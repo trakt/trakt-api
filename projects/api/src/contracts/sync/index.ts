@@ -7,6 +7,7 @@ import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { favoriteParamSchema } from './_internal/request/favoritesParamSchema.ts';
+import { historyRemoveRequestSchema } from './_internal/request/historyRemoveRequestSchema.ts';
 import { ratingsParamSchema } from './_internal/request/ratingsParamSchema.ts';
 import { watchlistRequestSchema } from './_internal/request/watchlistRequestSchema.ts';
 import { favoritesResponseSchema } from './_internal/response/favoritesResponseSchema.ts';
@@ -51,7 +52,7 @@ const history = builder.router({
   remove: {
     method: 'POST',
     path: '/remove',
-    body: bulkMediaRequestSchema,
+    body: historyRemoveRequestSchema,
     responses: {
       200: historyRemoveResponseSchema,
     },
@@ -125,7 +126,8 @@ export const sync = builder.router({
 
 export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
 
-export type HistoryRequest = z.infer<typeof bulkMediaRequestSchema>;
+export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
+export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
 export type HistoryResponse = z.infer<typeof historyResponseSchema>;
 
 export type WatchlistRequest = z.infer<typeof watchlistRequestSchema>;
