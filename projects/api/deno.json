@@ -1,7 +1,7 @@
 {
   "name": "@trakt/api",
   "exports": "./src/index.ts",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "imports": {
     "@std/testing": "jsr:@std/testing@^1.0.5",
     "@ts-rest/core": "npm:@ts-rest/core@^3.51.0",
