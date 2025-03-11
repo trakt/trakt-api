@@ -12,6 +12,7 @@ import { z } from '../_internal/z.ts';
 import { searchTypeParamFactory } from '../search/_internal/request/searchTypeParamFactory.ts';
 import { dateRangeParamsSchema } from './_internal/request/dateRangeParamsSchema.ts';
 import { hiddenParamsSchema } from './_internal/request/hiddenParamsSchema.ts';
+import { historyItemIdParamsSchema } from './_internal/request/historyItemIdParamsSchema.ts';
 import { listParamsSchema } from './_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
@@ -95,9 +96,10 @@ export const users = builder.router({
       },
     },
     movies: {
-      path: '/movies',
+      path: '/movies/:item_id?',
       method: 'GET',
-      pathParams: profileParamsSchema,
+      pathParams: profileParamsSchema
+        .merge(historyItemIdParamsSchema),
       query: extendedQuerySchemaFactory<['full', 'images']>()
         .merge(dateRangeParamsSchema)
         .merge(pageQuerySchema),
@@ -106,8 +108,10 @@ export const users = builder.router({
       },
     },
     shows: {
-      path: '/shows',
+      path: '/shows/:item_id?',
       method: 'GET',
+      pathParams: profileParamsSchema
+        .merge(historyItemIdParamsSchema),
       query: extendedQuerySchemaFactory<['full', 'images']>()
         .merge(dateRangeParamsSchema)
         .merge(pageQuerySchema),
@@ -116,8 +120,10 @@ export const users = builder.router({
       },
     },
     episodes: {
-      path: '/episodes',
+      path: '/episodes/:item_id?',
       method: 'GET',
+      pathParams: profileParamsSchema
+        .merge(historyItemIdParamsSchema),
       query: extendedQuerySchemaFactory<['full', 'images']>()
         .merge(dateRangeParamsSchema)
         .merge(pageQuerySchema),
