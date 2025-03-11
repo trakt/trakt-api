@@ -12,6 +12,7 @@ import { z } from '../_internal/z.ts';
 import { searchTypeParamFactory } from '../search/_internal/request/searchTypeParamFactory.ts';
 import { dateRangeParamsSchema } from './_internal/request/dateRangeParamsSchema.ts';
 import { hiddenParamsSchema } from './_internal/request/hiddenParamsSchema.ts';
+import { hiddenShowRequestSchema } from './_internal/request/hiddenShowRequestSchema.ts';
 import { historyItemIdParamsSchema } from './_internal/request/historyItemIdParamsSchema.ts';
 import { listParamsSchema } from './_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
@@ -271,14 +272,13 @@ export const users = builder.router({
       },
     },
     get: {
-      shows: {
-        path: '/hidden/progress_watched?type=show',
-        method: 'GET',
-        query: extendedQuerySchemaFactory<['full', 'images']>()
-          .merge(pageQuerySchema),
-        responses: {
-          200: hiddenShowResponseSchema.array(),
-        },
+      path: '/hidden/progress_watched',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['full', 'images']>()
+        .merge(pageQuerySchema)
+        .merge(hiddenShowRequestSchema),
+      responses: {
+        200: hiddenShowResponseSchema.array(),
       },
     },
     remove: {
