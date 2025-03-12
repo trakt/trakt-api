@@ -97,7 +97,40 @@ export const users = builder.router({
       },
     },
     movies: {
-      path: '/movies/:item_id?',
+      path: '/movies',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: extendedQuerySchemaFactory<['full', 'images']>()
+        .merge(dateRangeParamsSchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: movieActivityHistoryResponseSchema.array(),
+      },
+    },
+    shows: {
+      path: '/shows',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: extendedQuerySchemaFactory<['full', 'images']>()
+        .merge(dateRangeParamsSchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: showActivityHistoryResponseSchema.array(),
+      },
+    },
+    episodes: {
+      path: '/episodes',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: extendedQuerySchemaFactory<['full', 'images']>()
+        .merge(dateRangeParamsSchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: episodeActivityHistoryResponseSchema.array(),
+      },
+    },
+    movie: {
+      path: '/movies/:item_id',
       method: 'GET',
       pathParams: profileParamsSchema
         .merge(historyItemIdParamsSchema),
@@ -108,8 +141,8 @@ export const users = builder.router({
         200: movieActivityHistoryResponseSchema.array(),
       },
     },
-    shows: {
-      path: '/shows/:item_id?',
+    show: {
+      path: '/shows/:item_id',
       method: 'GET',
       pathParams: profileParamsSchema
         .merge(historyItemIdParamsSchema),
@@ -120,8 +153,8 @@ export const users = builder.router({
         200: showActivityHistoryResponseSchema.array(),
       },
     },
-    episodes: {
-      path: '/episodes/:item_id?',
+    episode: {
+      path: '/episodes/:item_id',
       method: 'GET',
       pathParams: profileParamsSchema
         .merge(historyItemIdParamsSchema),
