@@ -22,6 +22,11 @@ export const settingsResponseSchema = z.object({
     vip_cover_image: z.string().optional(),
     dob: z.string().optional(),
   }),
+  permissions: z.object({
+    commenting: z.boolean(),
+    liking: z.boolean(),
+    following: z.boolean(),
+  }),
   /***
    * Available if requesting extended `browsing`.
    */
