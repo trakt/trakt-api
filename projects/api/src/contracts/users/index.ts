@@ -14,6 +14,7 @@ import { dateRangeParamsSchema } from './_internal/request/dateRangeParamsSchema
 import { hiddenParamsSchema } from './_internal/request/hiddenParamsSchema.ts';
 import { hiddenShowRequestSchema } from './_internal/request/hiddenShowRequestSchema.ts';
 import { historyItemIdParamsSchema } from './_internal/request/historyItemIdParamsSchema.ts';
+import { likedTypeParamsSchema } from './_internal/request/likedTypeParamsSchema.ts';
 import { listParamsSchema } from './_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
@@ -28,6 +29,7 @@ import { favoritedShowsResponseSchema } from './_internal/response/favoritedShow
 import { hiddenAddResponseSchema } from './_internal/response/hiddenAddResponseSchema.ts';
 import { hiddenRemoveResponseSchema } from './_internal/response/hiddenRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from './_internal/response/hiddenShowResponseSchema.ts';
+import { likedItemResponseSchema } from './_internal/response/likedItemResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from './_internal/response/movieActivityHistoryResponseSchema.ts';
 import { RatedItemResponseSchema } from './_internal/response/ratedItemResponseSchema.ts';
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
@@ -333,6 +335,16 @@ export const users = builder.router({
       },
     },
   }),
+  likes: {
+    path: '/likes/:type',
+    pathParams: likedTypeParamsSchema,
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['comments', 'full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: likedItemResponseSchema.array(),
+    },
+  },
 }, {
   pathPrefix: '/users',
 });
@@ -379,3 +391,5 @@ export type HiddenShowItemResponse = z.infer<
 >;
 
 export type HiddenMediaRequest = z.infer<typeof bulkMediaRequestSchema>;
+
+export type LikedItemResponse = z.infer<typeof likedItemResponseSchema>;
