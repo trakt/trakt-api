@@ -33,6 +33,7 @@ module.exports = {
         'api',
         'calendar',
         'checkin',
+        'comment',
         'episode',
         'favorite',
         'footer',
