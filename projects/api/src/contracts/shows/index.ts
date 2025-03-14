@@ -29,7 +29,7 @@ import type { z } from '../_internal/z.ts';
 import { episodeParamsSchema } from './_internal/request/episodeParamsSchema.ts';
 import { seasonParamsSchema } from './_internal/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './_internal/request/showQueryParamsSchema.ts';
-import { seasonsResponseSchema } from './_internal/response/seasonsResponseSchema.ts';
+import { seasonResponseSchema } from './_internal/response/seasonResponseSchema.ts';
 import { showProgressResponseSchema } from './_internal/response/showProgressResponseSchema.ts';
 import { showWatchedResponseSchema } from './_internal/response/showWatchedResponseSchema.ts';
 
@@ -223,7 +223,7 @@ const ENTITY_LEVEL = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images']>(),
     pathParams: idParamsSchema,
     responses: {
-      200: seasonsResponseSchema,
+      200: seasonResponseSchema.array(),
     },
   },
   episodes: {
@@ -333,7 +333,7 @@ export type EpisodeTranslationResponse = z.infer<
 export type ShowCertificationResponse = z.infer<
   typeof showCertificationResponseSchema
 >;
-export type SeasonsResponse = z.infer<typeof seasonsResponseSchema>;
+export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
 export type SeasonResponse = z.infer<typeof episodeResponseSchema>[];
 export type EpisodeResponse = z.infer<typeof episodeResponseSchema>;
 export type EpisodeStatsResponse = z.infer<typeof episodeStatsResponseSchema>;
