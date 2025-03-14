@@ -1,6 +1,7 @@
 import { builder } from './_internal/builder.ts';
 import { calendars } from './calendars/index.ts';
 import { checkin } from './checkin/index.ts';
+import { comments } from './comments/index.ts';
 import { episodes } from './episodes/index.ts';
 import { lists } from './lists/index.ts';
 import { movies } from './movies/index.ts';
@@ -28,4 +29,5 @@ export const traktContract = builder
     watchnow,
     episodes,
     lists,
+    comments,
   });
