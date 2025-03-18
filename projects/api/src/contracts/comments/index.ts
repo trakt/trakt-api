@@ -1,6 +1,7 @@
 import { builder } from '../_internal/builder.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { commentLikeResponseSchema } from './_internal/responses/commentLikeResponseSchema.ts';
 
@@ -30,6 +31,15 @@ export const comments = builder.router({
     body: z.undefined(),
     responses: {
       204: z.undefined(),
+    },
+  },
+  replies: {
+    path: '/replies',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: commentResponseSchema.array(),
     },
   },
 }, {
