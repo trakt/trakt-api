@@ -95,7 +95,8 @@ const EPISODE_LEVEL = builder.router({
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema)
       .merge(commentsSortParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -252,7 +253,8 @@ const ENTITY_LEVEL = builder.router({
     path: '/comments/:sort',
     method: 'GET',
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
