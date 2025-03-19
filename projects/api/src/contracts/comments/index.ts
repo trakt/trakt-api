@@ -3,6 +3,7 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { z } from '../_internal/z.ts';
+import { commentReplyParamsSchema } from './_internal/requests/commentReplyParamsSchema.ts';
 import { commentLikeResponseSchema } from './_internal/responses/commentLikeResponseSchema.ts';
 
 export const comments = builder.router({
@@ -42,8 +43,18 @@ export const comments = builder.router({
       200: commentResponseSchema.array(),
     },
   },
+  reply: {
+    path: '/replies',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: commentReplyParamsSchema,
+    responses: {
+      201: commentResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/comments/:id',
 });
 
 export type CommentLikesResponse = z.infer<typeof commentLikeResponseSchema>;
+export type CommentReplyParams = z.infer<typeof commentReplyParamsSchema>;
