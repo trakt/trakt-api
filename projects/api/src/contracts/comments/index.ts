@@ -53,6 +53,15 @@ const ENTITY_LEVEL = builder.router({
       201: commentResponseSchema,
     },
   },
+  edit: {
+    path: '/',
+    method: 'PUT',
+    pathParams: idParamsSchema,
+    body: commentReplyParamsSchema,
+    responses: {
+      200: commentResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
