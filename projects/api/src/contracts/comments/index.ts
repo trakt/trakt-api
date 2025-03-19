@@ -62,6 +62,15 @@ const ENTITY_LEVEL = builder.router({
       200: commentResponseSchema,
     },
   },
+  delete: {
+    path: '/',
+    method: 'DELETE',
+    pathParams: idParamsSchema,
+    body: z.undefined(),
+    responses: {
+      204: z.undefined(),
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
