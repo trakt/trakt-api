@@ -1,4 +1,5 @@
 import { builder } from '../_internal/builder.ts';
+import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
@@ -96,7 +97,8 @@ const EPISODE_LEVEL = builder.router({
       .merge(episodeParamsSchema)
       .merge(commentsSortParamsSchema),
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      .merge(allPagesQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -254,7 +256,8 @@ const ENTITY_LEVEL = builder.router({
     method: 'GET',
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      .merge(allPagesQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
