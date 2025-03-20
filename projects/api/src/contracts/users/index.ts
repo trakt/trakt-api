@@ -341,8 +341,7 @@ export const users = builder.router({
     pathParams: likedTypeParamsSchema,
     method: 'GET',
     query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(allPagesQuerySchema),
+      .and(pageQuerySchema.or(allPagesQuerySchema)),
     responses: {
       200: likedItemResponseSchema.array(),
     },

@@ -118,8 +118,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/lists/:type/:sort',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(allPagesQuerySchema),
+      .merge(pageQuerySchema),
     pathParams: idParamsSchema
       .merge(listSortSchema)
       .merge(listTypeSchema),
@@ -131,7 +130,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/comments/:sort',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+      .and(pageQuerySchema.or(allPagesQuerySchema)),
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
     responses: {
       200: commentResponseSchema.array(),
