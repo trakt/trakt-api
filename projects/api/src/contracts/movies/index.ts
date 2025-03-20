@@ -1,4 +1,5 @@
 import { builder } from '../_internal/builder.ts';
+import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
@@ -117,7 +118,8 @@ const ENTITY_LEVEL = builder.router({
     path: '/lists/:type/:sort',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      .merge(allPagesQuerySchema),
     pathParams: idParamsSchema
       .merge(listSortSchema)
       .merge(listTypeSchema),
