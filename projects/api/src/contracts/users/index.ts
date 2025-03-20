@@ -1,4 +1,5 @@
 import { builder } from '../_internal/builder.ts';
+import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
@@ -340,7 +341,8 @@ export const users = builder.router({
     pathParams: likedTypeParamsSchema,
     method: 'GET',
     query: extendedQuerySchemaFactory<['comments', 'full', 'images']>()
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      .merge(allPagesQuerySchema),
     responses: {
       200: likedItemResponseSchema.array(),
     },
