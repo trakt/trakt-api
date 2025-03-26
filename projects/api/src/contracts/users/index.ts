@@ -45,6 +45,7 @@ export const users = builder.router({
     path: '/:id',
     method: 'GET',
     pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'vip']>(),
     responses: {
       200: profileResponseSchema,
     },
