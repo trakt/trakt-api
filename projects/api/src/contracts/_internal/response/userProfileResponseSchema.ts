@@ -36,4 +36,16 @@ export const profileResponseSchema = z.object({
    * Available if requesting extended `full`.
    */
   images: z.object({ avatar: z.object({ full: z.string() }) }).optional(),
+  /***
+   * Available if requesting extended `vip`.
+   */
+  vip_og: z.boolean().optional(),
+  /***
+   * Available if requesting extended `vip`.
+   */
+  vip_years: z.number().optional(),
+  /***
+   * Available if requesting extended `vip`.
+   */
+  vip_cover_image: z.string().optional(),
 });
