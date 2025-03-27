@@ -82,4 +82,8 @@ export const movieResponseSchema = z.object({
    * Available if requesting extended `full`.
    */
   certification: movieCertificationResponseSchema.optional(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  original_title: z.string().nullish(),
 });
