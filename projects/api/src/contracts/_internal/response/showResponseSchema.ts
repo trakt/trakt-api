@@ -97,4 +97,8 @@ export const showResponseSchema = z.object({
    * Available if requesting extended `full`.
    */
   genres: z.array(genreResponseSchema).optional(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  original_title: z.string().nullish(),
 });

@@ -56,4 +56,8 @@ export const episodeResponseSchema = z.object({
   images: z
     .object({ screenshot: z.array(z.string()) })
     .optional(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  original_title: z.string().nullish(),
 });
