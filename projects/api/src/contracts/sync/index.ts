@@ -131,6 +131,7 @@ export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
 export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
 export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
 export type HistoryResponse = z.infer<typeof historyResponseSchema>;
+export type HistoryRemoveResponse = z.infer<typeof historyRemoveResponseSchema>;
 
 export type WatchlistRequest = z.infer<typeof watchlistRequestSchema>;
 export type WatchlistResponse = z.infer<typeof watchlistResponseSchema>;
