@@ -4,7 +4,6 @@ import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySc
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
-import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { favoriteParamSchema } from './_internal/request/favoritesParamSchema.ts';
 import { historyRemoveRequestSchema } from './_internal/request/historyRemoveRequestSchema.ts';
@@ -14,6 +13,7 @@ import { favoritesRemoveResponseSchema } from './_internal/response/favoritesRem
 import { favoritesResponseSchema } from './_internal/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './_internal/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './_internal/response/historyResponseSchema.ts';
+import { ratingsResponseSchema } from './_internal/response/ratingsResponseSchema.ts';
 import { upNextResponseSchema } from './_internal/response/upNextResponseSchema.ts';
 import { watchlistRemoveResponseSchema } from './_internal/response/watchlistRemoveResponseSchema.ts';
 import { watchlistResponseSchema } from './_internal/response/watchlistResponseSchema.ts';
