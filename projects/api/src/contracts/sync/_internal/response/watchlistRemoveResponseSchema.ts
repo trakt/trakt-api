@@ -1,14 +1,8 @@
 import { bulkMediaRequestSchema } from '../../../_internal/request/bulkMediaRequestSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
-export const watchlistResponseSchema = z.object({
-  added: z.object({
-    movies: z.number(),
-    shows: z.number(),
-    seasons: z.number(),
-    episodes: z.number(),
-  }),
-  existing: z.object({
+export const watchlistRemoveResponseSchema = z.object({
+  deleted: z.object({
     movies: z.number(),
     shows: z.number(),
     seasons: z.number(),
