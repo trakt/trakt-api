@@ -14,6 +14,7 @@ import { favoritesResponseSchema } from './_internal/response/favoritesResponseS
 import { historyRemoveResponseSchema } from './_internal/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './_internal/response/historyResponseSchema.ts';
 import { upNextResponseSchema } from './_internal/response/upNextResponseSchema.ts';
+import { watchlistRemoveResponseSchema } from './_internal/response/watchlistRemoveResponseSchema.ts';
 import { watchlistResponseSchema } from './_internal/response/watchlistResponseSchema.ts';
 
 const progress = builder.router({
@@ -75,7 +76,7 @@ const watchlist = builder.router({
     path: '/remove',
     body: watchlistRequestSchema,
     responses: {
-      200: watchlistResponseSchema,
+      200: watchlistRemoveResponseSchema,
     },
   },
 }, {
@@ -132,6 +133,9 @@ export type HistoryResponse = z.infer<typeof historyResponseSchema>;
 
 export type WatchlistRequest = z.infer<typeof watchlistRequestSchema>;
 export type WatchlistResponse = z.infer<typeof watchlistResponseSchema>;
+export type WatchlistRemoveResponse = z.infer<
+  typeof watchlistRemoveResponseSchema
+>;
 
 export type RatingsRequest = z.infer<typeof ratingsParamSchema>;
 export type RatingsResponse = z.infer<typeof ratingsResponseSchema>;
