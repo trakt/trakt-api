@@ -2,10 +2,13 @@ import { builder } from '../_internal/builder.ts';
 import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
+import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
+import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
 import { profileResponseSchema } from '../_internal/response/userProfileResponseSchema.ts';
@@ -254,6 +257,23 @@ const list = builder.router({
         .array(),
     },
   },
+  add: {
+    path: '/items',
+    method: 'POST',
+    body: listRequestSchema,
+    responses: {
+      201: listAddResponseSchema,
+      420: z.undefined(),
+    },
+  },
+  remove: {
+    path: '/items/remove',
+    method: 'POST',
+    body: listRequestSchema,
+    responses: {
+      200: listRemoveResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:list_id',
 });
@@ -417,3 +437,9 @@ export type HiddenShowItemResponse = z.infer<
 export type HiddenMediaRequest = z.infer<typeof bulkMediaRequestSchema>;
 
 export type LikedItemResponse = z.infer<typeof likedItemResponseSchema>;
+
+export type ListRequest = z.infer<typeof listRequestSchema>;
+export type ListAddResponse = z.infer<typeof listAddResponseSchema>;
+export type ListRemoveResponse = z.infer<
+  typeof listRemoveResponseSchema
+>;
