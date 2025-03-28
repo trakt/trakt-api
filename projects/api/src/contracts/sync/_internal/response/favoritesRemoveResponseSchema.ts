@@ -1,12 +1,8 @@
 import { z } from '../../../_internal/z.ts';
 import { favoriteParamSchema } from '../request/favoritesParamSchema.ts';
 
-export const favoritesResponseSchema = z.object({
-  added: z.object({
-    movies: z.number(),
-    shows: z.number(),
-  }).optional(),
-  existing: z.object({
+export const favoritesRemoveResponseSchema = z.object({
+  deleted: z.object({
     movies: z.number(),
     shows: z.number(),
   }).optional(),

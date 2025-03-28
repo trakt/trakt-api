@@ -10,6 +10,7 @@ import { favoriteParamSchema } from './_internal/request/favoritesParamSchema.ts
 import { historyRemoveRequestSchema } from './_internal/request/historyRemoveRequestSchema.ts';
 import { ratingsParamSchema } from './_internal/request/ratingsParamSchema.ts';
 import { watchlistRequestSchema } from './_internal/request/watchlistRequestSchema.ts';
+import { favoritesRemoveResponseSchema } from './_internal/response/favoritesRemoveResponseSchema.ts';
 import { favoritesResponseSchema } from './_internal/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './_internal/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './_internal/response/historyResponseSchema.ts';
@@ -110,7 +111,7 @@ const favorites = builder.router({
     path: '/remove',
     body: favoriteParamSchema,
     responses: {
-      201: favoritesResponseSchema,
+      200: favoritesRemoveResponseSchema,
     },
   },
 }, {
@@ -142,3 +143,6 @@ export type RatingsResponse = z.infer<typeof ratingsResponseSchema>;
 
 export type FavoritesRequest = z.infer<typeof favoriteParamSchema>;
 export type FavoritesResponse = z.infer<typeof favoritesResponseSchema>;
+export type FavoritesRemoveResponse = z.infer<
+  typeof favoritesRemoveResponseSchema
+>;
