@@ -40,6 +40,284 @@ import type { watchActionSchema } from './_internal/response/watchActionSchema.t
 import { watchedMoviesResponseSchema } from './_internal/response/watchedMoviesResponseSchema.ts';
 import { watchedShowsResponseSchema } from './_internal/response/watchedShowsResponseSchema.ts';
 
+const watched = builder.router({
+  movies: {
+    path: '/movies',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    responses: {
+      200: watchedMoviesResponseSchema,
+    },
+  },
+  shows: {
+    path: '/shows',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['noseasons']>(),
+    responses: {
+      200: watchedShowsResponseSchema,
+    },
+  },
+}, {
+  pathPrefix: '/:id/watched',
+});
+
+const history = builder.router({
+  all: {
+    path: '/',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: activityHistoryResponseSchema.array(),
+    },
+  },
+  movies: {
+    path: '/movies',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: movieActivityHistoryResponseSchema.array(),
+    },
+  },
+  shows: {
+    path: '/shows',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: showActivityHistoryResponseSchema.array(),
+    },
+  },
+  episodes: {
+    path: '/episodes',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: episodeActivityHistoryResponseSchema.array(),
+    },
+  },
+  movie: {
+    path: '/movies/:item_id',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(historyItemIdParamsSchema),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: movieActivityHistoryResponseSchema.array(),
+    },
+  },
+  show: {
+    path: '/shows/:item_id',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(historyItemIdParamsSchema),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: showActivityHistoryResponseSchema.array(),
+    },
+  },
+  episode: {
+    path: '/episodes/:item_id',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(historyItemIdParamsSchema),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: episodeActivityHistoryResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/:id/history',
+});
+
+const watchlist = builder.router({
+  movies: {
+    path: '/movies/:sort',
+    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: listedMovieResponseSchema.array(),
+    },
+  },
+  shows: {
+    path: '/shows/:sort',
+    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: listedShowResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/:id/watchlist',
+});
+
+const ratings = builder.router({
+  movies: {
+    path: '/movies',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: RatedItemResponseSchema.array(),
+    },
+  },
+  shows: {
+    path: '/shows',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: RatedItemResponseSchema.array(),
+    },
+  },
+  episodes: {
+    path: '/episodes',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: RatedItemResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/:id/ratings',
+});
+
+const favorites = builder.router({
+  movies: {
+    path: '/movies/:sort',
+    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: favoritedMoviesResponseSchema.array(),
+    },
+  },
+  shows: {
+    path: '/shows/:sort',
+    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: favoritedShowsResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/:id/favorites',
+});
+
+const lists = builder.router({
+  personal: {
+    path: '',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  collaborations: {
+    path: '/collaborations',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  summary: {
+    path: '/:list_id',
+    method: 'GET',
+    pathParams: profileParamsSchema.merge(listParamsSchema),
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: listResponseSchema,
+    },
+  },
+  items: {
+    path: '/:list_id/items/:type',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema)
+      .merge(
+        searchTypeParamFactory<
+          ['movie', 'show']
+        >(),
+      ),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(sortQuerySchema),
+    responses: {
+      200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
+        .array(),
+    },
+  },
+}, {
+  pathPrefix: '/:id/lists',
+});
+
+const hidden = builder.router({
+  add: {
+    path: '/:section',
+    pathParams: hiddenParamsSchema,
+    method: 'POST',
+    body: bulkMediaRequestSchema,
+    responses: {
+      200: hiddenAddResponseSchema,
+    },
+  },
+  get: {
+    path: '/progress_watched',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(hiddenShowRequestSchema),
+    responses: {
+      200: hiddenShowResponseSchema.array(),
+    },
+  },
+  remove: {
+    progress: {
+      path: '/progress_watched/remove',
+      method: 'POST',
+      body: bulkMediaRequestSchema,
+      responses: {
+        200: hiddenRemoveResponseSchema,
+      },
+    },
+    calendar: {
+      path: '/calendar/remove',
+      method: 'POST',
+      body: bulkMediaRequestSchema,
+      responses: {
+        200: hiddenRemoveResponseSchema,
+      },
+    },
+  },
+}, {
+  pathPrefix: '/hidden',
+});
+
 export const users = builder.router({
   profile: {
     path: '/:id',
@@ -68,275 +346,6 @@ export const users = builder.router({
       200: settingsResponseSchema,
     },
   },
-  watched: builder.router({
-    movies: {
-      path: '/movies',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      responses: {
-        200: watchedMoviesResponseSchema,
-      },
-    },
-    shows: {
-      path: '/shows',
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['noseasons']>(),
-      responses: {
-        200: watchedShowsResponseSchema,
-      },
-    },
-  }, {
-    pathPrefix: '/:id/watched',
-  }),
-  history: builder.router({
-    all: {
-      path: '/',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: activityHistoryResponseSchema.array(),
-      },
-    },
-    movies: {
-      path: '/movies',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: movieActivityHistoryResponseSchema.array(),
-      },
-    },
-    shows: {
-      path: '/shows',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: showActivityHistoryResponseSchema.array(),
-      },
-    },
-    episodes: {
-      path: '/episodes',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: episodeActivityHistoryResponseSchema.array(),
-      },
-    },
-    movie: {
-      path: '/movies/:item_id',
-      method: 'GET',
-      pathParams: profileParamsSchema
-        .merge(historyItemIdParamsSchema),
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: movieActivityHistoryResponseSchema.array(),
-      },
-    },
-    show: {
-      path: '/shows/:item_id',
-      method: 'GET',
-      pathParams: profileParamsSchema
-        .merge(historyItemIdParamsSchema),
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: showActivityHistoryResponseSchema.array(),
-      },
-    },
-    episode: {
-      path: '/episodes/:item_id',
-      method: 'GET',
-      pathParams: profileParamsSchema
-        .merge(historyItemIdParamsSchema),
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(dateRangeParamsSchema)
-        .merge(pageQuerySchema),
-      responses: {
-        200: episodeActivityHistoryResponseSchema.array(),
-      },
-    },
-  }, {
-    pathPrefix: '/:id/history',
-  }),
-  watchlist: builder.router({
-    movies: {
-      path: '/movies/:sort',
-      pathParams: profileParamsSchema.merge(sortParamsSchema),
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(pageQuerySchema),
-      responses: {
-        200: listedMovieResponseSchema.array(),
-      },
-    },
-    shows: {
-      path: '/shows/:sort',
-      pathParams: profileParamsSchema.merge(sortParamsSchema),
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(pageQuerySchema),
-      responses: {
-        200: listedShowResponseSchema.array(),
-      },
-    },
-  }, {
-    pathPrefix: '/:id/watchlist',
-  }),
-  ratings: builder.router({
-    movies: {
-      path: '/movies',
-      pathParams: profileParamsSchema,
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: RatedItemResponseSchema.array(),
-      },
-    },
-    shows: {
-      path: '/shows',
-      pathParams: profileParamsSchema,
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: RatedItemResponseSchema.array(),
-      },
-    },
-    episodes: {
-      path: '/episodes',
-      pathParams: profileParamsSchema,
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: RatedItemResponseSchema.array(),
-      },
-    },
-  }, {
-    pathPrefix: '/:id/ratings',
-  }),
-  favorites: builder.router({
-    movies: {
-      path: '/movies/:sort',
-      pathParams: profileParamsSchema.merge(sortParamsSchema),
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: favoritedMoviesResponseSchema.array(),
-      },
-    },
-    shows: {
-      path: '/shows/:sort',
-      pathParams: profileParamsSchema.merge(sortParamsSchema),
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: favoritedShowsResponseSchema.array(),
-      },
-    },
-  }, {
-    pathPrefix: '/:id/favorites',
-  }),
-  lists: builder.router({
-    personal: {
-      path: '',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: listResponseSchema.array(),
-      },
-    },
-    collaborations: {
-      path: '/collaborations',
-      method: 'GET',
-      pathParams: profileParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: listResponseSchema.array(),
-      },
-    },
-    summary: {
-      path: '/:list_id',
-      method: 'GET',
-      pathParams: profileParamsSchema.merge(listParamsSchema),
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
-      responses: {
-        200: listResponseSchema,
-      },
-    },
-    items: {
-      path: '/:list_id/items/:type',
-      method: 'GET',
-      pathParams: profileParamsSchema
-        .merge(listParamsSchema)
-        .merge(
-          searchTypeParamFactory<
-            ['movie', 'show']
-          >(),
-        ),
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(pageQuerySchema)
-        .merge(sortQuerySchema),
-      responses: {
-        200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-          .array(),
-      },
-    },
-  }, {
-    pathPrefix: '/:id/lists',
-  }),
-  hidden: builder.router({
-    add: {
-      path: '/hidden/:section',
-      pathParams: hiddenParamsSchema,
-      method: 'POST',
-      body: bulkMediaRequestSchema,
-      responses: {
-        200: hiddenAddResponseSchema,
-      },
-    },
-    get: {
-      path: '/hidden/progress_watched',
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(pageQuerySchema)
-        .merge(hiddenShowRequestSchema),
-      responses: {
-        200: hiddenShowResponseSchema.array(),
-      },
-    },
-    remove: {
-      progress: {
-        path: '/hidden/progress_watched/remove',
-        method: 'POST',
-        body: bulkMediaRequestSchema,
-        responses: {
-          200: hiddenRemoveResponseSchema,
-        },
-      },
-      calendar: {
-        path: '/hidden/calendar/remove',
-        method: 'POST',
-        body: bulkMediaRequestSchema,
-        responses: {
-          200: hiddenRemoveResponseSchema,
-        },
-      },
-    },
-  }),
   likes: {
     path: '/likes/:type',
     pathParams: likedTypeParamsSchema,
@@ -347,6 +356,13 @@ export const users = builder.router({
       200: likedItemResponseSchema.array(),
     },
   },
+  watched,
+  history,
+  watchlist,
+  ratings,
+  favorites,
+  lists,
+  hidden,
 }, {
   pathPrefix: '/users',
 });
