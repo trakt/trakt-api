@@ -226,6 +226,38 @@ const favorites = builder.router({
   pathPrefix: '/:id/favorites',
 });
 
+const list = builder.router({
+  summary: {
+    path: '/',
+    method: 'GET',
+    pathParams: profileParamsSchema.merge(listParamsSchema),
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: listResponseSchema,
+    },
+  },
+  items: {
+    path: '/items/:type',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema)
+      .merge(
+        searchTypeParamFactory<
+          ['movie', 'show']
+        >(),
+      ),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(sortQuerySchema),
+    responses: {
+      200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
+        .array(),
+    },
+  },
+}, {
+  pathPrefix: '/:list_id',
+});
+
 const lists = builder.router({
   personal: {
     path: '',
@@ -245,33 +277,7 @@ const lists = builder.router({
       200: listResponseSchema.array(),
     },
   },
-  summary: {
-    path: '/:list_id',
-    method: 'GET',
-    pathParams: profileParamsSchema.merge(listParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
-    responses: {
-      200: listResponseSchema,
-    },
-  },
-  items: {
-    path: '/:list_id/items/:type',
-    method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema)
-      .merge(
-        searchTypeParamFactory<
-          ['movie', 'show']
-        >(),
-      ),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(sortQuerySchema),
-    responses: {
-      200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-        .array(),
-    },
-  },
+  list,
 }, {
   pathPrefix: '/:id/lists',
 });
