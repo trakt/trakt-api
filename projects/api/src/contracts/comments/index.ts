@@ -2,10 +2,10 @@ import { builder } from '../_internal/builder.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
+import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { commentPostParamsSchema } from './_internal/requests/commentPostParamsSchema.ts';
 import { commentReplyParamsSchema } from './_internal/requests/commentReplyParamsSchema.ts';
-import { commentLikeResponseSchema } from './_internal/responses/commentLikeResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
   likes: {
@@ -14,7 +14,7 @@ const ENTITY_LEVEL = builder.router({
     pathParams: idParamsSchema,
     query: pageQuerySchema,
     responses: {
-      200: commentLikeResponseSchema.array(),
+      200: likeResponseSchema.array(),
     },
   },
   like: {
@@ -93,6 +93,6 @@ export const comments = builder.router({
   pathPrefix: '/comments',
 });
 
-export type CommentLikesResponse = z.infer<typeof commentLikeResponseSchema>;
+export type CommentLikesResponse = z.infer<typeof likeResponseSchema>;
 export type CommentReplyParams = z.infer<typeof commentReplyParamsSchema>;
 export type CommentPostParams = z.infer<typeof commentPostParamsSchema>;
