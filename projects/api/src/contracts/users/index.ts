@@ -6,6 +6,7 @@ import { internalIdParamsSchema } from '../_internal/request/internalIdParamsSch
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
+import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
@@ -21,6 +22,7 @@ import { hiddenParamsSchema } from './_internal/request/hiddenParamsSchema.ts';
 import { hiddenShowRequestSchema } from './_internal/request/hiddenShowRequestSchema.ts';
 import { historyItemIdParamsSchema } from './_internal/request/historyItemIdParamsSchema.ts';
 import { likedTypeParamsSchema } from './_internal/request/likedTypeParamsSchema.ts';
+import { listCommentsSortParamsSchema } from './_internal/request/listCommentsSortParamsSchema.ts';
 import { listParamsSchema } from './_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
 import { reorderRequestSchema } from './_internal/request/reorderRequestSchema.ts';
@@ -179,6 +181,16 @@ const watchlist = builder.router({
       200: listedShowResponseSchema.array(),
     },
   },
+  comments: {
+    path: '/comments/:sort',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listCommentsSortParamsSchema),
+    query: pageQuerySchema,
+    responses: {
+      200: commentResponseSchema.array(),
+    },
+  },
 }, {
   pathPrefix: '/:id/watchlist',
 });
@@ -232,6 +244,16 @@ const favorites = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images']>(),
     responses: {
       200: favoritedShowsResponseSchema.array(),
+    },
+  },
+  comments: {
+    path: '/comments/:sort',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listCommentsSortParamsSchema),
+    query: pageQuerySchema,
+    responses: {
+      200: commentResponseSchema.array(),
     },
   },
 }, {
@@ -301,6 +323,17 @@ const list = builder.router({
     query: pageQuerySchema,
     responses: {
       200: likeResponseSchema.array(),
+    },
+  },
+  comments: {
+    path: '/comments/:sort',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema)
+      .merge(listCommentsSortParamsSchema),
+    query: pageQuerySchema,
+    responses: {
+      200: commentResponseSchema.array(),
     },
   },
 }, {
@@ -553,3 +586,7 @@ export type reorderListResponseSchema = z.infer<
 >;
 
 export type ListLikesResponse = z.infer<typeof likeResponseSchema>;
+
+export type ListCommentsSortParams = z.infer<
+  typeof listCommentsSortParamsSchema
+>;
