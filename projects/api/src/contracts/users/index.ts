@@ -50,6 +50,7 @@ import { requestsResponseSchema } from './_internal/response/requestsResponseSch
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from './_internal/response/showActivityHistoryResponseSchema.ts';
 import { socialActivityResponseSchema } from './_internal/response/socialActivityResponseSchema.ts';
+import { userStatsResponseSchema } from './_internal/response/userStatsResponseSchema.ts';
 import type { watchActionSchema } from './_internal/response/watchActionSchema.ts';
 import { watchedMoviesResponseSchema } from './_internal/response/watchedMoviesResponseSchema.ts';
 import { watchedShowsResponseSchema } from './_internal/response/watchedShowsResponseSchema.ts';
@@ -507,6 +508,14 @@ export const users = builder.router({
       200: likedItemResponseSchema.array(),
     },
   },
+  stats: {
+    path: '/:id/stats',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    responses: {
+      200: userStatsResponseSchema,
+    },
+  },
   watched,
   history,
   watchlist,
@@ -590,3 +599,5 @@ export type ListLikesResponse = z.infer<typeof likeResponseSchema>;
 export type ListCommentsSortParams = z.infer<
   typeof listCommentsSortParamsSchema
 >;
+
+export type UserStatsResponse = z.infer<typeof userStatsResponseSchema>;
