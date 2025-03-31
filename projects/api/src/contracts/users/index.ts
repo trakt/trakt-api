@@ -22,6 +22,7 @@ import { historyItemIdParamsSchema } from './_internal/request/historyItemIdPara
 import { likedTypeParamsSchema } from './_internal/request/likedTypeParamsSchema.ts';
 import { listParamsSchema } from './_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
+import { reorderRequestSchema } from './_internal/request/reorderRequestSchema.ts';
 import { sectionParamsSchema } from './_internal/request/sectionParamsSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
 import {
@@ -40,6 +41,8 @@ import { hiddenShowResponseSchema } from './_internal/response/hiddenShowRespons
 import { likedItemResponseSchema } from './_internal/response/likedItemResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from './_internal/response/movieActivityHistoryResponseSchema.ts';
 import { RatedItemResponseSchema } from './_internal/response/ratedItemResponseSchema.ts';
+import { reorderListResponseSchema } from './_internal/response/reorderListResponseSchema.ts';
+import { reorderListsResponseSchema } from './_internal/response/reorderListsResponseSchema.ts';
 import { requestsResponseSchema } from './_internal/response/requestsResponseSchema.ts';
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from './_internal/response/showActivityHistoryResponseSchema.ts';
@@ -279,6 +282,16 @@ const list = builder.router({
       200: listRemoveResponseSchema,
     },
   },
+  reorder: {
+    path: '/reorder',
+    method: 'POST',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    body: reorderRequestSchema,
+    responses: {
+      200: reorderListResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:list_id',
 });
@@ -300,6 +313,14 @@ const lists = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images']>(),
     responses: {
       200: listResponseSchema.array(),
+    },
+  },
+  reorder: {
+    path: '/reorder',
+    method: 'POST',
+    body: reorderRequestSchema,
+    responses: {
+      200: reorderListsResponseSchema,
     },
   },
   list,
@@ -513,3 +534,9 @@ export type ApproveFollowerResponse = z.infer<
 
 export type FilterSection = z.infer<typeof sectionParamsSchema>;
 export type FilterResponse = z.infer<typeof filterResponseSchema>;
+
+export type ReorderRequest = z.infer<typeof reorderRequestSchema>;
+export type ReorderListsResponse = z.infer<typeof reorderListsResponseSchema>;
+export type reorderListResponseSchema = z.infer<
+  typeof reorderListResponseSchema
+>;
