@@ -6,6 +6,7 @@ import { internalIdParamsSchema } from '../_internal/request/internalIdParamsSch
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
+import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
@@ -292,6 +293,16 @@ const list = builder.router({
       200: reorderListResponseSchema,
     },
   },
+  likes: {
+    path: '/likes',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    query: pageQuerySchema,
+    responses: {
+      200: likeResponseSchema.array(),
+    },
+  },
 }, {
   pathPrefix: '/:list_id',
 });
@@ -540,3 +551,5 @@ export type ReorderListsResponse = z.infer<typeof reorderListsResponseSchema>;
 export type reorderListResponseSchema = z.infer<
   typeof reorderListResponseSchema
 >;
+
+export type ListLikesResponse = z.infer<typeof likeResponseSchema>;
