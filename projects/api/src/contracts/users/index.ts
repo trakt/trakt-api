@@ -22,6 +22,7 @@ import { historyItemIdParamsSchema } from './_internal/request/historyItemIdPara
 import { likedTypeParamsSchema } from './_internal/request/likedTypeParamsSchema.ts';
 import { listParamsSchema } from './_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
+import { sectionParamsSchema } from './_internal/request/sectionParamsSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
 import {
   type sortEnumSchema,
@@ -32,6 +33,7 @@ import { approveFollowerResponseSchema } from './_internal/response/approveFollo
 import { episodeActivityHistoryResponseSchema } from './_internal/response/episodeActivityHistoryResponseSchema.ts';
 import { favoritedMoviesResponseSchema } from './_internal/response/favoritedMoviesResponseSchema.ts';
 import { favoritedShowsResponseSchema } from './_internal/response/favoritedShowsResponseSchema.ts';
+import { filterResponseSchema } from './_internal/response/filterResponseSchema.ts';
 import { hiddenAddResponseSchema } from './_internal/response/hiddenAddResponseSchema.ts';
 import { hiddenRemoveResponseSchema } from './_internal/response/hiddenRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from './_internal/response/hiddenShowResponseSchema.ts';
@@ -388,6 +390,20 @@ const requests = builder.router({
   pathPrefix: '/requests',
 });
 
+const filters = builder.router({
+  saved: {
+    path: '/:section',
+    method: 'GET',
+    pathParams: sectionParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: filterResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/saved_filters',
+});
+
 export const users = builder.router({
   profile: {
     path: '/:id',
@@ -434,6 +450,7 @@ export const users = builder.router({
   lists,
   hidden,
   requests,
+  filters,
 }, {
   pathPrefix: '/users',
 });
@@ -493,3 +510,6 @@ export type RequestsResponse = z.infer<typeof requestsResponseSchema>;
 export type ApproveFollowerResponse = z.infer<
   typeof approveFollowerResponseSchema
 >;
+
+export type FilterSection = z.infer<typeof sectionParamsSchema>;
+export type FilterResponse = z.infer<typeof filterResponseSchema>;
