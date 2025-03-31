@@ -2,6 +2,7 @@ import { builder } from '../_internal/builder.ts';
 import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { internalIdParamsSchema } from '../_internal/request/internalIdParamsSchema.ts';
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
@@ -27,6 +28,7 @@ import {
   sortParamsSchema,
 } from './_internal/request/sortParamsSchema.ts';
 import { activityHistoryResponseSchema } from './_internal/response/activityHistoryResponseSchema.ts';
+import { approveFollowerResponseSchema } from './_internal/response/approveFollowerResponseSchema.ts';
 import { episodeActivityHistoryResponseSchema } from './_internal/response/episodeActivityHistoryResponseSchema.ts';
 import { favoritedMoviesResponseSchema } from './_internal/response/favoritedMoviesResponseSchema.ts';
 import { favoritedShowsResponseSchema } from './_internal/response/favoritedShowsResponseSchema.ts';
@@ -36,6 +38,7 @@ import { hiddenShowResponseSchema } from './_internal/response/hiddenShowRespons
 import { likedItemResponseSchema } from './_internal/response/likedItemResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from './_internal/response/movieActivityHistoryResponseSchema.ts';
 import { RatedItemResponseSchema } from './_internal/response/ratedItemResponseSchema.ts';
+import { requestsResponseSchema } from './_internal/response/requestsResponseSchema.ts';
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from './_internal/response/showActivityHistoryResponseSchema.ts';
 import { socialActivityResponseSchema } from './_internal/response/socialActivityResponseSchema.ts';
@@ -344,6 +347,47 @@ const hidden = builder.router({
   pathPrefix: '/hidden',
 });
 
+const requests = builder.router({
+  follow: {
+    path: '/',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full']>(),
+    responses: {
+      200: requestsResponseSchema.array(),
+    },
+  },
+  following: {
+    path: '/following',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full']>(),
+    responses: {
+      200: requestsResponseSchema.array(),
+    },
+  },
+  approve: {
+    path: '/:id',
+    method: 'POST',
+    query: extendedQuerySchemaFactory<['full']>(),
+    pathParams: internalIdParamsSchema,
+    body: z.undefined(),
+    responses: {
+      200: approveFollowerResponseSchema,
+      404: z.undefined(),
+    },
+  },
+  deny: {
+    path: '/:id',
+    method: 'DELETE',
+    pathParams: internalIdParamsSchema,
+    responses: {
+      204: z.undefined(),
+      404: z.undefined(),
+    },
+  },
+}, {
+  pathPrefix: '/requests',
+});
+
 export const users = builder.router({
   profile: {
     path: '/:id',
@@ -389,6 +433,7 @@ export const users = builder.router({
   favorites,
   lists,
   hidden,
+  requests,
 }, {
   pathPrefix: '/users',
 });
@@ -442,4 +487,9 @@ export type ListRequest = z.infer<typeof listRequestSchema>;
 export type ListAddResponse = z.infer<typeof listAddResponseSchema>;
 export type ListRemoveResponse = z.infer<
   typeof listRemoveResponseSchema
+>;
+
+export type RequestsResponse = z.infer<typeof requestsResponseSchema>;
+export type ApproveFollowerResponse = z.infer<
+  typeof approveFollowerResponseSchema
 >;
