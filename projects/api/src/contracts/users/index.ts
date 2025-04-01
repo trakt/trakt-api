@@ -42,6 +42,7 @@ import { favoritedShowsResponseSchema } from './_internal/response/favoritedShow
 import { filterResponseSchema } from './_internal/response/filterResponseSchema.ts';
 import { followerResponseSchema } from './_internal/response/followerResponseSchema.ts';
 import { followResponseSchema } from './_internal/response/followResponseSchema.ts';
+import { friendResponseSchema } from './_internal/response/friendResponseSchema.ts';
 import { hiddenAddResponseSchema } from './_internal/response/hiddenAddResponseSchema.ts';
 import { hiddenRemoveResponseSchema } from './_internal/response/hiddenRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from './_internal/response/hiddenShowResponseSchema.ts';
@@ -513,6 +514,15 @@ const FOLLOW_LEVEL = builder.router({
       200: followerResponseSchema.array(),
     },
   },
+  friends: {
+    path: '/friends',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full']>(),
+    responses: {
+      200: friendResponseSchema.array(),
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
@@ -680,3 +690,5 @@ export type CommentRequest = z.infer<typeof commentsRequestSchema>;
 export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
 
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
+
+export type FriendResponse = z.infer<typeof friendResponseSchema>;
