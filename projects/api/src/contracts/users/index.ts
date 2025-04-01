@@ -33,11 +33,12 @@ import {
   sortParamsSchema,
 } from './_internal/request/sortParamsSchema.ts';
 import { activityHistoryResponseSchema } from './_internal/response/activityHistoryResponseSchema.ts';
-import { approveFollowerResponseSchema } from './_internal/response/approveFollowerResponseSchema.ts';
 import { episodeActivityHistoryResponseSchema } from './_internal/response/episodeActivityHistoryResponseSchema.ts';
 import { favoritedMoviesResponseSchema } from './_internal/response/favoritedMoviesResponseSchema.ts';
 import { favoritedShowsResponseSchema } from './_internal/response/favoritedShowsResponseSchema.ts';
 import { filterResponseSchema } from './_internal/response/filterResponseSchema.ts';
+import { followerResponseSchema } from './_internal/response/followerResponseSchema.ts';
+import { followResponseSchema } from './_internal/response/followResponseSchema.ts';
 import { hiddenAddResponseSchema } from './_internal/response/hiddenAddResponseSchema.ts';
 import { hiddenRemoveResponseSchema } from './_internal/response/hiddenRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from './_internal/response/hiddenShowResponseSchema.ts';
@@ -439,7 +440,7 @@ const requests = builder.router({
     pathParams: internalIdParamsSchema,
     body: z.undefined(),
     responses: {
-      200: approveFollowerResponseSchema,
+      200: followerResponseSchema,
       404: z.undefined(),
     },
   },
@@ -468,6 +469,47 @@ const filters = builder.router({
   },
 }, {
   pathPrefix: '/saved_filters',
+});
+
+const FOLLOW_LEVEL = builder.router({
+  follow: {
+    path: '/follow',
+    method: 'POST',
+    pathParams: profileParamsSchema,
+    body: z.undefined(),
+    responses: {
+      201: followResponseSchema,
+      409: z.undefined(),
+    },
+  },
+  unfollow: {
+    path: '/follow',
+    method: 'DELETE',
+    pathParams: profileParamsSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
+  followers: {
+    path: '/followers',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full']>(),
+    responses: {
+      200: followerResponseSchema.array(),
+    },
+  },
+  following: {
+    path: '/following',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full']>(),
+    responses: {
+      200: followerResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/:id',
 });
 
 export const users = builder.router({
@@ -525,6 +567,7 @@ export const users = builder.router({
   hidden,
   requests,
   filters,
+  ...FOLLOW_LEVEL,
 }, {
   pathPrefix: '/users',
 });
@@ -581,9 +624,10 @@ export type ListRemoveResponse = z.infer<
 >;
 
 export type RequestsResponse = z.infer<typeof requestsResponseSchema>;
-export type ApproveFollowerResponse = z.infer<
-  typeof approveFollowerResponseSchema
+export type FollowerResponse = z.infer<
+  typeof followerResponseSchema
 >;
+export type FollowResponse = z.infer<typeof followResponseSchema>;
 
 export type FilterSection = z.infer<typeof sectionParamsSchema>;
 export type FilterResponse = z.infer<typeof filterResponseSchema>;
