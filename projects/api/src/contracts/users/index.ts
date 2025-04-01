@@ -17,6 +17,9 @@ import type { sortDirectionSchema } from '../_internal/response/sortDirectionSch
 import { profileResponseSchema } from '../_internal/response/userProfileResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { searchTypeParamFactory } from '../search/_internal/request/searchTypeParamFactory.ts';
+import { commentOnTypeParamsSchema } from './_internal/request/commentOnTypeParamsSchema.ts';
+import { commentsRequestSchema } from './_internal/request/commentsRequestSchema.ts';
+import { commentTypeParamsSchema } from './_internal/request/commentTypeParamsSchema.ts';
 import { dateRangeParamsSchema } from './_internal/request/dateRangeParamsSchema.ts';
 import { hiddenParamsSchema } from './_internal/request/hiddenParamsSchema.ts';
 import { hiddenShowRequestSchema } from './_internal/request/hiddenShowRequestSchema.ts';
@@ -51,6 +54,7 @@ import { requestsResponseSchema } from './_internal/response/requestsResponseSch
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from './_internal/response/showActivityHistoryResponseSchema.ts';
 import { socialActivityResponseSchema } from './_internal/response/socialActivityResponseSchema.ts';
+import { userCommentResponseSchema } from './_internal/response/userCommentResponseSchema.ts';
 import { userStatsResponseSchema } from './_internal/response/userStatsResponseSchema.ts';
 import type { watchActionSchema } from './_internal/response/watchActionSchema.ts';
 import { watchedMoviesResponseSchema } from './_internal/response/watchedMoviesResponseSchema.ts';
@@ -558,6 +562,19 @@ export const users = builder.router({
       200: userStatsResponseSchema,
     },
   },
+  comments: {
+    path: '/:id/comments/:comment_type/:type',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(commentTypeParamsSchema)
+      .merge(commentOnTypeParamsSchema),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(commentsRequestSchema),
+    responses: {
+      200: userCommentResponseSchema.array(),
+    },
+  },
   watched,
   history,
   watchlist,
@@ -645,3 +662,8 @@ export type ListCommentsSortParams = z.infer<
 >;
 
 export type UserStatsResponse = z.infer<typeof userStatsResponseSchema>;
+
+export type CommentTypeParams = z.infer<typeof commentTypeParamsSchema>;
+export type CommentOnTypeParams = z.infer<typeof commentOnTypeParamsSchema>;
+export type CommentRequest = z.infer<typeof commentsRequestSchema>;
+export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
