@@ -59,6 +59,7 @@ import { userStatsResponseSchema } from './_internal/response/userStatsResponseS
 import type { watchActionSchema } from './_internal/response/watchActionSchema.ts';
 import { watchedMoviesResponseSchema } from './_internal/response/watchedMoviesResponseSchema.ts';
 import { watchedShowsResponseSchema } from './_internal/response/watchedShowsResponseSchema.ts';
+import { watchingResponseSchema } from './_internal/response/watchingResponseSchema.ts';
 
 const watched = builder.router({
   movies: {
@@ -575,6 +576,16 @@ export const users = builder.router({
       200: userCommentResponseSchema.array(),
     },
   },
+  watching: {
+    path: '/:id/watching',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: watchingResponseSchema,
+      204: z.undefined(),
+    },
+  },
   watched,
   history,
   watchlist,
@@ -667,3 +678,5 @@ export type CommentTypeParams = z.infer<typeof commentTypeParamsSchema>;
 export type CommentOnTypeParams = z.infer<typeof commentOnTypeParamsSchema>;
 export type CommentRequest = z.infer<typeof commentsRequestSchema>;
 export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
+
+export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
