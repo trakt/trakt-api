@@ -11,6 +11,7 @@
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "cSpell.words": [
+    "checkin",
     "deno",
     "fanart",
     "favorited",
@@ -19,6 +20,7 @@
     "metacritic",
     "metascore",
     "rewatching",
+    "scrobble",
     "tmdb",
     "watchlist",
     "watchlisted",
