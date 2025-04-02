@@ -1,5 +1,6 @@
 import { builder } from './_internal/builder.ts';
 import { calendars } from './calendars/index.ts';
+import { certifications } from './certifications/index.ts';
 import { checkin } from './checkin/index.ts';
 import { comments } from './comments/index.ts';
 import { episodes } from './episodes/index.ts';
@@ -30,4 +31,5 @@ export const traktContract = builder
     episodes,
     lists,
     comments,
+    certifications,
   });
