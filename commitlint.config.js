@@ -32,6 +32,7 @@ module.exports = {
       [
         'api',
         'calendar',
+        'certifications',
         'checkin',
         'comment',
         'episode',
@@ -47,6 +48,7 @@ module.exports = {
         'oauth',
         'person',
         'recommendation',
+        'scrobble',
         'search',
         'show',
         'sync',
