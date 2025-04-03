@@ -2,6 +2,7 @@ import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
@@ -33,6 +34,34 @@ const ENTITY_LEVEL = builder.router({
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
         .array(),
+    },
+  },
+  likes: {
+    path: '/likes',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    query: extendedQuerySchemaFactory<['full']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: likeResponseSchema.array(),
+    },
+  },
+  like: {
+    path: '/like',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: z.undefined(),
+    responses: {
+      204: z.undefined(),
+    },
+  },
+  unlike: {
+    path: '/like',
+    method: 'DELETE',
+    pathParams: idParamsSchema,
+    body: z.undefined(),
+    responses: {
+      204: z.undefined(),
     },
   },
 }, {
@@ -68,3 +97,4 @@ export const lists = builder.router({
 });
 
 export type ProminentListResponse = z.infer<typeof prominentListResponseSchema>;
+export type ListLikeResponse = z.infer<typeof likeResponseSchema>;
