@@ -26,9 +26,9 @@ import { favorites } from './subroutes/favorites.ts';
 import { filters } from './subroutes/filters.ts';
 import { hidden } from './subroutes/hidden.ts';
 import { history } from './subroutes/history.ts';
-import { lists } from './subroutes/lists.ts';
 import { ratings } from './subroutes/ratings.ts';
 import { requests } from './subroutes/requests.ts';
+import { userLists } from './subroutes/userLists.ts';
 import { watched } from './subroutes/watched.ts';
 import { watchlist } from './subroutes/watchlist.ts';
 
@@ -161,7 +161,7 @@ export const users = builder.router({
   watchlist,
   ratings,
   favorites,
-  lists,
+  lists: userLists,
   hidden,
   requests,
   filters,
@@ -173,9 +173,9 @@ export type * from './subroutes/favorites.ts';
 export type * from './subroutes/filters.ts';
 export type * from './subroutes/hidden.ts';
 export type * from './subroutes/history.ts';
-export type * from './subroutes/lists.ts';
 export type * from './subroutes/ratings.ts';
 export type * from './subroutes/requests.ts';
+export type * from './subroutes/userLists.ts';
 export type * from './subroutes/watched.ts';
 export type * from './subroutes/watchlist.ts';
 

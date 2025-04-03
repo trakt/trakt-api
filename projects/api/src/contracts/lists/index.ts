@@ -7,8 +7,9 @@ import { listedShowResponseSchema } from '../_internal/response/listedShowRespon
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { searchTypeParamFactory } from '../search/_internal/request/searchTypeParamFactory.ts';
+import { prominentListResponseSchema } from './_internal/prominentListResponseSchema.ts';
 
-export const lists = builder.router({
+const ENTITY_LEVEL = builder.router({
   summary: {
     path: '',
     method: 'GET',
@@ -35,5 +36,35 @@ export const lists = builder.router({
     },
   },
 }, {
-  pathPrefix: '/lists/:id',
+  pathPrefix: '/:id',
 });
+
+const GLOBAL_LEVEL = builder.router({
+  trending: {
+    path: '/trending',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: prominentListResponseSchema.array(),
+    },
+  },
+  popular: {
+    path: '/popular',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: prominentListResponseSchema.array(),
+    },
+  },
+});
+
+export const lists = builder.router({
+  ...GLOBAL_LEVEL,
+  ...ENTITY_LEVEL,
+}, {
+  pathPrefix: '/lists',
+});
+
+export type ProminentListResponse = z.infer<typeof prominentListResponseSchema>;

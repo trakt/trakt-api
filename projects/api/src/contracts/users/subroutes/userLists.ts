@@ -99,7 +99,7 @@ const list = builder.router({
   pathPrefix: '/:list_id',
 });
 
-export const lists = builder.router({
+export const userLists = builder.router({
   personal: {
     path: '',
     method: 'GET',
