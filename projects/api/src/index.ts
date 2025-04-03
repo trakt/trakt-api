@@ -6,6 +6,7 @@ export type * from './contracts/calendars/index.ts';
 export type * from './contracts/certifications/index.ts';
 export type * from './contracts/comments/index.ts';
 export * from './contracts/enums/index.ts';
+export type * from './contracts/lists/index.ts';
 export type * from './contracts/movies/index.ts';
 export type * from './contracts/oauth/index.ts';
 export type * from './contracts/people/index.ts';
