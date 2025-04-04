@@ -9,6 +9,7 @@ import { movies } from './movies/index.ts';
 import { oauth } from './oauth/index.ts';
 import { people } from './people/index.ts';
 import { recommendations } from './recommendations/index.ts';
+import { scrobble } from './scrobble/index.ts';
 import { search } from './search/index.ts';
 import { shows } from './shows/index.ts';
 import { sync } from './sync/index.ts';
@@ -32,4 +33,5 @@ export const traktContract = builder
     lists,
     comments,
     certifications,
+    scrobble,
   });
