@@ -7,7 +7,9 @@ import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
+import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
+import { streamingParamsSchema } from '../_internal/request/streamingParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
@@ -32,6 +34,7 @@ import { seasonParamsSchema } from './_internal/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './_internal/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './_internal/response/seasonResponseSchema.ts';
 import { showProgressResponseSchema } from './_internal/response/showProgressResponseSchema.ts';
+import { showStreamingResponseSchema } from './_internal/response/showStreamingResponseSchema.ts';
 import { showWatchedResponseSchema } from './_internal/response/showWatchedResponseSchema.ts';
 
 const EPISODE_LEVEL = builder.router({
@@ -307,6 +310,18 @@ const GLOBAL_LEVEL = builder.router({
       200: showResponseSchema.array(),
     },
   },
+  streaming: {
+    path: '/streaming/:period',
+    method: 'GET',
+    pathParams: recentPeriodParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(streamingParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: showStreamingResponseSchema.array(),
+    },
+  },
 });
 
 export const shows = builder.router({
@@ -340,3 +355,4 @@ export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
 export type SeasonResponse = z.infer<typeof episodeResponseSchema>[];
 export type EpisodeResponse = z.infer<typeof episodeResponseSchema>;
 export type EpisodeStatsResponse = z.infer<typeof episodeStatsResponseSchema>;
+export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;
