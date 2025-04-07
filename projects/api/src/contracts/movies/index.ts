@@ -26,6 +26,7 @@ import {
   peopleResponseSchema,
 } from '../_internal/response/peopleResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
+import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import type { statusResponseSchema } from '../_internal/response/statusResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
@@ -139,6 +140,14 @@ const ENTITY_LEVEL = builder.router({
       200: commentResponseSchema.array(),
     },
   },
+  sentiments: {
+    path: '/sentiments',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    responses: {
+      200: sentimentsResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
@@ -223,6 +232,7 @@ export type CrewResponse = z.infer<typeof crewSchema>;
 export type CastResponse = z.infer<typeof castSchema>;
 export type ListResponse = z.infer<typeof listResponseSchema>;
 export type CommentResponse = z.infer<typeof commentResponseSchema>;
+export type SentimentsResponse = z.infer<typeof sentimentsResponseSchema>;
 
 export type MovieTranslationResponse = z.infer<
   typeof translationResponseSchema
