@@ -19,6 +19,7 @@ import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
 import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
+import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import { showAnticipatedResponseSchema } from '../_internal/response/showAnticipatedResponseSchema.ts';
 import type { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
 import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
@@ -261,6 +262,14 @@ const ENTITY_LEVEL = builder.router({
       .and(pageQuerySchema.or(allPagesQuerySchema)),
     responses: {
       200: commentResponseSchema.array(),
+    },
+  },
+  sentiments: {
+    path: '/sentiments',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    responses: {
+      200: sentimentsResponseSchema,
     },
   },
   episode: EPISODE_LEVEL,
