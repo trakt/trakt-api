@@ -7,6 +7,8 @@ import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
+import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { streamingParamsSchema } from '../_internal/request/streamingParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreResponseSchema } from '../_internal/response/genreResponseSchema.ts';
 import type { jobResponseSchema } from '../_internal/response/jobResponseSchema.ts';
@@ -33,6 +35,7 @@ import {
   type watchNowServiceResponseSchema,
 } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
+import { movieStreamingResponseSchema } from './_internal/response/movieStreamingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './_internal/response/movieWatchedResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
@@ -182,6 +185,18 @@ const GLOBAL_LEVEL = builder.router({
       200: movieResponseSchema.array(),
     },
   },
+  streaming: {
+    path: '/streaming/:period',
+    method: 'GET',
+    pathParams: recentPeriodParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(streamingParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: movieStreamingResponseSchema.array(),
+    },
+  },
 });
 
 export const movies = builder.router({
@@ -223,4 +238,7 @@ export type MovieAnticipatedResponse = z.infer<
 >;
 export type MovieCertificationResponse = z.infer<
   typeof movieCertificationResponseSchema
+>;
+export type MovieStreamingResponse = z.infer<
+  typeof movieStreamingResponseSchema
 >;
