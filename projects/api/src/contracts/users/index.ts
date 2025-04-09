@@ -1,6 +1,6 @@
 import { builder } from '../_internal/builder.ts';
-import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
 import { profileResponseSchema } from '../_internal/response/userProfileResponseSchema.ts';
@@ -46,7 +46,7 @@ const GLOBAL_LEVEL = builder.router({
     pathParams: likedTypeParamsSchema,
     method: 'GET',
     query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-      .and(pageQuerySchema.or(allPagesQuerySchema)),
+      .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: likedItemResponseSchema.array(),
     },

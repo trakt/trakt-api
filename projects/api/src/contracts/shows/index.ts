@@ -1,10 +1,10 @@
 import { builder } from '../_internal/builder.ts';
-import { allPagesQuerySchema } from '../_internal/request/allPagesQuerySchema.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
+import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
@@ -101,7 +101,7 @@ const EPISODE_LEVEL = builder.router({
       .merge(episodeParamsSchema)
       .merge(commentsSortParamsSchema),
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .and(pageQuerySchema.or(allPagesQuerySchema)),
+      .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -259,7 +259,7 @@ const ENTITY_LEVEL = builder.router({
     method: 'GET',
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .and(pageQuerySchema.or(allPagesQuerySchema)),
+      .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: commentResponseSchema.array(),
     },
