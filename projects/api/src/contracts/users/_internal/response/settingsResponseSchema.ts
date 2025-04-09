@@ -10,6 +10,7 @@ export const settingsResponseSchema = z.object({
     name: z.string().nullable(),
     vip: z.boolean(),
     vip_ep: z.boolean(),
+    director: z.boolean(),
     ids: z.object({ slug: z.string(), trakt: z.number(), uuid: z.string() }),
     joined_at: z.string(),
     location: z.string().nullable(),
