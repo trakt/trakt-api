@@ -1,5 +1,6 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { limitlessQuerySchema } from '../../_internal/request/limitlessQuerySchema.ts';
 import { listRequestSchema } from '../../_internal/request/listRequestSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
@@ -40,8 +41,8 @@ const list = builder.router({
         >(),
       ),
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(sortQuerySchema),
+      .merge(sortQuerySchema)
+      .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
         .array(),
