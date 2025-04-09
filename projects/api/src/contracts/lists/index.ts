@@ -1,6 +1,7 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
+import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
@@ -30,7 +31,7 @@ const ENTITY_LEVEL = builder.router({
         >(),
       ),
     query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+      .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
         .array(),
