@@ -8,6 +8,7 @@ export const profileResponseSchema = z.object({
   name: z.string().nullable(),
   vip: z.boolean(),
   vip_ep: z.boolean(),
+  director: z.boolean(),
   ids: z.object({
     slug: z.string().nullable(),
     trakt: z.number(),
