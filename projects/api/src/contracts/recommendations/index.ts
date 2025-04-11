@@ -10,7 +10,7 @@ const movies = builder.router({
   recommend: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(recommendationsQuerySchema),
     responses: {
       200: recommendedMovieResponse,
@@ -30,7 +30,7 @@ const shows = builder.router({
   recommend: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(recommendationsQuerySchema),
     responses: {
       200: recommendedShowResponse,
