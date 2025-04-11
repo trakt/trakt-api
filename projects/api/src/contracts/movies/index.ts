@@ -43,7 +43,7 @@ const ENTITY_LEVEL = builder.router({
   summary: {
     path: '',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>(),
     pathParams: idParamsSchema,
     responses: {
       200: movieResponseSchema,
@@ -156,7 +156,7 @@ const GLOBAL_LEVEL = builder.router({
   trending: {
     path: '/trending',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -166,7 +166,7 @@ const GLOBAL_LEVEL = builder.router({
   watched: {
     path: '/watched/:period',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
@@ -177,7 +177,7 @@ const GLOBAL_LEVEL = builder.router({
   anticipated: {
     path: '/anticipated',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -187,7 +187,7 @@ const GLOBAL_LEVEL = builder.router({
   popular: {
     path: '/popular',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -198,7 +198,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/streaming/:period',
     method: 'GET',
     pathParams: recentPeriodParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
       .merge(streamingParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),

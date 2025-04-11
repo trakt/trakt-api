@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { genreResponseSchema } from './genreResponseSchema.ts';
 import { imagesResponseSchema } from './imagesResponseSchema.ts';
+import { mediaColorsResponseSchema } from './mediaColorsResponseSchema.ts';
 import { movieCertificationResponseSchema } from './movieCertificationResponseSchema.ts';
 import { movieIdsResponseSchema } from './movieIdsResponseSchema.ts';
 import { statusResponseSchema } from './statusResponseSchema.ts';
@@ -86,4 +87,8 @@ export const movieResponseSchema = z.object({
    * Available if requesting extended `full`.
    */
   original_title: z.string().nullish(),
+  /***
+   * Available if requesting extended `colors`.
+   */
+  colors: mediaColorsResponseSchema.optional(),
 });
