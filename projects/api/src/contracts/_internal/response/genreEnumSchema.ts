@@ -1,6 +1,6 @@
 import { z } from '../z.ts';
 
-export const genreResponseSchema = z.enum([
+export const genreEnumSchema = z.enum([
   'action',
   'adventure',
   'animation',

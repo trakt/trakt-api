@@ -10,7 +10,7 @@ import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { streamingParamsSchema } from '../_internal/request/streamingParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
-import type { genreResponseSchema } from '../_internal/response/genreResponseSchema.ts';
+import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
 import type { jobResponseSchema } from '../_internal/response/jobResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
@@ -218,7 +218,7 @@ export const movies = builder.router({
 export type MovieIdParams = z.infer<typeof idParamsSchema>;
 export type MovieResponse = z.infer<typeof movieResponseSchema>;
 export type MovieRatingsResponse = z.infer<typeof ratingsResponseSchema>;
-export type Genre = z.infer<typeof genreResponseSchema>;
+export type Genre = z.infer<typeof genreEnumSchema>;
 export type StatusResponse = z.infer<typeof statusResponseSchema>;
 export type Job = z.infer<typeof jobResponseSchema>;
 export type StudioResponse = z.infer<typeof studioResponseSchema>;

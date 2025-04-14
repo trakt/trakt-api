@@ -1,3 +1,3 @@
-import { genreResponseSchema } from '../_internal/response/genreResponseSchema.ts';
+import { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
 
-export const genreOptionSchema = genreResponseSchema;
+export const genreOptionSchema = genreEnumSchema;
