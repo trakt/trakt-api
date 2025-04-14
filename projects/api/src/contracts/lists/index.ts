@@ -60,7 +60,6 @@ const ENTITY_LEVEL = builder.router({
     path: '/like',
     method: 'DELETE',
     pathParams: idParamsSchema,
-    body: z.undefined(),
     responses: {
       204: z.undefined(),
     },
