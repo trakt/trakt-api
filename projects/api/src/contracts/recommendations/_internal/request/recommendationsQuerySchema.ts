@@ -1,7 +1,9 @@
 import { ignoreQuerySchema } from '../../../_internal/request/ignoreQuerySchema.ts';
+import { genreEnumSchema } from '../../../_internal/response/genreEnumSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
 export const recommendationsQuerySchema = z.object({
-  limit: z.number().int().min(0).optional(),
-  days: z.number().int().min(0).optional(),
+  limit: z.number().optional(),
+  watch_window: z.number().optional(),
+  genres: z.array(genreEnumSchema).optional(),
 }).merge(ignoreQuerySchema);
