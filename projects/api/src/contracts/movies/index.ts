@@ -5,6 +5,7 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
+import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
@@ -103,6 +104,7 @@ const ENTITY_LEVEL = builder.router({
   },
   watchnow: {
     path: '/watchnow/:country',
+    query: linksQuerySchema,
     method: 'GET',
     pathParams: idParamsSchema,
     responses: {

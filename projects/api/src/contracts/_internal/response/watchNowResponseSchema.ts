@@ -9,6 +9,10 @@ export const watchNowServiceResponseSchema = z.object({
     rent: z.string().nullish(),
     purchase: z.string().nullish(),
   }),
+  /***
+   * Available if requesting links `tvos`.
+   */
+  link_tvos: z.string().nullable(),
 });
 
 export const watchNowResponseSchema = z.record(
