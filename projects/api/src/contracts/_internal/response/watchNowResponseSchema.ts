@@ -12,7 +12,7 @@ export const watchNowServiceResponseSchema = z.object({
   /***
    * Available if requesting links `tvos`.
    */
-  link_tvos: z.string().nullable(),
+  link_tvos: z.string().nullish(),
 });
 
 export const watchNowResponseSchema = z.record(
