@@ -1,5 +1,6 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import type { z } from '../_internal/z.ts';
 import { searchQuerySchema } from './_internal/request/searchQuerySchema.ts';
 import { searchTypeParamFactory } from './_internal/request/searchTypeParamFactory.ts';
@@ -16,9 +17,11 @@ export const search = builder.router({
     pathParams: searchTypeParamFactory<
       ['movie', 'show']
     >(),
-    query: searchQuerySchema.merge(
-      extendedQuerySchemaFactory<['full,images']>(),
-    ),
+    query: searchQuerySchema
+      .merge(pageQuerySchema)
+      .merge(
+        extendedQuerySchemaFactory<['full,images']>(),
+      ),
     responses: {
       200: searchResultResponseSchema,
     },
