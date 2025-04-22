@@ -5,4 +5,6 @@ export const recommendationsQuerySchema = z.object({
   limit: z.number().optional(),
   watch_window: z.number().optional(),
   genres: z.string().optional(),
+  decade: z.number().optional(),
+  min_year: z.number().optional(),
 }).merge(ignoreQuerySchema);
