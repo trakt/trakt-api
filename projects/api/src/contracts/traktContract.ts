@@ -12,6 +12,7 @@ import { recommendations } from './recommendations/index.ts';
 import { scrobble } from './scrobble/index.ts';
 import { search } from './search/index.ts';
 import { shows } from './shows/index.ts';
+import { social_recommendations } from './social_recommendations/index.ts';
 import { sync } from './sync/index.ts';
 import { users } from './users/index.ts';
 import { watchnow } from './watchnow/index.ts';
@@ -24,6 +25,7 @@ export const traktContract = builder
     users,
     sync,
     recommendations,
+    social_recommendations,
     movies,
     shows,
     search,
