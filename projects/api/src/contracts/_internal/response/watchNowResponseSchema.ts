@@ -13,6 +13,10 @@ export const watchNowServiceResponseSchema = z.object({
    * Available if requesting links `tvos`.
    */
   link_tvos: z.string().nullish(),
+  /***
+   * Available if requesting links `direct`.
+   */
+  link_direct: z.string().nullish(),
 });
 
 export const watchNowResponseSchema = z.record(
