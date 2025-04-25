@@ -15,6 +15,7 @@ import type { sentimentsResponseSchema } from '../_internal/response/sentimentsR
 import type { statusResponseSchema } from '../_internal/response/statusResponseSchema.ts';
 import type { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import type { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
+import type { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import type { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 
@@ -47,3 +48,4 @@ export type TranslationResponse = z.infer<
 >;
 export type ProfileResponse = z.infer<typeof profileResponseSchema>;
 export type WatchNowResponse = z.infer<typeof watchNowResponseSchema>;
+export type VideoResponse = z.infer<typeof videoResponseSchema>;

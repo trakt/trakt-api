@@ -27,6 +27,7 @@ import { showResponseSchema } from '../_internal/response/showResponseSchema.ts'
 import { showStatsResponseSchema } from '../_internal/response/showStatsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
+import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { episodeParamsSchema } from './_internal/request/episodeParamsSchema.ts';
@@ -235,14 +236,37 @@ const ENTITY_LEVEL = builder.router({
       200: seasonResponseSchema.array(),
     },
   },
-  episodes: {
-    path: '/seasons/:season',
+  season: builder.router({
+    episodes: {
+      path: '',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['full', 'images']>(),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      responses: {
+        200: episodeResponseSchema.array(),
+      },
+    },
+    videos: {
+      path: '/seasons/:season/videos',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['full', 'images']>(),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      responses: {
+        200: videoResponseSchema.array(),
+      },
+    },
+  }, {
+    pathPrefix: '/seasons/:season',
+  }),
+  videos: {
+    path: '/videos',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>(),
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema),
+    pathParams: idParamsSchema,
     responses: {
-      200: episodeResponseSchema.array(),
+      200: videoResponseSchema.array(),
     },
   },
   lists: {
