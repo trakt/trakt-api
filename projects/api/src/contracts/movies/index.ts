@@ -28,6 +28,7 @@ import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSche
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
+import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import {
   watchNowResponseSchema,
   type watchNowServiceResponseSchema,
@@ -116,6 +117,15 @@ const ENTITY_LEVEL = builder.router({
     pathParams: idParamsSchema,
     responses: {
       200: peopleResponseSchema,
+    },
+  },
+  videos: {
+    path: '/videos',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    pathParams: idParamsSchema,
+    responses: {
+      200: videoResponseSchema.array(),
     },
   },
   lists: {
