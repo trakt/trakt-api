@@ -19,24 +19,24 @@ import { listResponseSchema } from '../_internal/response/listResponseSchema.ts'
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
 import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
+import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
-import { showAnticipatedResponseSchema } from '../_internal/response/showAnticipatedResponseSchema.ts';
 import type { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
 import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
 import { showStatsResponseSchema } from '../_internal/response/showStatsResponseSchema.ts';
-import { showTrendingResponseSchema } from '../_internal/response/showTrendingResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
-import { profileResponseSchema } from '../_internal/response/userProfileResponseSchema.ts';
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { episodeParamsSchema } from './_internal/request/episodeParamsSchema.ts';
 import { seasonParamsSchema } from './_internal/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './_internal/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './_internal/response/seasonResponseSchema.ts';
+import { showAnticipatedResponseSchema } from './_internal/response/showAnticipatedResponseSchema.ts';
 import { showProgressResponseSchema } from './_internal/response/showProgressResponseSchema.ts';
 import { showStreamingResponseSchema } from './_internal/response/showStreamingResponseSchema.ts';
+import { showTrendingResponseSchema } from './_internal/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './_internal/response/showWatchedResponseSchema.ts';
 
 const EPISODE_LEVEL = builder.router({
@@ -344,7 +344,6 @@ export const shows = builder.router({
 });
 
 export type ShowIdParams = z.infer<typeof idParamsSchema>;
-export type ShowRatingsResponse = z.infer<typeof ratingsResponseSchema>;
 export type ShowResponse = z.infer<typeof showResponseSchema>;
 export type ShowProgressResponse = z.infer<typeof showProgressResponseSchema>;
 export type ShowQueryParams = z.infer<typeof showQueryParamsSchema>;
@@ -354,17 +353,9 @@ export type ShowStatsResponse = z.infer<typeof showStatsResponseSchema>;
 export type ShowAnticipatedResponse = z.infer<
   typeof showAnticipatedResponseSchema
 >;
-export type ShowTranslationResponse = z.infer<
-  typeof translationResponseSchema
->;
-export type EpisodeTranslationResponse = z.infer<
-  typeof episodeTranslationResponseSchema
->;
+
 export type ShowCertificationResponse = z.infer<
   typeof showCertificationResponseSchema
 >;
 export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
-export type SeasonResponse = z.infer<typeof episodeResponseSchema>[];
-export type EpisodeResponse = z.infer<typeof episodeResponseSchema>;
-export type EpisodeStatsResponse = z.infer<typeof episodeStatsResponseSchema>;
 export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;

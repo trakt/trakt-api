@@ -97,4 +97,3 @@ export const lists = builder.router({
 });
 
 export type ProminentListResponse = z.infer<typeof prominentListResponseSchema>;
-export type ListLikeResponse = z.infer<typeof likeResponseSchema>;

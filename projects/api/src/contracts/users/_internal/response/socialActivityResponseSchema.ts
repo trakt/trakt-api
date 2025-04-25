@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
+import { profileResponseSchema } from '../../../_internal/response/profileResponseSchema.ts';
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
-import { profileResponseSchema } from '../../../_internal/response/userProfileResponseSchema.ts';
 
 const actionSchema = z.enum(['scrobble', 'watch', 'checkin']);
 

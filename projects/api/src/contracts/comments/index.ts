@@ -91,6 +91,5 @@ export const comments = builder.router({
   pathPrefix: '/comments',
 });
 
-export type CommentLikesResponse = z.infer<typeof likeResponseSchema>;
 export type CommentReplyParams = z.infer<typeof commentReplyParamsSchema>;
 export type CommentPostParams = z.infer<typeof commentPostParamsSchema>;
