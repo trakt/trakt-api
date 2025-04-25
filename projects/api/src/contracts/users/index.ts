@@ -2,8 +2,8 @@ import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
-import { profileResponseSchema } from '../_internal/response/userProfileResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { commentOnTypeParamsSchema } from './_internal/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './_internal/request/commentsRequestSchema.ts';
@@ -180,7 +180,6 @@ export type * from './subroutes/watched.ts';
 export type * from './subroutes/watchlist.ts';
 
 export type ProfileParams = z.infer<typeof profileParamsSchema>;
-export type ProfileResponse = z.infer<typeof profileResponseSchema>;
 export type SettingsResponse = z.infer<typeof settingsResponseSchema>;
 
 export type SortDirection = z.infer<typeof sortDirectionSchema>;

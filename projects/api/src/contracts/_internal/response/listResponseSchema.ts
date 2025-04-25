@@ -1,7 +1,7 @@
 import { sortEnumSchema } from '../../users/_internal/request/sortParamsSchema.ts';
 import { z } from '../z.ts';
+import { profileResponseSchema } from './profileResponseSchema.ts';
 import { sortDirectionSchema } from './sortDirectionSchema.ts';
-import { profileResponseSchema } from './userProfileResponseSchema.ts';
 
 export const listResponseSchema = z.object({
   name: z.string(),

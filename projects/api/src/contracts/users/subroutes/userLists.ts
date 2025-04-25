@@ -132,24 +132,13 @@ export const userLists = builder.router({
   pathPrefix: '/:id/lists',
 });
 
-export type ListedMovieResponse = z.infer<
-  typeof listedMovieResponseSchema
->;
-export type ListedShowResponse = z.infer<
-  typeof listedShowResponseSchema
->;
 export type ReorderRequest = z.infer<typeof reorderRequestSchema>;
 export type ReorderListsResponse = z.infer<typeof reorderListsResponseSchema>;
 export type ReorderListResponseSchema = z.infer<
   typeof reorderListResponseSchema
 >;
-export type ListLikesResponse = z.infer<typeof likeResponseSchema>;
 
 export type ListCommentsSortParams = z.infer<
   typeof listCommentsSortParamsSchema
 >;
 export type ListRequest = z.infer<typeof listRequestSchema>;
-export type ListAddResponse = z.infer<typeof listAddResponseSchema>;
-export type ListRemoveResponse = z.infer<
-  typeof listRemoveResponseSchema
->;

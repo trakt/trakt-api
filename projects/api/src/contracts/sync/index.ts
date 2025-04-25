@@ -15,7 +15,7 @@ import { favoritesRemoveResponseSchema } from './_internal/response/favoritesRem
 import { favoritesResponseSchema } from './_internal/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './_internal/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './_internal/response/historyResponseSchema.ts';
-import { ratingsResponseSchema } from './_internal/response/ratingsResponseSchema.ts';
+import { ratingsSyncResponseSchema } from './_internal/response/ratingsResponseSchema.ts';
 import { upNextResponseSchema } from './_internal/response/upNextResponseSchema.ts';
 
 const progress = builder.router({
@@ -90,7 +90,7 @@ const ratings = builder.router({
     path: '',
     body: ratingsParamSchema,
     responses: {
-      201: ratingsResponseSchema,
+      201: ratingsSyncResponseSchema,
     },
   },
 }, {
@@ -134,13 +134,8 @@ export type HistoryResponse = z.infer<typeof historyResponseSchema>;
 export type HistoryRemoveResponse = z.infer<typeof historyRemoveResponseSchema>;
 
 export type WatchlistRequest = z.infer<typeof listRequestSchema>;
-export type WatchlistResponse = z.infer<typeof listAddResponseSchema>;
-export type WatchlistRemoveResponse = z.infer<
-  typeof listRemoveResponseSchema
->;
 
-export type RatingsRequest = z.infer<typeof ratingsParamSchema>;
-export type RatingsResponse = z.infer<typeof ratingsResponseSchema>;
+export type RatingsSyncResponse = z.infer<typeof ratingsSyncResponseSchema>;
 
 export type FavoritesRequest = z.infer<typeof favoriteParamSchema>;
 export type FavoritesResponse = z.infer<typeof favoritesResponseSchema>;

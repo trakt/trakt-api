@@ -12,32 +12,30 @@ import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParam
 import { streamingParamsSchema } from '../_internal/request/streamingParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
-import type { jobResponseSchema } from '../_internal/response/jobResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
-import { movieAnticipatedResponseSchema } from '../_internal/response/movieAnticipatedResponseSchema.ts';
 import type { movieCertificationResponseSchema } from '../_internal/response/movieCertificationResponseSchema.ts';
 import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import { movieStatsResponseSchema } from '../_internal/response/movieStatsResponseSchema.ts';
-import { movieTrendingResponseSchema } from '../_internal/response/movieTrendingResponseSchema.ts';
 import {
   type castSchema,
   type crewSchema,
   peopleResponseSchema,
 } from '../_internal/response/peopleResponseSchema.ts';
+import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
-import type { statusResponseSchema } from '../_internal/response/statusResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
-import { profileResponseSchema } from '../_internal/response/userProfileResponseSchema.ts';
 import {
   watchNowResponseSchema,
   type watchNowServiceResponseSchema,
 } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
+import { movieAnticipatedResponseSchema } from './_internal/response/movieAnticipatedResponseSchema.ts';
 import { movieStreamingResponseSchema } from './_internal/response/movieStreamingResponseSchema.ts';
+import { movieTrendingResponseSchema } from './_internal/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './_internal/response/movieWatchedResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
@@ -219,26 +217,14 @@ export const movies = builder.router({
 
 export type MovieIdParams = z.infer<typeof idParamsSchema>;
 export type MovieResponse = z.infer<typeof movieResponseSchema>;
-export type MovieRatingsResponse = z.infer<typeof ratingsResponseSchema>;
 export type Genre = z.infer<typeof genreEnumSchema>;
-export type StatusResponse = z.infer<typeof statusResponseSchema>;
-export type Job = z.infer<typeof jobResponseSchema>;
-export type StudioResponse = z.infer<typeof studioResponseSchema>;
-export type WatchNowResponse = z.infer<typeof watchNowResponseSchema>;
 export type WatchNowServiceResponse = z.infer<
   typeof watchNowServiceResponseSchema
 >;
 export type MovieStatsResponse = z.infer<typeof movieStatsResponseSchema>;
-export type PeopleResponse = z.infer<typeof peopleResponseSchema>;
 export type CrewResponse = z.infer<typeof crewSchema>;
 export type CastResponse = z.infer<typeof castSchema>;
-export type ListResponse = z.infer<typeof listResponseSchema>;
-export type CommentResponse = z.infer<typeof commentResponseSchema>;
-export type SentimentsResponse = z.infer<typeof sentimentsResponseSchema>;
 
-export type MovieTranslationResponse = z.infer<
-  typeof translationResponseSchema
->;
 export type MovieTrendingResponse = z.infer<
   typeof movieTrendingResponseSchema
 >;
