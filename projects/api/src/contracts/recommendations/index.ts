@@ -1,5 +1,6 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { z } from '../_internal/z.ts';
 import { hideParamsSchema } from './_internal/request/hideParamsSchema.ts';
 import { recommendationsQuerySchema } from './_internal/request/recommendationsQuerySchema.ts';
@@ -11,7 +12,8 @@ const movies = builder.router({
     path: '/',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
-      .merge(recommendationsQuerySchema),
+      .merge(recommendationsQuerySchema)
+      .merge(mediaFilterParamsSchema),
     responses: {
       200: recommendedMovieResponse,
     },
@@ -31,7 +33,8 @@ const shows = builder.router({
     path: '/',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
-      .merge(recommendationsQuerySchema),
+      .merge(recommendationsQuerySchema)
+      .merge(mediaFilterParamsSchema),
     responses: {
       200: recommendedShowResponse,
     },

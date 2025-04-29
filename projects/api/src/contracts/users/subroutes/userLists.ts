@@ -2,6 +2,7 @@ import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import { limitlessQuerySchema } from '../../_internal/request/limitlessQuerySchema.ts';
 import { listRequestSchema } from '../../_internal/request/listRequestSchema.ts';
+import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
@@ -35,6 +36,8 @@ const list = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema
       .merge(listParamsSchema)
+      /** NOTE: technically not supported yet */
+      .merge(mediaFilterParamsSchema)
       .merge(
         searchTypeParamFactory<
           ['movie', 'show']
