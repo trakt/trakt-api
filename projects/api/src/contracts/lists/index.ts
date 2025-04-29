@@ -2,6 +2,7 @@ import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
+import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
@@ -16,7 +17,9 @@ const ENTITY_LEVEL = builder.router({
     path: '',
     method: 'GET',
     pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      /** NOTE: technically not supported yet */
+      .merge(mediaFilterParamsSchema),
     responses: {
       200: listResponseSchema,
     },
@@ -31,6 +34,8 @@ const ENTITY_LEVEL = builder.router({
         >(),
       ),
     query: extendedQuerySchemaFactory<['full', 'images']>()
+      /** NOTE: technically not supported yet */
+      .merge(mediaFilterParamsSchema)
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
@@ -73,7 +78,9 @@ const GLOBAL_LEVEL = builder.router({
     path: '/trending',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      /** NOTE: technically not supported yet */
+      .merge(mediaFilterParamsSchema),
     responses: {
       200: prominentListResponseSchema.array(),
     },
@@ -82,7 +89,9 @@ const GLOBAL_LEVEL = builder.router({
     path: '/popular',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      /** NOTE: technically not supported yet */
+      .merge(mediaFilterParamsSchema),
     responses: {
       200: prominentListResponseSchema.array(),
     },

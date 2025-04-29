@@ -6,11 +6,11 @@ import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
+import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
-import { streamingParamsSchema } from '../_internal/request/streamingParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
@@ -309,6 +309,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/trending',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+      .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -319,6 +320,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/watched/:period',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+      .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
@@ -330,6 +332,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/anticipated',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+      .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -340,6 +343,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/popular',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+      .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -351,7 +355,7 @@ const GLOBAL_LEVEL = builder.router({
     method: 'GET',
     pathParams: recentPeriodParamsSchema,
     query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
-      .merge(streamingParamsSchema)
+      .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
