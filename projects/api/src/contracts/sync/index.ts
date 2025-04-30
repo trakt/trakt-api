@@ -135,6 +135,7 @@ export type HistoryRemoveResponse = z.infer<typeof historyRemoveResponseSchema>;
 
 export type WatchlistRequest = z.infer<typeof listRequestSchema>;
 
+export type RatingsSyncRequest = z.infer<typeof ratingsParamSchema>;
 export type RatingsSyncResponse = z.infer<typeof ratingsSyncResponseSchema>;
 
 export type FavoritesRequest = z.infer<typeof favoriteParamSchema>;
