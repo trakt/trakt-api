@@ -248,7 +248,7 @@ const ENTITY_LEVEL = builder.router({
       },
     },
     videos: {
-      path: '/seasons/:season/videos',
+      path: '/videos',
       method: 'GET',
       query: extendedQuerySchemaFactory<['full', 'images']>(),
       pathParams: idParamsSchema
