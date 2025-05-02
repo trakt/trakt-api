@@ -11,6 +11,7 @@ export const videoResponseSchema = z.object({
     'featurette',
     'recap',
     'behind the scenes',
+    'opening credits',
   ]),
   size: z.number(),
   official: z.boolean(),
