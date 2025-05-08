@@ -5,6 +5,7 @@ import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
 import { z } from '../_internal/z.ts';
+import { avatarRequestSchema } from './_internal/request/avatarRequestSchema.ts';
 import { commentOnTypeParamsSchema } from './_internal/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './_internal/request/commentsRequestSchema.ts';
 import { commentTypeParamsSchema } from './_internal/request/commentTypeParamsSchema.ts';
@@ -49,6 +50,15 @@ const GLOBAL_LEVEL = builder.router({
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: likedItemResponseSchema.array(),
+    },
+  },
+  avatar: {
+    path: '/avatar',
+    method: 'PUT',
+    body: avatarRequestSchema,
+    responses: {
+      204: z.undefined(),
+      400: z.undefined(),
     },
   },
 });
@@ -206,3 +216,4 @@ export type CommentRequest = z.infer<typeof commentsRequestSchema>;
 export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
 
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
+export type AvatarRequest = z.infer<typeof avatarRequestSchema>;
