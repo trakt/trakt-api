@@ -4,8 +4,8 @@ import { sharingRequestSchema } from './sharingRequestSchema.ts';
 
 const showAbsoluteCheckinRequestSchema = z.object({
   show: z.object({
-    title: z.string(),
-    year: z.number(),
+    title: z.string().optional(),
+    year: z.number().optional(),
     ids: showIdsRequestSchema,
   }),
   episode: z.object({ number_abs: z.number() }),
@@ -21,8 +21,8 @@ const episodeCheckinRequestSchema = z.object({
 
 const episodeWithShowCheckinRequestSchema = z.object({
   show: z.object({
-    title: z.string(),
-    year: z.number(),
+    title: z.string().optional(),
+    year: z.number().optional(),
     ids: showIdsRequestSchema,
   }),
   episode: z.object({ season: z.number(), number: z.number() }),
