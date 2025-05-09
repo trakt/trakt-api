@@ -17,6 +17,10 @@ export const watchNowServiceResponseSchema = z.object({
    * Available if requesting links `direct`.
    */
   link_direct: z.string().nullish(),
+  /***
+   * Available if requesting links `android`.
+   */
+  link_android: z.string().nullish(),
 });
 
 export const watchNowResponseSchema = z.record(
