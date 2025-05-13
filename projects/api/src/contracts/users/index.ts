@@ -11,6 +11,7 @@ import { commentsRequestSchema } from './_internal/request/commentsRequestSchema
 import { commentTypeParamsSchema } from './_internal/request/commentTypeParamsSchema.ts';
 import { likedTypeParamsSchema } from './_internal/request/likedTypeParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
+import { settingsRequestSchema } from './_internal/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
 import type { sortEnumSchema } from './_internal/request/sortParamsSchema.ts';
 import { followerResponseSchema } from './_internal/response/followerResponseSchema.ts';
@@ -59,6 +60,14 @@ const GLOBAL_LEVEL = builder.router({
     responses: {
       204: z.undefined(),
       400: z.undefined(),
+    },
+  },
+  saveSettings: {
+    path: '/settings',
+    method: 'PUT',
+    body: settingsRequestSchema,
+    responses: {
+      201: z.undefined(),
     },
   },
 });
@@ -217,3 +226,4 @@ export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
 
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
 export type AvatarRequest = z.infer<typeof avatarRequestSchema>;
+export type SettingsRequest = z.infer<typeof settingsRequestSchema>;
