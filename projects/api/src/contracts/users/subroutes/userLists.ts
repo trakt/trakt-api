@@ -36,8 +36,6 @@ const list = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema
       .merge(listParamsSchema)
-      /** NOTE: technically not supported yet */
-      .merge(mediaFilterParamsSchema)
       .merge(
         searchTypeParamFactory<
           ['movie', 'show']
@@ -45,6 +43,7 @@ const list = builder.router({
       ),
     query: extendedQuerySchemaFactory<['full', 'images']>()
       .merge(sortQuerySchema)
+      .merge(mediaFilterParamsSchema)
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
