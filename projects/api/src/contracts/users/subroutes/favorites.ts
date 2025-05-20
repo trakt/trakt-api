@@ -1,3 +1,4 @@
+import type z from 'zod';
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
@@ -40,3 +41,8 @@ export const favorites = builder.router({
 }, {
   pathPrefix: '/:id/favorites',
 });
+
+export type FavoriteShowResponse = z.infer<typeof favoritedShowsResponseSchema>;
+export type FavoriteMovieResponse = z.infer<
+  typeof favoritedMoviesResponseSchema
+>;
