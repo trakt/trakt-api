@@ -1,11 +1,11 @@
 import { z } from '../z.ts';
 
 const allMediaIdsSchema = z.object({
-  trakt: z.number().optional(),
-  slug: z.string().optional(),
-  imdb: z.string().optional(),
-  tmdb: z.number().optional(),
-  tvdb: z.number().optional(),
+  trakt: z.number().optional().openapi({ description: 'Trakt ID' }),
+  slug: z.string().optional().openapi({ description: 'Slug' }),
+  imdb: z.string().optional().openapi({ description: 'IMDb ID' }),
+  tmdb: z.number().optional().openapi({ description: 'TMDb ID' }),
+  tvdb: z.number().optional().openapi({ description: 'TVDb ID' }),
 });
 
 const showMediaIdsSchema = allMediaIdsSchema;

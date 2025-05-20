@@ -8,7 +8,7 @@
   "imports": {
     "@hono/swagger-ui": "npm:@hono/swagger-ui@^0.5.0",
     "@seriousme/openapi-schema-validator": "npm:@seriousme/openapi-schema-validator@^2.3.1",
-    "@ts-rest/open-api": "npm:@ts-rest/open-api@^3.51.0",
+    "@ts-rest/open-api": "npm:@ts-rest/open-api@^3.52.1",
     "hono": "npm:hono@^4.6.16"
   }
 }
