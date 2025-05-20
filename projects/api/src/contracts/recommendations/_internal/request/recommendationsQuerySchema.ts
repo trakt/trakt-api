@@ -2,6 +2,10 @@ import { ignoreQuerySchema } from '../../../_internal/request/ignoreQuerySchema.
 import { z } from '../../../_internal/z.ts';
 
 export const recommendationsQuerySchema = z.object({
-  limit: z.number().optional(),
-  watch_window: z.number().optional(),
+  limit: z.number().openapi({
+    description: 'Limit the number of results.',
+  }),
+  watch_window: z.number().optional().openapi({
+    description: 'The watch window in days for the recommendations.',
+  }),
 }).merge(ignoreQuerySchema);
