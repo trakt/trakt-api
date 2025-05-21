@@ -1,8 +1,8 @@
-import type z from 'zod';
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
+import type { z } from '../../_internal/z.ts';
 import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
 import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
 import { sortParamsSchema } from '../_internal/request/sortParamsSchema.ts';
