@@ -2,7 +2,7 @@ import { movieResponseSchema } from '../../../_internal/response/movieResponseSc
 import { z } from '../../../_internal/z.ts';
 
 export const movieStreamingResponseSchema = z.object({
-  rank: z.number(),
-  delta: z.number().nullable(),
+  rank: z.number().int(),
+  delta: z.number().int().nullable(),
   movie: movieResponseSchema,
 });

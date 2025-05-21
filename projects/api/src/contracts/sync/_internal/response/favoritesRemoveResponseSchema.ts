@@ -3,12 +3,12 @@ import { favoriteParamSchema } from '../request/favoritesParamSchema.ts';
 
 export const favoritesRemoveResponseSchema = z.object({
   deleted: z.object({
-    movies: z.number(),
-    shows: z.number(),
+    movies: z.number().int(),
+    shows: z.number().int(),
   }).optional(),
   not_found: favoriteParamSchema,
   list: z.object({
-    updated_at: z.string(),
-    item_count: z.number(),
+    updated_at: z.string().datetime(),
+    item_count: z.number().int(),
   }),
 });

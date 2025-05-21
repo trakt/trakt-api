@@ -2,6 +2,6 @@ import { profileResponseSchema } from '../../../_internal/response/profileRespon
 import { z } from '../../../_internal/z.ts';
 
 export const friendResponseSchema = z.object({
-  friends_at: z.string(),
+  friends_at: z.string().datetime(),
   user: profileResponseSchema,
 });

@@ -2,18 +2,18 @@ import { distributionResponseSchema } from '../../../_internal/response/distribu
 import { z } from '../../../_internal/z.ts';
 
 const simpleStatsResponseSchema = z.object({
-  ratings: z.number(),
-  comments: z.number(),
+  ratings: z.number().int(),
+  comments: z.number().int(),
 });
 
 const extendedStatsResponseSchema = simpleStatsResponseSchema.extend({
-  watched: z.number(),
-  collected: z.number(),
+  watched: z.number().int(),
+  collected: z.number().int(),
 });
 
 const fullStatsResponseSchema = extendedStatsResponseSchema.extend({
-  plays: z.number(),
-  minutes: z.number(),
+  plays: z.number().int(),
+  minutes: z.number().int(),
 });
 
 export const userStatsResponseSchema = z.object({
@@ -22,12 +22,12 @@ export const userStatsResponseSchema = z.object({
   movies: fullStatsResponseSchema,
   episodes: fullStatsResponseSchema,
   network: z.object({
-    friends: z.number(),
-    followers: z.number(),
-    following: z.number(),
+    friends: z.number().int(),
+    followers: z.number().int(),
+    following: z.number().int(),
   }),
   ratings: z.object({
-    total: z.number(),
+    total: z.number().int(),
     distribution: distributionResponseSchema,
   }),
 });

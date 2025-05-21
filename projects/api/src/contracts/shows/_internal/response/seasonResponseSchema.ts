@@ -2,25 +2,25 @@ import { seasonIdsResponseSchema } from '../../../_internal/response/seasonIdsRe
 import { z } from '../../../_internal/z.ts';
 
 export const seasonResponseSchema = z.object({
-  number: z.number(),
+  number: z.number().int(),
   ids: seasonIdsResponseSchema,
   /**
    * Available if requesting extended `full`.
    */
-  aired_episodes: z.number().optional(),
+  aired_episodes: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
-  rating: z.number().optional(
+  rating: z.number().int().optional(
     /**
      * Available if requesting extended `full`.
      */
   ),
-  votes: z.number().optional(),
+  votes: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
-  episode_count: z.number().optional(),
+  episode_count: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
@@ -37,7 +37,7 @@ export const seasonResponseSchema = z.object({
      * Available if requesting extended `full`.
      */
   ),
-  updated_at: z.string().optional(),
+  updated_at: z.string().datetime().optional(),
   /**
    * Available if requesting extended `full`.
    */

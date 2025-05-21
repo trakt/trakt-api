@@ -1,14 +1,14 @@
 import { z } from '../z.ts';
 
 export const distributionResponseSchema = z.object({
-  1: z.number(),
-  2: z.number(),
-  3: z.number(),
-  4: z.number(),
-  5: z.number(),
-  6: z.number(),
-  7: z.number(),
-  8: z.number(),
-  9: z.number(),
-  10: z.number(),
+  1: z.number().finite(),
+  2: z.number().finite(),
+  3: z.number().finite(),
+  4: z.number().finite(),
+  5: z.number().finite(),
+  6: z.number().finite(),
+  7: z.number().finite(),
+  8: z.number().finite(),
+  9: z.number().finite(),
+  10: z.number().finite(),
 });

@@ -3,7 +3,7 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 
 export const episodeScrobbleResponseSchema = z.object({
-  id: z.number(),
+  id: z.number().int(),
   action: z.enum(['start', 'pause', 'stop']),
   episode: episodeResponseSchema,
   show: showResponseSchema,

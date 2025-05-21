@@ -2,6 +2,6 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 
 export const showAnticipatedResponseSchema = z.object({
-  list_count: z.number(),
+  list_count: z.number().int(),
   show: showResponseSchema,
 });

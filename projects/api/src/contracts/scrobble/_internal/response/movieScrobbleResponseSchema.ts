@@ -2,7 +2,7 @@ import { movieResponseSchema } from '../../../_internal/response/movieResponseSc
 import { z } from '../../../_internal/z.ts';
 
 export const movieScrobbleResponseSchema = z.object({
-  id: z.number(),
+  id: z.number().int(),
   action: z.enum(['start', 'pause', 'stop']),
   movie: movieResponseSchema,
 });

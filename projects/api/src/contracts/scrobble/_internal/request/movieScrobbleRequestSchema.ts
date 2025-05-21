@@ -9,10 +9,10 @@ import { z } from '../../../_internal/z.ts';
 */
 
 export const movieScrobbleRequestSchema = z.object({
-  progress: z.number(),
+  progress: z.number().int(),
   movie: z.object({
     title: z.string(),
-    year: z.number(),
+    year: z.number().int(),
     ids: movieIdsRequestSchema,
   }),
 });

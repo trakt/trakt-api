@@ -3,6 +3,6 @@ import { z } from '../../../_internal/z.ts';
 
 export const searchShowResponseSchema = z.object({
   type: z.literal('show'),
-  score: z.number(),
+  score: z.number().int(),
   show: showResponseSchema,
 });

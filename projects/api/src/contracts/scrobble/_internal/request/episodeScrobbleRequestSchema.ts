@@ -4,7 +4,7 @@ import {
 import { z } from '../../../_internal/z.ts';
 
 export const episodeScrobbleRequestSchema = z.object({
-  progress: z.number(),
+  progress: z.number().int(),
   episode: z.object({
     ids: episodeIdsRequestSchema,
   }),

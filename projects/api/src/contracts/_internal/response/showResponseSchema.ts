@@ -8,7 +8,7 @@ import { statusResponseSchema } from './statusResponseSchema.ts';
 
 export const showResponseSchema = z.object({
   title: z.string(),
-  year: z.number().optional(),
+  year: z.number().int().optional(),
   ids: showIdsResponseSchema,
   /***
    * Available if requesting extended `images`.
@@ -17,7 +17,7 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  aired_episodes: z.number().optional(),
+  aired_episodes: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
@@ -41,7 +41,7 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  runtime: z.number().optional(),
+  runtime: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
@@ -61,15 +61,15 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  rating: z.number().optional(),
+  rating: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
-  votes: z.number().optional(),
+  votes: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
-  comment_count: z.number().optional(),
+  comment_count: z.number().int().optional(),
   /**
    * Available if requesting extended `full`.
    */
@@ -81,7 +81,7 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  updated_at: z.string().optional(),
+  updated_at: z.string().datetime().optional(),
   /**
    * Available if requesting extended `full`.
    */

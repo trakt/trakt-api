@@ -3,6 +3,6 @@ import { watchedStatsResponseSchema } from '../../../_internal/response/watchedS
 import { z } from '../../../_internal/z.ts';
 
 export const showWatchedResponseSchema = watchedStatsResponseSchema.extend({
-  collector_count: z.number(),
+  collector_count: z.number().int(),
   show: showResponseSchema,
 });

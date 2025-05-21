@@ -10,10 +10,10 @@ const headshotSchema = z.object({
 const personSchema = z.object({
   name: z.string(),
   ids: z.object({
-    trakt: z.number(),
+    trakt: z.number().int(),
     slug: z.string(),
     imdb: z.string().nullable(),
-    tmdb: z.number().nullable(),
+    tmdb: z.number().int().nullable(),
   }),
   /***
    * Available if requesting extended `images`.
@@ -24,7 +24,7 @@ const personSchema = z.object({
 });
 
 export const castSchema = z.object({
-  episode_count: z.number().optional(),
+  episode_count: z.number().int().optional(),
   person: personSchema,
   /***
    * Available if requesting extended `images`.
@@ -34,7 +34,7 @@ export const castSchema = z.object({
 
 export const crewSchema = z.object({
   person: personSchema,
-  episode_count: z.number().optional(),
+  episode_count: z.number().int().optional(),
   /***
    * Available if requesting extended `images`.
    */

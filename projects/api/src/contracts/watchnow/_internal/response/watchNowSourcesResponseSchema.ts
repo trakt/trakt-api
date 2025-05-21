@@ -7,7 +7,7 @@ export const watchNowSourceResponseSchema = z.object({
   cinema: z.boolean(),
   amazon: z.boolean(),
   color: z.string(),
-  link_count: z.number(),
+  link_count: z.number().int(),
   images: z.object({
     logo: z.string().nullable(),
     channel: z.string().nullable(),

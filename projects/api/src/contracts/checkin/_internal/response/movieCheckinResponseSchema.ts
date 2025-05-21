@@ -2,8 +2,8 @@ import { movieIdsResponseSchema } from '../../../_internal/response/movieIdsResp
 import { z } from '../../../_internal/z.ts';
 
 export const movieCheckinResponseSchema = z.object({
-  id: z.number(),
-  watched_at: z.string(),
+  id: z.number().int(),
+  watched_at: z.string().datetime(),
   sharing: z.object({
     twitter: z.boolean(),
     mastodon: z.boolean(),
@@ -11,7 +11,7 @@ export const movieCheckinResponseSchema = z.object({
   }),
   movie: z.object({
     title: z.string(),
-    year: z.number(),
+    year: z.number().int(),
     ids: movieIdsResponseSchema,
   }),
 });

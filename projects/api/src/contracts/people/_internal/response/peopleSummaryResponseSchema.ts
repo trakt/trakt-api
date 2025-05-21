@@ -5,10 +5,10 @@ export const peopleSummaryResponseSchema = z.object({
   name: z.string(),
   ids: z.object({
     slug: z.string(),
-    trakt: z.number(),
-    tvdb: z.number().optional(),
+    trakt: z.number().int(),
+    tvdb: z.number().int().optional(),
     imdb: z.string().optional(),
-    tmdb: z.number().optional(),
+    tmdb: z.number().int().optional(),
   }),
   /***
    * Available if requesting extended `full`.
@@ -50,7 +50,7 @@ export const peopleSummaryResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  updated_at: z.string().optional(),
+  updated_at: z.string().datetime().optional(),
   /***
    * Available if requesting extended `images`.
    */

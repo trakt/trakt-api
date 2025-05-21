@@ -4,8 +4,8 @@ import { z } from '../../../_internal/z.ts';
 import { historyActionSchema } from './historyActionSchema.ts';
 
 export const showActivityHistoryResponseSchema = z.object({
-  id: z.number(),
-  watched_at: z.string(),
+  id: z.number().int(),
+  watched_at: z.string().datetime(),
   action: historyActionSchema,
   type: z.literal('episode'),
   episode: episodeResponseSchema,

@@ -11,12 +11,12 @@ export const profileResponseSchema = z.object({
   director: z.boolean(),
   ids: z.object({
     slug: z.string().nullable(),
-    trakt: z.number(),
+    trakt: z.number().int(),
   }),
   /***
    * Available if requesting extended `full`.
    */
-  joined_at: z.string().optional(),
+  joined_at: z.string().datetime().optional(),
   /***
    * Available if requesting extended `full`.
    */
@@ -32,7 +32,7 @@ export const profileResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  age: z.number().or(z.null()).optional(),
+  age: z.number().int().or(z.null()).optional(),
   /***
    * Available if requesting extended `full`.
    */
@@ -44,7 +44,7 @@ export const profileResponseSchema = z.object({
   /***
    * Available if requesting extended `vip`.
    */
-  vip_years: z.number().optional(),
+  vip_years: z.number().int().optional(),
   /***
    * Available if requesting extended `vip`.
    */

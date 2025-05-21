@@ -6,15 +6,15 @@ import { z } from '../../../_internal/z.ts';
 export const showProgressResponseSchema = progressResponseSchema.extend({
   seasons: z.array(
     z.object({
-      number: z.number(),
+      number: z.number().int(),
       title: z.string().nullable(),
-      aired: z.number(),
-      completed: z.number(),
+      aired: z.number().int(),
+      completed: z.number().int(),
       episodes: z.array(
         z.object({
-          number: z.number(),
+          number: z.number().int(),
           completed: z.boolean(),
-          last_watched_at: z.string().nullable(),
+          last_watched_at: z.string().datetime().nullable(),
           /***
            * Available if requesting include_stats `true`.
            */
@@ -29,7 +29,7 @@ export const showProgressResponseSchema = progressResponseSchema.extend({
   ),
   hidden_seasons: z.array(
     z.object({
-      number: z.number(),
+      number: z.number().int(),
       ids: seasonIdsResponseSchema,
     }),
   ),

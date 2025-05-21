@@ -2,14 +2,14 @@ import { showIdsResponseSchema } from '../../../_internal/response/showIdsRespon
 import { z } from '../../../_internal/z.ts';
 
 export const watchedShowsResponseSchema = z.array(z.object({
-  plays: z.number(),
-  last_watched_at: z.string(),
-  last_updated_at: z.string(),
-  reset_at: z.string().nullish(),
+  plays: z.number().int(),
+  last_watched_at: z.string().datetime(),
+  last_updated_at: z.string().datetime(),
+  reset_at: z.string().datetime().nullish(),
   show: z.object({
-    aired_episodes: z.number(),
+    aired_episodes: z.number().int(),
     title: z.string(),
-    year: z.number(),
+    year: z.number().int(),
     ids: showIdsResponseSchema,
   }),
   /***
@@ -17,12 +17,12 @@ export const watchedShowsResponseSchema = z.array(z.object({
    */
   seasons: z.array(
     z.object({
-      number: z.number(),
+      number: z.number().int(),
       episodes: z.array(
         z.object({
-          number: z.number(),
-          plays: z.number(),
-          last_watched_at: z.string(),
+          number: z.number().int(),
+          plays: z.number().int(),
+          last_watched_at: z.string().datetime(),
         }),
       ),
     }),

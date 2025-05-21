@@ -2,7 +2,7 @@ import { listResponseSchema } from '../../_internal/response/listResponseSchema.
 import { z } from '../../_internal/z.ts';
 
 export const prominentListResponseSchema = z.object({
-  like_count: z.number(),
-  comment_count: z.number(),
+  like_count: z.number().int(),
+  comment_count: z.number().int(),
   list: listResponseSchema,
 });

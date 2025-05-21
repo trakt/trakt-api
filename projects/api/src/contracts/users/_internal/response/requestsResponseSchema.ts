@@ -2,7 +2,7 @@ import { profileResponseSchema } from '../../../_internal/response/profileRespon
 import { z } from '../../../_internal/z.ts';
 
 export const requestsResponseSchema = z.object({
-  id: z.number(),
-  requested_at: z.string(),
+  id: z.number().int(),
+  requested_at: z.string().datetime(),
   user: profileResponseSchema,
 });

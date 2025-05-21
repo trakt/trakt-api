@@ -10,7 +10,7 @@ export const calendarRequestParamsSchema = z.object({
     description:
       'The start date of the calendar. Must be formatted as "YYYY-MM-DD".',
   }),
-  days: z.number().openapi({
+  days: z.number().int().openapi({
     description: 'The number of days to retrieve.',
   }),
 });

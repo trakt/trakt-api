@@ -8,8 +8,8 @@ const actionSchema = z.enum(['scrobble', 'watch', 'checkin']);
 
 export const socialActivityResponseSchema = z.discriminatedUnion('type', [
   z.object({
-    id: z.number(),
-    activity_at: z.string(),
+    id: z.number().int(),
+    activity_at: z.string().datetime(),
     action: actionSchema,
     type: z.literal('episode'),
     episode: episodeResponseSchema,
@@ -17,8 +17,8 @@ export const socialActivityResponseSchema = z.discriminatedUnion('type', [
     user: profileResponseSchema,
   }),
   z.object({
-    id: z.number(),
-    activity_at: z.string(),
+    id: z.number().int(),
+    activity_at: z.string().datetime(),
     action: actionSchema,
     type: z.literal('movie'),
     movie: movieResponseSchema,

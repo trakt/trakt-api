@@ -7,22 +7,22 @@ import {
 } from './idsRequestSchema.ts';
 
 const watchedAtSchema = z.object({
-  watched_at: z.string().optional(),
+  watched_at: z.string().datetime().optional(),
 });
 
 const watchWithTileAndYearSchema = z.object({
   title: z.string(),
-  year: z.number(),
+  year: z.number().int(),
 }).merge(watchedAtSchema);
 
 const watchWithSeasonsSchema = z
   .object({
     seasons: z.array(
       z.object({
-        number: z.number(),
+        number: z.number().int(),
         episodes: z.array(
           z.object({
-            number: z.number(),
+            number: z.number().int(),
           }).merge(watchedAtSchema),
         ),
       }).merge(watchedAtSchema),

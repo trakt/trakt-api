@@ -2,6 +2,6 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 
 export const showTrendingResponseSchema = z.object({
-  watchers: z.number(),
+  watchers: z.number().int(),
   show: showResponseSchema,
 });

@@ -2,6 +2,6 @@ import { movieResponseSchema } from '../../../_internal/response/movieResponseSc
 import { z } from '../../../_internal/z.ts';
 
 export const movieAnticipatedResponseSchema = z.object({
-  list_count: z.number(),
+  list_count: z.number().int(),
   movie: movieResponseSchema,
 });

@@ -13,9 +13,9 @@ export const videoResponseSchema = z.object({
     'behind the scenes',
     'opening credits',
   ]),
-  size: z.number(),
+  size: z.number().int(),
   official: z.boolean(),
-  published_at: z.string(),
+  published_at: z.string().datetime(),
   country: z.string(),
   language: z.string(),
 });

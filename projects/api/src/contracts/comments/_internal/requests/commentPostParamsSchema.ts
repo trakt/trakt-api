@@ -6,7 +6,7 @@ import { commentReplyParamsSchema } from './commentReplyParamsSchema.ts';
 
 const idOnlySchema = z.object({
   ids: z.object({
-    trakt: z.number(),
+    trakt: z.number().int(),
   }),
 });
 

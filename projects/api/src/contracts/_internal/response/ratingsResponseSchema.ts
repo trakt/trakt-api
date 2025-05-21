@@ -2,36 +2,39 @@ import { z } from '../z.ts';
 import { distributionResponseSchema } from './distributionResponseSchema.ts';
 
 const externalRatingsResponseSchema = z.object({
-  rating: z.number().nullable(),
+  rating: z.number().finite().nullable(),
   link: z.string().nullable(),
 });
 
 export const ratingsResponseSchema = z.object({
   trakt: z.object({
-    rating: z.number(),
-    votes: z.number(),
+    rating: z.number().finite(),
+    votes: z.number().int(),
     distribution: distributionResponseSchema,
   }),
   /***
    * Available if requesting extended `all`.
    */
   tmdb: externalRatingsResponseSchema.extend({
-    votes: z.number().nullable(),
+    votes: z.number().int().nullable(),
   }).optional(),
   /***
    * Available if requesting extended `all`.
    */
   imdb: externalRatingsResponseSchema.extend({
-    votes: z.number().nullable(),
+    votes: z.number().int().nullable(),
   }).optional(),
   /***
    * Available if requesting extended `all`.
    */
-  metascore: externalRatingsResponseSchema.optional(),
+  metascore: z.object({
+    rating: z.number().int().nullable(),
+    link: z.string().nullable(),
+  }),
   /***
    * Available if requesting extended `all`.
    */
   rotten_tomatoes: externalRatingsResponseSchema.extend({
-    user_rating: z.number().nullable(),
+    user_rating: z.number().int().nullable(),
   }).optional(),
 });

@@ -3,10 +3,10 @@ import { ratingsParamSchema } from '../request/ratingsParamSchema.ts';
 
 export const ratingsSyncResponseSchema = z.object({
   added: z.object({
-    movies: z.number(),
-    shows: z.number(),
-    seasons: z.number(),
-    episodes: z.number(),
+    movies: z.number().int(),
+    shows: z.number().int(),
+    seasons: z.number().int(),
+    episodes: z.number().int(),
   }),
   not_found: ratingsParamSchema,
 });

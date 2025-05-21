@@ -4,8 +4,8 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 
 const commonWatchingResponseSchema = z.object({
-  expires_at: z.string(),
-  started_at: z.string(),
+  expires_at: z.string().datetime(),
+  started_at: z.string().datetime(),
   action: z.enum(['checkin', 'scrobble']),
 });
 

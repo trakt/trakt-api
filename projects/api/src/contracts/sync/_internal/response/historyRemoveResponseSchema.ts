@@ -2,6 +2,6 @@ import { bulkMediaRequestSchema } from '../../../_internal/request/bulkMediaRequ
 import { z } from '../../../_internal/z.ts';
 
 export const historyRemoveResponseSchema = z.object({
-  deleted: z.object({ movies: z.number(), episodes: z.number() }),
+  deleted: z.object({ movies: z.number().int(), episodes: z.number().int() }),
   not_found: bulkMediaRequestSchema,
 });

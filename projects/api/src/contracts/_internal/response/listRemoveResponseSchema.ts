@@ -6,7 +6,7 @@ export const listRemoveResponseSchema = z.object({
   deleted: mediaMutationCountsSchema,
   not_found: bulkMediaRequestSchema,
   list: z.object({
-    updated_at: z.string(),
-    item_count: z.number(),
+    updated_at: z.string().datetime(),
+    item_count: z.number().int(),
   }),
 });

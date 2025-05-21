@@ -7,7 +7,7 @@ import { sharingRequestSchema } from './sharingRequestSchema.ts';
 export const movieCheckinRequestSchema = z.object({
   movie: z.object({
     title: z.string().optional(),
-    year: z.number().optional(),
+    year: z.number().int().optional(),
     ids: movieIdsRequestSchema,
   }),
   sharing: sharingRequestSchema,
