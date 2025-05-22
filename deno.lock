@@ -10,13 +10,13 @@
     "jsr:@std/internal@^1.0.7": "1.0.7",
     "jsr:@std/path@^1.0.9": "1.0.9",
     "jsr:@std/testing@^1.0.5": "1.0.12",
-    "npm:@anatine/zod-openapi@^2.2.6": "2.2.8_openapi3-ts@4.4.0_zod@3.25.7",
+    "npm:@anatine/zod-openapi@^2.2.6": "2.2.8_openapi3-ts@4.4.0_zod@3.25.20",
     "npm:@hono/swagger-ui@0.5": "0.5.1_hono@4.7.10",
     "npm:@seriousme/openapi-schema-validator@^2.3.1": "2.4.1_ajv@8.17.1",
-    "npm:@ts-rest/core@^3.52.1": "3.52.1_zod@3.25.7",
-    "npm:@ts-rest/open-api@^3.52.1": "3.52.1_@ts-rest+core@3.52.1__zod@3.25.7_zod@3.25.7_openapi3-ts@2.0.2",
+    "npm:@ts-rest/core@^3.52.1": "3.52.1_zod@3.25.20",
+    "npm:@ts-rest/open-api@^3.52.1": "3.52.1_@ts-rest+core@3.52.1__zod@3.25.20_zod@3.25.20_openapi3-ts@2.0.2",
     "npm:hono@^4.6.16": "4.7.10",
-    "npm:zod@^3.24.1": "3.25.7"
+    "npm:zod@^3.24.1": "3.25.20"
   },
   "jsr": {
     "@std/assert@1.0.13": {
@@ -56,7 +56,7 @@
     }
   },
   "npm": {
-    "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.7": {
+    "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.20": {
       "integrity": "sha512-q0qHfnuNYVKu0Swrnnvfj9971AEyW7c8v9jCOZGCl5ZbyGMNG4RPyJkRcMi/JC8CRfdOe0IDfNm1nNsi2avprg==",
       "dependencies": [
         "openapi3-ts@2.0.2",
@@ -64,7 +64,7 @@
         "zod"
       ]
     },
-    "@anatine/zod-openapi@2.2.8_openapi3-ts@4.4.0_zod@3.25.7": {
+    "@anatine/zod-openapi@2.2.8_openapi3-ts@4.4.0_zod@3.25.20": {
       "integrity": "sha512-iyM8mB556KdiZ6a1GTZ67ACLnJakU1hrzzXoh7PLaReldAdMq88MlZn/Ir/U56/TBuQctBhh/4seo0b0B343uw==",
       "dependencies": [
         "openapi3-ts@4.4.0",
@@ -88,7 +88,7 @@
       ],
       "bin": true
     },
-    "@ts-rest/core@3.52.1_zod@3.25.7": {
+    "@ts-rest/core@3.52.1_zod@3.25.20": {
       "integrity": "sha512-tAjz7Kxq/grJodcTA1Anop4AVRDlD40fkksEV5Mmal88VoZeRKAG8oMHsDwdwPZz+B/zgnz0q2sF+cm5M7Bc7g==",
       "dependencies": [
         "zod"
@@ -97,10 +97,10 @@
         "zod"
       ]
     },
-    "@ts-rest/open-api@3.52.1_@ts-rest+core@3.52.1__zod@3.25.7_zod@3.25.7_openapi3-ts@2.0.2": {
+    "@ts-rest/open-api@3.52.1_@ts-rest+core@3.52.1__zod@3.25.20_zod@3.25.20_openapi3-ts@2.0.2": {
       "integrity": "sha512-VY91g6HFzCe1/fNgX4Y3HzaJbIdztCGHTg34drkh7bKgtNOizLJLXV0wwIkMwLGvjhRHojJxnwYxHjGMIkScwg==",
       "dependencies": [
-        "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.7",
+        "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.20",
         "@ts-rest/core",
         "openapi3-ts@2.0.2",
         "zod"
@@ -180,8 +180,8 @@
       "integrity": "sha512-4lLa/EcQCB0cJkyts+FpIRx5G/llPxfP6VQU5KByHEhLxY3IJCH0f0Hy1MHI8sClTvsIb8qwRJ6R/ZdlDJ/leQ==",
       "bin": true
     },
-    "zod@3.25.7": {
-      "integrity": "sha512-YGdT1cVRmKkOg6Sq7vY7IkxdphySKnXhaUmFI4r4FcuFVNgpCb9tZfNwXbT6BPjD5oz0nubFsoo9pIqKrDcCvg=="
+    "zod@3.25.20": {
+      "integrity": "sha512-z03fqpTMDF1G02VLKUMt6vyACE7rNWkh3gpXVHgPTw28NPtDFRGvcpTtPwn2kMKtQ0idtYJUTxchytmnqYswcw=="
     }
   },
   "workspace": {
