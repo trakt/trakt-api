@@ -6,9 +6,13 @@
     "generate": "deno run --allow-read --allow-write generate.ts"
   },
   "imports": {
+    "@anatine/zod-openapi": "npm:@anatine/zod-openapi@1.12.0",
     "@hono/swagger-ui": "npm:@hono/swagger-ui@^0.5.0",
     "@seriousme/openapi-schema-validator": "npm:@seriousme/openapi-schema-validator@^2.3.1",
+    "@ts-rest/core": "npm:@ts-rest/core@^3.52.1",
     "@ts-rest/open-api": "npm:@ts-rest/open-api@^3.52.1",
-    "hono": "npm:hono@^4.6.16"
+    "hono": "npm:hono@^4.6.16",
+    "openapi3-ts": "npm:openapi3-ts@2.0.2",
+    "zod": "npm:zod@^3.25.20"
   }
 }
