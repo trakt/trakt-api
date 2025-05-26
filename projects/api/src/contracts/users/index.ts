@@ -9,7 +9,6 @@ import { avatarRequestSchema } from './_internal/request/avatarRequestSchema.ts'
 import { commentOnTypeParamsSchema } from './_internal/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './_internal/request/commentsRequestSchema.ts';
 import { commentTypeParamsSchema } from './_internal/request/commentTypeParamsSchema.ts';
-import { likedTypeParamsSchema } from './_internal/request/likedTypeParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './_internal/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
@@ -17,7 +16,10 @@ import type { sortEnumSchema } from './_internal/request/sortParamsSchema.ts';
 import { followerResponseSchema } from './_internal/response/followerResponseSchema.ts';
 import { followResponseSchema } from './_internal/response/followResponseSchema.ts';
 import { friendResponseSchema } from './_internal/response/friendResponseSchema.ts';
-import { likedItemResponseSchema } from './_internal/response/likedItemResponseSchema.ts';
+import {
+  likedCommentResponseSchema,
+  likedListResponseSchema,
+} from './_internal/response/likedItemResponseSchema.ts';
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { socialActivityResponseSchema } from './_internal/response/socialActivityResponseSchema.ts';
 import { userCommentResponseSchema } from './_internal/response/userCommentResponseSchema.ts';
@@ -44,13 +46,23 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   likes: {
-    path: '/likes/:type',
-    pathParams: likedTypeParamsSchema,
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-      .and(pageQuerySchema.or(limitlessQuerySchema)),
-    responses: {
-      200: likedItemResponseSchema.array(),
+    comments: {
+      path: '/likes/comments',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
+        .and(pageQuerySchema.or(limitlessQuerySchema)),
+      responses: {
+        200: likedCommentResponseSchema.array(),
+      },
+    },
+    lists: {
+      path: '/likes/lists',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
+        .and(pageQuerySchema.or(limitlessQuerySchema)),
+      responses: {
+        200: likedListResponseSchema.array(),
+      },
     },
   },
   avatar: {
@@ -206,7 +218,10 @@ export type SortType = z.infer<typeof sortEnumSchema>;
 
 export type WatchAction = z.infer<typeof watchActionSchema>;
 
-export type LikedItemResponse = z.infer<typeof likedItemResponseSchema>;
+export type LikedCommentItemResponse = z.infer<
+  typeof likedCommentResponseSchema
+>;
+export type LikedListItemResponse = z.infer<typeof likedListResponseSchema>;
 
 export type SocialActivityResponse = z.infer<
   typeof socialActivityResponseSchema

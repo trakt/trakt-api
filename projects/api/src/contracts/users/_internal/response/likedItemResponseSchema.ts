@@ -63,7 +63,7 @@ const likedExtendedCommentResponseSchema = z.union(
   ],
 );
 
-const likedCommentResponseSchema = z.object({
+export const likedCommentResponseSchema = z.object({
   liked_at: z.string().datetime(),
   type: z.literal('comment'),
   /***
@@ -73,7 +73,7 @@ const likedCommentResponseSchema = z.object({
     .extend({ id: z.number().int() }),
 }).and(likedExtendedCommentResponseSchema);
 
-const likedListResponseSchema = z.object({
+export const likedListResponseSchema = z.object({
   liked_at: z.string().datetime(),
   type: z.literal('list'),
   /***
@@ -82,8 +82,3 @@ const likedListResponseSchema = z.object({
   list: listResponseSchema.partial()
     .extend({ id: z.number().int() }),
 });
-
-export const likedItemResponseSchema = z.union([
-  likedCommentResponseSchema,
-  likedListResponseSchema,
-]);
