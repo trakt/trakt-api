@@ -1,5 +1,5 @@
 import { builder } from '../../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { limitlessQuerySchema } from '../../_internal/request/limitlessQuerySchema.ts';
 import { listRequestSchema } from '../../_internal/request/listRequestSchema.ts';
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
@@ -26,7 +26,7 @@ const list = builder.router({
     path: '/',
     method: 'GET',
     pathParams: profileParamsSchema.merge(listParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: listResponseSchema,
     },
@@ -41,7 +41,7 @@ const list = builder.router({
           ['movie', 'show']
         >(),
       ),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(sortQuerySchema)
       .merge(mediaFilterParamsSchema)
       .and(pageQuerySchema.or(limitlessQuerySchema)),
@@ -107,7 +107,7 @@ export const userLists = builder.router({
     path: '',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: listResponseSchema.array(),
     },
@@ -116,7 +116,7 @@ export const userLists = builder.router({
     path: '/collaborations',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: listResponseSchema.array(),
     },

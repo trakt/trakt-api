@@ -1,5 +1,5 @@
 import { builder } from '../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { recommendationsQuerySchema } from '../recommendations/_internal/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from '../recommendations/_internal/response/recommendedMovieResponse.ts';
 import { recommendedShowResponse } from '../recommendations/_internal/response/recommendedShowResponse.ts';
@@ -8,7 +8,7 @@ const movies = builder.router({
   recommend: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(recommendationsQuerySchema),
     responses: {
       200: recommendedMovieResponse,
@@ -20,7 +20,7 @@ const shows = builder.router({
   recommend: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(recommendationsQuerySchema),
     responses: {
       200: recommendedShowResponse,

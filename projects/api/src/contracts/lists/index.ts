@@ -1,4 +1,5 @@
 import { builder } from '../_internal/builder.ts';
+import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
@@ -17,8 +18,7 @@ const ENTITY_LEVEL = builder.router({
     path: '',
     method: 'GET',
     pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      /** NOTE: technically not supported yet */
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema),
     responses: {
       200: listResponseSchema,
@@ -33,8 +33,7 @@ const ENTITY_LEVEL = builder.router({
           ['movie', 'show']
         >(),
       ),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      /** NOTE: technically not supported yet */
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
@@ -79,7 +78,6 @@ const GLOBAL_LEVEL = builder.router({
     method: 'GET',
     query: extendedQuerySchemaFactory<['full']>()
       .merge(pageQuerySchema)
-      /** NOTE: technically not supported yet */
       .merge(mediaFilterParamsSchema),
     responses: {
       200: prominentListResponseSchema.array(),
@@ -90,7 +88,6 @@ const GLOBAL_LEVEL = builder.router({
     method: 'GET',
     query: extendedQuerySchemaFactory<['full']>()
       .merge(pageQuerySchema)
-      /** NOTE: technically not supported yet */
       .merge(mediaFilterParamsSchema),
     responses: {
       200: prominentListResponseSchema.array(),
