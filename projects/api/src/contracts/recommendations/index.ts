@@ -1,5 +1,5 @@
 import { builder } from '../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { z } from '../_internal/z.ts';
 import { hideParamsSchema } from './_internal/request/hideParamsSchema.ts';
@@ -11,7 +11,7 @@ const movies = builder.router({
   recommend: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(recommendationsQuerySchema)
       .merge(mediaFilterParamsSchema),
     responses: {
@@ -32,7 +32,7 @@ const shows = builder.router({
   recommend: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(recommendationsQuerySchema)
       .merge(mediaFilterParamsSchema),
     responses: {

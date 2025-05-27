@@ -1,5 +1,5 @@
 import { builder } from '../../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
 import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
 import { RatedItemResponseSchema } from '../_internal/response/ratedItemResponseSchema.ts';
@@ -9,7 +9,7 @@ export const ratings = builder.router({
     path: '/movies',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: RatedItemResponseSchema.array(),
     },
@@ -18,7 +18,7 @@ export const ratings = builder.router({
     path: '/shows',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: RatedItemResponseSchema.array(),
     },
@@ -27,7 +27,7 @@ export const ratings = builder.router({
     path: '/episodes',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: RatedItemResponseSchema.array(),
     },

@@ -1,5 +1,5 @@
 import { builder } from '../../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
 import { dateRangeParamsSchema } from '../_internal/request/dateRangeParamsSchema.ts';
@@ -15,7 +15,7 @@ export const history = builder.router({
     path: '/',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -26,7 +26,7 @@ export const history = builder.router({
     path: '/movies',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -37,7 +37,7 @@ export const history = builder.router({
     path: '/shows',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -48,7 +48,7 @@ export const history = builder.router({
     path: '/episodes',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -60,7 +60,7 @@ export const history = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema
       .merge(historyItemIdParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -72,7 +72,7 @@ export const history = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema
       .merge(historyItemIdParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -84,7 +84,7 @@ export const history = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema
       .merge(historyItemIdParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {

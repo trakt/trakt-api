@@ -1,5 +1,5 @@
 import { builder } from '../../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import type { z } from '../../_internal/z.ts';
@@ -14,7 +14,7 @@ export const favorites = builder.router({
     path: '/movies/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: favoritedMoviesResponseSchema.array(),
     },
@@ -23,7 +23,7 @@ export const favorites = builder.router({
     path: '/shows/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: favoritedShowsResponseSchema.array(),
     },

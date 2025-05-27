@@ -1,5 +1,5 @@
 import { builder } from '../../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
@@ -14,9 +14,8 @@ export const watchlist = builder.router({
     path: '/movies/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(pageQuerySchema)
-      /** NOTE: technically not supported yet */
       .merge(mediaFilterParamsSchema),
     responses: {
       200: listedMovieResponseSchema.array(),
@@ -26,9 +25,8 @@ export const watchlist = builder.router({
     path: '/shows/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(pageQuerySchema)
-      /** NOTE: technically not supported yet */
       .merge(mediaFilterParamsSchema),
     responses: {
       200: listedShowResponseSchema.array(),

@@ -1,5 +1,6 @@
 import { builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
+import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
@@ -44,7 +45,7 @@ const EPISODE_LEVEL = builder.router({
   summary: {
     path: '',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     pathParams: idParamsSchema
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema),
@@ -102,7 +103,7 @@ const EPISODE_LEVEL = builder.router({
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema)
       .merge(commentsSortParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: commentResponseSchema.array(),
@@ -138,7 +139,7 @@ const ENTITY_LEVEL = builder.router({
   summary: {
     path: '',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>(),
+    query: extendedMediaQuerySchema,
     pathParams: idParamsSchema,
     responses: {
       200: showResponseSchema,
@@ -166,7 +167,7 @@ const ENTITY_LEVEL = builder.router({
       path: '/progress/watched',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedQuerySchemaFactory<['full', 'images']>()
+      query: extendedMediaQuerySchema
         .merge(showQueryParamsSchema)
         .merge(statsQuerySchema),
       responses: {
@@ -186,7 +187,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/related',
     method: 'GET',
     pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(pageQuerySchema),
     responses: {
       200: showResponseSchema.array(),
@@ -230,7 +231,7 @@ const ENTITY_LEVEL = builder.router({
   seasons: {
     path: '/seasons',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     pathParams: idParamsSchema,
     responses: {
       200: seasonResponseSchema.array(),
@@ -240,7 +241,7 @@ const ENTITY_LEVEL = builder.router({
     episodes: {
       path: '',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
+      query: extendedMediaQuerySchema,
       pathParams: idParamsSchema
         .merge(seasonParamsSchema),
       responses: {
@@ -250,7 +251,7 @@ const ENTITY_LEVEL = builder.router({
     videos: {
       path: '/videos',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['full', 'images']>(),
+      query: extendedMediaQuerySchema,
       pathParams: idParamsSchema
         .merge(seasonParamsSchema),
       responses: {
@@ -263,7 +264,7 @@ const ENTITY_LEVEL = builder.router({
   videos: {
     path: '/videos',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     pathParams: idParamsSchema,
     responses: {
       200: videoResponseSchema.array(),
@@ -285,7 +286,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/comments/:sort',
     method: 'GET',
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     responses: {
       200: commentResponseSchema.array(),
@@ -308,7 +309,7 @@ const GLOBAL_LEVEL = builder.router({
   trending: {
     path: '/trending',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
@@ -319,7 +320,7 @@ const GLOBAL_LEVEL = builder.router({
   watched: {
     path: '/watched/:period',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
@@ -331,7 +332,7 @@ const GLOBAL_LEVEL = builder.router({
   anticipated: {
     path: '/anticipated',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
@@ -342,7 +343,7 @@ const GLOBAL_LEVEL = builder.router({
   popular: {
     path: '/popular',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
@@ -354,7 +355,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/streaming/:period',
     method: 'GET',
     pathParams: recentPeriodParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images', 'colors']>()
+    query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),

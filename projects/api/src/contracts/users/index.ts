@@ -1,4 +1,5 @@
 import { builder } from '../_internal/builder.ts';
+import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
@@ -98,7 +99,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/:type/activities',
     method: 'GET',
     pathParams: profileParamsSchema.merge(socialActivityParamsSchema),
-    query: extendedQuerySchemaFactory<['full', 'images']>()
+    query: extendedMediaQuerySchema
       .merge(pageQuerySchema),
     responses: {
       200: socialActivityResponseSchema.array(),
@@ -129,7 +130,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/watching',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedMediaQuerySchema,
     responses: {
       200: watchingResponseSchema,
       204: z.undefined(),
