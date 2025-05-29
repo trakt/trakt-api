@@ -2,19 +2,13 @@ import { z } from '../z.ts';
 import { distributionResponseSchema } from './distributionResponseSchema.ts';
 
 const externalRatingsResponseSchema = z.object({
-  rating: z.number().openapi({
-    type: 'number',
-    format: 'float',
-  }).nullable(),
+  rating: z.number().float().nullable(),
   link: z.string().nullable(),
 });
 
 export const ratingsResponseSchema = z.object({
   trakt: z.object({
-    rating: z.number().openapi({
-      type: 'number',
-      format: 'float',
-    }),
+    rating: z.number().float(),
     votes: z.number().int(),
     distribution: distributionResponseSchema,
   }),
