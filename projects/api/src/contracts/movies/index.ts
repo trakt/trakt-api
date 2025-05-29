@@ -1,6 +1,7 @@
 import { builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
+import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
@@ -123,7 +124,6 @@ const ENTITY_LEVEL = builder.router({
   videos: {
     path: '/videos',
     method: 'GET',
-    query: extendedMediaQuerySchema,
     pathParams: idParamsSchema,
     responses: {
       200: videoResponseSchema.array(),
@@ -132,7 +132,7 @@ const ENTITY_LEVEL = builder.router({
   lists: {
     path: '/lists/:type/:sort',
     method: 'GET',
-    query: extendedMediaQuerySchema
+    query: extendedProfileQuerySchema
       .merge(pageQuerySchema),
     pathParams: idParamsSchema
       .merge(listSortSchema)
@@ -144,7 +144,7 @@ const ENTITY_LEVEL = builder.router({
   comments: {
     path: '/comments/:sort',
     method: 'GET',
-    query: extendedMediaQuerySchema
+    query: extendedProfileQuerySchema
       .and(pageQuerySchema.or(limitlessQuerySchema)),
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
     responses: {

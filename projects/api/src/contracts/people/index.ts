@@ -1,5 +1,6 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
+import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { peopleMovieCreditsResponseSchema } from './_internal/response/peopleMovieCreditsResponseSchema.ts';
@@ -10,7 +11,7 @@ export const people = builder.router({
   summary: {
     path: '/',
     pathParams: idParamsSchema,
-    query: extendedMediaQuerySchema,
+    query: extendedPeopleQuerySchema,
     method: 'GET',
     responses: {
       200: peopleSummaryResponseSchema,
