@@ -1,5 +1,6 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
+import { extendedProfileQuerySchema } from '../../_internal/request/extendedProfileQuerySchema.ts';
 import { limitlessQuerySchema } from '../../_internal/request/limitlessQuerySchema.ts';
 import { listRequestSchema } from '../../_internal/request/listRequestSchema.ts';
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
@@ -26,7 +27,7 @@ const list = builder.router({
     path: '/',
     method: 'GET',
     pathParams: profileParamsSchema.merge(listParamsSchema),
-    query: extendedMediaQuerySchema,
+    query: extendedProfileQuerySchema,
     responses: {
       200: listResponseSchema,
     },
@@ -107,7 +108,7 @@ export const userLists = builder.router({
     path: '',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedMediaQuerySchema,
+    query: extendedProfileQuerySchema,
     responses: {
       200: listResponseSchema.array(),
     },
@@ -116,7 +117,7 @@ export const userLists = builder.router({
     path: '/collaborations',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedMediaQuerySchema,
+    query: extendedProfileQuerySchema,
     responses: {
       200: listResponseSchema.array(),
     },

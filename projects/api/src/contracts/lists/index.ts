@@ -1,5 +1,6 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
+import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
@@ -18,7 +19,7 @@ const ENTITY_LEVEL = builder.router({
     path: '',
     method: 'GET',
     pathParams: idParamsSchema,
-    query: extendedMediaQuerySchema
+    query: extendedProfileQuerySchema
       .merge(mediaFilterParamsSchema),
     responses: {
       200: listResponseSchema,
