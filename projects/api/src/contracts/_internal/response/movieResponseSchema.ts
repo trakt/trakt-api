@@ -42,7 +42,11 @@ export const movieResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  rating: z.number().int().optional(),
+  rating: z.number()
+    .openapi({
+      type: 'number',
+      format: 'float',
+    }).optional(),
   /***
    * Available if requesting extended `full`.
    */
