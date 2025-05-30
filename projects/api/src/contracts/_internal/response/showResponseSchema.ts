@@ -1,4 +1,4 @@
-import { z } from '../z.ts';
+import { float, z } from '../z.ts';
 import { genreEnumSchema } from './genreEnumSchema.ts';
 import { imagesResponseSchema } from './imagesResponseSchema.ts';
 import { mediaColorsResponseSchema } from './mediaColorsResponseSchema.ts';
@@ -61,7 +61,7 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  rating: z.number().float().optional(),
+  rating: float(z.number()).optional(),
   /**
    * Available if requesting extended `full`.
    */

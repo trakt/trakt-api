@@ -1,63 +1,31 @@
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
-import { z, type ZodTypeDef } from 'zod';
+import { z } from 'zod';
 
-declare module 'zod' {
-  // skipcq: JS-0323, JS-0356
-  // deno-lint-ignore no-explicit-any
-  interface ZodSchema<Output = any, Def extends ZodTypeDef = ZodTypeDef, Input = Output> {
-    /**
-     * Marks a number as a float in OpenAPI metadata.
-     * This doesn't change the runtime validation behavior,
-     * but adds OpenAPI metadata for documentation and client generation.
-     * 
-     * @returns The same ZodType instance with OpenAPI metadata
-     */
-    float(): this;
-
-    /**
-     * Marks a ZodType as a string in OpenAPI metadata.
-     */
-    forceString(): this;
-  }
-}
-
-
-/**
- * TODO: https://ts-rest.com/docs/open-api
- * extend with open-api metadata
- */
+// Extend zod with the OpenAPI capabilities
 extendZodWithOpenApi(z);
 
 /**
- * Extends ZodType with a float() method that adds OpenAPI metadata
- * for documenting number fields as floating point values.
+ * Helper function to mark a number schema as a float in OpenAPI metadata
  */
-Object.defineProperty(z.ZodType.prototype, 'float', {
-  value() {
-    return this.openapi({
+export function float(schema: z.ZodNumber) {
+  // Use type assertion to access the openapi method added by extendZodWithOpenApi
+  return (schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber })
+    .openapi({
       type: 'number',
       format: 'float',
     });
-  },
-  writable: true,
-  configurable: true,
-  enumerable: false,
-});
+}
 
 /**
- * Extends ZodType with an forceString() method that adds OpenAPI metadata
- * for documenting enum fields as strings.
+ * Helper function to force a schema to be treated as a string in OpenAPI metadata
  */
-Object.defineProperty(z.ZodType.prototype, 'forceString', {
-  value() {
-    return this.openapi({
+export function asString<T extends z.ZodEnum<[string, ...string[]]>>(schema: T) {
+  // Use type assertion to access the openapi method
+  return (schema as T & { openapi: (meta: unknown) => T })
+    .openapi({
       type: 'string',
       enum: undefined,
     });
-  },
-  writable: true,
-  configurable: true,
-  enumerable: false,
-});
+}
 
 export { z };

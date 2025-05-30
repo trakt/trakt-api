@@ -1,14 +1,14 @@
-import { z } from '../z.ts';
+import { float, z } from '../z.ts';
 import { distributionResponseSchema } from './distributionResponseSchema.ts';
 
 const externalRatingsResponseSchema = z.object({
-  rating: z.number().float().nullable(),
+  rating: float(z.number()).nullable(),
   link: z.string().nullable(),
 });
 
 export const ratingsResponseSchema = z.object({
   trakt: z.object({
-    rating: z.number().float(),
+    rating: float(z.number()),
     votes: z.number().int(),
     distribution: distributionResponseSchema,
   }),

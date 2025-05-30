@@ -1,6 +1,6 @@
-import { z } from '../z.ts';
+import { asString, z } from '../z.ts';
 
-export const genreEnumSchema = z.enum([
+export const genreEnumSchema = asString(z.enum([
   'action',
   'adventure',
   'animation',
@@ -38,4 +38,4 @@ export const genreEnumSchema = z.enum([
   'anime',
   'superhero',
   'donghua',
-]).forceString();
+]));
