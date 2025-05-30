@@ -14,6 +14,10 @@ declare module 'zod' {
      */
     float(): this;
 
+    /**
+     * Marks a ZodType as a string in OpenAPI metadata.
+     */
+    forceString(): this;
   }
 }
 
@@ -33,6 +37,22 @@ Object.defineProperty(z.ZodType.prototype, 'float', {
     return this.openapi({
       type: 'number',
       format: 'float',
+    });
+  },
+  writable: true,
+  configurable: true,
+  enumerable: false,
+});
+
+/**
+ * Extends ZodType with an forceString() method that adds OpenAPI metadata
+ * for documenting enum fields as strings.
+ */
+Object.defineProperty(z.ZodType.prototype, 'forceString', {
+  value() {
+    return this.openapi({
+      type: 'string',
+      enum: undefined,
     });
   },
   writable: true,
