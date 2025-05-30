@@ -26,5 +26,5 @@ export const watchedShowsResponseSchema = z.array(z.object({
         }),
       ),
     }),
-  ).optional(),
+  ).nullish(),
 }));

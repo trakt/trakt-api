@@ -6,11 +6,11 @@ export const episodeResponseSchema = z.object({
   number: z.number().int(),
   title: z.string(),
   first_aired: z.string(),
-  number_abs: z.number().int().nullable(),
+  number_abs: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  rating: float(z.number()).optional(),
+  rating: float(z.number()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
@@ -34,7 +34,7 @@ export const episodeResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  overview: z.string().nullable(),
+  overview: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
@@ -48,14 +48,14 @@ export const episodeResponseSchema = z.object({
       'season_finale',
       'series_finale',
     ])
-    .optional(),
+    .nullish(),
   ids: episodeIdsResponseSchema,
   /***
    * Available if requesting extended `images`.
    */
   images: z
     .object({ screenshot: z.array(z.string()) })
-    .optional(),
+    .nullish(),
   /***
    * Available if requesting extended `full`.
    */

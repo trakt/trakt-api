@@ -8,81 +8,81 @@ import { statusResponseSchema } from './statusResponseSchema.ts';
 
 export const movieResponseSchema = z.object({
   title: z.string(),
-  year: z.number().int().optional(),
+  year: z.number().int().nullish(),
   ids: movieIdsResponseSchema,
   /***
    * Available if requesting extended `images`.
    */
-  images: imagesResponseSchema.optional(),
+  images: imagesResponseSchema.nullish(),
 
   /***
    * Available if requesting extended `full`.
    */
-  tagline: z.string().optional(),
+  tagline: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  overview: z.string().optional(),
+  overview: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  released: z.string().optional(),
+  released: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  runtime: z.number().int().optional(),
+  runtime: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  country: z.string().optional(),
+  country: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  status: statusResponseSchema.optional(),
+  status: statusResponseSchema.nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  rating: float(z.number()).optional(),
+  rating: float(z.number()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  votes: z.number().int().optional(),
+  votes: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  comment_count: z.number().int().optional(),
+  comment_count: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  trailer: z.string().optional(),
+  trailer: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  homepage: z.string().optional(),
+  homepage: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  updated_at: z.string().datetime().optional(),
+  updated_at: z.string().datetime().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  language: z.string().optional(),
+  language: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  languages: z.array(z.string()).optional(),
+  languages: z.array(z.string()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  available_translations: z.array(z.string()).optional(),
+  available_translations: z.array(z.string()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  genres: z.array(genreEnumSchema).optional(),
+  genres: z.array(genreEnumSchema).nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  certification: movieCertificationResponseSchema.optional(),
+  certification: movieCertificationResponseSchema.nullish(),
   /***
    * Available if requesting extended `full`.
    */
@@ -90,5 +90,5 @@ export const movieResponseSchema = z.object({
   /***
    * Available if requesting extended `colors`.
    */
-  colors: mediaColorsResponseSchema.optional(),
+  colors: mediaColorsResponseSchema.nullish(),
 });

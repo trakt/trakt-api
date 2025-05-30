@@ -1,13 +1,13 @@
 import { z } from '../../../_internal/z.ts';
 
 export const showQueryParamsSchema = z.object({
-  hidden: z.boolean().optional().openapi({
+  hidden: z.boolean().nullish().openapi({
     description: 'Whether to include any hidden seasons',
   }),
-  specials: z.boolean().optional().openapi({
+  specials: z.boolean().nullish().openapi({
     description: 'Whether to include special seasons as season 0.',
   }),
-  count_specials: z.boolean().optional().openapi({
+  count_specials: z.boolean().nullish().openapi({
     description:
       'Whether to count specials in the overall stats (only applies if specials are included).',
   }),

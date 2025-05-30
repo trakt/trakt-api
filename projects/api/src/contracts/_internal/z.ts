@@ -19,7 +19,9 @@ export function float(schema: z.ZodNumber) {
 /**
  * Helper function to force a schema to be treated as a string in OpenAPI metadata
  */
-export function asString<T extends z.ZodEnum<[string, ...string[]]>>(schema: T) {
+export function asString<T extends z.ZodEnum<[string, ...string[]]>>(
+  schema: T,
+) {
   // Use type assertion to access the openapi method
   return (schema as T & { openapi: (meta: unknown) => T })
     .openapi({

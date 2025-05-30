@@ -8,72 +8,72 @@ import { statusResponseSchema } from './statusResponseSchema.ts';
 
 export const showResponseSchema = z.object({
   title: z.string(),
-  year: z.number().int().optional(),
+  year: z.number().int().nullish(),
   ids: showIdsResponseSchema,
   /***
    * Available if requesting extended `images`.
    */
-  images: imagesResponseSchema.optional(),
+  images: imagesResponseSchema.nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  aired_episodes: z.number().int().optional(),
+  aired_episodes: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  tagline: z.string().optional(),
+  tagline: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  overview: z.string().optional(),
+  overview: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  first_aired: z.string().optional(),
+  first_aired: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
   airs: z.object({
-    day: z.string().optional(),
-    time: z.string().optional(),
-    timezone: z.string().optional(),
-  }).optional(),
+    day: z.string().nullish(),
+    time: z.string().nullish(),
+    timezone: z.string().nullish(),
+  }).nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  runtime: z.number().int().optional(),
+  runtime: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  certification: showCertificationResponseSchema.optional(),
+  certification: showCertificationResponseSchema.nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  network: z.string().optional(),
+  network: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  country: z.string().optional(),
+  country: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  status: statusResponseSchema.optional(),
+  status: statusResponseSchema.nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  rating: float(z.number()).optional(),
+  rating: float(z.number()).nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  votes: z.number().int().optional(),
+  votes: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  comment_count: z.number().int().optional(),
+  comment_count: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  trailer: z.string().optional(),
+  trailer: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
@@ -81,23 +81,23 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  updated_at: z.string().datetime().optional(),
+  updated_at: z.string().datetime().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  language: z.string().optional(),
+  language: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  languages: z.array(z.string()).optional(),
+  languages: z.array(z.string()).nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  available_translations: z.array(z.string()).optional(),
+  available_translations: z.array(z.string()).nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  genres: z.array(genreEnumSchema).optional(),
+  genres: z.array(genreEnumSchema).nullish(),
   /***
    * Available if requesting extended `full`.
    */
@@ -105,5 +105,5 @@ export const showResponseSchema = z.object({
   /***
    * Available if requesting extended `colors`.
    */
-  colors: mediaColorsResponseSchema.optional(),
+  colors: mediaColorsResponseSchema.nullish(),
 });
