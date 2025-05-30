@@ -37,5 +37,6 @@ export const ratingsResponseSchema = z.object({
   rotten_tomatoes: externalRatingsResponseSchema.extend({
     user_rating: z.number().int().nullable(),
     state: z.string().nullable(),
+    user_state: z.string().nullable(),
   }).optional(),
 });
