@@ -7,7 +7,7 @@ export const seasonResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  aired_episodes: z.number().int().optional(),
+  aired_episodes: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
@@ -16,15 +16,15 @@ export const seasonResponseSchema = z.object({
      * Available if requesting extended `full`.
      */
   ),
-  votes: z.number().int().optional(),
+  votes: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  episode_count: z.number().int().optional(),
+  episode_count: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  title: z.string().optional(),
+  title: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
    */
@@ -37,16 +37,16 @@ export const seasonResponseSchema = z.object({
      * Available if requesting extended `full`.
      */
   ),
-  updated_at: z.string().datetime().optional(),
+  updated_at: z.string().datetime().nullish(),
   /**
    * Available if requesting extended `full`.
    */
-  network: z.string().optional(),
+  network: z.string().nullish(),
   /**
    * Available if requesting extended `images`.
    */
   images: z.object({
     poster: z.array(z.string()),
     thumb: z.array(z.string()),
-  }).optional(),
+  }).nullish(),
 });

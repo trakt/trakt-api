@@ -5,7 +5,7 @@ export const favoritesRemoveResponseSchema = z.object({
   deleted: z.object({
     movies: z.number().int(),
     shows: z.number().int(),
-  }).optional(),
+  }).nullish(),
   not_found: favoriteParamSchema,
   list: z.object({
     updated_at: z.string().datetime(),

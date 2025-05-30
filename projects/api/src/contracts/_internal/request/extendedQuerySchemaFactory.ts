@@ -5,7 +5,7 @@ export const extendedQuerySchemaFactory = <T extends string[]>() =>
   z.object({
     extended: z
       .custom<CombinationsFrom<T>>()
-      .optional()
+      .nullish()
       .openapi({
         description: 'Extended information to include in the response.',
       }),

@@ -11,9 +11,9 @@ export const commentResponseSchema = z.object({
   review: z.boolean(),
   replies: z.number().int(),
   likes: z.number().int(),
-  user_rating: z.number().int().nullable(),
+  user_rating: z.number().int().nullish(),
   user_stats: z.object({
-    rating: z.number().int().nullable(),
+    rating: z.number().int().nullish(),
     play_count: z.number().int(),
     completed_count: z.number().int(),
   }),

@@ -6,5 +6,5 @@ export const listCommentsSortParamsSchema = z.object({
     'oldest',
     'likes',
     'replies',
-  ]).optional(),
+  ]).nullish(),
 });

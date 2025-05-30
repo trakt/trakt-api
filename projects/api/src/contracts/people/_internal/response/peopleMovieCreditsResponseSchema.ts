@@ -9,7 +9,7 @@ export const peopleMovieCreditsResponseSchema = z.object({
     z.object({
       movie: movieResponseSchema,
     }).merge(characterResponseSchema),
-  ).optional(),
+  ).nullish(),
   crew: z.record(
     crewPositionResponseSchema,
     z.array(
@@ -17,5 +17,5 @@ export const peopleMovieCreditsResponseSchema = z.object({
         movie: movieResponseSchema,
       }).merge(jobsResponseSchema),
     ),
-  ).optional(),
+  ).nullish(),
 });

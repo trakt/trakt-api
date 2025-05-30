@@ -14,7 +14,7 @@ const likedMovieCommentResponseSchema = z.object({
   /***
    * Available if requesting extended `comments`.
    */
-  movie: movieResponseSchema.optional(),
+  movie: movieResponseSchema.nullish(),
 });
 
 const likedShowCommentResponseSchema = z.object({
@@ -25,7 +25,7 @@ const likedShowCommentResponseSchema = z.object({
   /***
    * Available if requesting extended `comments`.
    */
-  show: showResponseSchema.optional(),
+  show: showResponseSchema.nullish(),
 });
 
 const likedSeasonCommentResponseSchema = z.object({
@@ -36,11 +36,11 @@ const likedSeasonCommentResponseSchema = z.object({
   /***
    * Available if requesting extended `comments`.
    */
-  show: showResponseSchema.optional(),
+  show: showResponseSchema.nullish(),
   /***
    * Available if requesting extended `comments`.
    */
-  season: seasonResponseSchema.optional(),
+  season: seasonResponseSchema.nullish(),
 });
 
 const likedEpisodeCommentResponseSchema = z.object({
@@ -51,7 +51,7 @@ const likedEpisodeCommentResponseSchema = z.object({
   /***
    * Available if requesting extended `comments`.
    */
-  episode: episodeResponseSchema.optional(),
+  episode: episodeResponseSchema.nullish(),
 });
 
 const likedExtendedCommentResponseSchema = z.union(

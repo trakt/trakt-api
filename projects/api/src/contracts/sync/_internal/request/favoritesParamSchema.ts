@@ -6,5 +6,5 @@ import { z } from '../../../_internal/z.ts';
 export const favoriteParamSchema = z.object({
   movies: z.array(
     z.object({ ids: movieIdsRequestSchema }),
-  ).optional(),
+  ).nullish(),
 });

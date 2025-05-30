@@ -11,7 +11,7 @@ export const peopleShowCreditsResponseSchema = z.object({
       episode_count: z.number().int(),
       series_regular: z.boolean(),
     }).merge(characterResponseSchema),
-  ).optional(),
+  ).nullish(),
   crew: z.record(
     crewPositionResponseSchema,
     z.array(
@@ -20,5 +20,5 @@ export const peopleShowCreditsResponseSchema = z.object({
         episode_count: z.number().int(),
       }).merge(jobsResponseSchema),
     ),
-  ).optional(),
+  ).nullish(),
 });

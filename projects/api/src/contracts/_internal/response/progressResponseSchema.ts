@@ -12,5 +12,5 @@ export const progressResponseSchema = z.object({
   /***
    * Available if requesting include_stats `true`.
    */
-  stats: statsResponseSchema.optional(),
+  stats: statsResponseSchema.nullish(),
 });

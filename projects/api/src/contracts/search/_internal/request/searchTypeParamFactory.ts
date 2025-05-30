@@ -5,7 +5,7 @@ export const searchTypeParamFactory = <T extends string[]>() =>
   z.object({
     type: z
       .custom<CombinationsFrom<T>>()
-      .optional()
+      .nullish()
       .openapi({
         description:
           'Specify the type of results by sending a single value or a comma delimited string for multiple types.',
