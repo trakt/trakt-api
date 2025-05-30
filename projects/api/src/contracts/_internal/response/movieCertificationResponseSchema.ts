@@ -15,4 +15,4 @@ export const movieCertificationResponseSchema = z.enum([
   'Unrated',
   'X',
   'Young',
-]);
+]).forceString();

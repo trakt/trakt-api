@@ -12,7 +12,7 @@ export const videoResponseSchema = z.object({
     'recap',
     'behind the scenes',
     'opening credits',
-  ]),
+  ]).forceString(),
   size: z.number().int(),
   official: z.boolean(),
   published_at: z.string().datetime(),

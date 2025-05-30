@@ -8,7 +8,7 @@ const showCertificationSlugResponseSchema = z.enum([
   'tv-14',
   'tv-ma',
   'nr',
-]);
+]).forceString();
 
 const certificationResponseSchema = z.object({
   name: z.string(),

@@ -13,4 +13,4 @@ export const showCertificationResponseSchema = z.enum([
   'NC-17',
   'R',
   'PG',
-]);
+]).forceString();

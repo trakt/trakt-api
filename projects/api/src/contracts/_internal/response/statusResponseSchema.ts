@@ -12,4 +12,4 @@ export const statusResponseSchema = z.enum([
   'pilot',
   'continuing',
   'upcoming',
-]);
+]).forceString();

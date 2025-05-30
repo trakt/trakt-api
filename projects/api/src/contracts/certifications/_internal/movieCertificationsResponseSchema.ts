@@ -6,7 +6,7 @@ const movieCertificationSlugResponseSchema = z.enum([
   'pg-13',
   'r',
   'nr',
-]);
+]).forceString();
 
 const certificationResponseSchema = z.object({
   name: z.string(),

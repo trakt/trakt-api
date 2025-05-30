@@ -133,4 +133,4 @@ export const jobResponseSchema = z.enum([
   'Writer',
   "Writers' Assistant",
   "Writers' Production",
-]);
+]).forceString();
