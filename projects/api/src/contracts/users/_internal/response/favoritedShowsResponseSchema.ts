@@ -4,7 +4,7 @@ import { z } from '../../../_internal/z.ts';
 export const favoritedShowsResponseSchema = z.object({
   id: z.number().int(),
   listed_at: z.string().datetime(),
-  notes: z.string().nullable(),
+  notes: z.string().nullish(),
   type: z.literal('show'),
   show: showResponseSchema,
   rank: z.number().int(),

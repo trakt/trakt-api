@@ -5,7 +5,7 @@ export const recommendationsQuerySchema = z.object({
   limit: z.number().int().openapi({
     description: 'Limit the number of results.',
   }),
-  watch_window: z.number().int().optional().openapi({
+  watch_window: z.number().int().nullish().openapi({
     description: 'The watch window in days for the recommendations.',
   }),
 }).merge(ignoreQuerySchema);

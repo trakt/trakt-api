@@ -12,39 +12,39 @@ const personSchema = z.object({
   ids: z.object({
     trakt: z.number().int(),
     slug: z.string(),
-    imdb: z.string().nullable(),
-    tmdb: z.number().int().nullable(),
+    imdb: z.string().nullish(),
+    tmdb: z.number().int().nullish(),
   }),
   /***
    * Available if requesting extended `images`.
    */
   images: headshotSchema.extend({
     fanart: z.array(z.string()),
-  }).optional(),
+  }).nullish(),
 });
 
 export const castSchema = z.object({
-  episode_count: z.number().int().optional(),
+  episode_count: z.number().int().nullish(),
   person: personSchema,
   /***
    * Available if requesting extended `images`.
    */
-  images: headshotSchema.optional(),
+  images: headshotSchema.nullish(),
 }).merge(characterResponseSchema);
 
 export const crewSchema = z.object({
   person: personSchema,
-  episode_count: z.number().int().optional(),
+  episode_count: z.number().int().nullish(),
   /***
    * Available if requesting extended `images`.
    */
-  images: headshotSchema.optional(),
+  images: headshotSchema.nullish(),
 }).merge(jobsResponseSchema);
 
 export const peopleResponseSchema = z.object({
-  cast: z.array(castSchema).optional(),
+  cast: z.array(castSchema).nullish(),
   crew: z.record(
     crewPositionResponseSchema,
     z.array(crewSchema),
-  ).optional(),
+  ).nullish(),
 });

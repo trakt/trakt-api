@@ -2,11 +2,11 @@ import { z } from '../../../_internal/z.ts';
 
 export const sharingRequestSchema = z
   .object({
-    twitter: z.boolean().optional(),
-    mastodon: z.boolean().optional(),
-    tumblr: z.boolean().optional(),
+    twitter: z.boolean().nullish(),
+    mastodon: z.boolean().nullish(),
+    tumblr: z.boolean().nullish(),
   })
-  .optional()
+  .nullish()
   .describe(
     `The sharing object is optional and will apply the user's settings if not sent. 
     If sharing is sent, each key will override the user's setting for that social network. 

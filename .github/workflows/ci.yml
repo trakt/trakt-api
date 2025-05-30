@@ -53,7 +53,7 @@ jobs:
           deno-version: v2.3.0
 
       - name: The Sacred Assembly aka Install Dependencies
-        run: "deno task install"
+        run: 'deno task install'
 
       - name: The Scroll's Scrutiny aka Validate OpenAPI
         if: ${{

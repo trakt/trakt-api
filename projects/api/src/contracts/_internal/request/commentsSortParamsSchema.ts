@@ -9,5 +9,5 @@ export const commentsSortParamsSchema = z.object({
     'highest',
     'lowest',
     'plays',
-  ]).optional(),
+  ]).nullish(),
 });
