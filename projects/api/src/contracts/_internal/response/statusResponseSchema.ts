@@ -1,6 +1,6 @@
-import { z } from '../z.ts';
+import { asString, z } from '../z.ts';
 
-export const statusResponseSchema = z.enum([
+export const statusResponseSchema = asString(z.enum([
   'released',
   'planned',
   'post production',
@@ -12,4 +12,4 @@ export const statusResponseSchema = z.enum([
   'pilot',
   'continuing',
   'upcoming',
-]).forceString();
+]));

@@ -1,6 +1,6 @@
-import { z } from '../z.ts';
+import { asString, z } from '../z.ts';
 
-export const crewPositionResponseSchema = z.enum([
+export const crewPositionResponseSchema = asString(z.enum([
   'acting',
   'production',
   'art',
@@ -15,4 +15,4 @@ export const crewPositionResponseSchema = z.enum([
   'editing',
   'creator',
   'created by',
-]).forceString();
+]));

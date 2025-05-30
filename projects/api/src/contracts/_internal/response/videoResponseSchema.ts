@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { asString, z } from '../z.ts';
 
 export const videoResponseSchema = z.object({
   title: z.string(),
   url: z.string(),
   site: z.string(),
-  type: z.enum([
+  type: asString(z.enum([
     'trailer',
     'clip',
     'teaser',
@@ -12,7 +12,7 @@ export const videoResponseSchema = z.object({
     'recap',
     'behind the scenes',
     'opening credits',
-  ]).forceString(),
+  ])),
   size: z.number().int(),
   official: z.boolean(),
   published_at: z.string().datetime(),

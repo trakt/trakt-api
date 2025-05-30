@@ -1,7 +1,7 @@
-import { z } from '../z.ts';
+import { asString, z } from '../z.ts';
 
 // TODO split up in separate schemas
-export const jobResponseSchema = z.enum([
+export const jobResponseSchema = asString(z.enum([
   /*
     Temporary list to type mock responses.
     TODO @seferturan: update this list with all job titles.
@@ -133,4 +133,4 @@ export const jobResponseSchema = z.enum([
   'Writer',
   "Writers' Assistant",
   "Writers' Production",
-]).forceString();
+]));

@@ -1,6 +1,6 @@
-import { z } from '../z.ts';
+import { asString, z } from '../z.ts';
 
-export const showCertificationResponseSchema = z.enum([
+export const showCertificationResponseSchema = asString(z.enum([
   'TV-14',
   'TV-Y7',
   'TV-Y',
@@ -13,4 +13,4 @@ export const showCertificationResponseSchema = z.enum([
   'NC-17',
   'R',
   'PG',
-]).forceString();
+]));

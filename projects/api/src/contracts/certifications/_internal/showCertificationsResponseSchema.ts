@@ -1,6 +1,6 @@
-import { z } from '../../_internal/z.ts';
+import { asString, z } from '../../_internal/z.ts';
 
-const showCertificationSlugResponseSchema = z.enum([
+const showCertificationSlugResponseSchema = asString(z.enum([
   'tv-y',
   'tv-y7',
   'tv-g',
@@ -8,7 +8,7 @@ const showCertificationSlugResponseSchema = z.enum([
   'tv-14',
   'tv-ma',
   'nr',
-]).forceString();
+]));
 
 const certificationResponseSchema = z.object({
   name: z.string(),

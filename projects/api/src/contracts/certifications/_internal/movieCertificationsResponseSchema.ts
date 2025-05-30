@@ -1,12 +1,12 @@
-import { z } from '../../_internal/z.ts';
+import { asString, z } from '../../_internal/z.ts';
 
-const movieCertificationSlugResponseSchema = z.enum([
+const movieCertificationSlugResponseSchema = asString(z.enum([
   'g',
   'pg',
   'pg-13',
   'r',
   'nr',
-]).forceString();
+]));
 
 const certificationResponseSchema = z.object({
   name: z.string(),

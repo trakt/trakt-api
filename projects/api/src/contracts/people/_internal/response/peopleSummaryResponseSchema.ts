@@ -1,5 +1,5 @@
 import { crewPositionResponseSchema } from '../../../_internal/response/crewPositionResponseSchema.ts';
-import { z } from '../../../_internal/z.ts';
+import { asString, z } from '../../../_internal/z.ts';
 
 export const peopleSummaryResponseSchema = z.object({
   name: z.string(),
@@ -42,7 +42,7 @@ export const peopleSummaryResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  gender: z.enum(['male', 'female', 'non_binary']).forceString().nullish(),
+  gender: asString(z.enum(['male', 'female', 'non_binary'])).nullish(),
   /***
    * Available if requesting extended `full`.
    */
