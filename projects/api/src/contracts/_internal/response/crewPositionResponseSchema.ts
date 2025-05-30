@@ -15,4 +15,4 @@ export const crewPositionResponseSchema = z.enum([
   'editing',
   'creator',
   'created by',
-]);
+]).forceString();

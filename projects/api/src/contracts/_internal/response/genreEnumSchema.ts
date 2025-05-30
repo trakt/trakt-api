@@ -38,4 +38,4 @@ export const genreEnumSchema = z.enum([
   'anime',
   'superhero',
   'donghua',
-]);
+]).forceString();
