@@ -5,11 +5,11 @@ export const favoritesResponseSchema = z.object({
   added: z.object({
     movies: z.number().int(),
     shows: z.number().int(),
-  }).optional(),
+  }).nullish(),
   existing: z.object({
     movies: z.number().int(),
     shows: z.number().int(),
-  }).optional(),
+  }).nullish(),
   not_found: favoriteParamSchema,
   list: z.object({
     updated_at: z.string().datetime(),

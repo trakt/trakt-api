@@ -9,8 +9,8 @@ export const watchNowSourceResponseSchema = z.object({
   color: z.string(),
   link_count: z.number().int(),
   images: z.object({
-    logo: z.string().nullable(),
-    channel: z.string().nullable(),
+    logo: z.string().nullish(),
+    channel: z.string().nullish(),
   }),
 });
 

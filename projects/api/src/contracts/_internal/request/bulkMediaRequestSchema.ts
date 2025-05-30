@@ -7,7 +7,7 @@ import {
 } from './idsRequestSchema.ts';
 
 const watchedAtSchema = z.object({
-  watched_at: z.string().datetime().optional(),
+  watched_at: z.string().datetime().nullish(),
 });
 
 const watchWithTileAndYearSchema = z.object({
@@ -26,7 +26,7 @@ const watchWithSeasonsSchema = z
           }).merge(watchedAtSchema),
         ),
       }).merge(watchedAtSchema),
-    ).optional(),
+    ).nullish(),
   }).merge(watchedAtSchema);
 
 const addMovieToHistorySchema = z
@@ -63,8 +63,8 @@ const addEpisodeToHistorySchema = z
   }).merge(watchedAtSchema);
 
 export const bulkMediaRequestSchema = z.object({
-  movies: z.array(addMovieToHistorySchema).optional(),
-  shows: z.array(addShowToHistorySchema).optional(),
-  seasons: z.array(addSeasonToHistorySchema).optional(),
-  episodes: z.array(addEpisodeToHistorySchema).optional(),
+  movies: z.array(addMovieToHistorySchema).nullish(),
+  shows: z.array(addShowToHistorySchema).nullish(),
+  seasons: z.array(addSeasonToHistorySchema).nullish(),
+  episodes: z.array(addEpisodeToHistorySchema).nullish(),
 });
