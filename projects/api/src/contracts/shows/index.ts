@@ -285,10 +285,11 @@ const ENTITY_LEVEL = builder.router({
   comments: {
     path: '/comments/:sort',
     method: 'GET',
-    pathParams: idParamsSchema.merge(commentsSortParamsSchema),
+    pathParams: idParamsSchema
+      .merge(commentsSortParamsSchema),
     query: extendedProfileQuerySchema
-      .merge(listSortSchema)
-      .merge(listTypeSchema),
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
