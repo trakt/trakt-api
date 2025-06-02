@@ -105,7 +105,8 @@ const EPISODE_LEVEL = builder.router({
       .merge(episodeParamsSchema)
       .merge(commentsSortParamsSchema),
     query: extendedProfileQuerySchema
-      .and(pageQuerySchema.or(limitlessQuerySchema)),
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },

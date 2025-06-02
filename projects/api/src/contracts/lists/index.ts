@@ -36,7 +36,8 @@ const ENTITY_LEVEL = builder.router({
       ),
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
-      .and(pageQuerySchema.or(limitlessQuerySchema)),
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
         .array(),

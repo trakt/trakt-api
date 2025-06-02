@@ -51,7 +51,8 @@ const GLOBAL_LEVEL = builder.router({
       path: '/likes/comments',
       method: 'GET',
       query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-        .and(pageQuerySchema.or(limitlessQuerySchema)),
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
       responses: {
         200: likedCommentResponseSchema.array(),
       },
@@ -60,7 +61,8 @@ const GLOBAL_LEVEL = builder.router({
       path: '/likes/lists',
       method: 'GET',
       query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-        .and(pageQuerySchema.or(limitlessQuerySchema)),
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
       responses: {
         200: likedListResponseSchema.array(),
       },

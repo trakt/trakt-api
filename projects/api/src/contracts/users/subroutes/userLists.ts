@@ -45,7 +45,8 @@ const list = builder.router({
     query: extendedMediaQuerySchema
       .merge(sortQuerySchema)
       .merge(mediaFilterParamsSchema)
-      .and(pageQuerySchema.or(limitlessQuerySchema)),
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
         .array(),
