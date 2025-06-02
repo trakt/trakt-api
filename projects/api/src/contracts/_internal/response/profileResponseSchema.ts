@@ -6,9 +6,9 @@ export const profileResponseSchema = z.object({
   private: z.boolean(),
   deleted: z.boolean(),
   name: z.string().nullable(),
-  vip: z.boolean(),
-  vip_ep: z.boolean(),
-  director: z.boolean(),
+  vip: z.boolean().nullable(),
+  vip_ep: z.boolean().nullable(),
+  director: z.boolean().nullable(),
   ids: z.object({
     slug: z.string().nullable(),
     trakt: z.number().int(),
