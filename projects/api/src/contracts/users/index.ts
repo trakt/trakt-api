@@ -10,6 +10,7 @@ import { avatarRequestSchema } from './_internal/request/avatarRequestSchema.ts'
 import { commentOnTypeParamsSchema } from './_internal/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './_internal/request/commentsRequestSchema.ts';
 import { commentTypeParamsSchema } from './_internal/request/commentTypeParamsSchema.ts';
+import { monthInReviewParamsSchema } from './_internal/request/monthInReviewParamsSchema.ts';
 import { profileParamsSchema } from './_internal/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './_internal/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './_internal/request/socialActivityParamsSchema.ts';
@@ -21,6 +22,7 @@ import {
   likedCommentResponseSchema,
   likedListResponseSchema,
 } from './_internal/response/likedItemResponseSchema.ts';
+import { monthInReviewResponseSchema } from './_internal/response/monthInReviewResponseSchema.ts';
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { socialActivityResponseSchema } from './_internal/response/socialActivityResponseSchema.ts';
 import { userCommentResponseSchema } from './_internal/response/userCommentResponseSchema.ts';
@@ -183,6 +185,16 @@ const ENTITY_LEVEL = builder.router({
       200: friendResponseSchema.array(),
     },
   },
+  month_in_review: {
+    path: '/mir',
+    pathParams: profileParamsSchema
+      .merge(monthInReviewParamsSchema),
+    query: extendedMediaQuerySchema,
+    method: 'GET',
+    responses: {
+      200: monthInReviewResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
@@ -245,3 +257,6 @@ export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
 export type AvatarRequest = z.infer<typeof avatarRequestSchema>;
 export type SettingsRequest = z.infer<typeof settingsRequestSchema>;
+
+export type MonthInReviewParams = z.infer<typeof monthInReviewParamsSchema>;
+export type MonthInReviewResponse = z.infer<typeof monthInReviewResponseSchema>;
