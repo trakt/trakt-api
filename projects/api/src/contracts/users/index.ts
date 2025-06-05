@@ -186,7 +186,7 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   month_in_review: {
-    path: '/mir',
+    path: '/mir/:year/:month',
     pathParams: profileParamsSchema
       .merge(monthInReviewParamsSchema),
     query: extendedMediaQuerySchema,
