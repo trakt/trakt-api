@@ -17,7 +17,6 @@ const statsCategoriesSchema = z.object({
   collected_counts: statsSchema,
   ratings_counts: statsSchema,
   comments_counts: statsSchema,
-  lists_counts: statsSchema,
 });
 
 const watchedEpisodeSchema = z.object({
@@ -40,7 +39,9 @@ const watchedItemSchema = z.discriminatedUnion('type', [
 
 export const monthInReviewResponseSchema = z.object({
   stats: z.object({
-    all: statsCategoriesSchema,
+    all: statsCategoriesSchema.merge(z.object({
+      lists_counts: statsSchema,
+    })),
     shows: statsCategoriesSchema,
     movies: statsCategoriesSchema,
   }),
