@@ -49,6 +49,6 @@ export const monthInReviewResponseSchema = z.object({
     cover: z.string(),
     story: z.string(),
   }),
-  first_watched: watchedItemSchema,
-  last_watched: watchedItemSchema,
+  first_watched: watchedItemSchema.nullable(),
+  last_watched: watchedItemSchema.nullable(),
 });
