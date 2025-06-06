@@ -1,5 +1,6 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
+import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
@@ -162,7 +163,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/followers',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>(),
+    query: extendedProfileQuerySchema,
     responses: {
       200: followerResponseSchema.array(),
     },
@@ -171,7 +172,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/following',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>(),
+    query: extendedProfileQuerySchema,
     responses: {
       200: followerResponseSchema.array(),
     },
@@ -180,7 +181,7 @@ const ENTITY_LEVEL = builder.router({
     path: '/friends',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>(),
+    query: extendedProfileQuerySchema,
     responses: {
       200: friendResponseSchema.array(),
     },
