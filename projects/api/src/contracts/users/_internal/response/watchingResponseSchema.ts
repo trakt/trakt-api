@@ -1,12 +1,12 @@
 import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
-import { z } from '../../../_internal/z.ts';
+import { asString, z } from '../../../_internal/z.ts';
 
 const commonWatchingResponseSchema = z.object({
   expires_at: z.string().datetime(),
   started_at: z.string().datetime(),
-  action: z.enum(['checkin', 'scrobble']),
+  action: asString(z.enum(['checkin', 'scrobble'])),
 });
 
 const movieWatchingResponseSchema = commonWatchingResponseSchema.extend({

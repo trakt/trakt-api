@@ -3,8 +3,9 @@ import { episodeResponseSchema } from '../../../_internal/response/episodeRespon
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { profileResponseSchema } from '../../../_internal/response/profileResponseSchema.ts';
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
+import { asString } from '../../../_internal/z.ts';
 
-const actionSchema = z.enum(['scrobble', 'watch', 'checkin']);
+const actionSchema = asString(z.enum(['scrobble', 'watch', 'checkin']));
 
 export const socialActivityResponseSchema = z.discriminatedUnion('type', [
   z.object({

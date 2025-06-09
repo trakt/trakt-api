@@ -1,8 +1,8 @@
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
-import { z } from '../../../_internal/z.ts';
+import { asString, z } from '../../../_internal/z.ts';
 
 export const movieScrobbleResponseSchema = z.object({
   id: z.number().int(),
-  action: z.enum(['start', 'pause', 'stop']),
+  action: asString(z.enum(['start', 'pause', 'stop'])),
   movie: movieResponseSchema,
 });
