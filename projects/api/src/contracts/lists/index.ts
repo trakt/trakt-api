@@ -11,7 +11,6 @@ import { listedMovieResponseSchema } from '../_internal/response/listedMovieResp
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { z } from '../_internal/z.ts';
-import { searchTypeParamFactory } from '../search/_internal/request/searchTypeParamFactory.ts';
 import { prominentListResponseSchema } from './_internal/prominentListResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
@@ -26,21 +25,29 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   items: {
-    path: '/items/:type',
-    method: 'GET',
-    pathParams: idParamsSchema
-      .merge(
-        searchTypeParamFactory<
-          ['movie', 'show']
-        >(),
-      ),
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
-    responses: {
-      200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-        .array(),
+    movie: {
+      path: '/items/movie',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedMovieResponseSchema.array(),
+      },
+    },
+    show: {
+      path: '/items/show',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedShowResponseSchema.array(),
+      },
     },
   },
   likes: {
