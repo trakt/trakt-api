@@ -1,23 +1,23 @@
 import { sortEnumSchema } from '../../users/_internal/request/sortParamsSchema.ts';
-import { z } from '../z.ts';
+import { asString, z } from '../z.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';
 import { sortDirectionSchema } from './sortDirectionSchema.ts';
 
 export const listResponseSchema = z.object({
   name: z.string(),
   description: z.string(),
-  privacy: z.enum([
+  privacy: asString(z.enum([
     'public',
     'private',
-  ]),
+  ])),
   share_link: z.string(),
-  type: z.enum([
+  type: asString(z.enum([
     'all',
     'personal',
     'official',
     'watchlist',
     'favorites',
-  ]),
+  ])),
   display_numbers: z.boolean(),
   allow_comments: z.boolean(),
   sort_by: sortEnumSchema,

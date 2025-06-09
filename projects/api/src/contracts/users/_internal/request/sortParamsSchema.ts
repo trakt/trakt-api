@@ -1,6 +1,6 @@
-import { z } from '../../../_internal/z.ts';
+import { asString, z } from '../../../_internal/z.ts';
 
-export const sortEnumSchema = z.enum([
+export const sortEnumSchema = asString(z.enum([
   'rank',
   'added',
   'title',
@@ -9,7 +9,7 @@ export const sortEnumSchema = z.enum([
   'popularity',
   'percentage',
   'votes',
-]);
+]));
 
 // FIXME split up param & response schemas
 export const sortParamsSchema = z.object({
