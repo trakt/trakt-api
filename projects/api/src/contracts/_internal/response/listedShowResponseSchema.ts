@@ -4,6 +4,6 @@ import { showResponseSchema } from './showResponseSchema.ts';
 
 export const listedShowResponseSchema = listMetadataResponseSchema
   .extend({
-    show: showResponseSchema,
+    show: showResponseSchema.nullish(),
     type: z.literal('show'),
   });

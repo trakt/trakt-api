@@ -4,6 +4,6 @@ import { movieResponseSchema } from './movieResponseSchema.ts';
 
 export const listedMovieResponseSchema = listMetadataResponseSchema
   .extend({
-    movie: movieResponseSchema,
+    movie: movieResponseSchema.nullish(),
     type: z.literal('movie'),
   });
