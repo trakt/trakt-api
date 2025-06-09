@@ -14,7 +14,6 @@ import { listedShowResponseSchema } from '../../_internal/response/listedShowRes
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../../_internal/response/listResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
-import { searchTypeParamFactory } from '../../search/_internal/request/searchTypeParamFactory.ts';
 import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
 import { listParamsSchema } from '../_internal/request/listParamsSchema.ts';
 import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
@@ -33,23 +32,31 @@ const list = builder.router({
     },
   },
   items: {
-    path: '/items/:type',
-    method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema)
-      .merge(
-        searchTypeParamFactory<
-          ['movie', 'show']
-        >(),
-      ),
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
-    responses: {
-      200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-        .array(),
+    movie: {
+      path: '/items/movie',
+      method: 'GET',
+      pathParams: profileParamsSchema.merge(listParamsSchema),
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedMovieResponseSchema.array(),
+      },
+    },
+    show: {
+      path: '/items/show',
+      method: 'GET',
+      pathParams: profileParamsSchema.merge(listParamsSchema),
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedShowResponseSchema.array(),
+      },
     },
   },
   add: {
