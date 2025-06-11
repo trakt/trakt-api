@@ -11,6 +11,7 @@ export const commentResponseSchema = z.object({
   review: z.boolean(),
   replies: z.number().int(),
   likes: z.number().int(),
+  language: z.string().nullish(),
   user_rating: z.number().int().nullish(),
   user_stats: z.object({
     rating: z.number().int().nullish(),
