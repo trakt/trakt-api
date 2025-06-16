@@ -49,6 +49,19 @@ const ENTITY_LEVEL = builder.router({
         200: listedShowResponseSchema.array(),
       },
     },
+    all: {
+      path: '/items/movie,show',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
+          .array(),
+      },
+    },
   },
   likes: {
     path: '/likes',
