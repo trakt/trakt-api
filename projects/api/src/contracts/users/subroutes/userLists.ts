@@ -16,6 +16,7 @@ import { listResponseSchema } from '../../_internal/response/listResponseSchema.
 import { z } from '../../_internal/z.ts';
 import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
 import { listParamsSchema } from '../_internal/request/listParamsSchema.ts';
+import { listUpdateRequestSchema } from '../_internal/request/listUpdateRequestSchema.ts';
 import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
 import { reorderRequestSchema } from '../_internal/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../_internal/response/reorderListResponseSchema.ts';
@@ -29,6 +30,15 @@ const list = builder.router({
     query: extendedProfileQuerySchema,
     responses: {
       200: listResponseSchema,
+    },
+  },
+  update: {
+    path: '/',
+    method: 'PUT',
+    pathParams: profileParamsSchema.merge(listParamsSchema),
+    body: listUpdateRequestSchema.merge(sortQuerySchema),
+    responses: {
+      200: listResponseSchema.array(),
     },
   },
   items: {
@@ -168,3 +178,4 @@ export type ListCommentsSortParams = z.infer<
   typeof listCommentsSortParamsSchema
 >;
 export type ListRequest = z.infer<typeof listRequestSchema>;
+export type ListUpdateRequest = z.infer<typeof listUpdateRequestSchema>;
