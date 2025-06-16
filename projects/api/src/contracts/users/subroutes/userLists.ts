@@ -58,6 +58,21 @@ const list = builder.router({
         200: listedShowResponseSchema.array(),
       },
     },
+    all: {
+      path: '/items/movie,show',
+      method: 'GET',
+      pathParams: profileParamsSchema
+        .merge(listParamsSchema),
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
+          .array(),
+      },
+    },
   },
   add: {
     path: '/items',
