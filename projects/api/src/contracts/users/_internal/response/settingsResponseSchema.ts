@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { genreEnumSchema } from '../../../_internal/response/genreEnumSchema.ts';
 import { sortDirectionSchema } from '../../../_internal/response/sortDirectionSchema.ts';
 import { upNextSortBySchema } from '../../../_internal/response/upNextSortBySchema.ts';
 import { watchActionSchema } from './watchActionSchema.ts';
@@ -105,7 +106,10 @@ export const settingsResponseSchema = z.object({
       completed_at: z.string().datetime(),
       exit_step: z.null(),
     }),
-    genres: z.object({ favorites: z.null(), disliked: z.null() }),
+    genres: z.object({
+      favorites: z.array(genreEnumSchema).nullish(),
+      disliked: z.array(genreEnumSchema).nullish(),
+    }),
     comments: z.object({ blocked_uids: z.array(z.unknown()) }),
     recommendations: z.object({
       ignore_collected: z.boolean(),
