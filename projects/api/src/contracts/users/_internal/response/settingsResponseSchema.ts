@@ -61,7 +61,7 @@ export const settingsResponseSchema = z.object({
       start_day: z.string().nullish(),
       layout: z.string().nullish(),
       image_type: z.string().nullish(),
-      hide_special: z.boolean(),
+      hide_specials: z.boolean(),
       autoscroll: z.boolean(),
     }),
     progress: z.object({
