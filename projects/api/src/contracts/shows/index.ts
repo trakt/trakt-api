@@ -37,6 +37,7 @@ import { seasonParamsSchema } from './_internal/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './_internal/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './_internal/response/seasonResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './_internal/response/showAnticipatedResponseSchema.ts';
+import { showHotResponseSchema } from './_internal/response/showHotResponseSchema.ts';
 import { showProgressResponseSchema } from './_internal/response/showProgressResponseSchema.ts';
 import { showStreamingResponseSchema } from './_internal/response/showStreamingResponseSchema.ts';
 import { showTrendingResponseSchema } from './_internal/response/showTrendingResponseSchema.ts';
@@ -342,6 +343,17 @@ const GLOBAL_LEVEL = builder.router({
       200: showAnticipatedResponseSchema.array(),
     },
   },
+  hot: {
+    path: '/hot',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: showHotResponseSchema.array(),
+    },
+  },
   popular: {
     path: '/popular',
     method: 'GET',
@@ -383,6 +395,9 @@ export type ShowWatchedResponse = z.infer<typeof showWatchedResponseSchema>;
 export type ShowStatsResponse = z.infer<typeof showStatsResponseSchema>;
 export type ShowAnticipatedResponse = z.infer<
   typeof showAnticipatedResponseSchema
+>;
+export type ShowHotResponse = z.infer<
+  typeof showHotResponseSchema
 >;
 
 export type ShowCertificationResponse = z.infer<
