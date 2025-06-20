@@ -37,6 +37,7 @@ import {
 } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { movieAnticipatedResponseSchema } from './_internal/response/movieAnticipatedResponseSchema.ts';
+import { movieHotResponseSchema } from './_internal/response/movieHotResponseSchema.ts';
 import { movieStreamingResponseSchema } from './_internal/response/movieStreamingResponseSchema.ts';
 import { movieTrendingResponseSchema } from './_internal/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './_internal/response/movieWatchedResponseSchema.ts';
@@ -198,6 +199,17 @@ const GLOBAL_LEVEL = builder.router({
       200: movieAnticipatedResponseSchema.array(),
     },
   },
+  hot: {
+    path: '/hot',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: movieHotResponseSchema.array(),
+    },
+  },
   popular: {
     path: '/popular',
     method: 'GET',
@@ -248,6 +260,9 @@ export type MovieWatchedResponse = z.infer<
 >;
 export type MovieAnticipatedResponse = z.infer<
   typeof movieAnticipatedResponseSchema
+>;
+export type MovieHotResponse = z.infer<
+  typeof movieHotResponseSchema
 >;
 export type MovieCertificationResponse = z.infer<
   typeof movieCertificationResponseSchema
