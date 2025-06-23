@@ -1,7 +1,7 @@
 {
   "name": "@trakt/api",
   "exports": "./src/index.ts",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "imports": {
     "@anatine/zod-openapi": "npm:@anatine/zod-openapi@^2.2.6",
     "@std/testing": "jsr:@std/testing@^1.0.5",
