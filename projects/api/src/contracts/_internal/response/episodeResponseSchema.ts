@@ -14,23 +14,23 @@ export const episodeResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  votes: z.number().int(),
+  votes: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  comment_count: z.number().int(),
+  comment_count: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  updated_at: z.string().datetime(),
+  updated_at: z.string().datetime().nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  available_translations: z.array(z.string()),
+  available_translations: z.array(z.string()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
-  runtime: z.number().int(),
+  runtime: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
    */
