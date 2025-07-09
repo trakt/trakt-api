@@ -4,7 +4,7 @@ export const watchNowServiceResponseSchema = z.object({
   source: z.string(),
   link: z.string(),
   uhd: z.boolean(),
-  currency: z.string(),
+  currency: z.string().nullish(),
   prices: z.object({
     rent: z.string().nullish(),
     purchase: z.string().nullish(),
