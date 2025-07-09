@@ -1,5 +1,5 @@
 import { seasonIdsResponseSchema } from '../../../_internal/response/seasonIdsResponseSchema.ts';
-import { z } from '../../../_internal/z.ts';
+import { float, z } from '../../../_internal/z.ts';
 
 export const seasonResponseSchema = z.object({
   number: z.number().int(),
@@ -11,11 +11,10 @@ export const seasonResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  rating: z.number().int().optional(
-    /**
-     * Available if requesting extended `full`.
-     */
-  ),
+  rating: float(z.number()).nullish(),
+  /**
+   * Available if requesting extended `full`.
+   */
   votes: z.number().int().nullish(),
   /**
    * Available if requesting extended `full`.
