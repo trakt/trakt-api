@@ -30,9 +30,9 @@ export const watchNowServiceResponseSchema = z.object({
 export const watchNowResponseSchema = z.record(
   z.string(),
   z.object({
-    cable: z.array(z.unknown()),
-    free: z.array(z.unknown()),
-    cinema: z.array(z.unknown()),
+    cable: z.array(watchNowServiceResponseSchema),
+    free: z.array(watchNowServiceResponseSchema),
+    cinema: z.array(watchNowServiceResponseSchema),
     subscription: z.array(watchNowServiceResponseSchema),
     purchase: z.array(watchNowServiceResponseSchema),
   }),
