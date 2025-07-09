@@ -5,7 +5,7 @@ import { sortDirectionSchema } from './sortDirectionSchema.ts';
 
 export const listResponseSchema = z.object({
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullish(),
   privacy: asString(z.enum([
     'public',
     'private',
