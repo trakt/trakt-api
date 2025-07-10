@@ -1,8 +1,8 @@
 import { movieIdsResponseSchema } from '../../../_internal/response/movieIdsResponseSchema.ts';
-import { z } from '../../../_internal/z.ts';
+import { int64, z } from '../../../_internal/z.ts';
 
 export const movieCheckinResponseSchema = z.object({
-  id: z.number().int(),
+  id: int64(z.number().int()),
   watched_at: z.string().datetime(),
   sharing: z.object({
     twitter: z.boolean(),
