@@ -14,7 +14,8 @@ export const favorites = builder.router({
     path: '/movies/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
-    query: extendedMediaQuerySchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: favoritedMoviesResponseSchema.array(),
     },
@@ -23,7 +24,8 @@ export const favorites = builder.router({
     path: '/shows/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
-    query: extendedMediaQuerySchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: favoritedShowsResponseSchema.array(),
     },
