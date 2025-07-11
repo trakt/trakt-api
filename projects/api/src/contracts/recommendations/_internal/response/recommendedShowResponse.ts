@@ -5,7 +5,7 @@ import { userProfileWithNotesSchema } from './userProfileWithNotesSchema.ts';
 export const recommendedShowResponse = z.array(
   showResponseSchema
     .extend({
-      favorited_by: z.array(userProfileWithNotesSchema),
-      recommended_by: z.array(userProfileWithNotesSchema),
+      favorited_by: z.array(userProfileWithNotesSchema).nullable(),
+      recommended_by: z.array(userProfileWithNotesSchema).nullable(),
     }),
 );
