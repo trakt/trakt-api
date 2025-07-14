@@ -103,7 +103,7 @@ export const settingsResponseSchema = z.object({
     dark_knight: z.string(),
     app_theme: z.string(),
     welcome: z.object({
-      completed_at: z.string().datetime(),
+      completed_at: z.string().datetime().nullish(),
       exit_step: z.null(),
     }),
     genres: z.object({
