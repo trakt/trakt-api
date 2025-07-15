@@ -32,4 +32,10 @@ export const listResponseSchema = z.object({
     slug: z.string(),
   }),
   user: profileResponseSchema,
+  /***
+   * Available if requesting extended `images`.
+   */
+  images: z.object({
+    posters: z.array(z.string()),
+  }).nullish(),
 });
