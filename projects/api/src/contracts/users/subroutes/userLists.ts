@@ -41,6 +41,15 @@ const list = builder.router({
       200: listResponseSchema.array(),
     },
   },
+  delete: {
+    path: '/',
+    method: 'DELETE',
+    pathParams: profileParamsSchema.merge(listParamsSchema),
+    responses: {
+      204: z.undefined(),
+      403: z.undefined(),
+    },
+  },
   items: {
     movie: {
       path: '/items/movie',
