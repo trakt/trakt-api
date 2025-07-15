@@ -1,18 +1,11 @@
-import { asString, z } from '../z.ts';
+import { z } from '../z.ts';
+import { videoTypeEnumSchema } from './videoTypeEnumSchema.ts';
 
 export const videoResponseSchema = z.object({
   title: z.string(),
   url: z.string(),
   site: z.string(),
-  type: asString(z.enum([
-    'trailer',
-    'clip',
-    'teaser',
-    'featurette',
-    'recap',
-    'behind the scenes',
-    'opening credits',
-  ])),
+  type: videoTypeEnumSchema,
   size: z.number().int(),
   official: z.boolean(),
   published_at: z.string().datetime(),
