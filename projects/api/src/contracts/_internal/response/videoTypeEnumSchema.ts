@@ -8,4 +8,5 @@ export const videoTypeEnumSchema = asString(z.enum([
   'recap',
   'behind the scenes',
   'opening credits',
+  'bloopers',
 ]));
