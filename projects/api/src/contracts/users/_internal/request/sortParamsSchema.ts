@@ -1,5 +1,6 @@
 import { asString, z } from '../../../_internal/z.ts';
 
+// FIXME: add vip-only sort options
 export const sortEnumSchema = asString(z.enum([
   'rank',
   'added',

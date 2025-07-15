@@ -1,15 +1,13 @@
 import { sortEnumSchema } from '../../users/_internal/request/sortParamsSchema.ts';
 import { asString, z } from '../z.ts';
+import { listPrivacyEnumSchema } from './listPrivacyEnumSchema.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';
 import { sortDirectionSchema } from './sortDirectionSchema.ts';
 
 export const listResponseSchema = z.object({
   name: z.string(),
   description: z.string().nullish(),
-  privacy: asString(z.enum([
-    'public',
-    'private',
-  ])),
+  privacy: listPrivacyEnumSchema,
   share_link: z.string(),
   type: asString(z.enum([
     'all',
