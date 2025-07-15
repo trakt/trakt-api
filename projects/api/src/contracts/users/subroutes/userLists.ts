@@ -14,6 +14,7 @@ import { listedShowResponseSchema } from '../../_internal/response/listedShowRes
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../../_internal/response/listResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
+import { createListRequestSchema } from '../_internal/request/createListRequestSchema.ts';
 import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
 import { listParamsSchema } from '../_internal/request/listParamsSchema.ts';
 import { listUpdateRequestSchema } from '../_internal/request/listUpdateRequestSchema.ts';
@@ -172,6 +173,14 @@ export const userLists = builder.router({
       200: reorderListsResponseSchema,
     },
   },
+  create: {
+    path: '',
+    method: 'POST',
+    body: createListRequestSchema,
+    responses: {
+      201: listResponseSchema,
+    },
+  },
   list,
 }, {
   pathPrefix: '/:id/lists',
@@ -188,3 +197,5 @@ export type ListCommentsSortParams = z.infer<
 >;
 export type ListRequest = z.infer<typeof listRequestSchema>;
 export type ListUpdateRequest = z.infer<typeof listUpdateRequestSchema>;
+
+export type CreateListRequest = z.infer<typeof createListRequestSchema>;
