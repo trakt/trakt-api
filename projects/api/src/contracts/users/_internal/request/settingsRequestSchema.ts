@@ -6,7 +6,9 @@ const spoilerEnumSchema = z.enum(['show', 'hide']);
 const userSettingsSettingsSchema = z.object({
   name: z.string().nullish(),
   about: z.string().nullish(),
+  location: z.string().nullish(),
   private: z.boolean().nullish(),
+  dob: z.string().nullish(),
 });
 
 const browsingSettingsSchema = z.object({
