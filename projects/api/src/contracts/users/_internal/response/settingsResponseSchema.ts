@@ -110,7 +110,7 @@ export const settingsResponseSchema = z.object({
       favorites: z.array(genreEnumSchema).nullish(),
       disliked: z.array(genreEnumSchema).nullish(),
     }),
-    comments: z.object({ blocked_uids: z.array(z.unknown()) }),
+    comments: z.object({ blocked_uids: z.array(z.number().int()) }),
     recommendations: z.object({
       ignore_collected: z.boolean(),
       ignore_watchlisted: z.boolean(),
