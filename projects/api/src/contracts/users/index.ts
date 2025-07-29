@@ -24,6 +24,7 @@ import {
   likedListResponseSchema,
 } from './_internal/response/likedItemResponseSchema.ts';
 import { monthInReviewResponseSchema } from './_internal/response/monthInReviewResponseSchema.ts';
+import { reactedCommentResponseSchema } from './_internal/response/reactedCommentResponseSchema.ts';
 import { settingsResponseSchema } from './_internal/response/settingsResponseSchema.ts';
 import { socialActivityResponseSchema } from './_internal/response/socialActivityResponseSchema.ts';
 import { userCommentResponseSchema } from './_internal/response/userCommentResponseSchema.ts';
@@ -47,6 +48,18 @@ const GLOBAL_LEVEL = builder.router({
     query: extendedQuerySchemaFactory<['browsing']>(),
     responses: {
       200: settingsResponseSchema,
+    },
+  },
+  reactions: {
+    comments: {
+      path: '/reactions/comments',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: reactedCommentResponseSchema.array(),
+      },
     },
   },
   likes: {
@@ -261,3 +274,7 @@ export type SettingsRequest = z.infer<typeof settingsRequestSchema>;
 
 export type MonthInReviewParams = z.infer<typeof monthInReviewParamsSchema>;
 export type MonthInReviewResponse = z.infer<typeof monthInReviewResponseSchema>;
+
+export type ReactedCommentResponse = z.infer<
+  typeof reactedCommentResponseSchema
+>;
