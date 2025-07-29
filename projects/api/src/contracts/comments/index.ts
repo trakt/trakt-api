@@ -1,11 +1,57 @@
 import { builder } from '../_internal/builder.ts';
+import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
+import {
+  reactionEnumSchema,
+  reactionsResponseSchema,
+  reactionsSummaryResponseSchema,
+  reactionTypeSchema,
+} from '../_internal/response/reactionsResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { commentPostParamsSchema } from './_internal/requests/commentPostParamsSchema.ts';
 import { commentReplyParamsSchema } from './_internal/requests/commentReplyParamsSchema.ts';
+
+const REACTIONS_LEVEL = builder.router({
+  summary: {
+    path: '/summary',
+    method: 'GET',
+    responses: {
+      200: reactionsSummaryResponseSchema.array(),
+    },
+  },
+  all: {
+    path: '/',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: reactionsResponseSchema.array(),
+    },
+  },
+  add: {
+    path: '/:reaction_type',
+    method: 'POST',
+    body: z.undefined(),
+    pathParams: reactionTypeSchema,
+    responses: {
+      201: z.undefined(),
+    },
+  },
+  remove: {
+    path: '/:reaction_type?',
+    method: 'DELETE',
+    pathParams: z.object({
+      reaction_type: reactionEnumSchema.optional(),
+    }),
+    responses: {
+      204: z.undefined(),
+    },
+  },
+}, {
+  pathPrefix: '/reactions',
+});
 
 const ENTITY_LEVEL = builder.router({
   likes: {
@@ -69,6 +115,7 @@ const ENTITY_LEVEL = builder.router({
       204: z.undefined(),
     },
   },
+  reactions: REACTIONS_LEVEL,
 }, {
   pathPrefix: '/:id',
 });
@@ -93,3 +140,9 @@ export const comments = builder.router({
 
 export type CommentReplyParams = z.infer<typeof commentReplyParamsSchema>;
 export type CommentPostParams = z.infer<typeof commentPostParamsSchema>;
+
+export type ReactionsSummaryResponse = z.infer<
+  typeof reactionsSummaryResponseSchema
+>;
+export type ReactionsResponse = z.infer<typeof reactionsResponseSchema>;
+export type ReactionType = z.infer<typeof reactionTypeSchema>;
