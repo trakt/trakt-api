@@ -1,6 +1,7 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
+import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
@@ -25,7 +26,9 @@ const REACTIONS_LEVEL = builder.router({
   all: {
     path: '/',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: reactionsResponseSchema.array(),
     },
