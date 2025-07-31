@@ -88,6 +88,14 @@ export const movieResponseSchema = z.object({
    */
   original_title: z.string().nullish(),
   /***
+   * Available if requesting extended `full`.
+   */
+  after_credits: z.boolean().nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  during_credits: z.boolean().nullish(),
+  /***
    * Available if requesting extended `colors`.
    */
   colors: mediaColorsResponseSchema.nullish(),
