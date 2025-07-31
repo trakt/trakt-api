@@ -51,13 +51,21 @@ export const episodeResponseSchema = z.object({
     .nullish(),
   ids: episodeIdsResponseSchema,
   /***
+   * Available if requesting extended `full`.
+   */
+  original_title: z.string().nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  after_credits: z.boolean().nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  during_credits: z.boolean().nullish(),
+  /***
    * Available if requesting extended `images`.
    */
   images: z
     .object({ screenshot: z.array(z.string()) })
     .nullish(),
-  /***
-   * Available if requesting extended `full`.
-   */
-  original_title: z.string().nullish(),
 });
