@@ -1,7 +1,7 @@
 import { episodeIdsResponseSchema } from '../../../_internal/response/episodeIdsResponseSchema.ts';
-import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
+import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { showIdsResponseSchema } from '../../../_internal/response/showIdsResponseSchema.ts';
-import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
+import { typedShowResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
 const ratedResponseSchema = z.object({
@@ -25,15 +25,11 @@ const ratedEpisodesResponseSchema = ratedResponseSchema.extend({
   }),
 });
 
-const ratedMoviesResponseSchema = ratedResponseSchema.extend({
-  type: z.literal('movie'),
-  movie: movieResponseSchema,
-});
+const ratedMoviesResponseSchema = ratedResponseSchema
+  .merge(typedMovieResponseSchema);
 
-const ratedShowsResponseSchema = ratedResponseSchema.extend({
-  type: z.literal('show'),
-  show: showResponseSchema,
-});
+const ratedShowsResponseSchema = ratedResponseSchema
+  .merge(typedShowResponseSchema);
 
 export const RatedItemResponseSchema = z.discriminatedUnion('type', [
   ratedEpisodesResponseSchema,
