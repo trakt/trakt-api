@@ -100,3 +100,8 @@ export const movieResponseSchema = z.object({
    */
   colors: mediaColorsResponseSchema.nullish(),
 });
+
+export const typedMovieResponseSchema = z.object({
+  type: z.literal('movie'),
+  movie: movieResponseSchema,
+});

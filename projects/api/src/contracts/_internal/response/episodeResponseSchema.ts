@@ -1,5 +1,6 @@
 import { float, z } from '../z.ts';
 import { episodeIdsResponseSchema } from './episodeIdsResponseSchema.ts';
+import { showResponseSchema } from './showResponseSchema.ts';
 
 export const episodeResponseSchema = z.object({
   season: z.number().int(),
@@ -68,4 +69,10 @@ export const episodeResponseSchema = z.object({
   images: z
     .object({ screenshot: z.array(z.string()) })
     .nullish(),
+});
+
+export const typedEpisodeResponseSchema = z.object({
+  type: z.literal('episode'),
+  episode: episodeResponseSchema,
+  show: showResponseSchema,
 });

@@ -107,3 +107,8 @@ export const showResponseSchema = z.object({
    */
   colors: mediaColorsResponseSchema.nullish(),
 });
+
+export const typedShowResponseSchema = z.object({
+  type: z.literal('show'),
+  show: showResponseSchema,
+});
