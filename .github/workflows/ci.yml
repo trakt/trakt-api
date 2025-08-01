@@ -74,3 +74,9 @@ jobs:
           path: projects/openapi/openapi.json
           if-no-files-found: error
           retention-days: 30
+
+      - name: The Sacred Transcription aka Upload to Readme
+        if: github.ref == 'refs/heads/master'
+        uses: readmeio/rdme@v10
+        with:
+          rdme: openapi upload ./projects/openapi/openapi.json --key=${{ secrets.README_API_KEY }} --slug=openapi.json
