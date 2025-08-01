@@ -1,6 +1,5 @@
-import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
-import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
-import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
+import { typedEpisodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
+import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
 const statsSchema = z.object({
@@ -20,17 +19,12 @@ const statsCategoriesSchema = z.object({
 });
 
 const watchedEpisodeSchema = z.object({
-  type: z.literal('episode'),
   watched_at: z.string().datetime(),
-  episode: episodeResponseSchema,
-  show: showResponseSchema,
-});
+}).merge(typedEpisodeResponseSchema);
 
 const watchedMovieSchema = z.object({
-  type: z.literal('movie'),
   watched_at: z.string().datetime(),
-  movie: movieResponseSchema,
-});
+}).merge(typedMovieResponseSchema);
 
 const watchedItemSchema = z.discriminatedUnion('type', [
   watchedEpisodeSchema,
