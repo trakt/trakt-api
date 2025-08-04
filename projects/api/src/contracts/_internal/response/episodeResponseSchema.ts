@@ -5,7 +5,7 @@ export const episodeResponseSchema = z.object({
   season: z.number().int(),
   number: z.number().int(),
   title: z.string(),
-  first_aired: z.string(),
+  first_aired: z.string().nullish(),
   number_abs: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
