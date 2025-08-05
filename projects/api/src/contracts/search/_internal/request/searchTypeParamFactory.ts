@@ -9,6 +9,6 @@ export const searchTypeParamFactory = <T extends string[]>() =>
       .openapi({
         description:
           'Specify the type of results by sending a single value or a comma delimited string for multiple types.',
-        enum: ['movie', 'show'],
+        enum: ['movie', 'show', 'person'],
       }),
   });
