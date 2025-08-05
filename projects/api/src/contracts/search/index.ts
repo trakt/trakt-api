@@ -7,7 +7,7 @@ import { searchTypeParamFactory } from './_internal/request/searchTypeParamFacto
 import { searchResultResponseSchema } from './_internal/response/searchResultResponseSchema.ts';
 
 /**
- * TODO: add support for 'episode', 'person', 'list'
+ * TODO: add support for 'episode', 'list'
  */
 
 export const search = builder.router({
@@ -15,7 +15,7 @@ export const search = builder.router({
     path: '/:type',
     method: 'GET',
     pathParams: searchTypeParamFactory<
-      ['movie', 'show']
+      ['movie', 'show', 'person']
     >(),
     query: searchQuerySchema
       .merge(pageQuerySchema)
