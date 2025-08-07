@@ -1,8 +1,8 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
-import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { calendarRequestParamsSchema } from './_internal/request/calendarParamsSchema.ts';
+import { calendarMovieResponseSchema } from './_internal/response/calendarMovieResponseSchema.ts';
 import { calendarShowListResponseSchema } from './_internal/response/calendarShowListResponseSchema.ts';
 
 export const calendars = builder.router({
@@ -48,7 +48,7 @@ export const calendars = builder.router({
     query: extendedMediaQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
-      200: movieResponseSchema.array(),
+      200: calendarMovieResponseSchema.array(),
     },
   },
   dvdReleases: {
@@ -57,7 +57,7 @@ export const calendars = builder.router({
     query: extendedMediaQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
-      200: movieResponseSchema.array(),
+      200: calendarMovieResponseSchema.array(),
     },
   },
 }, { pathPrefix: '/calendars' });
@@ -66,4 +66,4 @@ export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;
 export type CalendarShowListResponse = z.infer<
   typeof calendarShowListResponseSchema
 >;
-export type CalendarMovieListResponse = z.infer<typeof movieResponseSchema>[];
+export type CalendarMovieResponse = z.infer<typeof calendarMovieResponseSchema>;
