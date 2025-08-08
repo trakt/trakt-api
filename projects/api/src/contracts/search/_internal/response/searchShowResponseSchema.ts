@@ -1,6 +1,6 @@
 import { typedShowResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
-import { z } from '../../../_internal/z.ts';
+import { int64, z } from '../../../_internal/z.ts';
 
 export const searchShowResponseSchema = z.object({
-  score: z.number().int(),
+  score: int64(z.number().int()),
 }).merge(typedShowResponseSchema);

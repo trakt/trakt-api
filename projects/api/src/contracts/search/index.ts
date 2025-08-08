@@ -5,6 +5,7 @@ import type { z } from '../_internal/z.ts';
 import { searchQuerySchema } from './_internal/request/searchQuerySchema.ts';
 import { searchTypeParamFactory } from './_internal/request/searchTypeParamFactory.ts';
 import { searchResultResponseSchema } from './_internal/response/searchResultResponseSchema.ts';
+import { searchEngineSchema } from "./_internal/request/searchEngineSchema.ts";
 
 /**
  * TODO: add support for 'episode', 'list'
@@ -18,6 +19,7 @@ export const search = builder.router({
       ['movie', 'show', 'person']
     >(),
     query: searchQuerySchema
+      .merge(searchEngineSchema)
       .merge(pageQuerySchema)
       .merge(
         extendedQuerySchemaFactory<['full,images']>(),
