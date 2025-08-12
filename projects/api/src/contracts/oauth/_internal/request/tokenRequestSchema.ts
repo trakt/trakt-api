@@ -6,5 +6,8 @@ export const tokenRequestSchema = tokenBaseSchema.extend({
     description:
       'The code received when trakt redirects the user back to the application.',
   }),
-  grant_type: z.literal('authorization_code'),
+  grant_type: z.string({
+    description:
+      'Defines how an access token is obtained.',
+  }),
 });
