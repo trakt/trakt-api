@@ -20,7 +20,7 @@ const REACTIONS_LEVEL = builder.router({
     path: '/summary',
     method: 'GET',
     responses: {
-      200: reactionsSummaryResponseSchema.array(),
+      200: reactionsSummaryResponseSchema,
     },
   },
   all: {
