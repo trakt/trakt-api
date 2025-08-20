@@ -4,5 +4,5 @@ import { peopleSummaryResponseSchema } from '../../../people/_internal/response/
 export const searchPersonResponseSchema = z.object({
   score: int64(z.number().int()),
   type: z.literal('person'),
-  person: peopleSummaryResponseSchema,
+  person: peopleSummaryResponseSchema.nullish(),
 });
