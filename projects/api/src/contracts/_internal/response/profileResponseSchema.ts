@@ -32,7 +32,7 @@ export const profileResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  age: z.number().int().or(z.null()).nullish(),
+  age: z.number().int().nullish(),
   /***
    * Available if requesting extended `images`.
    */
