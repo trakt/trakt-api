@@ -1,19 +1,28 @@
-import { z } from 'zod';
-import { typedEpisodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
-import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
+import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
+import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { profileResponseSchema } from '../../../_internal/response/profileResponseSchema.ts';
-import { asString } from '../../../_internal/z.ts';
-
-const actionSchema = asString(z.enum(['scrobble', 'watch', 'checkin']));
+import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
+import { asString, int64, z } from '../../../_internal/z.ts';
 
 const activitySchema = z.object({
-  id: z.number().int(),
+  id: int64(z.number().int()),
   activity_at: z.string().datetime(),
-  action: actionSchema,
+  action: asString(z.enum(['scrobble', 'watch', 'checkin'])),
   user: profileResponseSchema,
 });
 
-export const socialActivityResponseSchema = z.discriminatedUnion('type', [
-  activitySchema.merge(typedEpisodeResponseSchema),
-  activitySchema.merge(typedMovieResponseSchema),
+const socialEpisodeResponseSchema = z.object({
+  type: z.literal('episode'),
+  episode: episodeResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
+});
+
+const socialMovieResponseSchema = z.object({
+  type: z.literal('movie'),
+  movie: movieResponseSchema.nullish(),
+});
+
+export const socialActivityResponseSchema = z.union([
+  activitySchema.merge(socialEpisodeResponseSchema),
+  activitySchema.merge(socialMovieResponseSchema),
 ]);
