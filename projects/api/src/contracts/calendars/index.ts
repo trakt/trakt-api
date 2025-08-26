@@ -3,7 +3,7 @@ import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuer
 import type { z } from '../_internal/z.ts';
 import { calendarRequestParamsSchema } from './_internal/request/calendarParamsSchema.ts';
 import { calendarMovieResponseSchema } from './_internal/response/calendarMovieResponseSchema.ts';
-import { calendarShowListResponseSchema } from './_internal/response/calendarShowListResponseSchema.ts';
+import { calendarShowResponseSchema } from './_internal/response/calendarShowListResponseSchema.ts';
 
 export const calendars = builder.router({
   shows: {
@@ -12,7 +12,7 @@ export const calendars = builder.router({
     query: extendedMediaQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
-      200: calendarShowListResponseSchema,
+      200: calendarShowResponseSchema.array(),
     },
   },
   newShows: {
@@ -21,7 +21,7 @@ export const calendars = builder.router({
     query: extendedMediaQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
-      200: calendarShowListResponseSchema,
+      200: calendarShowResponseSchema.array(),
     },
   },
   seasonPremieres: {
@@ -30,7 +30,7 @@ export const calendars = builder.router({
     query: extendedMediaQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
-      200: calendarShowListResponseSchema,
+      200: calendarShowResponseSchema.array(),
     },
   },
   finales: {
@@ -39,7 +39,7 @@ export const calendars = builder.router({
     query: extendedMediaQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
-      200: calendarShowListResponseSchema,
+      200: calendarShowResponseSchema.array(),
     },
   },
   movies: {
@@ -63,7 +63,7 @@ export const calendars = builder.router({
 }, { pathPrefix: '/calendars' });
 
 export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;
-export type CalendarShowListResponse = z.infer<
-  typeof calendarShowListResponseSchema
+export type CalendarShowResponse = z.infer<
+  typeof calendarShowResponseSchema
 >;
 export type CalendarMovieResponse = z.infer<typeof calendarMovieResponseSchema>;
