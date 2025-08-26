@@ -10,14 +10,14 @@
     "jsr:@std/internal@^1.0.9": "1.0.10",
     "jsr:@std/path@^1.1.1": "1.1.2",
     "jsr:@std/testing@^1.0.5": "1.0.15",
-    "npm:@anatine/zod-openapi@^2.2.8": "2.2.8_openapi3-ts@4.5.0_zod@3.25.76",
+    "npm:@anatine/zod-openapi@^2.2.8": "2.2.8_openapi3-ts@2.0.2_zod@3.25.76",
     "npm:@hono/swagger-ui@~0.5.2": "0.5.2_hono@4.9.4",
     "npm:@seriousme/openapi-schema-validator@^2.5.0": "2.5.0_ajv@8.17.1",
     "npm:@ts-rest/core@3.52.1": "3.52.1_zod@3.25.76",
     "npm:@ts-rest/open-api@3.52.1": "3.52.1_@ts-rest+core@3.52.1__zod@3.25.76_zod@3.25.76_openapi3-ts@2.0.2",
     "npm:@types/node@*": "24.2.0",
     "npm:hono@^4.9.4": "4.9.4",
-    "npm:openapi3-ts@^4.1.2": "4.5.0",
+    "npm:openapi3-ts@^2.0.2": "2.0.2",
     "npm:zod@^3.25.76": "3.25.76"
   },
   "jsr": {
@@ -65,15 +65,15 @@
     "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.76": {
       "integrity": "sha512-q0qHfnuNYVKu0Swrnnvfj9971AEyW7c8v9jCOZGCl5ZbyGMNG4RPyJkRcMi/JC8CRfdOe0IDfNm1nNsi2avprg==",
       "dependencies": [
-        "openapi3-ts@2.0.2",
+        "openapi3-ts",
         "ts-deepmerge",
         "zod"
       ]
     },
-    "@anatine/zod-openapi@2.2.8_openapi3-ts@4.5.0_zod@3.25.76": {
+    "@anatine/zod-openapi@2.2.8_openapi3-ts@2.0.2_zod@3.25.76": {
       "integrity": "sha512-iyM8mB556KdiZ6a1GTZ67ACLnJakU1hrzzXoh7PLaReldAdMq88MlZn/Ir/U56/TBuQctBhh/4seo0b0B343uw==",
       "dependencies": [
-        "openapi3-ts@4.5.0",
+        "openapi3-ts",
         "ts-deepmerge",
         "zod"
       ]
@@ -119,7 +119,7 @@
       "dependencies": [
         "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.76",
         "@ts-rest/core@3.52.1_zod@3.25.76",
-        "openapi3-ts@2.0.2",
+        "openapi3-ts",
         "zod"
       ]
     },
@@ -128,7 +128,7 @@
       "dependencies": [
         "@anatine/zod-openapi@1.14.2_openapi3-ts@2.0.2_zod@3.25.76",
         "@ts-rest/core@3.52.1_zod@3.25.76_@types+node@24.2.0",
-        "openapi3-ts@2.0.2",
+        "openapi3-ts",
         "zod"
       ]
     },
@@ -190,13 +190,7 @@
     "openapi3-ts@2.0.2": {
       "integrity": "sha512-TxhYBMoqx9frXyOgnRHufjQfPXomTIHYKhSKJ6jHfj13kS8OEIhvmE8CTuQyKtjjWttAjX5DPxM1vmalEpo8Qw==",
       "dependencies": [
-        "yaml@1.10.2"
-      ]
-    },
-    "openapi3-ts@4.5.0": {
-      "integrity": "sha512-jaL+HgTq2Gj5jRcfdutgRGLosCy/hT8sQf6VOy+P+g36cZOjI1iukdPnijC+4CmeRzg/jEllJUboEic2FhxhtQ==",
-      "dependencies": [
-        "yaml@2.8.1"
+        "yaml"
       ]
     },
     "require-from-string@2.0.2": {
@@ -210,10 +204,6 @@
     },
     "yaml@1.10.2": {
       "integrity": "sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg=="
-    },
-    "yaml@2.8.1": {
-      "integrity": "sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==",
-      "bin": true
     },
     "zod@3.25.76": {
       "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="
@@ -237,7 +227,7 @@
           "npm:@ts-rest/core@3.52.1",
           "npm:@ts-rest/open-api@3.52.1",
           "npm:hono@^4.9.4",
-          "npm:openapi3-ts@^4.1.2",
+          "npm:openapi3-ts@^2.0.2",
           "npm:zod@^3.25.76"
         ]
       },
