@@ -35,7 +35,7 @@ const progress = builder.router({
         .merge(sortQuerySchema)
         .merge(statsQuerySchema),
       responses: {
-        200: upNextResponseSchema,
+        200: upNextResponseSchema.array(),
       },
     },
     nitro: {
@@ -43,7 +43,7 @@ const progress = builder.router({
       path: '/up_next_nitro',
       query: pageQuerySchema,
       responses: {
-        200: upNextResponseSchema,
+        200: upNextResponseSchema.array(),
       },
     },
   },
