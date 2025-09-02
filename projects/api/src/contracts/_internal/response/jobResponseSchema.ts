@@ -221,6 +221,10 @@ export const jobResponseSchema = asString(z.enum([
   'Series Director',
   'Special Guest Director',
   'Stage Director',
+  'Second Assistant Director',
+  'Second Second Assistant Director',
+  'Third Assistant Director',
+  'Additional Second Assistant Director',
 
   //Writing jobs
   'Adaptation',
