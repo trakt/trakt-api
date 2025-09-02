@@ -271,4 +271,20 @@ export const jobResponseSchema = asString(z.enum([
   'Writer',
   "Writers' Assistant",
   "Writers' Production",
+
+  //Other jobs
+  'Pilot',
+  'Dialect Coach',
+  'Set Medic',
+  'Technical Advisor',
+  'Loader',
+  'Catering',
+  'Craft Service',
+  'Security Coordinator',
+  'Set Costumer',
+  'Makeup Artist',
+  'Hairstylist',
+  'Costumer',
+  'Key Costumer',
+  'Prosthetics',
 ]));
