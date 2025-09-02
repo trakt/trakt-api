@@ -6,8 +6,9 @@ export const limitlessQuerySchema = z.object({
     .or(z.literal('all'))
     .nullish()
     .openapi({
-      description: `The number of items per page, can be a number or the value all`,
+      description:
+        `The number of items per page, can be a number or the value all`,
       type: 'string',
-      oneOf: undefined
+      oneOf: undefined,
     }),
 });
