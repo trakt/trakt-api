@@ -245,6 +245,7 @@ export const movies = builder.router({
 export {
   movieAnticipatedResponseSchema,
   movieHotResponseSchema,
+  movieResponseSchema,
   movieStreamingResponseSchema,
   movieTrendingResponseSchema,
   movieWatchedResponseSchema,

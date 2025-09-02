@@ -394,6 +394,7 @@ export {
   showHotResponseSchema,
   showProgressResponseSchema,
   showQueryParamsSchema,
+  showResponseSchema,
   showStreamingResponseSchema,
   showTrendingResponseSchema,
   showWatchedResponseSchema,
