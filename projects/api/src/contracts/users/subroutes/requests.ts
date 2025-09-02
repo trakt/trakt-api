@@ -2,8 +2,8 @@ import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import { internalIdParamsSchema } from '../../_internal/request/internalIdParamsSchema.ts';
 import { z } from '../../_internal/z.ts';
-import { followerResponseSchema } from '../_internal/response/followerResponseSchema.ts';
-import { requestsResponseSchema } from '../_internal/response/requestsResponseSchema.ts';
+import { followerResponseSchema } from '../schema/response/followerResponseSchema.ts';
+import { requestsResponseSchema } from '../schema/response/requestsResponseSchema.ts';
 
 export const requests = builder.router({
   follow: {

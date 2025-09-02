@@ -1,4 +1,4 @@
-import { sortEnumSchema } from '../../users/_internal/request/sortParamsSchema.ts';
+import { sortEnumSchema } from '../../users/schema/request/sortParamsSchema.ts';
 import { asString, z } from '../z.ts';
 import { listPrivacyEnumSchema } from './listPrivacyEnumSchema.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';

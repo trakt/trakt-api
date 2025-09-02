@@ -1,8 +1,8 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
-import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
-import { RatedItemResponseSchema } from '../_internal/response/ratedItemResponseSchema.ts';
+import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { RatedItemResponseSchema } from '../schema/response/ratedItemResponseSchema.ts';
 
 export const ratings = builder.router({
   movies: {

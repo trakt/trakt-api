@@ -1,10 +1,10 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import type { z } from '../../_internal/z.ts';
-import { showQueryParamsSchema } from '../../shows/_internal/request/showQueryParamsSchema.ts';
-import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
-import { watchedMoviesResponseSchema } from '../_internal/response/watchedMoviesResponseSchema.ts';
-import { watchedShowsResponseSchema } from '../_internal/response/watchedShowsResponseSchema.ts';
+import { showQueryParamsSchema } from '../../shows/schema/request/showQueryParamsSchema.ts';
+import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { watchedMoviesResponseSchema } from '../schema/response/watchedMoviesResponseSchema.ts';
+import { watchedShowsResponseSchema } from '../schema/response/watchedShowsResponseSchema.ts';
 
 export const watched = builder.router({
   movies: {

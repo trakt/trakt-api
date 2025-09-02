@@ -2,13 +2,13 @@ import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
-import { dateRangeParamsSchema } from '../_internal/request/dateRangeParamsSchema.ts';
-import { historyItemIdParamsSchema } from '../_internal/request/historyItemIdParamsSchema.ts';
-import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
-import { activityHistoryResponseSchema } from '../_internal/response/activityHistoryResponseSchema.ts';
-import { episodeActivityHistoryResponseSchema } from '../_internal/response/episodeActivityHistoryResponseSchema.ts';
-import { movieActivityHistoryResponseSchema } from '../_internal/response/movieActivityHistoryResponseSchema.ts';
-import { showActivityHistoryResponseSchema } from '../_internal/response/showActivityHistoryResponseSchema.ts';
+import { dateRangeParamsSchema } from '../schema/request/dateRangeParamsSchema.ts';
+import { historyItemIdParamsSchema } from '../schema/request/historyItemIdParamsSchema.ts';
+import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { activityHistoryResponseSchema } from '../schema/response/activityHistoryResponseSchema.ts';
+import { episodeActivityHistoryResponseSchema } from '../schema/response/episodeActivityHistoryResponseSchema.ts';
+import { movieActivityHistoryResponseSchema } from '../schema/response/movieActivityHistoryResponseSchema.ts';
+import { showActivityHistoryResponseSchema } from '../schema/response/showActivityHistoryResponseSchema.ts';
 
 export const history = builder.router({
   all: {

@@ -36,11 +36,11 @@ import {
   type watchNowServiceResponseSchema,
 } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
-import { movieAnticipatedResponseSchema } from './_internal/response/movieAnticipatedResponseSchema.ts';
-import { movieHotResponseSchema } from './_internal/response/movieHotResponseSchema.ts';
-import { movieStreamingResponseSchema } from './_internal/response/movieStreamingResponseSchema.ts';
-import { movieTrendingResponseSchema } from './_internal/response/movieTrendingResponseSchema.ts';
-import { movieWatchedResponseSchema } from './_internal/response/movieWatchedResponseSchema.ts';
+import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
+import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
+import { movieStreamingResponseSchema } from './schema/response/movieStreamingResponseSchema.ts';
+import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
+import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
   summary: {

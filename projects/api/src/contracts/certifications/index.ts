@@ -2,8 +2,8 @@ import { builder } from '../_internal/builder.ts';
 import type { z } from '../_internal/z.ts';
 import {
   movieCertificationsResponseSchema,
-} from './_internal/movieCertificationsResponseSchema.ts';
-import { showCertificationsResponseSchema } from './_internal/showCertificationsResponseSchema.ts';
+} from './schema/movieCertificationsResponseSchema.ts';
+import { showCertificationsResponseSchema } from './schema/showCertificationsResponseSchema.ts';
 
 export const certifications = builder.router({
   shows: {

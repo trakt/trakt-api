@@ -7,7 +7,6 @@ export const tokenRefreshSchema = tokenBaseSchema.extend({
       'The refresh token which was sent from the server during the exchange of the code.',
   }),
   grant_type: z.string({
-    description:
-      'Defines how an access token is obtained.',
+    description: 'Defines how an access token is obtained.',
   }),
 });

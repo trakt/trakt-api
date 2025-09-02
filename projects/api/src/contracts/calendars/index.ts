@@ -1,9 +1,9 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import type { z } from '../_internal/z.ts';
-import { calendarRequestParamsSchema } from './_internal/request/calendarParamsSchema.ts';
-import { calendarMovieResponseSchema } from './_internal/response/calendarMovieResponseSchema.ts';
-import { calendarShowResponseSchema } from './_internal/response/calendarShowListResponseSchema.ts';
+import { calendarRequestParamsSchema } from './schema/request/calendarParamsSchema.ts';
+import { calendarMovieResponseSchema } from './schema/response/calendarMovieResponseSchema.ts';
+import { calendarShowResponseSchema } from './schema/response/calendarShowListResponseSchema.ts';
 
 export const calendars = builder.router({
   shows: {
