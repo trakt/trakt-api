@@ -1,22 +1,22 @@
-import type { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
-import type { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
-import type { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
-import type { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
-import type { jobResponseSchema } from '../_internal/response/jobResponseSchema.ts';
-import type { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
-import type { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
-import type { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
-import type { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
-import type { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
-import type { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
-import type { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
-import type { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
-import type { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
-import type { statusResponseSchema } from '../_internal/response/statusResponseSchema.ts';
-import type { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
-import type { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
-import type { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
-import type { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
+import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
+import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
+import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
+import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
+import { jobResponseSchema } from '../_internal/response/jobResponseSchema.ts';
+import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
+import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
+import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
+import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
+import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
+import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
+import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
+import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
+import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
+import { statusResponseSchema } from '../_internal/response/statusResponseSchema.ts';
+import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
+import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
+import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
+import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
 
 export type CommentResponse = z.infer<typeof commentResponseSchema>;
@@ -49,3 +49,25 @@ export type TranslationResponse = z.infer<
 export type ProfileResponse = z.infer<typeof profileResponseSchema>;
 export type WatchNowResponse = z.infer<typeof watchNowResponseSchema>;
 export type VideoResponse = z.infer<typeof videoResponseSchema>;
+
+export {
+  commentResponseSchema,
+  episodeResponseSchema,
+  episodeStatsResponseSchema,
+  episodeTranslationResponseSchema,
+  jobResponseSchema,
+  listAddResponseSchema,
+  listedMovieResponseSchema,
+  listedShowResponseSchema,
+  listRemoveResponseSchema,
+  listResponseSchema,
+  peopleResponseSchema,
+  profileResponseSchema,
+  ratingsResponseSchema,
+  sentimentsResponseSchema,
+  statusResponseSchema,
+  studioResponseSchema,
+  translationResponseSchema,
+  videoResponseSchema,
+  watchNowResponseSchema,
+};
