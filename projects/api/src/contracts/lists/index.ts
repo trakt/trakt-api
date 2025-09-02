@@ -124,4 +124,6 @@ export const lists = builder.router({
   pathPrefix: '/lists',
 });
 
+export { prominentListResponseSchema };
+
 export type ProminentListResponse = z.infer<typeof prominentListResponseSchema>;

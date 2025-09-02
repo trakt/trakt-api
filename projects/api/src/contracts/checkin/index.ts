@@ -34,6 +34,14 @@ export const checkin = builder.router({
   },
 }, { pathPrefix: '/checkin' });
 
+export {
+  checkin409ErrorResponse,
+  movieCheckinRequestSchema,
+  movieCheckinResponseSchema,
+  showCheckinRequestSchema,
+  showCheckinResponseSchema,
+};
+
 export type ShowCheckinRequest = z.infer<typeof showCheckinRequestSchema>;
 export type ShowCheckinResponse = z.infer<typeof showCheckinResponseSchema>;
 export type MovieCheckinRequest = z.infer<typeof movieCheckinRequestSchema>;

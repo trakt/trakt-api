@@ -62,6 +62,12 @@ export const calendars = builder.router({
   },
 }, { pathPrefix: '/calendars' });
 
+export {
+  calendarMovieResponseSchema,
+  calendarRequestParamsSchema,
+  calendarShowResponseSchema,
+};
+
 export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;
 export type CalendarShowResponse = z.infer<
   typeof calendarShowResponseSchema

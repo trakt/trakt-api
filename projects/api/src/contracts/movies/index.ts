@@ -242,6 +242,14 @@ export const movies = builder.router({
   pathPrefix: '/movies',
 });
 
+export {
+  movieAnticipatedResponseSchema,
+  movieHotResponseSchema,
+  movieStreamingResponseSchema,
+  movieTrendingResponseSchema,
+  movieWatchedResponseSchema,
+};
+
 export type MovieIdParams = z.infer<typeof idParamsSchema>;
 export type MovieResponse = z.infer<typeof movieResponseSchema>;
 export type Genre = z.infer<typeof genreEnumSchema>;
