@@ -3,9 +3,9 @@ import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuer
 import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import type { z } from '../_internal/z.ts';
-import { peopleMovieCreditsResponseSchema } from './_internal/response/peopleMovieCreditsResponseSchema.ts';
-import { peopleShowCreditsResponseSchema } from './_internal/response/peopleShowCreditsResponseSchema.ts';
-import { peopleSummaryResponseSchema } from './_internal/response/peopleSummaryResponseSchema.ts';
+import { peopleMovieCreditsResponseSchema } from './schema/response/peopleMovieCreditsResponseSchema.ts';
+import { peopleShowCreditsResponseSchema } from './schema/response/peopleShowCreditsResponseSchema.ts';
+import { peopleSummaryResponseSchema } from './schema/response/peopleSummaryResponseSchema.ts';
 
 export const people = builder.router({
   summary: {

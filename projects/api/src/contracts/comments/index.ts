@@ -12,8 +12,8 @@ import {
   reactionTypeSchema,
 } from '../_internal/response/reactionsResponseSchema.ts';
 import { z } from '../_internal/z.ts';
-import { commentPostParamsSchema } from './_internal/requests/commentPostParamsSchema.ts';
-import { commentReplyParamsSchema } from './_internal/requests/commentReplyParamsSchema.ts';
+import { commentPostParamsSchema } from './schema/requests/commentPostParamsSchema.ts';
+import { commentReplyParamsSchema } from './schema/requests/commentReplyParamsSchema.ts';
 
 const REACTIONS_LEVEL = builder.router({
   summary: {

@@ -1,10 +1,10 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import type { z } from '../_internal/z.ts';
-import { episodeScrobbleRequestSchema } from './_internal/request/episodeScrobbleRequestSchema.ts';
-import { movieScrobbleRequestSchema } from './_internal/request/movieScrobbleRequestSchema.ts';
-import { episodeScrobbleResponseSchema } from './_internal/response/episodeScrobbleResponseSchema.ts';
-import { movieScrobbleResponseSchema } from './_internal/response/movieScrobbleResponseSchema.ts';
+import { episodeScrobbleRequestSchema } from './schema/request/episodeScrobbleRequestSchema.ts';
+import { movieScrobbleRequestSchema } from './schema/request/movieScrobbleRequestSchema.ts';
+import { episodeScrobbleResponseSchema } from './schema/response/episodeScrobbleResponseSchema.ts';
+import { movieScrobbleResponseSchema } from './schema/response/movieScrobbleResponseSchema.ts';
 
 export const scrobble = builder.router({
   movie: builder.router({

@@ -3,11 +3,11 @@ import { bulkMediaRequestSchema } from '../../_internal/request/bulkMediaRequest
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
-import { hiddenParamsSchema } from '../_internal/request/hiddenParamsSchema.ts';
-import { hiddenShowRequestSchema } from '../_internal/request/hiddenShowRequestSchema.ts';
-import { hiddenAddResponseSchema } from '../_internal/response/hiddenAddResponseSchema.ts';
-import { hiddenRemoveResponseSchema } from '../_internal/response/hiddenRemoveResponseSchema.ts';
-import { hiddenShowResponseSchema } from '../_internal/response/hiddenShowResponseSchema.ts';
+import { hiddenParamsSchema } from '../schema/request/hiddenParamsSchema.ts';
+import { hiddenShowRequestSchema } from '../schema/request/hiddenShowRequestSchema.ts';
+import { hiddenAddResponseSchema } from '../schema/response/hiddenAddResponseSchema.ts';
+import { hiddenRemoveResponseSchema } from '../schema/response/hiddenRemoveResponseSchema.ts';
+import { hiddenShowResponseSchema } from '../schema/response/hiddenShowResponseSchema.ts';
 
 export const hidden = builder.router({
   add: {

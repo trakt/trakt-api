@@ -8,22 +8,22 @@ import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
-import { collectionParamSchema } from './_internal/request/collectionParamSchema.ts';
-import { favoriteParamSchema } from './_internal/request/favoritesParamSchema.ts';
-import { historyRemoveRequestSchema } from './_internal/request/historyRemoveRequestSchema.ts';
-import { minimalParamSchema } from './_internal/request/minimalParamSchema.ts';
-import { ratingsParamSchema } from './_internal/request/ratingsParamSchema.ts';
+import { collectionParamSchema } from './schema/request/collectionParamSchema.ts';
+import { favoriteParamSchema } from './schema/request/favoritesParamSchema.ts';
+import { historyRemoveRequestSchema } from './schema/request/historyRemoveRequestSchema.ts';
+import { minimalParamSchema } from './schema/request/minimalParamSchema.ts';
+import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
 import {
   collectionMinimalResponseSchema,
   collectionMinimalShowResponseSchema,
-} from './_internal/response/collectionMinimalResponseSchema.ts';
-import { collectionResponseSchema } from './_internal/response/collectionResponseSchema.ts';
-import { favoritesRemoveResponseSchema } from './_internal/response/favoritesRemoveResponseSchema.ts';
-import { favoritesResponseSchema } from './_internal/response/favoritesResponseSchema.ts';
-import { historyRemoveResponseSchema } from './_internal/response/historyRemoveResponseSchema.ts';
-import { historyResponseSchema } from './_internal/response/historyResponseSchema.ts';
-import { ratingsSyncResponseSchema } from './_internal/response/ratingsResponseSchema.ts';
-import { upNextResponseSchema } from './_internal/response/upNextResponseSchema.ts';
+} from './schema/response/collectionMinimalResponseSchema.ts';
+import { collectionResponseSchema } from './schema/response/collectionResponseSchema.ts';
+import { favoritesRemoveResponseSchema } from './schema/response/favoritesRemoveResponseSchema.ts';
+import { favoritesResponseSchema } from './schema/response/favoritesResponseSchema.ts';
+import { historyRemoveResponseSchema } from './schema/response/historyRemoveResponseSchema.ts';
+import { historyResponseSchema } from './schema/response/historyResponseSchema.ts';
+import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
+import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
 
 const progress = builder.router({
   upNext: {

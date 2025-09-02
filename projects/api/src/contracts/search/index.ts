@@ -2,10 +2,10 @@ import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import type { z } from '../_internal/z.ts';
-import { searchQuerySchema } from './_internal/request/searchQuerySchema.ts';
-import { searchTypeParamFactory } from './_internal/request/searchTypeParamFactory.ts';
-import { searchResultResponseSchema } from './_internal/response/searchResultResponseSchema.ts';
-import { searchEngineSchema } from "./_internal/request/searchEngineSchema.ts";
+import { searchQuerySchema } from './schema/request/searchQuerySchema.ts';
+import { searchTypeParamFactory } from './schema/request/searchTypeParamFactory.ts';
+import { searchResultResponseSchema } from './schema/response/searchResultResponseSchema.ts';
+import { searchEngineSchema } from "./schema/request/searchEngineSchema.ts";
 
 /**
  * TODO: add support for 'episode', 'list'

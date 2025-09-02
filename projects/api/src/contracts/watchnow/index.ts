@@ -1,9 +1,9 @@
 import { builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 import {
-  type watchNowSourceResponseSchema,
+  watchNowSourceResponseSchema,
   watchNowSourcesResponseSchema,
-} from './_internal/response/watchNowSourcesResponseSchema.ts';
+} from './schema/response/watchNowSourcesResponseSchema.ts';
 
 export const watchnow = builder.router({
   sources: {

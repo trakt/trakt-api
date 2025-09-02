@@ -14,14 +14,14 @@ import { listedShowResponseSchema } from '../../_internal/response/listedShowRes
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../../_internal/response/listResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
-import { createListRequestSchema } from '../_internal/request/createListRequestSchema.ts';
-import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
-import { listParamsSchema } from '../_internal/request/listParamsSchema.ts';
-import { listUpdateRequestSchema } from '../_internal/request/listUpdateRequestSchema.ts';
-import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
-import { reorderRequestSchema } from '../_internal/request/reorderRequestSchema.ts';
-import { reorderListResponseSchema } from '../_internal/response/reorderListResponseSchema.ts';
-import { reorderListsResponseSchema } from '../_internal/response/reorderListsResponseSchema.ts';
+import { createListRequestSchema } from '../schema/request/createListRequestSchema.ts';
+import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
+import { listParamsSchema } from '../schema/request/listParamsSchema.ts';
+import { listUpdateRequestSchema } from '../schema/request/listUpdateRequestSchema.ts';
+import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { reorderRequestSchema } from '../schema/request/reorderRequestSchema.ts';
+import { reorderListResponseSchema } from '../schema/response/reorderListResponseSchema.ts';
+import { reorderListsResponseSchema } from '../schema/response/reorderListsResponseSchema.ts';
 
 const list = builder.router({
   summary: {

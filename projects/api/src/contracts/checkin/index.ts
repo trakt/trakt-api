@@ -1,10 +1,10 @@
 import { builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
-import { movieCheckinRequestSchema } from './_internal/request/movieCheckinRequestSchema.ts';
-import { showCheckinRequestSchema } from './_internal/request/showCheckinRequestSchema.ts';
-import { checkin409ErrorResponse } from './_internal/response/checkin409ErrorResponse.ts';
-import { movieCheckinResponseSchema } from './_internal/response/movieCheckinResponseSchema.ts';
-import { showCheckinResponseSchema } from './_internal/response/showCheckinResponseSchema.ts';
+import { movieCheckinRequestSchema } from './schema/request/movieCheckinRequestSchema.ts';
+import { showCheckinRequestSchema } from './schema/request/showCheckinRequestSchema.ts';
+import { checkin409ErrorResponse } from './schema/response/checkin409ErrorResponse.ts';
+import { movieCheckinResponseSchema } from './schema/response/movieCheckinResponseSchema.ts';
+import { showCheckinResponseSchema } from './schema/response/showCheckinResponseSchema.ts';
 
 export const checkin = builder.router({
   show: {

@@ -1,5 +1,5 @@
 import { int64, z } from '../../../_internal/z.ts';
-import { peopleSummaryResponseSchema } from '../../../people/_internal/response/peopleSummaryResponseSchema.ts';
+import { peopleSummaryResponseSchema } from '../../../people/index.ts';
 
 export const searchPersonResponseSchema = z.object({
   score: int64(z.number().int()),

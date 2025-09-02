@@ -4,7 +4,7 @@ import { listResponseSchema } from '../../../_internal/response/listResponseSche
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
-import { seasonResponseSchema } from '../../../shows/_internal/response/seasonResponseSchema.ts';
+import { seasonResponseSchema } from '../../../shows/schema/response/seasonResponseSchema.ts';
 
 const likedMovieCommentResponseSchema = z.object({
   /***

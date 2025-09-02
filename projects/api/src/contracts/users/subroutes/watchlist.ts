@@ -6,9 +6,9 @@ import { commentResponseSchema } from '../../_internal/response/commentResponseS
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
-import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
-import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
-import { sortParamsSchema } from '../_internal/request/sortParamsSchema.ts';
+import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
+import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
 export const watchlist = builder.router({
   movies: {

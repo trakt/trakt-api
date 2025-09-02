@@ -3,11 +3,11 @@ import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQ
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import type { z } from '../../_internal/z.ts';
-import { listCommentsSortParamsSchema } from '../_internal/request/listCommentsSortParamsSchema.ts';
-import { profileParamsSchema } from '../_internal/request/profileParamsSchema.ts';
-import { sortParamsSchema } from '../_internal/request/sortParamsSchema.ts';
-import { favoritedMoviesResponseSchema } from '../_internal/response/favoritedMoviesResponseSchema.ts';
-import { favoritedShowsResponseSchema } from '../_internal/response/favoritedShowsResponseSchema.ts';
+import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
+import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
+import { favoritedMoviesResponseSchema } from '../schema/response/favoritedMoviesResponseSchema.ts';
+import { favoritedShowsResponseSchema } from '../schema/response/favoritedShowsResponseSchema.ts';
 
 export const favorites = builder.router({
   movies: {

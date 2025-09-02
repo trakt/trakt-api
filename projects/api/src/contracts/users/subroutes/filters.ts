@@ -1,8 +1,8 @@
 import { builder } from '../../_internal/builder.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
-import { sectionParamsSchema } from '../_internal/request/sectionParamsSchema.ts';
-import { filterResponseSchema } from '../_internal/response/filterResponseSchema.ts';
+import { sectionParamsSchema } from '../schema/request/sectionParamsSchema.ts';
+import { filterResponseSchema } from '../schema/response/filterResponseSchema.ts';
 
 export const filters = builder.router({
   saved: {

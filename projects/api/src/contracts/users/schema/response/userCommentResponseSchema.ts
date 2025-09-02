@@ -3,7 +3,7 @@ import { episodeResponseSchema } from '../../../_internal/response/episodeRespon
 import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { typedShowResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
-import { seasonResponseSchema } from '../../../shows/_internal/response/seasonResponseSchema.ts';
+import { seasonResponseSchema } from '../../../shows/schema/response/seasonResponseSchema.ts';
 
 const commentedMovieResponseSchema = z.object({
   comment: commentResponseSchema,

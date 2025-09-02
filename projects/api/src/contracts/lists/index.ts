@@ -11,7 +11,7 @@ import { listedMovieResponseSchema } from '../_internal/response/listedMovieResp
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { z } from '../_internal/z.ts';
-import { prominentListResponseSchema } from './_internal/prominentListResponseSchema.ts';
+import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
   summary: {

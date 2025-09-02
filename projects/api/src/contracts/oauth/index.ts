@@ -1,13 +1,13 @@
 import { builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
-import { codeRequestSchema } from './_internal/request/codeRequestSchema.ts';
+import { codeRequestSchema } from './schema/request/codeRequestSchema.ts';
 import {
   deviceTokenRequestSchema,
-} from './_internal/request/deviceTokenRequestSchema.ts';
-import { tokenRefreshSchema } from './_internal/request/tokenRefreshSchema.ts';
-import { tokenRequestSchema } from './_internal/request/tokenRequestSchema.ts';
-import { codeResponseSchema } from './_internal/response/codeResponseSchema.ts';
-import { tokenResponseSchema } from './_internal/response/tokenResponseSchema.ts';
+} from './schema/request/deviceTokenRequestSchema.ts';
+import { tokenRefreshSchema } from './schema/request/tokenRefreshSchema.ts';
+import { tokenRequestSchema } from './schema/request/tokenRequestSchema.ts';
+import { codeResponseSchema } from './schema/response/codeResponseSchema.ts';
+import { tokenResponseSchema } from './schema/response/tokenResponseSchema.ts';
 
 const device = builder.router({
   code: {

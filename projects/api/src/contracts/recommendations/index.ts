@@ -2,10 +2,10 @@ import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { z } from '../_internal/z.ts';
-import { hideParamsSchema } from './_internal/request/hideParamsSchema.ts';
-import { recommendationsQuerySchema } from './_internal/request/recommendationsQuerySchema.ts';
-import { recommendedMovieResponse } from './_internal/response/recommendedMovieResponse.ts';
-import { recommendedShowResponse } from './_internal/response/recommendedShowResponse.ts';
+import { hideParamsSchema } from './schema/request/hideParamsSchema.ts';
+import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
+import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
+import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
 
 const movies = builder.router({
   recommend: {

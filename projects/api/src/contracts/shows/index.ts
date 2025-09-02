@@ -32,16 +32,16 @@ import { translationResponseSchema } from '../_internal/response/translationResp
 import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import type { z } from '../_internal/z.ts';
-import { episodeParamsSchema } from './_internal/request/episodeParamsSchema.ts';
-import { seasonParamsSchema } from './_internal/request/seasonParamsSchema.ts';
-import { showQueryParamsSchema } from './_internal/request/showQueryParamsSchema.ts';
-import { seasonResponseSchema } from './_internal/response/seasonResponseSchema.ts';
-import { showAnticipatedResponseSchema } from './_internal/response/showAnticipatedResponseSchema.ts';
-import { showHotResponseSchema } from './_internal/response/showHotResponseSchema.ts';
-import { showProgressResponseSchema } from './_internal/response/showProgressResponseSchema.ts';
-import { showStreamingResponseSchema } from './_internal/response/showStreamingResponseSchema.ts';
-import { showTrendingResponseSchema } from './_internal/response/showTrendingResponseSchema.ts';
-import { showWatchedResponseSchema } from './_internal/response/showWatchedResponseSchema.ts';
+import { episodeParamsSchema } from './schema/request/episodeParamsSchema.ts';
+import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
+import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
+import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts';
+import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
+import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
+import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
+import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
+import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
+import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
 
 const EPISODE_LEVEL = builder.router({
   summary: {
