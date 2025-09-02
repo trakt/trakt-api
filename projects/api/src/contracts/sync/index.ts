@@ -195,6 +195,22 @@ export const sync = builder.router({
   collection,
 }, { pathPrefix: '/sync' });
 
+export {
+  collectionMinimalResponseSchema,
+  collectionMinimalShowResponseSchema,
+  collectionParamSchema,
+  collectionResponseSchema,
+  favoriteParamSchema,
+  favoritesRemoveResponseSchema,
+  favoritesResponseSchema,
+  historyRemoveRequestSchema,
+  historyResponseSchema,
+  minimalParamSchema,
+  ratingsParamSchema,
+  ratingsSyncResponseSchema,
+  upNextResponseSchema,
+};
+
 export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
 
 export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;

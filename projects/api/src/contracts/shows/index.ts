@@ -386,6 +386,19 @@ export const shows = builder.router({
   pathPrefix: '/shows',
 });
 
+export {
+  episodeParamsSchema,
+  seasonParamsSchema,
+  seasonResponseSchema,
+  showAnticipatedResponseSchema,
+  showHotResponseSchema,
+  showProgressResponseSchema,
+  showQueryParamsSchema,
+  showStreamingResponseSchema,
+  showTrendingResponseSchema,
+  showWatchedResponseSchema,
+};
+
 export type ShowIdParams = z.infer<typeof idParamsSchema>;
 export type ShowResponse = z.infer<typeof showResponseSchema>;
 export type ShowProgressResponse = z.infer<typeof showProgressResponseSchema>;

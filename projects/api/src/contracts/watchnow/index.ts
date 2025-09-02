@@ -24,10 +24,12 @@ export const watchnow = builder.router({
         200: watchNowSourcesResponseSchema.array(),
       },
     },
-  }
+  },
 }, {
   pathPrefix: '/watchnow',
 });
+
+export { watchNowSourceResponseSchema, watchNowSourcesResponseSchema };
 
 export type WatchNowSourcesResponse = z.infer<
   typeof watchNowSourcesResponseSchema

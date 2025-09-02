@@ -31,6 +31,15 @@ const device = builder.router({
   pathPrefix: '/device',
 });
 
+export {
+  codeRequestSchema,
+  codeResponseSchema,
+  deviceTokenRequestSchema,
+  tokenRefreshSchema,
+  tokenRequestSchema,
+  tokenResponseSchema,
+};
+
 export type OAuthDeviceCodeRequest = z.infer<typeof codeRequestSchema>;
 export type OAuthDeviceCodeResponse = z.infer<typeof codeResponseSchema>;
 export type OAuthDeviceTokenRequest = z.infer<typeof deviceTokenRequestSchema>;

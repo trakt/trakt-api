@@ -24,6 +24,8 @@ export const certifications = builder.router({
   pathPrefix: '/certifications',
 });
 
+export { movieCertificationsResponseSchema, showCertificationsResponseSchema };
+
 export type MovieCertificationsResponse = z.infer<
   typeof movieCertificationsResponseSchema
 >;

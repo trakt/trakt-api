@@ -67,6 +67,13 @@ export const scrobble = builder.router({
   }),
 }, { pathPrefix: '/scrobble' });
 
+export {
+  episodeScrobbleRequestSchema,
+  episodeScrobbleResponseSchema,
+  movieScrobbleRequestSchema,
+  movieScrobbleResponseSchema,
+};
+
 export type MovieScrobbleRequest = z.infer<typeof movieScrobbleRequestSchema>;
 export type MovieScrobbleResponse = z.infer<typeof movieScrobbleRequestSchema>;
 export type EpisodeScrobbleRequest = z.infer<

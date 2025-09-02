@@ -39,6 +39,12 @@ export const people = builder.router({
   pathPrefix: '/people/:id',
 });
 
+export {
+  peopleMovieCreditsResponseSchema,
+  peopleShowCreditsResponseSchema,
+  peopleSummaryResponseSchema,
+};
+
 export type PeopleSummaryResponse = z.infer<
   typeof peopleSummaryResponseSchema
 >;

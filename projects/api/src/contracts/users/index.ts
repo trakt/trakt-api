@@ -239,6 +239,30 @@ export type * from './subroutes/userLists.ts';
 export type * from './subroutes/watched.ts';
 export type * from './subroutes/watchlist.ts';
 
+export {
+  avatarRequestSchema,
+  commentOnTypeParamsSchema,
+  commentsRequestSchema,
+  commentTypeParamsSchema,
+  followerResponseSchema,
+  followResponseSchema,
+  friendResponseSchema,
+  likedCommentResponseSchema,
+  likedListResponseSchema,
+  monthInReviewParamsSchema,
+  monthInReviewResponseSchema,
+  profileParamsSchema,
+  reactedCommentResponseSchema,
+  settingsRequestSchema,
+  settingsResponseSchema,
+  socialActivityResponseSchema,
+  sortEnumSchema,
+  userCommentResponseSchema,
+  userStatsResponseSchema,
+  watchActionSchema,
+  watchingResponseSchema,
+};
+
 export type ProfileParams = z.infer<typeof profileParamsSchema>;
 export type SettingsResponse = z.infer<typeof settingsResponseSchema>;
 
