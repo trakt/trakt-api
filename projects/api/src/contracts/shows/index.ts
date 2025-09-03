@@ -386,30 +386,31 @@ export const shows = builder.router({
   pathPrefix: '/shows',
 });
 
-export {
-  episodeParamsSchema,
-  seasonParamsSchema,
-  seasonResponseSchema,
-  showAnticipatedResponseSchema,
-  showHotResponseSchema,
-  showProgressResponseSchema,
-  showQueryParamsSchema,
-  showResponseSchema,
-  showStreamingResponseSchema,
-  showTrendingResponseSchema,
-  showWatchedResponseSchema,
-};
-
 export type ShowIdParams = z.infer<typeof idParamsSchema>;
+
+export { showResponseSchema };
 export type ShowResponse = z.infer<typeof showResponseSchema>;
+
+export { showProgressResponseSchema };
 export type ShowProgressResponse = z.infer<typeof showProgressResponseSchema>;
+
+export { showQueryParamsSchema };
 export type ShowQueryParams = z.infer<typeof showQueryParamsSchema>;
+
+export { showTrendingResponseSchema };
 export type ShowTrendingResponse = z.infer<typeof showTrendingResponseSchema>;
+
+export { showWatchedResponseSchema };
 export type ShowWatchedResponse = z.infer<typeof showWatchedResponseSchema>;
+
 export type ShowStatsResponse = z.infer<typeof showStatsResponseSchema>;
+
+export { showAnticipatedResponseSchema };
 export type ShowAnticipatedResponse = z.infer<
   typeof showAnticipatedResponseSchema
 >;
+
+export { showHotResponseSchema };
 export type ShowHotResponse = z.infer<
   typeof showHotResponseSchema
 >;
@@ -417,5 +418,13 @@ export type ShowHotResponse = z.infer<
 export type ShowCertificationResponse = z.infer<
   typeof showCertificationResponseSchema
 >;
+
+export { seasonResponseSchema };
 export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
+
+export { showStreamingResponseSchema };
 export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;
+
+export { episodeParamsSchema };
+
+export { seasonParamsSchema };

@@ -32,12 +32,8 @@ export const search = builder.router({
   pathPrefix: '/search',
 });
 
-export {
-  searchEngineSchema,
-  searchQuerySchema,
-  searchResultResponseSchema,
-  searchTypeParamFactory,
-};
-
+export { searchEngineSchema, searchQuerySchema };
 export type SearchQueryParams = z.infer<typeof searchQuerySchema>;
+export { searchResultResponseSchema };
 export type SearchResultResponse = z.infer<typeof searchResultResponseSchema>;
+export { searchTypeParamFactory };

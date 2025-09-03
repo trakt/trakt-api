@@ -56,13 +56,13 @@ export const recommendations = builder.router({
   pathPrefix: '/recommendations',
 });
 
-export {
-  hideParamsSchema,
-  recommendationsQuerySchema,
-  recommendedMovieResponse,
-  recommendedShowResponse,
-};
-
+export { hideParamsSchema };
 export type HideRecommendationParams = z.infer<typeof hideParamsSchema>;
+
+export { recommendedMovieResponse };
 export type RecommendedMovieResponse = z.infer<typeof recommendedMovieResponse>;
+
+export { recommendedShowResponse };
 export type RecommendedShowResponse = z.infer<typeof recommendedShowResponse>;
+
+export { recommendationsQuerySchema };
