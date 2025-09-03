@@ -242,40 +242,48 @@ export const movies = builder.router({
   pathPrefix: '/movies',
 });
 
-export {
-  movieAnticipatedResponseSchema,
-  movieHotResponseSchema,
-  movieResponseSchema,
-  movieStreamingResponseSchema,
-  movieTrendingResponseSchema,
-  movieWatchedResponseSchema,
-};
-
 export type MovieIdParams = z.infer<typeof idParamsSchema>;
+
+export { movieResponseSchema };
 export type MovieResponse = z.infer<typeof movieResponseSchema>;
+
 export type Genre = z.infer<typeof genreEnumSchema>;
+
 export type WatchNowServiceResponse = z.infer<
   typeof watchNowServiceResponseSchema
 >;
+
 export type MovieStatsResponse = z.infer<typeof movieStatsResponseSchema>;
+
 export type CrewResponse = z.infer<typeof crewSchema>;
+
 export type CastResponse = z.infer<typeof castSchema>;
 
+export { movieTrendingResponseSchema };
 export type MovieTrendingResponse = z.infer<
   typeof movieTrendingResponseSchema
 >;
+
+export { movieWatchedResponseSchema };
 export type MovieWatchedResponse = z.infer<
   typeof movieWatchedResponseSchema
 >;
+
+export { movieAnticipatedResponseSchema };
 export type MovieAnticipatedResponse = z.infer<
   typeof movieAnticipatedResponseSchema
 >;
+
+export { movieHotResponseSchema };
 export type MovieHotResponse = z.infer<
   typeof movieHotResponseSchema
 >;
+
 export type MovieCertificationResponse = z.infer<
   typeof movieCertificationResponseSchema
 >;
+
+export { movieStreamingResponseSchema };
 export type MovieStreamingResponse = z.infer<
   typeof movieStreamingResponseSchema
 >;
