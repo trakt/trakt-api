@@ -7,7 +7,7 @@ const headshotSchema = z.object({
   headshot: z.array(z.string()),
 });
 
-const personSchema = z.object({
+export const personResponseSchema = z.object({
   name: z.string(),
   ids: z.object({
     trakt: z.number().int(),
@@ -23,17 +23,17 @@ const personSchema = z.object({
   }).nullish(),
 });
 
-export const castSchema = z.object({
+export const castResponseSchema = z.object({
   episode_count: z.number().int().nullish(),
-  person: personSchema,
+  person: personResponseSchema,
   /***
    * Available if requesting extended `images`.
    */
   images: headshotSchema.nullish(),
 }).merge(characterResponseSchema);
 
-export const crewSchema = z.object({
-  person: personSchema,
+export const crewResponseSchema = z.object({
+  person: personResponseSchema,
   episode_count: z.number().int().nullish(),
   /***
    * Available if requesting extended `images`.
@@ -42,9 +42,9 @@ export const crewSchema = z.object({
 }).merge(jobsResponseSchema);
 
 export const peopleResponseSchema = z.object({
-  cast: z.array(castSchema).nullish(),
+  cast: z.array(castResponseSchema).nullish(),
   crew: z.record(
     crewPositionResponseSchema,
-    z.array(crewSchema),
+    z.array(crewResponseSchema),
   ).nullish(),
 });

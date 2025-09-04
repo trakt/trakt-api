@@ -8,7 +8,12 @@ import { listedMovieResponseSchema } from '../_internal/response/listedMovieResp
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
-import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
+import {
+  castResponseSchema,
+  crewResponseSchema,
+  peopleResponseSchema,
+  personResponseSchema,
+} from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
@@ -61,6 +66,15 @@ export type ListResponse = z.infer<typeof listResponseSchema>;
 
 export { peopleResponseSchema };
 export type PeopleResponse = z.infer<typeof peopleResponseSchema>;
+
+export { crewResponseSchema };
+export type CrewResponse = z.infer<typeof crewResponseSchema>;
+
+export { castResponseSchema };
+export type CastResponse = z.infer<typeof castResponseSchema>;
+
+export { personResponseSchema as personSchema };
+export type PersonResponse = z.infer<typeof personResponseSchema>;
 
 export { ratingsResponseSchema };
 export type RatingsResponse = z.infer<typeof ratingsResponseSchema>;

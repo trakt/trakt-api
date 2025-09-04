@@ -21,8 +21,6 @@ import type { movieCertificationResponseSchema } from '../_internal/response/mov
 import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import { movieStatsResponseSchema } from '../_internal/response/movieStatsResponseSchema.ts';
 import {
-  type castSchema,
-  type crewSchema,
   peopleResponseSchema,
 } from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
@@ -254,10 +252,6 @@ export type WatchNowServiceResponse = z.infer<
 >;
 
 export type MovieStatsResponse = z.infer<typeof movieStatsResponseSchema>;
-
-export type CrewResponse = z.infer<typeof crewSchema>;
-
-export type CastResponse = z.infer<typeof castSchema>;
 
 export { movieTrendingResponseSchema };
 export type MovieTrendingResponse = z.infer<
