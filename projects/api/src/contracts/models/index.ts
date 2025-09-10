@@ -2,7 +2,6 @@ import { commentResponseSchema } from '../_internal/response/commentResponseSche
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
-import { jobResponseSchema } from '../_internal/response/jobResponseSchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
@@ -37,9 +36,6 @@ export { episodeTranslationResponseSchema };
 export type EpisodeTranslationResponse = z.infer<
   typeof episodeTranslationResponseSchema
 >;
-
-export { jobResponseSchema };
-export type Job = z.infer<typeof jobResponseSchema>;
 
 export type LikesResponse = z.infer<typeof episodeResponseSchema>;
 
