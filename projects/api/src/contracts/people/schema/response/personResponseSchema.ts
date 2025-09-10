@@ -42,7 +42,8 @@ export const personResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  gender: asString(z.enum(['male', 'female', 'non_binary'])).nullish(),
+  gender: asString(z.enum(['unknown', 'male', 'female', 'non_binary']))
+    .nullish(),
   /***
    * Available if requesting extended `full`.
    */
