@@ -1,3 +1,4 @@
+import { personResponseSchema } from '../../people/schema/response/personResponseSchema.ts';
 import { z } from '../z.ts';
 import { characterResponseSchema } from './characterResponseSchema.ts';
 import { crewPositionResponseSchema } from './crewPositionResponseSchema.ts';
@@ -5,22 +6,6 @@ import { jobsResponseSchema } from './jobsResponseSchema.ts';
 
 const headshotSchema = z.object({
   headshot: z.array(z.string()),
-});
-
-export const personResponseSchema = z.object({
-  name: z.string(),
-  ids: z.object({
-    trakt: z.number().int(),
-    slug: z.string(),
-    imdb: z.string().nullish(),
-    tmdb: z.number().int().nullish(),
-  }),
-  /***
-   * Available if requesting extended `images`.
-   */
-  images: headshotSchema.extend({
-    fanart: z.array(z.string()),
-  }).nullish(),
 });
 
 export const castResponseSchema = z.object({

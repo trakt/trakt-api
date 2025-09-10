@@ -5,7 +5,7 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { peopleMovieCreditsResponseSchema } from './schema/response/peopleMovieCreditsResponseSchema.ts';
 import { peopleShowCreditsResponseSchema } from './schema/response/peopleShowCreditsResponseSchema.ts';
-import { peopleSummaryResponseSchema } from './schema/response/peopleSummaryResponseSchema.ts';
+import { personResponseSchema } from './schema/response/personResponseSchema.ts';
 
 export const people = builder.router({
   summary: {
@@ -14,7 +14,7 @@ export const people = builder.router({
     query: extendedPeopleQuerySchema,
     method: 'GET',
     responses: {
-      200: peopleSummaryResponseSchema,
+      200: personResponseSchema,
     },
   },
   movies: {
@@ -39,9 +39,9 @@ export const people = builder.router({
   pathPrefix: '/people/:id',
 });
 
-export { peopleSummaryResponseSchema };
-export type PeopleSummaryResponse = z.infer<
-  typeof peopleSummaryResponseSchema
+export { personResponseSchema };
+export type PersonResponse = z.infer<
+  typeof personResponseSchema
 >;
 
 export { peopleMovieCreditsResponseSchema };

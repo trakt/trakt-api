@@ -1,7 +1,7 @@
 import { crewPositionResponseSchema } from '../../../_internal/response/crewPositionResponseSchema.ts';
 import { asString, z } from '../../../_internal/z.ts';
 
-export const peopleSummaryResponseSchema = z.object({
+export const personResponseSchema = z.object({
   name: z.string(),
   ids: z.object({
     slug: z.string(),

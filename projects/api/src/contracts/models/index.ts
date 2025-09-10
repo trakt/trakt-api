@@ -11,7 +11,6 @@ import {
   castResponseSchema,
   crewResponseSchema,
   peopleResponseSchema,
-  personResponseSchema,
 } from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
@@ -68,9 +67,6 @@ export type CrewResponse = z.infer<typeof crewResponseSchema>;
 
 export { castResponseSchema };
 export type CastResponse = z.infer<typeof castResponseSchema>;
-
-export { personResponseSchema as personSchema };
-export type PersonResponse = z.infer<typeof personResponseSchema>;
 
 export { ratingsResponseSchema };
 export type RatingsResponse = z.infer<typeof ratingsResponseSchema>;
