@@ -101,6 +101,10 @@ export const showResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
+  subgenres: z.array(genreEnumSchema).nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
   original_title: z.string().nullish(),
   /***
    * Available if requesting extended `colors`.
