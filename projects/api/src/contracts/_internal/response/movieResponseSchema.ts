@@ -82,7 +82,7 @@ export const movieResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  subgenres: z.array(genreEnumSchema).nullish(),
+  subgenres: z.array(z.string()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
