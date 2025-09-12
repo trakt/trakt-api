@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 
 export const upNextSortBySchema = z.enum([
+  'activity',
   'added',
   'completed',
   'episodes',
