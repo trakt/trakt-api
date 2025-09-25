@@ -142,9 +142,11 @@ export function traktApiFactory({
       if (
         contentType?.includes('application/') && contentType?.includes('json')
       ) {
+        const responseText = await result.text();
+
         const response = {
           status: result.status,
-          body: await result.json(),
+          body: responseText ? JSON.parse(responseText) : undefined,
           headers: result.headers,
         };
 
