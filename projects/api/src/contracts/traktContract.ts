@@ -14,6 +14,7 @@ import { search } from './search/index.ts';
 import { shows } from './shows/index.ts';
 import { social_recommendations } from './social_recommendations/index.ts';
 import { sync } from './sync/index.ts';
+import { team } from './team/index.ts';
 import { users } from './users/index.ts';
 import { watchnow } from './watchnow/index.ts';
 
@@ -36,4 +37,5 @@ export const traktContract = builder
     comments,
     certifications,
     scrobble,
+    team,
   });
