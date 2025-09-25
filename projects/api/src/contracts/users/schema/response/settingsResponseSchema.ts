@@ -37,7 +37,7 @@ export const settingsResponseSchema = z.object({
    * Available if requesting extended `browsing`.
    */
   browsing: z.object({
-    watch_popup_action: watchActionSchema,
+    watch_popup_action: watchActionSchema.nullish(),
     hide_watching_now: z.boolean(),
     list_popup_action: z.string(),
     week_start_day: z.string().nullish(),
