@@ -52,6 +52,7 @@ module.exports = {
         'search',
         'show',
         'sync',
+        'team',
         'user',
         'watchnow',
       ],

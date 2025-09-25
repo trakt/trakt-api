@@ -17,6 +17,7 @@ export * from './contracts/scrobble/index.ts';
 export * from './contracts/search/index.ts';
 export * from './contracts/shows/index.ts';
 export * from './contracts/sync/index.ts';
+export * from './contracts/team/index.ts';
 export * from './contracts/users/index.ts';
 export * from './contracts/watchnow/index.ts';
 
