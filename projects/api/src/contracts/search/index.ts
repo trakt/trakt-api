@@ -1,7 +1,8 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
+import { recentSearchRequestSchema } from './schema/request/recentSearchRequestSchema.ts';
 import { searchEngineSchema } from './schema/request/searchEngineSchema.ts';
 import { searchQuerySchema } from './schema/request/searchQuerySchema.ts';
 import { searchTypeParamFactory } from './schema/request/searchTypeParamFactory.ts';
@@ -17,6 +18,25 @@ import type { trendingSearchShowResponseSchema } from './schema/response/trendin
 /**
  * TODO: add support for 'episode', 'list'
  */
+
+const recent = builder.router({
+  add: {
+    path: '/',
+    method: 'POST',
+    body: recentSearchRequestSchema,
+    responses: {
+      201: z.undefined(),
+    },
+  },
+  remove: {
+    path: '/remove',
+    method: 'POST',
+    body: recentSearchRequestSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
+}, { pathPrefix: '/recent' });
 
 export const search = builder.router({
   query: {
@@ -49,6 +69,7 @@ export const search = builder.router({
       200: trendingSearchResponseSchema.array(),
     },
   },
+  recent,
 }, {
   pathPrefix: '/search',
 });
@@ -85,3 +106,6 @@ export { trendingSearchPersonResponseSchema } from './schema/response/trendingSe
 export type TrendingSearchPersonResultResponse = z.infer<
   typeof trendingSearchPersonResponseSchema
 >;
+
+export { recentSearchRequestSchema };
+export type RecentSearchRequest = z.infer<typeof recentSearchRequestSchema>;
