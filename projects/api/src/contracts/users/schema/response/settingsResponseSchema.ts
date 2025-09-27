@@ -39,7 +39,7 @@ export const settingsResponseSchema = z.object({
   browsing: z.object({
     watch_popup_action: watchActionSchema.nullish(),
     hide_watching_now: z.boolean(),
-    list_popup_action: z.string(),
+    list_popup_action: z.string().nullish(),
     week_start_day: z.string().nullish(),
     watch_after_rating: z.string().nullish(),
     watch_only_once: z.boolean(),
@@ -100,8 +100,8 @@ export const settingsResponseSchema = z.object({
       favorites: z.array(z.string()),
       only_favorites: z.boolean(),
     }),
-    dark_knight: z.string(),
-    app_theme: z.string(),
+    dark_knight: z.string().nullish(),
+    app_theme: z.string().nullish(),
     welcome: z.object({
       completed_at: z.string().datetime().nullish(),
       exit_step: z.null(),
