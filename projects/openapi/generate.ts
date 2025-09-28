@@ -1,5 +1,5 @@
 import { traktContract } from '@trakt/api';
-import { generateOpenApi } from './generateOpenApi.ts';
+import { generateOpenApi } from '@ts-rest/open-api';
 
 export function generate(): ReturnType<typeof generateOpenApi> {
   return generateOpenApi(traktContract, {
@@ -16,11 +16,10 @@ export function generate(): ReturnType<typeof generateOpenApi> {
 
       return {
         ...operation,
-        operationId: `${route.method.toLowerCase()}${
-          parts
+        operationId: `${route.method.toLowerCase()}${parts
             .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
             .join('')
-        }`,
+          }`,
       };
     },
   });
