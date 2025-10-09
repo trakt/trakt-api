@@ -12,6 +12,7 @@ import { collectionParamSchema } from './schema/request/collectionParamSchema.ts
 import { favoriteParamSchema } from './schema/request/favoritesParamSchema.ts';
 import { historyRemoveRequestSchema } from './schema/request/historyRemoveRequestSchema.ts';
 import { minimalParamSchema } from './schema/request/minimalParamSchema.ts';
+import { progressParamsSchema } from './schema/request/progressParamsSchema.ts';
 import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
 import {
   collectionMinimalResponseSchema,
@@ -22,6 +23,7 @@ import { favoritesRemoveResponseSchema } from './schema/response/favoritesRemove
 import { favoritesResponseSchema } from './schema/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './schema/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './schema/response/historyResponseSchema.ts';
+import { movieProgressResponseSchema } from './schema/response/movieProgressResponseSchema.ts';
 import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
 import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
 
@@ -29,7 +31,7 @@ const progress = builder.router({
   upNext: {
     standard: {
       method: 'GET',
-      path: '/up_next',
+      path: '/progress/up_next',
       query: extendedQuerySchemaFactory<['full', 'images']>()
         .merge(pageQuerySchema)
         .merge(sortQuerySchema)
@@ -40,14 +42,24 @@ const progress = builder.router({
     },
     nitro: {
       method: 'GET',
-      path: '/up_next_nitro',
+      path: '/progress/up_next_nitro',
       query: pageQuerySchema,
       responses: {
         200: upNextResponseSchema.array(),
       },
     },
   },
-}, { pathPrefix: '/progress' });
+  movies: {
+    method: 'GET',
+    path: '/playback/movies',
+    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema),
+    responses: {
+      200: movieProgressResponseSchema.array(),
+    },
+  },
+});
 
 const history = builder.router({
   add: {
