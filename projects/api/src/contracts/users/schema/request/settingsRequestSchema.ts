@@ -26,6 +26,7 @@ const browsingSettingsSchema = z.object({
     favorites: z.array(z.string()).nullish(),
     only_favorites: z.boolean().nullish(),
   }).nullish(),
+  dark_knight: z.enum(['true', 'false', 'auto']).nullish(),
 });
 
 export const settingsRequestSchema = z.object({
