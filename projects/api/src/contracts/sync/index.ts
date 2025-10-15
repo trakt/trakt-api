@@ -218,12 +218,14 @@ export {
   historyRemoveRequestSchema,
   historyResponseSchema,
   minimalParamSchema,
+  movieProgressResponseSchema,
   ratingsParamSchema,
   ratingsSyncResponseSchema,
   upNextResponseSchema,
 };
 
 export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
+export type MovieProgressResponse = z.infer<typeof movieProgressResponseSchema>;
 
 export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
 export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
