@@ -11,6 +11,7 @@ import { avatarRequestSchema } from './schema/request/avatarRequestSchema.ts';
 import { commentOnTypeParamsSchema } from './schema/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts';
 import { commentTypeParamsSchema } from './schema/request/commentTypeParamsSchema.ts';
+import { coverRequestSchema } from './schema/request/coverRequestSchema.ts';
 import { monthInReviewParamsSchema } from './schema/request/monthInReviewParamsSchema.ts';
 import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
@@ -88,6 +89,15 @@ const GLOBAL_LEVEL = builder.router({
     path: '/avatar',
     method: 'PUT',
     body: avatarRequestSchema,
+    responses: {
+      204: z.undefined(),
+      400: z.undefined(),
+    },
+  },
+  cover: {
+    path: '/set_cover',
+    method: 'PUT',
+    body: coverRequestSchema,
     responses: {
       204: z.undefined(),
       400: z.undefined(),
@@ -244,6 +254,7 @@ export {
   commentOnTypeParamsSchema,
   commentsRequestSchema,
   commentTypeParamsSchema,
+  coverRequestSchema,
   followerResponseSchema,
   followResponseSchema,
   friendResponseSchema,
@@ -294,6 +305,7 @@ export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
 
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
 export type AvatarRequest = z.infer<typeof avatarRequestSchema>;
+export type CoverRequest = z.infer<typeof coverRequestSchema>;
 export type SettingsRequest = z.infer<typeof settingsRequestSchema>;
 
 export type MonthInReviewParams = z.infer<typeof monthInReviewParamsSchema>;
