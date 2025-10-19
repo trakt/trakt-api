@@ -14,6 +14,7 @@ import { historyRemoveRequestSchema } from './schema/request/historyRemoveReques
 import { minimalParamSchema } from './schema/request/minimalParamSchema.ts';
 import { progressParamsSchema } from './schema/request/progressParamsSchema.ts';
 import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
+import { upNextIntentQuerySchema } from './schema/request/upNextIntentQuerySchema.ts';
 import {
   collectionMinimalResponseSchema,
   collectionMinimalShowResponseSchema,
@@ -43,7 +44,8 @@ const progress = builder.router({
     nitro: {
       method: 'GET',
       path: '/progress/up_next_nitro',
-      query: pageQuerySchema,
+      query: pageQuerySchema
+        .merge(upNextIntentQuerySchema),
       responses: {
         200: upNextResponseSchema.array(),
       },
@@ -221,11 +223,13 @@ export {
   movieProgressResponseSchema,
   ratingsParamSchema,
   ratingsSyncResponseSchema,
+  upNextIntentQuerySchema,
   upNextResponseSchema,
 };
 
 export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
 export type MovieProgressResponse = z.infer<typeof movieProgressResponseSchema>;
+export type UpNextIntentRequest = z.infer<typeof upNextIntentQuerySchema>;
 
 export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
 export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
