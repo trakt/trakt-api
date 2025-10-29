@@ -7,11 +7,12 @@ import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
 import { collectionParamSchema } from './schema/request/collectionParamSchema.ts';
 import { favoriteParamSchema } from './schema/request/favoritesParamSchema.ts';
 import { historyRemoveRequestSchema } from './schema/request/historyRemoveRequestSchema.ts';
 import { minimalParamSchema } from './schema/request/minimalParamSchema.ts';
+import { playbackIdParamsSchema } from './schema/request/playbackIdParamsSchema.ts';
 import { progressParamsSchema } from './schema/request/progressParamsSchema.ts';
 import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
 import { upNextIntentQuerySchema } from './schema/request/upNextIntentQuerySchema.ts';
@@ -59,6 +60,16 @@ const progress = builder.router({
       .merge(progressParamsSchema),
     responses: {
       200: movieProgressResponseSchema.array(),
+    },
+  },
+  drop: {
+    movie: {
+      path: '/playback/:id',
+      method: 'DELETE',
+      pathParams: playbackIdParamsSchema,
+      responses: {
+        204: z.undefined(),
+      },
     },
   },
 });
