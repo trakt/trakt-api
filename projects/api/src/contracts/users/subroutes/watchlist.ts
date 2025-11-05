@@ -3,9 +3,9 @@ import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQ
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
+import { listedMediaResponseSchema } from '../../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
-import { z } from '../../_internal/z.ts';
 import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
@@ -41,8 +41,7 @@ export const watchlist = builder.router({
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema),
     responses: {
-      200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-        .array(),
+      200: listedMediaResponseSchema.array(),
     },
   },
   comments: {

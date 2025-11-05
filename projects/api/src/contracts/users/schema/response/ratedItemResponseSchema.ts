@@ -1,7 +1,7 @@
 import { episodeIdsResponseSchema } from '../../../_internal/response/episodeIdsResponseSchema.ts';
-import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
+import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { showIdsResponseSchema } from '../../../_internal/response/showIdsResponseSchema.ts';
-import { typedShowResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
+import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
 const ratedResponseSchema = z.object({
@@ -16,22 +16,28 @@ const ratedEpisodesResponseSchema = ratedResponseSchema.extend({
     number: z.number().int(),
     title: z.string(),
     ids: episodeIdsResponseSchema,
-  }),
+  }).nullish(),
   show: z.object({
     title: z.string(),
     year: z.number().int(),
     aired_episodes: z.number().int(),
     ids: showIdsResponseSchema,
-  }),
+  }).nullish(),
 });
 
 const ratedMoviesResponseSchema = ratedResponseSchema
-  .merge(typedMovieResponseSchema);
+  .merge(z.object({
+    type: z.literal('movie'),
+    movie: movieResponseSchema.nullish(),
+  }));
 
 const ratedShowsResponseSchema = ratedResponseSchema
-  .merge(typedShowResponseSchema);
+  .merge(z.object({
+    type: z.literal('show'),
+    show: showResponseSchema.nullish(),
+  }));
 
-export const RatedItemResponseSchema = z.discriminatedUnion('type', [
+export const RatedItemResponseSchema = z.union([
   ratedEpisodesResponseSchema,
   ratedMoviesResponseSchema,
   ratedShowsResponseSchema,

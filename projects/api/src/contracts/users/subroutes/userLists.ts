@@ -9,6 +9,7 @@ import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../../_internal/response/likeResponseSchema.ts';
 import { listAddResponseSchema } from '../../_internal/response/listAddResponseSchema.ts';
+import { listedMediaResponseSchema } from '../../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
@@ -89,8 +90,7 @@ const list = builder.router({
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
-        200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-          .array(),
+        200: listedMediaResponseSchema.array(),
       },
     },
   },

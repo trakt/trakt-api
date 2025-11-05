@@ -7,6 +7,7 @@ import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
+import { listedMediaResponseSchema } from '../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
@@ -58,8 +59,7 @@ const ENTITY_LEVEL = builder.router({
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
-        200: z.union([listedMovieResponseSchema, listedShowResponseSchema])
-          .array(),
+        200: listedMediaResponseSchema.array(),
       },
     },
   },
