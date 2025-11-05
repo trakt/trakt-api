@@ -157,7 +157,7 @@ const collection = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema),
     responses: {
-      200: collectionResponseSchema,
+      200: collectionResponseSchema.array(),
     },
   },
   shows: {
@@ -166,7 +166,7 @@ const collection = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema),
     responses: {
-      200: collectionResponseSchema,
+      200: collectionResponseSchema.array(),
     },
   },
   episodes: {
@@ -175,7 +175,7 @@ const collection = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema),
     responses: {
-      200: collectionResponseSchema,
+      200: collectionResponseSchema.array(),
     },
   },
   minimal: builder.router({
