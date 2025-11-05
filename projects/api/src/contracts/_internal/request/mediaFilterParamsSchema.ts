@@ -20,6 +20,7 @@ export const mediaFilterParamsSchema = z.object({
       Use "subscriptions_all" streaming on any subscription service in all countries`,
   }),
   genres: z.string().nullish(),
+  subgenres: z.string().nullish(),
   years: z.string().nullish(),
   ratings: z.string().nullish(),
   start_date: z.string().nullish(),
