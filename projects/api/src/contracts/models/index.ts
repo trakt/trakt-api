@@ -3,6 +3,7 @@ import { episodeResponseSchema } from '../_internal/response/episodeResponseSche
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
+import { listedMediaResponseSchema } from '../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
@@ -49,6 +50,11 @@ export type ListedMovieResponse = z.infer<
 export { listedShowResponseSchema };
 export type ListedShowResponse = z.infer<
   typeof listedShowResponseSchema
+>;
+
+export { listedMediaResponseSchema };
+export type ListedMediaResponse = z.infer<
+  typeof listedMediaResponseSchema
 >;
 
 export { listRemoveResponseSchema };
