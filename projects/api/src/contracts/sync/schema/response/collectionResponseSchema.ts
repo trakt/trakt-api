@@ -4,12 +4,9 @@ import {
   typedShowResponseSchema,
 } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
-import { seasonResponseSchema } from '../../../shows/schema/response/seasonResponseSchema.ts';
 import { availableOnEnumSchema } from '../request/availableOnEnumSchema.ts';
 
-const collectedItemSchema = z.object({
-  collected_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+const availableOnSchema = z.object({
   /***
    * Available if requesting extended `available_on`.
    */
@@ -18,17 +15,33 @@ const collectedItemSchema = z.object({
   })).nullish(),
 });
 
-const collectedMovieSchema = typedMovieResponseSchema
-  .merge(collectedItemSchema);
+const collectedItemSchema = z.object({
+  collected_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
+}).merge(availableOnSchema);
 
-const collectedShowSchema = z.object({
-  seasons: seasonResponseSchema.array(),
-})
-  .merge(typedShowResponseSchema)
+const collectedMovieSchema = typedMovieResponseSchema
   .merge(collectedItemSchema);
 
 const collectedEpisodeSchema = typedEpisodeResponseSchema
   .merge(collectedItemSchema);
+
+const collectedSeasonEpisodeSchema = z.object({
+  number: z.number().int(),
+  collected_at: z.string().datetime(),
+}).merge(availableOnSchema);
+
+const collectedSeasonResponseSchema = z.object({
+  number: z.number().int(),
+  episodes: collectedSeasonEpisodeSchema.array(),
+});
+
+const collectedShowSchema = z.object({
+  last_collected_at: z.string().datetime(),
+  last_updated_at: z.string().datetime(),
+  seasons: collectedSeasonResponseSchema.array(),
+})
+  .merge(typedShowResponseSchema);
 
 export const collectionResponseSchema = z.discriminatedUnion('type', [
   collectedMovieSchema,
