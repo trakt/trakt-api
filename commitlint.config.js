@@ -37,6 +37,7 @@ module.exports = {
         'comment',
         'episode',
         'favorite',
+        'filter',
         'footer',
         'guards',
         'i18n',
