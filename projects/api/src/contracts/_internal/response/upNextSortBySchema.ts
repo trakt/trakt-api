@@ -13,5 +13,6 @@ export const upNextSortBySchema = z.enum([
   'popularity',
   'runtime',
   'total-runtime',
+  'recently-aired',
   'random',
 ]);
