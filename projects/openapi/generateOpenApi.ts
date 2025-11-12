@@ -240,7 +240,7 @@ const extractReferenceSchemas = (
     if (schema.title in referenceSchemas) {
       if (
         JSON.stringify(referenceSchemas[schema.title]) !==
-          JSON.stringify(schema)
+        JSON.stringify(schema)
       ) {
         throw new Error(
           `Schema title '${schema.title}' already exists with a different schema`,
