@@ -2,6 +2,7 @@ import { commentResponseSchema } from '../_internal/response/commentResponseSche
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
+import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listedMediaResponseSchema } from '../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
@@ -96,6 +97,9 @@ export type ProfileResponse = z.infer<typeof profileResponseSchema>;
 
 export { watchNowResponseSchema };
 export type WatchNowResponse = z.infer<typeof watchNowResponseSchema>;
+
+export { justWatchLinkResponseSchema };
+export type JustWatchLinkResponse = z.infer<typeof justWatchLinkResponseSchema>;
 
 export { videoResponseSchema };
 export type VideoResponse = z.infer<typeof videoResponseSchema>;
