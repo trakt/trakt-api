@@ -14,6 +14,7 @@ import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
+import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
@@ -111,6 +112,16 @@ const ENTITY_LEVEL = builder.router({
       200: watchNowResponseSchema,
     },
   },
+  justwatch: builder.router({
+    link: {
+      path: '/watchnow/justwatch_links/:country',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: justWatchLinkResponseSchema,
+      },
+    },
+  }),
   people: {
     path: '/people',
     method: 'GET',

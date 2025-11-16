@@ -17,6 +17,7 @@ import { commentResponseSchema } from '../_internal/response/commentResponseSche
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
+import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
@@ -222,6 +223,16 @@ const ENTITY_LEVEL = builder.router({
       200: watchNowResponseSchema,
     },
   },
+  justwatch: builder.router({
+    link: {
+      path: '/watchnow/justwatch_links/:country',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: justWatchLinkResponseSchema,
+      },
+    },
+  }),
   people: {
     path: '/people',
     method: 'GET',
@@ -260,6 +271,16 @@ const ENTITY_LEVEL = builder.router({
         200: videoResponseSchema.array(),
       },
     },
+    justwatch: builder.router({
+      link: {
+        path: '/watchnow/justwatch_links/:country',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        responses: {
+          200: justWatchLinkResponseSchema,
+        },
+      },
+    }),
   }, {
     pathPrefix: '/seasons/:season',
   }),
