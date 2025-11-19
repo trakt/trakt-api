@@ -5,7 +5,7 @@ import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSc
 
 export const episodes = builder.router({
   watchnow: {
-    path: '/watchnow/:country',
+    path: '/watchnow/:country?',
     query: linksQuerySchema,
     method: 'GET',
     pathParams: watchNowParamsSchema,
