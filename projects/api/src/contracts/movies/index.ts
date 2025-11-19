@@ -104,7 +104,7 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   watchnow: {
-    path: '/watchnow/:country',
+    path: '/watchnow/:country?',
     query: linksQuerySchema,
     method: 'GET',
     pathParams: idParamsSchema,
