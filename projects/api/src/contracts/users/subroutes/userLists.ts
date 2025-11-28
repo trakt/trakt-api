@@ -151,7 +151,8 @@ export const userLists = builder.router({
     path: '',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedProfileQuerySchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: listResponseSchema.array(),
     },
