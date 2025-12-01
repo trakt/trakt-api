@@ -5,7 +5,7 @@ const idOnlySchema = z.object({
   ids: z.object({
     trakt: z.number().int(),
   }),
-});
+}).nullish();
 
 export const commentPostParamsSchema = commentReplyParamsSchema.and(
   z.union([
