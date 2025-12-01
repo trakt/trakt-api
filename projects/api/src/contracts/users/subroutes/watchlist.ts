@@ -1,5 +1,6 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
+import { hideFilterParamsSchema } from '../../_internal/request/hideFilterParamsSchema.ts';
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
@@ -17,7 +18,8 @@ export const watchlist = builder.router({
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
     responses: {
       200: listedMovieResponseSchema.array(),
     },
@@ -28,7 +30,8 @@ export const watchlist = builder.router({
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
     responses: {
       200: listedShowResponseSchema.array(),
     },
@@ -39,7 +42,8 @@ export const watchlist = builder.router({
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
     responses: {
       200: listedMediaResponseSchema.array(),
     },
