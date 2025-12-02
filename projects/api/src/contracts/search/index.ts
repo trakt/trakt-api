@@ -62,6 +62,7 @@ export const search = builder.router({
       ['movies', 'shows', 'people']
     >(),
     query: pageQuerySchema
+      .merge(searchQuerySchema)
       .merge(
         extendedQuerySchemaFactory<['full,images']>(),
       ),
