@@ -6,6 +6,7 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import { listedMediaResponseSchema } from '../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
@@ -31,6 +32,7 @@ const ENTITY_LEVEL = builder.router({
       method: 'GET',
       pathParams: idParamsSchema,
       query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
@@ -43,6 +45,7 @@ const ENTITY_LEVEL = builder.router({
       method: 'GET',
       pathParams: idParamsSchema,
       query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
@@ -55,6 +58,7 @@ const ENTITY_LEVEL = builder.router({
       method: 'GET',
       pathParams: idParamsSchema,
       query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
