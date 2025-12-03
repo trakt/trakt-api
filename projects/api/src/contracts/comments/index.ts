@@ -1,4 +1,5 @@
 import { builder } from '../_internal/builder.ts';
+import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
@@ -87,7 +88,8 @@ const ENTITY_LEVEL = builder.router({
     path: '/replies',
     method: 'GET',
     pathParams: idParamsSchema,
-    query: pageQuerySchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
