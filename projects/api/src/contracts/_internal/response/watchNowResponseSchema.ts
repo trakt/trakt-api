@@ -1,4 +1,5 @@
 import { z } from '../z.ts';
+import { watchNowRankResponseSchema } from './watchNowRankResponseSchema.ts';
 
 export const watchNowServiceResponseSchema = z.object({
   source: z.string(),
@@ -40,5 +41,9 @@ export const watchNowResponseSchema = z.record(
     cinema: z.array(watchNowServiceResponseSchema),
     subscription: z.array(watchNowServiceResponseSchema),
     purchase: z.array(watchNowServiceResponseSchema),
+    /***
+     * Available if requesting extended `streaming_ranks`.
+     */
+    streaming_ranks: watchNowRankResponseSchema,
   }),
 );

@@ -4,6 +4,7 @@ import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedWatchNowQuerySchema } from '../_internal/request/extendedWatchNowQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
@@ -31,6 +32,7 @@ import { sentimentsResponseSchema } from '../_internal/response/sentimentsRespon
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
 import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
+import type { watchNowRankResponseSchema } from '../_internal/response/watchNowRankResponseSchema.ts';
 import {
   watchNowResponseSchema,
   type watchNowServiceResponseSchema,
@@ -106,7 +108,8 @@ const ENTITY_LEVEL = builder.router({
   },
   watchnow: {
     path: '/watchnow/:country',
-    query: linksQuerySchema,
+    query: linksQuerySchema
+      .merge(extendedWatchNowQuerySchema),
     method: 'GET',
     pathParams: idParamsSchema.merge(countryParamsSchema),
     responses: {
@@ -261,6 +264,9 @@ export type Genre = z.infer<typeof genreEnumSchema>;
 
 export type WatchNowServiceResponse = z.infer<
   typeof watchNowServiceResponseSchema
+>;
+export type watchNowRankResponse = z.infer<
+  typeof watchNowRankResponseSchema
 >;
 
 export type MovieStatsResponse = z.infer<typeof movieStatsResponseSchema>;
