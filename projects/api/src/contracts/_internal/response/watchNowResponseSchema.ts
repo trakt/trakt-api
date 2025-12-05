@@ -44,6 +44,6 @@ export const watchNowResponseSchema = z.record(
     /***
      * Available if requesting extended `streaming_ranks`.
      */
-    streaming_ranks: watchNowRankResponseSchema,
+    streaming_ranks: watchNowRankResponseSchema.nullish(),
   }),
 );
