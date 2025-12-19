@@ -55,6 +55,22 @@ export const search = builder.router({
       200: searchResultResponseSchema.array(),
     },
   },
+  exact: {
+    path: '/:type/exact',
+    method: 'GET',
+    pathParams: searchTypeParamFactory<
+      ['movie', 'show']
+    >(),
+    query: searchQuerySchema
+      .merge(searchEngineSchema)
+      .merge(pageQuerySchema)
+      .merge(
+        extendedQuerySchemaFactory<['full,images']>(),
+      ),
+    responses: {
+      200: searchResultResponseSchema.array(),
+    },
+  },
   trending: {
     path: '/recent_by_id/global/:type',
     method: 'GET',
