@@ -17,6 +17,7 @@ import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
 import { sortEnumSchema } from './schema/request/sortParamsSchema.ts';
+import { yearInReviewParamsSchema } from './schema/request/yearInReviewParamsSchema.ts';
 import { followerResponseSchema } from './schema/response/followerResponseSchema.ts';
 import { followResponseSchema } from './schema/response/followResponseSchema.ts';
 import { friendResponseSchema } from './schema/response/friendResponseSchema.ts';
@@ -32,6 +33,7 @@ import { userCommentResponseSchema } from './schema/response/userCommentResponse
 import { userStatsResponseSchema } from './schema/response/userStatsResponseSchema.ts';
 import { watchActionSchema } from './schema/response/watchActionSchema.ts';
 import { watchingResponseSchema } from './schema/response/watchingResponseSchema.ts';
+import { yearInReviewResponseSchema } from './schema/response/yearInReviewResponseSchema.ts';
 import { favorites } from './subroutes/favorites.ts';
 import { filters } from './subroutes/filters.ts';
 import { hidden } from './subroutes/hidden.ts';
@@ -219,6 +221,16 @@ const ENTITY_LEVEL = builder.router({
       200: monthInReviewResponseSchema,
     },
   },
+  year_in_review: {
+    path: '/yir/:year',
+    pathParams: profileParamsSchema
+      .merge(yearInReviewParamsSchema),
+    query: extendedMediaQuerySchema,
+    method: 'GET',
+    responses: {
+      200: yearInReviewResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
@@ -310,6 +322,8 @@ export type SettingsRequest = z.infer<typeof settingsRequestSchema>;
 
 export type MonthInReviewParams = z.infer<typeof monthInReviewParamsSchema>;
 export type MonthInReviewResponse = z.infer<typeof monthInReviewResponseSchema>;
+export type YearInReviewParams = z.infer<typeof yearInReviewParamsSchema>;
+export type YearInReviewResponse = z.infer<typeof yearInReviewResponseSchema>;
 
 export type ReactedCommentResponse = z.infer<
   typeof reactedCommentResponseSchema
