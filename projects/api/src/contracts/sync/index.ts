@@ -15,6 +15,7 @@ import { minimalParamSchema } from './schema/request/minimalParamSchema.ts';
 import { playbackIdParamsSchema } from './schema/request/playbackIdParamsSchema.ts';
 import { progressParamsSchema } from './schema/request/progressParamsSchema.ts';
 import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
+import { removeRatingsParamSchema } from './schema/request/removeRatingsParamSchema.ts';
 import { upNextIntentQuerySchema } from './schema/request/upNextIntentQuerySchema.ts';
 import {
   collectionMinimalResponseSchema,
@@ -27,6 +28,7 @@ import { historyRemoveResponseSchema } from './schema/response/historyRemoveResp
 import { historyResponseSchema } from './schema/response/historyResponseSchema.ts';
 import { movieProgressResponseSchema } from './schema/response/movieProgressResponseSchema.ts';
 import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
+import { removeRatingsResponseSchema } from './schema/response/removeRatingsResponseSchema.ts';
 import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
 
 const progress = builder.router({
@@ -123,6 +125,14 @@ const ratings = builder.router({
     body: ratingsParamSchema,
     responses: {
       201: ratingsSyncResponseSchema,
+    },
+  },
+  remove: {
+    method: 'POST',
+    path: '/remove',
+    body: removeRatingsParamSchema,
+    responses: {
+      200: removeRatingsResponseSchema,
     },
   },
 }, {
@@ -234,6 +244,7 @@ export {
   movieProgressResponseSchema,
   ratingsParamSchema,
   ratingsSyncResponseSchema,
+  removeRatingsParamSchema,
   upNextIntentQuerySchema,
   upNextResponseSchema,
 };
@@ -266,3 +277,5 @@ export type CollectionMinimalResponse = z.infer<
 export type CollectionMinimalShowResponse = z.infer<
   typeof collectionMinimalShowResponseSchema
 >;
+
+export type RemoveRatingsParams = z.infer<typeof removeRatingsParamSchema>;
