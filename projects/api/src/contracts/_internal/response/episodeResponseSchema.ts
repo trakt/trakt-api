@@ -5,7 +5,7 @@ import { showResponseSchema } from './showResponseSchema.ts';
 export const episodeResponseSchema = z.object({
   season: z.number().int(),
   number: z.number().int(),
-  title: z.string(),
+  title: z.string().nullish(),
   first_aired: z.string().nullish(),
   number_abs: z.number().int().nullish(),
   /***
