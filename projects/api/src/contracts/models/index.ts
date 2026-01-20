@@ -4,7 +4,10 @@ import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsRe
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
-import { listedMediaResponseSchema } from '../_internal/response/listedMediaResponseSchema.ts';
+import {
+  listedAllResponseSchema,
+  listedMediaResponseSchema,
+} from '../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
@@ -56,6 +59,11 @@ export type ListedShowResponse = z.infer<
 export { listedMediaResponseSchema };
 export type ListedMediaResponse = z.infer<
   typeof listedMediaResponseSchema
+>;
+
+export { listedAllResponseSchema };
+export type ListedAllResponse = z.infer<
+  typeof listedAllResponseSchema
 >;
 
 export { listRemoveResponseSchema };
