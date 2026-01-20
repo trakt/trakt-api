@@ -9,7 +9,10 @@ import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../../_internal/response/likeResponseSchema.ts';
 import { listAddResponseSchema } from '../../_internal/response/listAddResponseSchema.ts';
-import { listedMediaResponseSchema } from '../../_internal/response/listedMediaResponseSchema.ts';
+import {
+  listedAllResponseSchema,
+  listedMediaResponseSchema,
+} from '../../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
@@ -79,7 +82,7 @@ const list = builder.router({
         200: listedShowResponseSchema.array(),
       },
     },
-    all: {
+    media: {
       path: '/items/movie,show',
       method: 'GET',
       pathParams: profileParamsSchema
@@ -91,6 +94,20 @@ const list = builder.router({
         .merge(limitlessQuerySchema),
       responses: {
         200: listedMediaResponseSchema.array(),
+      },
+    },
+    all: {
+      path: '/items/movie,show,season,episode',
+      method: 'GET',
+      pathParams: profileParamsSchema
+        .merge(listParamsSchema),
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(mediaFilterParamsSchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedAllResponseSchema.array(),
       },
     },
   },
