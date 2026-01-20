@@ -20,10 +20,10 @@ const collectedItemSchema = z.object({
   updated_at: z.string().datetime(),
 }).merge(availableOnSchema);
 
-const collectedMovieSchema = typedMovieResponseSchema
+export const collectedMovieSchema = typedMovieResponseSchema
   .merge(collectedItemSchema);
 
-const collectedEpisodeSchema = typedEpisodeResponseSchema
+export const collectedEpisodeSchema = typedEpisodeResponseSchema
   .merge(collectedItemSchema);
 
 const collectedSeasonEpisodeSchema = z.object({
@@ -36,7 +36,7 @@ const collectedSeasonResponseSchema = z.object({
   episodes: collectedSeasonEpisodeSchema.array(),
 });
 
-const collectedShowSchema = z.object({
+export const collectedShowSchema = z.object({
   last_collected_at: z.string().datetime(),
   last_updated_at: z.string().datetime(),
   seasons: collectedSeasonResponseSchema.array(),
