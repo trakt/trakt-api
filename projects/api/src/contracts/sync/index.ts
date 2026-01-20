@@ -21,7 +21,12 @@ import {
   collectionMinimalResponseSchema,
   collectionMinimalShowResponseSchema,
 } from './schema/response/collectionMinimalResponseSchema.ts';
-import { collectionResponseSchema } from './schema/response/collectionResponseSchema.ts';
+import {
+  collectedEpisodeSchema,
+  collectedMovieSchema,
+  collectedShowSchema,
+  collectionResponseSchema,
+} from './schema/response/collectionResponseSchema.ts';
 import { favoritesRemoveResponseSchema } from './schema/response/favoritesRemoveResponseSchema.ts';
 import { favoritesResponseSchema } from './schema/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './schema/response/historyRemoveResponseSchema.ts';
@@ -167,7 +172,7 @@ const collection = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema),
     responses: {
-      200: collectionResponseSchema.array(),
+      200: collectedMovieSchema.array(),
     },
   },
   shows: {
@@ -176,7 +181,7 @@ const collection = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema),
     responses: {
-      200: collectionResponseSchema.array(),
+      200: collectedShowSchema.array(),
     },
   },
   episodes: {
@@ -185,15 +190,14 @@ const collection = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema),
     responses: {
-      200: collectionResponseSchema.array(),
+      200: collectedEpisodeSchema.array(),
     },
   },
   minimal: builder.router({
     movies: {
       method: 'GET',
       path: '/movies',
-      query: collectionParamSchema
-        .merge(minimalParamSchema),
+      query: collectionParamSchema,
       responses: {
         200: collectionMinimalResponseSchema,
       },
@@ -201,8 +205,7 @@ const collection = builder.router({
     shows: {
       method: 'GET',
       path: '/shows',
-      query: collectionParamSchema
-        .merge(minimalParamSchema),
+      query: collectionParamSchema,
       responses: {
         200: collectionMinimalShowResponseSchema,
       },
@@ -210,13 +213,12 @@ const collection = builder.router({
     episodes: {
       method: 'GET',
       path: '/episodes',
-      query: collectionParamSchema
-        .merge(minimalParamSchema),
+      query: collectionParamSchema,
       responses: {
         200: collectionMinimalResponseSchema,
       },
     },
-  }),
+  }, { pathPrefix: '/minimal' }),
 }, {
   pathPrefix: '/collection',
 });
@@ -271,6 +273,9 @@ export type FavoritesRemoveResponse = z.infer<
 
 export type CollectionRequest = z.infer<typeof collectionParamSchema>;
 export type CollectionResponse = z.infer<typeof collectionResponseSchema>;
+export type CollectionMovieResponse = z.infer<typeof collectedMovieSchema>;
+export type CollectionShowResponse = z.infer<typeof collectedShowSchema>;
+export type CollectionEpisodeResponse = z.infer<typeof collectedEpisodeSchema>;
 export type CollectionMinimalResponse = z.infer<
   typeof collectionMinimalResponseSchema
 >;
