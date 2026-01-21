@@ -25,4 +25,5 @@ export const mediaFilterParamsSchema = z.object({
   ratings: z.string().nullish(),
   start_date: z.string().nullish(),
   end_date: z.string().nullish(),
+  runtimes: z.string().nullish(),
 });
