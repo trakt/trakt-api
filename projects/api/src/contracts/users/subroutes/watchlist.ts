@@ -3,6 +3,7 @@ import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQ
 import { hideFilterParamsSchema } from '../../_internal/request/hideFilterParamsSchema.ts';
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
+import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import { listedMediaResponseSchema } from '../../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
@@ -13,10 +14,12 @@ import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
 export const watchlist = builder.router({
   movies: {
-    path: '/movies/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    path: '/movies/:sort?',
+    pathParams: profileParamsSchema
+      .merge(sortParamsSchema.partial()),
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
       .merge(hideFilterParamsSchema),
@@ -25,10 +28,12 @@ export const watchlist = builder.router({
     },
   },
   shows: {
-    path: '/shows/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    path: '/shows/:sort?',
+    pathParams: profileParamsSchema
+      .merge(sortParamsSchema.partial()),
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
       .merge(hideFilterParamsSchema),
@@ -37,10 +42,12 @@ export const watchlist = builder.router({
     },
   },
   all: {
-    path: '/movie,show/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    path: '/movie,show/:sort?',
+    pathParams: profileParamsSchema
+      .merge(sortParamsSchema.partial()),
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
       .merge(hideFilterParamsSchema),
