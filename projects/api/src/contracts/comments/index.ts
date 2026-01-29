@@ -44,7 +44,7 @@ const REACTIONS_LEVEL = builder.router({
     },
   },
   remove: {
-    path: '/:reaction_type?',
+    path: '/:reaction_type',
     method: 'DELETE',
     pathParams: z.object({
       reaction_type: reactionEnumSchema.optional(),
