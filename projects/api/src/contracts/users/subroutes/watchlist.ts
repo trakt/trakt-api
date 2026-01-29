@@ -14,7 +14,7 @@ import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
 export const watchlist = builder.router({
   movies: {
-    path: '/movies/:sort?',
+    path: '/movies/:sort',
     pathParams: profileParamsSchema
       .merge(sortParamsSchema.partial()),
     method: 'GET',
@@ -28,7 +28,7 @@ export const watchlist = builder.router({
     },
   },
   shows: {
-    path: '/shows/:sort?',
+    path: '/shows/:sort',
     pathParams: profileParamsSchema
       .merge(sortParamsSchema.partial()),
     method: 'GET',
@@ -42,7 +42,7 @@ export const watchlist = builder.router({
     },
   },
   all: {
-    path: '/movie,show/:sort?',
+    path: '/movie,show/:sort',
     pathParams: profileParamsSchema
       .merge(sortParamsSchema.partial()),
     method: 'GET',
