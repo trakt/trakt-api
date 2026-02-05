@@ -170,7 +170,8 @@ const collection = builder.router({
     method: 'GET',
     path: '/movies',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema),
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
     responses: {
       200: collectedMovieSchema.array(),
     },
@@ -188,7 +189,8 @@ const collection = builder.router({
     method: 'GET',
     path: '/episodes',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema),
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
     responses: {
       200: collectedEpisodeSchema.array(),
     },
