@@ -202,7 +202,7 @@ const collection = builder.router({
       .merge(collectionParamSchema)
       .merge(pageQuerySchema),
     responses: {
-      200: collectionResponseSchema,
+      200: collectionResponseSchema.array(),
     },
   },
   minimal: builder.router({
