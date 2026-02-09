@@ -43,7 +43,7 @@ export const collectedShowSchema = z.object({
 })
   .merge(typedShowResponseSchema);
 
-export const collectionResponseSchema = z.discriminatedUnion('type', [
+export const collectionResponseSchema = z.union([
   collectedMovieSchema,
   collectedShowSchema,
   collectedEpisodeSchema,

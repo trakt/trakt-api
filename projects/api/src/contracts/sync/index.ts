@@ -195,6 +195,16 @@ const collection = builder.router({
       200: collectedEpisodeSchema.array(),
     },
   },
+  media: {
+    method: 'GET',
+    path: '/media',
+    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: collectionResponseSchema,
+    },
+  },
   minimal: builder.router({
     movies: {
       method: 'GET',
