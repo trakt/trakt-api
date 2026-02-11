@@ -7,21 +7,12 @@ import { movieCheckinResponseSchema } from './schema/response/movieCheckinRespon
 import { showCheckinResponseSchema } from './schema/response/showCheckinResponseSchema.ts';
 
 export const checkin = builder.router({
-  show: {
+  start: {
     method: 'POST',
     path: '',
-    body: showCheckinRequestSchema,
+    body: z.union([showCheckinRequestSchema, movieCheckinRequestSchema]),
     responses: {
-      200: showCheckinResponseSchema,
-      409: checkin409ErrorResponse,
-    },
-  },
-  movie: {
-    method: 'POST',
-    path: '',
-    body: movieCheckinRequestSchema,
-    responses: {
-      200: movieCheckinResponseSchema,
+      200: z.union([showCheckinResponseSchema, movieCheckinResponseSchema]),
       409: checkin409ErrorResponse,
     },
   },
