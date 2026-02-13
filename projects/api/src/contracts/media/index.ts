@@ -3,6 +3,7 @@ import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuer
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import type { z } from '../_internal/z.ts';
 import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipatedResponseSchema.ts';
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
@@ -44,3 +45,9 @@ export const media = builder.router({
 }, {
   pathPrefix: '/media',
 });
+
+export type MediaPopularResponse = z.infer<typeof mediaPopularResponseSchema>;
+export type MediaTrendingResponse = z.infer<typeof mediaTrendingResponseSchema>;
+export type MediaAnticipatedResponse = z.infer<
+  typeof mediaAnticipatedResponseSchema
+>;
