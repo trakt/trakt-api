@@ -8,6 +8,7 @@ export * from './contracts/checkin/index.ts';
 export * from './contracts/comments/index.ts';
 export * from './contracts/enums/index.ts';
 export * from './contracts/lists/index.ts';
+export * from './contracts/media/index.ts';
 export * from './contracts/models/index.ts';
 export * from './contracts/movies/index.ts';
 export * from './contracts/oauth/index.ts';
