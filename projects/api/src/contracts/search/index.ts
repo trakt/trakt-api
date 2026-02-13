@@ -43,7 +43,7 @@ export const search = builder.router({
     path: '/:type',
     method: 'GET',
     pathParams: searchTypeParamFactory<
-      ['movie', 'show', 'person']
+      ['movie', 'show', 'person', 'list']
     >(),
     query: searchQuerySchema
       .merge(searchEngineSchema)
