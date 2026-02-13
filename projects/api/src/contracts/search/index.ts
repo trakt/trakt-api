@@ -16,7 +16,7 @@ import type { trendingSearchPersonResponseSchema } from './schema/response/trend
 import { trendingSearchResponseSchema } from './schema/response/trendingSearchResponseSchema.ts';
 import type { trendingSearchShowResponseSchema } from './schema/response/trendingSearchShowResponseSchema.ts';
 /**
- * TODO: add support for 'episode', 'list'
+ * TODO: add support for 'episode'
  */
 
 const recent = builder.router({
