@@ -45,6 +45,7 @@ module.exports = {
         'layout',
         'link',
         'list',
+        'media',
         'movie',
         'oauth',
         'person',
