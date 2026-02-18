@@ -15,10 +15,10 @@ export const showCheckinResponseSchema = z.object({
     number: z.number().int(),
     title: z.string(),
     ids: episodeIdsResponseSchema,
-  }),
+  }).nullish(),
   show: z.object({
     title: z.string(),
     year: z.number().int(),
     ids: showIdsResponseSchema,
-  }),
+  }).nullish(),
 });

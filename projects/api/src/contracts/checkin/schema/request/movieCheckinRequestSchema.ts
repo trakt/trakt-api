@@ -9,7 +9,7 @@ export const movieCheckinRequestSchema = z.object({
     title: z.string().nullish(),
     year: z.number().int().nullish(),
     ids: movieIdsRequestSchema,
-  }),
+  }).nullish(),
   sharing: sharingRequestSchema,
   message: z.string().nullish(),
 });
