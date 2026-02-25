@@ -79,6 +79,8 @@ export const likedListResponseSchema = z.object({
   /***
    * When using extended 'min', only the id is returned
    */
-  list: listResponseSchema.partial()
-    .extend({ id: z.number().int() }),
+  list: z.union([
+    listResponseSchema.partial(),
+    z.object({ id: z.number().int().nullish() }),
+  ]),
 });

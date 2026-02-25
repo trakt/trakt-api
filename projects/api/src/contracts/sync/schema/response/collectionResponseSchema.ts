@@ -1,7 +1,7 @@
-import { typedEpisodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
-import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
+import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
+import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import {
-  typedShowResponseSchema,
+  showResponseSchema,
 } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 import { availableOnEnumSchema } from '../request/availableOnEnumSchema.ts';
@@ -20,10 +20,17 @@ const collectedItemSchema = z.object({
   updated_at: z.string().datetime(),
 }).merge(availableOnSchema);
 
-export const collectedMovieSchema = typedMovieResponseSchema
+export const collectedMovieSchema = z.object({
+  type: z.literal('movie'),
+  movie: movieResponseSchema.nullish(),
+})
   .merge(collectedItemSchema);
 
-export const collectedEpisodeSchema = typedEpisodeResponseSchema
+export const collectedEpisodeSchema = z.object({
+  type: z.literal('episode'),
+  episode: episodeResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
+})
   .merge(collectedItemSchema);
 
 const collectedSeasonEpisodeSchema = z.object({
@@ -37,11 +44,14 @@ const collectedSeasonResponseSchema = z.object({
 });
 
 export const collectedShowSchema = z.object({
-  last_collected_at: z.string().datetime(),
-  last_updated_at: z.string().datetime(),
-  seasons: collectedSeasonResponseSchema.array(),
+  last_collected_at: z.string().datetime().nullish(),
+  last_updated_at: z.string().datetime().nullish(),
+  seasons: collectedSeasonResponseSchema.array().nullish(),
 })
-  .merge(typedShowResponseSchema);
+  .merge(z.object({
+    type: z.literal('show'),
+    show: showResponseSchema.nullish(),
+  }));
 
 export const collectionResponseSchema = z.union([
   collectedMovieSchema,

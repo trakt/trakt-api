@@ -13,5 +13,5 @@ export const movieCheckinResponseSchema = z.object({
     title: z.string(),
     year: z.number().int(),
     ids: movieIdsResponseSchema,
-  }),
+  }).nullish(),
 });
