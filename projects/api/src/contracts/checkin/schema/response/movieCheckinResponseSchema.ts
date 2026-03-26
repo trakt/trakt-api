@@ -5,9 +5,9 @@ export const movieCheckinResponseSchema = z.object({
   id: int64(z.number().int()),
   watched_at: z.string().datetime(),
   sharing: z.object({
-    twitter: z.boolean(),
-    mastodon: z.boolean(),
-    tumblr: z.boolean(),
+    twitter: z.boolean().nullish(),
+    mastodon: z.boolean().nullish(),
+    tumblr: z.boolean().nullish(),
   }),
   movie: z.object({
     title: z.string(),
