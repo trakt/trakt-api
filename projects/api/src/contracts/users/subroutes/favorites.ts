@@ -1,6 +1,7 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
+import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
 import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
@@ -12,9 +13,10 @@ import { favoritedShowsResponseSchema } from '../schema/response/favoritedShowsR
 export const favorites = builder.router({
   media: {
     path: '/media/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: z.union([
@@ -25,9 +27,10 @@ export const favorites = builder.router({
   },
   movies: {
     path: '/movies/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: favoritedMoviesResponseSchema.array(),
@@ -35,9 +38,10 @@ export const favorites = builder.router({
   },
   shows: {
     path: '/shows/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema),
+    pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: favoritedShowsResponseSchema.array(),
