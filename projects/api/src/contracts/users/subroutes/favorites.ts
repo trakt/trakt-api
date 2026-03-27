@@ -11,7 +11,7 @@ import { favoritedShowsResponseSchema } from '../schema/response/favoritedShowsR
 
 export const favorites = builder.router({
   media: {
-    path: '/:sort',
+    path: '/media/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema),
     method: 'GET',
     query: extendedMediaQuerySchema
