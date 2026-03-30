@@ -45,6 +45,10 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
+  total_runtime: z.number().int().nullish(),
+  /**
+   * Available if requesting extended `full`.
+   */
   certification: showCertificationResponseSchema.nullish(),
   /**
    * Available if requesting extended `full`.

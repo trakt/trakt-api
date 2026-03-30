@@ -40,6 +40,10 @@ export const seasonResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
+  total_runtime: z.number().int().nullish(),
+  /**
+   * Available if requesting extended `full`.
+   */
   network: z.string().nullish(),
   /**
    * Available if requesting extended `images`.
