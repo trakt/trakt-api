@@ -4,6 +4,7 @@ import { imagesResponseSchema } from './imagesResponseSchema.ts';
 import { mediaColorsResponseSchema } from './mediaColorsResponseSchema.ts';
 import { showCertificationResponseSchema } from './showCertificationResponseSchema.ts';
 import { showIdsResponseSchema } from './showIdsResponseSchema.ts';
+import { socialIdsResponseSchema } from './socialIdsResponseSchema.ts';
 import { statusResponseSchema } from './statusResponseSchema.ts';
 
 export const showResponseSchema = z.object({
@@ -114,6 +115,10 @@ export const showResponseSchema = z.object({
    * Available if requesting extended `colors`.
    */
   colors: mediaColorsResponseSchema.nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  social_ids: socialIdsResponseSchema.nullish(),
 });
 
 export const typedShowResponseSchema = z.object({
