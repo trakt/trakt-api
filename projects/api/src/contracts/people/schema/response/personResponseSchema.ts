@@ -1,4 +1,5 @@
 import { crewPositionResponseSchema } from '../../../_internal/response/crewPositionResponseSchema.ts';
+import { socialIdsResponseSchema } from '../../../_internal/response/socialIdsResponseSchema.ts';
 import { asString, z } from '../../../_internal/z.ts';
 
 export const personResponseSchema = z.object({
@@ -13,12 +14,7 @@ export const personResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  social_ids: z.object({
-    twitter: z.string().nullish(),
-    facebook: z.string().nullish(),
-    instagram: z.string().nullish(),
-    wikipedia: z.string().nullish(),
-  }).nullish(),
+  social_ids: socialIdsResponseSchema.nullish(),
   /***
    * Available if requesting extended `full`.
    */

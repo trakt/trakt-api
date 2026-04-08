@@ -20,6 +20,7 @@ import {
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
+import { socialIdsResponseSchema } from '../_internal/response/socialIdsResponseSchema.ts';
 import { statusResponseSchema } from '../_internal/response/statusResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
@@ -111,3 +112,8 @@ export type JustWatchLinkResponse = z.infer<typeof justWatchLinkResponseSchema>;
 
 export { videoResponseSchema };
 export type VideoResponse = z.infer<typeof videoResponseSchema>;
+
+export { socialIdsResponseSchema };
+export type SocialIdsResponse = z.infer<
+  typeof socialIdsResponseSchema
+>;
