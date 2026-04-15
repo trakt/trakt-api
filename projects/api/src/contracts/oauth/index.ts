@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 import { codeRequestSchema } from './schema/request/codeRequestSchema.ts';
 import {
@@ -66,4 +66,5 @@ export const oauth = builder
     },
   }, {
     pathPrefix: '/oauth',
+    metadata: authMetadata('none'),
   });

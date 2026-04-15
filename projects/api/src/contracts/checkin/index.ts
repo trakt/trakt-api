@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 import { movieCheckinRequestSchema } from './schema/request/movieCheckinRequestSchema.ts';
 import { showCheckinRequestSchema } from './schema/request/showCheckinRequestSchema.ts';
@@ -26,7 +26,10 @@ export const checkin = builder.router({
       204: z.undefined(),
     },
   },
-}, { pathPrefix: '/checkin' });
+}, {
+  pathPrefix: '/checkin',
+  metadata: authMetadata('required'),
+});
 
 export { showCheckinRequestSchema };
 export type ShowCheckinRequest = z.infer<typeof showCheckinRequestSchema>;
