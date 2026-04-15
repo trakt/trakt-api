@@ -29,6 +29,13 @@ export const hidden = builder.router({
       200: hiddenShowResponseSchema.array(),
     },
   },
+  dropped: {
+    path: '/dropped',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: { 200: hiddenShowResponseSchema.array() },
+  },
   remove: {
     progress: {
       path: '/progress_watched/remove',
