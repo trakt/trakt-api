@@ -1,4 +1,4 @@
-import { traktContract } from '@trakt/api';
+import { Environment, traktContract } from '@trakt/api';
 import { generateOpenApi } from './generateOpenApi.ts';
 
 type AuthRequirement = 'none' | 'optional' | 'required';
@@ -37,6 +37,21 @@ function getSecurityFromAuth(auth: AuthRequirement) {
   }
 }
 
+const servers = [
+  {
+    url: Environment.production,
+    description: 'Production',
+  },
+  {
+    url: Environment.staging,
+    description: 'Staging',
+  },
+  {
+    url: Environment.production_private,
+    description: 'Private production',
+  },
+];
+
 export function generate(): ReturnType<typeof generateOpenApi> {
   return generateOpenApi(
     traktContract,
@@ -45,6 +60,7 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         title: 'Trakt API',
         version: '2.0.0',
       },
+      servers,
       components: {
         securitySchemes: {
           traktOAuth: {

@@ -36,6 +36,10 @@ const getPathsFromRouter = (
   Object.keys(router).forEach((key) => {
     const value = router[key];
 
+    if (value == null) {
+      return;
+    }
+
     if (isAppRoute(value)) {
       const pathWithPathParams = value.path.replace(/:(\w+)/g, '{$1}');
 
