@@ -79,6 +79,20 @@ const progress = builder.router({
       },
     },
   },
+  watched: {
+    method: 'GET',
+    path: '/progress/watched',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(sortQuerySchema)
+      .merge(z.object({
+        hide_completed: z.boolean().optional(),
+        hide_not_completed: z.boolean().optional(),
+      })),
+    responses: {
+      200: upNextResponseSchema.array(),
+    },
+  },
 });
 
 const history = builder.router({
