@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
@@ -256,7 +256,10 @@ export const sync = builder.router({
   ratings,
   favorites,
   collection,
-}, { pathPrefix: '/sync' });
+}, {
+  pathPrefix: '/sync',
+  metadata: authMetadata('required'),
+});
 
 export {
   collectionMinimalResponseSchema,

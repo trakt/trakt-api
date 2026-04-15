@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import type { z } from '../_internal/z.ts';
 import { episodeScrobbleRequestSchema } from './schema/request/episodeScrobbleRequestSchema.ts';
@@ -65,7 +65,10 @@ export const scrobble = builder.router({
       },
     },
   }),
-}, { pathPrefix: '/scrobble' });
+}, {
+  pathPrefix: '/scrobble',
+  metadata: authMetadata('required'),
+});
 
 export {
   episodeScrobbleRequestSchema,

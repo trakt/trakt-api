@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { z } from '../_internal/z.ts';
@@ -54,6 +54,7 @@ export const recommendations = builder.router({
   shows,
 }, {
   pathPrefix: '/recommendations',
+  metadata: authMetadata('required'),
 });
 
 export { hideParamsSchema };
