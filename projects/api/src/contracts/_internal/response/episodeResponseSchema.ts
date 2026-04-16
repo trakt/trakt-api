@@ -8,6 +8,7 @@ export const episodeResponseSchema = z.object({
   title: z.string().nullish(),
   first_aired: z.string().nullish(),
   released: z.string().nullish(),
+  effective_release_date: z.string().nullish(),
   number_abs: z.number().int().nullish(),
   /***
    * Available if requesting extended `full`.
