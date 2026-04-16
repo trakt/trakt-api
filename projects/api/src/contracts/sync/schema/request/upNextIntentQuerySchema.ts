@@ -1,8 +1,8 @@
 import { z } from '../../../_internal/z.ts';
 
 export const upNextIntentQuerySchema = z.object({
-  intent: z.enum(['all', 'continue', 'start']).optional().openapi({
+  intent: z.enum(['all', 'continue', 'start', 'completed']).optional().openapi({
     description:
-      'To get shows a user is just starting, continuing, or all shows.',
+      'To get shows a user is just starting, continuing, completed, or all shows.',
   }),
 });
