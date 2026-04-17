@@ -7,5 +7,8 @@ export const collectionMinimalResponseSchema = z.record(
 
 export const collectionMinimalShowResponseSchema = z.record(
   z.string(),
-  collectionMinimalResponseSchema,
+  z.record(
+    z.string(),
+    collectionMinimalResponseSchema,
+  ),
 );
