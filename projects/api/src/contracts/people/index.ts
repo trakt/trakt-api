@@ -2,7 +2,8 @@ import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
+import { peopleReportRequestSchema } from './schema/request/peopleReportRequestSchema.ts';
 import { peopleMovieCreditsResponseSchema } from './schema/response/peopleMovieCreditsResponseSchema.ts';
 import { peopleShowCreditsResponseSchema } from './schema/response/peopleShowCreditsResponseSchema.ts';
 import { personResponseSchema } from './schema/response/personResponseSchema.ts';
@@ -35,6 +36,17 @@ export const people = builder.router({
       200: peopleShowCreditsResponseSchema,
     },
   },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: peopleReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
+    },
+  },
 }, {
   pathPrefix: '/people/:id',
 });
@@ -47,6 +59,9 @@ export type PersonResponse = z.infer<
 export { peopleMovieCreditsResponseSchema };
 
 export { peopleShowCreditsResponseSchema };
+
+export { peopleReportRequestSchema };
+export type PeopleReportRequest = z.infer<typeof peopleReportRequestSchema>;
 export type PeopleMovieCreditsResponse = z.infer<
   typeof peopleMovieCreditsResponseSchema
 >;

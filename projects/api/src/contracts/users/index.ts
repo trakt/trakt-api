@@ -17,6 +17,7 @@ import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
 import { sortEnumSchema } from './schema/request/sortParamsSchema.ts';
+import { userReportRequestSchema } from './schema/request/userReportRequestSchema.ts';
 import { yearInReviewParamsSchema } from './schema/request/yearInReviewParamsSchema.ts';
 import { blockedUserResponseSchema } from './schema/response/blockedUserResponseSchema.ts';
 import { followerResponseSchema } from './schema/response/followerResponseSchema.ts';
@@ -210,6 +211,17 @@ const ENTITY_LEVEL = builder.router({
       204: z.undefined(),
     },
   },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: profileParamsSchema,
+    body: userReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
+    },
+  },
   followers: {
     path: '/followers',
     method: 'GET',
@@ -308,12 +320,14 @@ export {
   socialActivityResponseSchema,
   sortEnumSchema,
   userCommentResponseSchema,
+  userReportRequestSchema,
   userStatsResponseSchema,
   watchActionSchema,
   watchingResponseSchema,
 };
 
 export type ProfileParams = z.infer<typeof profileParamsSchema>;
+export type UserReportRequest = z.infer<typeof userReportRequestSchema>;
 export type SettingsResponse = z.infer<typeof settingsResponseSchema>;
 
 export type SortDirection = z.infer<typeof sortDirectionSchema>;

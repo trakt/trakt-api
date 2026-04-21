@@ -11,6 +11,7 @@ import { languageParamsSchema } from '../_internal/request/languageParamsSchema.
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
+import { mediaReportRequestSchema } from '../_internal/request/mediaReportRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
@@ -34,7 +35,7 @@ import { studioResponseSchema } from '../_internal/response/studioResponseSchema
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
 import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
 import { episodeParamsSchema } from './schema/request/episodeParamsSchema.ts';
 import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
@@ -136,6 +137,19 @@ const EPISODE_LEVEL = builder.router({
       .merge(episodeParamsSchema),
     responses: {
       200: watchNowResponseSchema,
+    },
+  },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema
+      .merge(seasonParamsSchema)
+      .merge(episodeParamsSchema),
+    body: mediaReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
     },
   },
 }, {
@@ -285,6 +299,17 @@ const ENTITY_LEVEL = builder.router({
         },
       },
     }),
+    report: {
+      path: '/report',
+      method: 'POST',
+      pathParams: idParamsSchema.merge(seasonParamsSchema),
+      body: mediaReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
+    },
   }, {
     pathPrefix: '/seasons/:season',
   }),
@@ -326,6 +351,17 @@ const ENTITY_LEVEL = builder.router({
     pathParams: idParamsSchema,
     responses: {
       200: sentimentsResponseSchema,
+    },
+  },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: mediaReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
     },
   },
   episode: EPISODE_LEVEL,
@@ -453,3 +489,6 @@ export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;
 export { episodeParamsSchema };
 
 export { seasonParamsSchema };
+
+export { mediaReportRequestSchema };
+export type MediaReportRequest = z.infer<typeof mediaReportRequestSchema>;

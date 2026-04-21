@@ -1,8 +1,11 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedWatchNowQuerySchema } from '../_internal/request/extendedWatchNowQuerySchema.ts';
+import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
+import { mediaReportRequestSchema } from '../_internal/request/mediaReportRequestSchema.ts';
 import { watchNowParamsSchema } from '../_internal/request/watchNowParamsSchema.ts';
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
+import { z } from '../_internal/z.ts';
 
 export const episodes = builder.router({
   watchnow: {
@@ -13,6 +16,17 @@ export const episodes = builder.router({
     pathParams: watchNowParamsSchema,
     responses: {
       200: watchNowResponseSchema,
+    },
+  },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: mediaReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
     },
   },
 }, {

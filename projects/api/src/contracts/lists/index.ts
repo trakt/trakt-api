@@ -16,6 +16,7 @@ import { listedMovieResponseSchema } from '../_internal/response/listedMovieResp
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { z } from '../_internal/z.ts';
+import { listReportRequestSchema } from './schema/listReportRequestSchema.ts';
 import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
 
 const ENTITY_LEVEL = builder.router({
@@ -110,6 +111,17 @@ const ENTITY_LEVEL = builder.router({
       204: z.undefined(),
     },
   },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: listReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
@@ -147,3 +159,6 @@ export const lists = builder.router({
 export { prominentListResponseSchema };
 
 export type ProminentListResponse = z.infer<typeof prominentListResponseSchema>;
+
+export { listReportRequestSchema };
+export type ListReportRequest = z.infer<typeof listReportRequestSchema>;
