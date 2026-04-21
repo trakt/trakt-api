@@ -11,6 +11,7 @@ import { languageParamsSchema } from '../_internal/request/languageParamsSchema.
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
+import { mediaReportRequestSchema } from '../_internal/request/mediaReportRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
@@ -37,7 +38,7 @@ import {
   watchNowResponseSchema,
   type watchNowServiceResponseSchema,
 } from '../_internal/response/watchNowResponseSchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
 import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
 import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
 import { movieStreamingResponseSchema } from './schema/response/movieStreamingResponseSchema.ts';
@@ -172,6 +173,17 @@ const ENTITY_LEVEL = builder.router({
     pathParams: idParamsSchema,
     responses: {
       200: sentimentsResponseSchema,
+    },
+  },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: mediaReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
     },
   },
 }, {

@@ -15,6 +15,7 @@ import {
 import { z } from '../_internal/z.ts';
 import { commentPostParamsSchema } from './schema/requests/commentPostParamsSchema.ts';
 import { commentReplyParamsSchema } from './schema/requests/commentReplyParamsSchema.ts';
+import { commentReportRequestSchema } from './schema/requests/commentReportRequestSchema.ts';
 
 const REACTIONS_LEVEL = builder.router({
   summary: {
@@ -84,6 +85,17 @@ const ENTITY_LEVEL = builder.router({
       204: z.undefined(),
     },
   },
+  report: {
+    path: '/report',
+    method: 'POST',
+    pathParams: idParamsSchema,
+    body: commentReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
+    },
+  },
   replies: {
     path: '/replies',
     method: 'GET',
@@ -146,6 +158,7 @@ export const comments = builder.router({
 export {
   commentPostParamsSchema,
   commentReplyParamsSchema,
+  commentReportRequestSchema,
   reactionsResponseSchema,
   reactionsSummaryResponseSchema,
   reactionTypeSchema,
@@ -153,6 +166,7 @@ export {
 
 export type CommentReplyParams = z.infer<typeof commentReplyParamsSchema>;
 export type CommentPostParams = z.infer<typeof commentPostParamsSchema>;
+export type CommentReportRequest = z.infer<typeof commentReportRequestSchema>;
 
 export type ReactionsSummaryResponse = z.infer<
   typeof reactionsSummaryResponseSchema
