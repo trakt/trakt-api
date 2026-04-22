@@ -82,11 +82,6 @@ Have questions or ideas? Share them in our
 Found a bug? Please report it in our
 [**GitHub Issues**](https://github.com/trakt/trakt-api/issues).
 
-## Stay Connected
-
-Make sure to follow our [**API Blog**](https://apiblog.trakt.tv) and
-[**@traktapi on Twitter**](https://twitter.com/traktapi) for real time updates.
-
 ## Third Party Libraries
 
 All of the libraries listed below are user contributed. If you find a bug or
