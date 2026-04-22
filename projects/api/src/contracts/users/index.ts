@@ -184,6 +184,24 @@ const ENTITY_LEVEL = builder.router({
       204: z.undefined(),
     },
   },
+  block: {
+    path: '/block',
+    method: 'POST',
+    pathParams: profileParamsSchema,
+    body: z.undefined(),
+    responses: {
+      201: z.undefined(),
+      409: z.undefined(),
+    },
+  },
+  unblock: {
+    path: '/block',
+    method: 'DELETE',
+    pathParams: profileParamsSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
   followers: {
     path: '/followers',
     method: 'GET',
