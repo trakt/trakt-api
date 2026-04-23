@@ -18,6 +18,7 @@ import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
 import { sortEnumSchema } from './schema/request/sortParamsSchema.ts';
 import { yearInReviewParamsSchema } from './schema/request/yearInReviewParamsSchema.ts';
+import { blockedUserResponseSchema } from './schema/response/blockedUserResponseSchema.ts';
 import { followerResponseSchema } from './schema/response/followerResponseSchema.ts';
 import { followResponseSchema } from './schema/response/followResponseSchema.ts';
 import { friendResponseSchema } from './schema/response/friendResponseSchema.ts';
@@ -111,6 +112,13 @@ const GLOBAL_LEVEL = builder.router({
     body: settingsRequestSchema,
     responses: {
       201: z.undefined(),
+    },
+  },
+  blocked: {
+    path: '/blocked',
+    method: 'GET',
+    responses: {
+      200: blockedUserResponseSchema.array(),
     },
   },
 });
@@ -281,6 +289,7 @@ export type * from './subroutes/watchlist.ts';
 
 export {
   avatarRequestSchema,
+  blockedUserResponseSchema,
   commentOnTypeParamsSchema,
   commentsRequestSchema,
   commentTypeParamsSchema,
@@ -324,6 +333,7 @@ export type FollowerResponse = z.infer<
   typeof followerResponseSchema
 >;
 export type FollowResponse = z.infer<typeof followResponseSchema>;
+export type BlockedUserResponse = z.infer<typeof blockedUserResponseSchema>;
 export type FriendResponse = z.infer<typeof friendResponseSchema>;
 
 export type UserStatsResponse = z.infer<typeof userStatsResponseSchema>;
