@@ -61,8 +61,18 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         version: '2.0.0',
       },
       servers,
+      security: [
+        {
+          traktAPI: [],
+        },
+      ],
       components: {
         securitySchemes: {
+          traktAPI: {
+            type: 'apiKey',
+            in: 'header',
+            name: 'trakt-api-key',
+          },
           traktOAuth: {
             type: 'oauth2',
             flows: {
@@ -76,6 +86,18 @@ export function generate(): ReturnType<typeof generateOpenApi> {
             },
           },
         },
+      },
+      'x-readme': {
+        headers: [
+          {
+            key: 'User-Agent',
+            value: 'readme/1.0',
+          },
+          {
+            key: 'trakt-api-version',
+            value: '2',
+          },
+        ],
       },
     },
     {
