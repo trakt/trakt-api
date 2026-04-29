@@ -1,11 +1,12 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
-import type { z } from '../../_internal/z.ts';
+import { z } from '../../_internal/z.ts';
 import { showQueryParamsSchema } from '../../shows/schema/request/showQueryParamsSchema.ts';
 import { minimalParamSchema } from '../../sync/schema/request/minimalParamSchema.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { watchedMoviesMinimalResponseSchema } from '../schema/response/watchedMoviesMinimalResponseSchema.ts';
 import { watchedMoviesResponseSchema } from '../schema/response/watchedMoviesResponseSchema.ts';
+import { watchedShowsMinimalResponseSchema } from '../schema/response/watchedShowsMinimalResponseSchema.ts';
 import { watchedShowsResponseSchema } from '../schema/response/watchedShowsResponseSchema.ts';
 
 export const watched = builder.router({
@@ -37,6 +38,19 @@ export const watched = builder.router({
         200: watchedMoviesMinimalResponseSchema,
       },
     },
+    shows: {
+      path: '/shows',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: minimalParamSchema.merge(
+        showQueryParamsSchema.pick({ specials: true }),
+      ).extend({
+        season_numbers: z.boolean().nullish(),
+      }),
+      responses: {
+        200: watchedShowsMinimalResponseSchema,
+      },
+    },
   }),
 }, {
   pathPrefix: '/:id/watched',
@@ -47,4 +61,8 @@ export type WatchedShowsResponse = z.infer<typeof watchedShowsResponseSchema>;
 
 export type WatchedMoviesMinimalResponse = z.infer<
   typeof watchedMoviesMinimalResponseSchema
+>;
+
+export type WatchedShowsMinimalResponse = z.infer<
+  typeof watchedShowsMinimalResponseSchema
 >;
