@@ -7,7 +7,7 @@ export const progressResponseSchema = z.object({
   completed: z.number().int(),
   last_watched_at: z.string().datetime().nullish(),
   reset_at: z.null(),
-  next_episode: episodeResponseSchema,
+  next_episode: episodeResponseSchema.or(z.null()),
   last_episode: episodeResponseSchema.or(z.null()),
   /***
    * Available if requesting include_stats `true`.

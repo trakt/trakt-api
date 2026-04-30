@@ -53,6 +53,7 @@ const progress = builder.router({
       method: 'GET',
       path: '/progress/up_next_nitro',
       query: pageQuerySchema
+        .merge(sortQuerySchema)
         .merge(upNextIntentQuerySchema),
       responses: {
         200: upNextResponseSchema.array(),
