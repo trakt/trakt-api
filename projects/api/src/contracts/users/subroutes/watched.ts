@@ -1,5 +1,6 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { z } from '../../_internal/z.ts';
 import { showQueryParamsSchema } from '../../shows/schema/request/showQueryParamsSchema.ts';
 import { minimalParamSchema } from '../../sync/schema/request/minimalParamSchema.ts';
@@ -33,7 +34,7 @@ export const watched = builder.router({
       path: '/movies',
       method: 'GET',
       pathParams: profileParamsSchema,
-      query: minimalParamSchema,
+      query: minimalParamSchema.merge(pageQuerySchema),
       responses: {
         200: watchedMoviesMinimalResponseSchema,
       },
@@ -42,11 +43,13 @@ export const watched = builder.router({
       path: '/shows',
       method: 'GET',
       pathParams: profileParamsSchema,
-      query: minimalParamSchema.merge(
-        showQueryParamsSchema.pick({ specials: true }),
-      ).extend({
-        season_numbers: z.boolean().nullish(),
-      }),
+      query: minimalParamSchema
+        .merge(pageQuerySchema)
+        .merge(
+          showQueryParamsSchema.pick({ specials: true }),
+        ).extend({
+          season_numbers: z.boolean().nullish(),
+        }),
       responses: {
         200: watchedShowsMinimalResponseSchema,
       },
