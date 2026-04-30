@@ -1,3 +1,4 @@
+import type { SecurityRequirementObject } from 'openapi3-ts';
 import { Environment, traktContract } from '@trakt/api';
 import { generateOpenApi } from './generateOpenApi.ts';
 
@@ -26,14 +27,16 @@ function getAuthRequirement(
   return tags.includes('oauth') ? 'none' : 'optional';
 }
 
-function getSecurityFromAuth(auth: AuthRequirement) {
+function getSecurityFromAuth(
+  auth: AuthRequirement,
+): SecurityRequirementObject[] {
   switch (auth) {
     case 'none':
-      return [];
+      return [{ traktAPI: [] }];
     case 'required':
-      return [{ traktOAuth: [] }];
+      return [{ traktAPI: [], traktOAuth: [] }];
     case 'optional':
-      return [{ traktOAuth: [] }, {}];
+      return [{ traktAPI: [], traktOAuth: [] }, { traktAPI: [] }];
   }
 }
 
@@ -61,11 +64,6 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         version: '2.0.0',
       },
       servers,
-      security: [
-        {
-          traktAPI: [],
-        },
-      ],
       components: {
         securitySchemes: {
           traktAPI: {
