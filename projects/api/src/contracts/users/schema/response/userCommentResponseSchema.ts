@@ -1,7 +1,10 @@
 import { commentResponseSchema } from '../../../_internal/response/commentResponseSchema.ts';
 import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
 import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
-import { typedShowResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
+import {
+  showResponseSchema,
+  typedShowResponseSchema,
+} from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 import { seasonResponseSchema } from '../../../shows/schema/response/seasonResponseSchema.ts';
 
@@ -22,6 +25,7 @@ const commentedSeasonResponseSchema = z.object({
 const commentedEpisodeResponseSchema = z.object({
   type: z.literal('episode'),
   episode: episodeResponseSchema,
+  show: showResponseSchema,
   comment: commentResponseSchema,
 });
 
