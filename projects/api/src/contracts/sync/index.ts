@@ -1,6 +1,7 @@
 import { authMetadata, builder } from '../_internal/builder.ts';
 import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { lifetimeStatsQuerySchema } from '../_internal/request/lifetimeStatsQuerySchema.ts';
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
@@ -44,7 +45,8 @@ const progress = builder.router({
       query: extendedQuerySchemaFactory<['full', 'images']>()
         .merge(pageQuerySchema)
         .merge(sortQuerySchema)
-        .merge(statsQuerySchema),
+        .merge(statsQuerySchema)
+        .merge(lifetimeStatsQuerySchema),
       responses: {
         200: upNextResponseSchema.array(),
       },
@@ -85,9 +87,14 @@ const progress = builder.router({
     query: extendedQuerySchemaFactory<['full', 'images']>()
       .merge(pageQuerySchema)
       .merge(sortQuerySchema)
+      .merge(lifetimeStatsQuerySchema)
       .merge(z.object({
         hide_completed: z.boolean().optional(),
         hide_not_completed: z.boolean().optional(),
+        only_rewatching: z.boolean().optional().openapi({
+          description:
+            'When true, restrict the list to shows the user is currently rewatching (i.e. those with an active `progress.reset_at`).',
+        }),
       })),
     responses: {
       200: upNextResponseSchema.array(),
