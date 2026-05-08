@@ -80,3 +80,26 @@ jobs:
         uses: readmeio/rdme@v10
         with:
           rdme: openapi upload ./projects/openapi/openapi.json --key=${{ secrets.README_API_KEY }} --slug=openapi.json
+
+      - name: Summoning the GitHub App Token
+        if: github.ref == 'refs/heads/master'
+        uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          repositories: trakt-android
+
+      - name: The Sacred Scroll's Journey aka Push OpenAPI to Android Repo
+        if: github.ref == 'refs/heads/master'
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ steps.generate-token.outputs.token }}
+        with:
+          source_file: 'projects/openapi/openapi.json'
+          destination_repo: 'trakt/trakt-android'
+          destination_folder: 'openapi'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          user_name: 'github-actions[bot]'
+          commit_message: 'chore: openapi schema updates'
+          destination_branch_create: 'feat/openapi_ci'
