@@ -9,6 +9,7 @@ const activitySchema = z.object({
   activity_at: z.string().datetime(),
   action: asString(z.enum(['scrobble', 'watch', 'checkin'])),
   user: profileResponseSchema,
+  user_rating: z.number().int().nullish(),
 });
 
 const socialEpisodeResponseSchema = z.object({

@@ -9,6 +9,7 @@ import { activityHistoryResponseSchema } from '../schema/response/activityHistor
 import { episodeActivityHistoryResponseSchema } from '../schema/response/episodeActivityHistoryResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from '../schema/response/movieActivityHistoryResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from '../schema/response/showActivityHistoryResponseSchema.ts';
+import { mediaFilterParamsSchema } from "../../_internal/request/mediaFilterParamsSchema.ts";
 
 export const history = builder.router({
   all: {
@@ -33,6 +34,7 @@ Returns movie watched history for a user. Use \`start_at\` and \`end_at\` to lim
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -47,6 +49,7 @@ Returns show watched history for a user. Use \`start_at\` and \`end_at\` to limi
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -61,6 +64,7 @@ Returns episode watched history for a user. Use \`start_at\` and \`end_at\` to l
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {

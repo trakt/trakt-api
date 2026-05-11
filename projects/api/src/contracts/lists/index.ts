@@ -18,6 +18,7 @@ import { listResponseSchema } from '../_internal/response/listResponseSchema.ts'
 import { z } from '../_internal/z.ts';
 import { listReportRequestSchema } from './schema/listReportRequestSchema.ts';
 import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
+import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
 
 const ENTITY_LEVEL = builder.router({
   summary: {
@@ -31,7 +32,8 @@ Returns a single list. Use the [**/lists/:id/items**](#reference/lists/list-item
     method: 'GET',
     pathParams: idParamsSchema,
     query: extendedProfileQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: listResponseSchema,
     },
@@ -47,6 +49,7 @@ Returns movie items on a public list. Use \`id\` to identify the list and query 
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -63,6 +66,7 @@ Returns show items on a public list. Use \`id\` to identify the list and query s
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -79,6 +83,7 @@ Returns movie and show items on a public list. Use \`id\` to identify the list a
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -95,6 +100,7 @@ Returns movie, show, episode, and season items on a public list. Use \`id\` to i
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {

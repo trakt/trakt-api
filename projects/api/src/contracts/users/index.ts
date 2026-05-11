@@ -45,6 +45,8 @@ import { requests } from './subroutes/requests.ts';
 import { userLists } from './subroutes/userLists.ts';
 import { watched } from './subroutes/watched.ts';
 import { watchlist } from './subroutes/watchlist.ts';
+import { mediaFilterParamsSchema } from "../_internal/request/mediaFilterParamsSchema.ts";
+import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
 
 const GLOBAL_LEVEL = builder.router({
   settings: {
@@ -177,6 +179,8 @@ Returns recent activity for a user social graph. Use \`type\` to choose \`friend
     method: 'GET',
     pathParams: profileParamsSchema.merge(socialActivityParamsSchema),
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: socialActivityResponseSchema.array(),

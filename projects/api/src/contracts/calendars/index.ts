@@ -5,6 +5,7 @@ import type { z } from '../_internal/z.ts';
 import { calendarRequestParamsSchema } from './schema/request/calendarParamsSchema.ts';
 import { calendarMovieResponseSchema } from './schema/response/calendarMovieResponseSchema.ts';
 import { calendarShowResponseSchema } from './schema/response/calendarShowListResponseSchema.ts';
+import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
 
 export const calendars = builder.router({
   shows: {
@@ -14,7 +15,8 @@ Returns shows airing during the requested UTC date range. Use \`target\` to choo
     method: 'GET',
     path: '/:target/shows/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -27,7 +29,8 @@ Returns new shows airing their first season during the requested UTC date range.
     method: 'GET',
     path: '/:target/shows/new/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -40,7 +43,8 @@ Returns season premieres airing during the requested UTC date range. Use \`targe
     method: 'GET',
     path: '/:target/shows/premieres/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -53,7 +57,8 @@ Returns show finales airing during the requested UTC date range. Use \`target\` 
     method: 'GET',
     path: '/:target/shows/finales/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -66,7 +71,8 @@ Returns movies with a release date during the requested UTC date range. Use \`ta
     method: 'GET',
     path: '/:target/movies/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
@@ -79,13 +85,14 @@ Returns DVD and physical media releases during the requested UTC date range. Use
     method: 'GET',
     path: '/:target/dvd/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
     },
   },
-}, { pathPrefix: '/calendars' });
+}, {pathPrefix: '/calendars'});
 
 export { calendarRequestParamsSchema };
 export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;

@@ -26,6 +26,7 @@ import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { reorderRequestSchema } from '../schema/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../schema/response/reorderListResponseSchema.ts';
 import { reorderListsResponseSchema } from '../schema/response/reorderListsResponseSchema.ts';
+import { ignoreQuerySchema } from "../../_internal/request/ignoreQuerySchema.ts";
 
 const list = builder.router({
   summary: {
@@ -98,6 +99,7 @@ Returns movie items on a personal list. Use \`list_id\` to identify the list and
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -115,6 +117,7 @@ Returns show items on a personal list. Use \`list_id\` to identify the list and 
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -133,6 +136,7 @@ Returns movie and show items on a personal list. Use \`list_id\` to identify the
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -151,6 +155,7 @@ Returns movie, show, season, and episode items on a personal list. Use \`list_id
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
