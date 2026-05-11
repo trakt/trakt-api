@@ -6,6 +6,6 @@ export const translationResponseSchema = z.array(
     overview: z.string().nullish(),
     tagline: z.string().nullish(),
     language: z.string(),
-    country: z.string(),
+    country: z.string().nullish(),
   }),
 );

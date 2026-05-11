@@ -2,7 +2,7 @@ import { z } from '../z.ts';
 
 const sentimentResponseSchema = z.object({
   sentiment: z.string(),
-  comment_ids: z.array(z.number().int()),
+  comment_ids: z.array(z.number().int()).nullish(),
 });
 
 export const sentimentsResponseSchema = z.object({

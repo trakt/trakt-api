@@ -18,6 +18,7 @@ import { listResponseSchema } from '../_internal/response/listResponseSchema.ts'
 import { z } from '../_internal/z.ts';
 import { listReportRequestSchema } from './schema/listReportRequestSchema.ts';
 import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
+import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
 
 const ENTITY_LEVEL = builder.router({
   summary: {
@@ -25,7 +26,8 @@ const ENTITY_LEVEL = builder.router({
     method: 'GET',
     pathParams: idParamsSchema,
     query: extendedProfileQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: listResponseSchema,
     },
@@ -38,6 +40,7 @@ const ENTITY_LEVEL = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -51,6 +54,7 @@ const ENTITY_LEVEL = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -64,6 +68,7 @@ const ENTITY_LEVEL = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -77,6 +82,7 @@ const ENTITY_LEVEL = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {

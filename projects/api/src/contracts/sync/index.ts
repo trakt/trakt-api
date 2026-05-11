@@ -35,6 +35,7 @@ import { movieProgressResponseSchema } from './schema/response/movieProgressResp
 import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
 import { removeRatingsResponseSchema } from './schema/response/removeRatingsResponseSchema.ts';
 import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
+import { mediaFilterParamsSchema } from "../_internal/request/mediaFilterParamsSchema.ts";
 
 const progress = builder.router({
   upNext: {
@@ -53,6 +54,7 @@ const progress = builder.router({
       method: 'GET',
       path: '/progress/up_next_nitro',
       query: pageQuerySchema
+        .merge(mediaFilterParamsSchema)
         .merge(sortQuerySchema)
         .merge(upNextIntentQuerySchema),
       responses: {
@@ -64,6 +66,7 @@ const progress = builder.router({
     method: 'GET',
     path: '/playback/movies',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
+      .merge(mediaFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(progressParamsSchema),
     responses: {

@@ -8,7 +8,7 @@ export const peopleShowCreditsResponseSchema = z.object({
   cast: z.array(
     z.object({
       show: showResponseSchema,
-      episode_count: z.number().int(),
+      episode_count: z.number().int().nullish(),
       series_regular: z.boolean(),
     }).merge(characterResponseSchema),
   ).nullish(),
@@ -17,7 +17,7 @@ export const peopleShowCreditsResponseSchema = z.object({
     z.array(
       z.object({
         show: showResponseSchema,
-        episode_count: z.number().int(),
+        episode_count: z.number().int().nullish(),
       }).merge(jobsResponseSchema),
     ),
   ).nullish(),

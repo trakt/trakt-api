@@ -9,6 +9,7 @@ import { activityHistoryResponseSchema } from '../schema/response/activityHistor
 import { episodeActivityHistoryResponseSchema } from '../schema/response/episodeActivityHistoryResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from '../schema/response/movieActivityHistoryResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from '../schema/response/showActivityHistoryResponseSchema.ts';
+import { mediaFilterParamsSchema } from "../../_internal/request/mediaFilterParamsSchema.ts";
 
 export const history = builder.router({
   all: {
@@ -27,6 +28,7 @@ export const history = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -38,6 +40,7 @@ export const history = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
@@ -49,6 +52,7 @@ export const history = builder.router({
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {

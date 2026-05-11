@@ -26,6 +26,7 @@ import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { reorderRequestSchema } from '../schema/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../schema/response/reorderListResponseSchema.ts';
 import { reorderListsResponseSchema } from '../schema/response/reorderListsResponseSchema.ts';
+import { ignoreQuerySchema } from "../../_internal/request/ignoreQuerySchema.ts";
 
 const list = builder.router({
   summary: {
@@ -63,6 +64,7 @@ const list = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -76,6 +78,7 @@ const list = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -90,6 +93,7 @@ const list = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {
@@ -104,6 +108,7 @@ const list = builder.router({
       query: extendedMediaQuerySchema
         .merge(sortQuerySchema)
         .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
       responses: {

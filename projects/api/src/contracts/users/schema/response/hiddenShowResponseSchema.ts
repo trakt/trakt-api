@@ -2,5 +2,5 @@ import { typedShowResponseSchema } from '../../../_internal/response/showRespons
 import { z } from '../../../_internal/z.ts';
 
 export const hiddenShowResponseSchema = z.object({
-  hidden_at: z.string().datetime(),
+  hidden_at: z.string().datetime().nullish(),
 }).merge(typedShowResponseSchema);

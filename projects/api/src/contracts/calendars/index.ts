@@ -5,13 +5,15 @@ import type { z } from '../_internal/z.ts';
 import { calendarRequestParamsSchema } from './schema/request/calendarParamsSchema.ts';
 import { calendarMovieResponseSchema } from './schema/response/calendarMovieResponseSchema.ts';
 import { calendarShowResponseSchema } from './schema/response/calendarShowListResponseSchema.ts';
+import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
 
 export const calendars = builder.router({
   shows: {
     method: 'GET',
     path: '/:target/shows/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -21,7 +23,8 @@ export const calendars = builder.router({
     method: 'GET',
     path: '/:target/shows/new/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -31,7 +34,8 @@ export const calendars = builder.router({
     method: 'GET',
     path: '/:target/shows/premieres/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -41,7 +45,8 @@ export const calendars = builder.router({
     method: 'GET',
     path: '/:target/shows/finales/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -51,7 +56,8 @@ export const calendars = builder.router({
     method: 'GET',
     path: '/:target/movies/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
@@ -61,13 +67,14 @@ export const calendars = builder.router({
     method: 'GET',
     path: '/:target/dvd/:start_date/:days',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
     },
   },
-}, { pathPrefix: '/calendars' });
+}, {pathPrefix: '/calendars'});
 
 export { calendarRequestParamsSchema };
 export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;
