@@ -5,6 +5,9 @@ import { teamMemberResponseSchema } from './schema/response/teamMemberResponseSc
 
 export const team = builder.router({
   members: {
+    summary: 'Get team members',
+    description: `#### ✨ Extended Info
+Returns Trakt team members. Use \`extended\` to include additional person details and images when available.`,
     path: '/',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>(),

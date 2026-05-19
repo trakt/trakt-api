@@ -7,6 +7,9 @@ import { showCertificationsResponseSchema } from './schema/showCertificationsRes
 
 export const certifications = builder.router({
   shows: {
+    summary: 'Get show certifications',
+    description:
+      'Returns show certifications grouped by country, including certification name, slug, and description.',
     method: 'GET',
     path: '/shows',
     responses: {
@@ -14,6 +17,9 @@ export const certifications = builder.router({
     },
   },
   movies: {
+    summary: 'Get movie certifications',
+    description:
+      'Returns movie certifications grouped by country, including certification name, slug, and description.',
     method: 'GET',
     path: '/movies',
     responses: {

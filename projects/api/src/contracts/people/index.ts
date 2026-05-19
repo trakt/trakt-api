@@ -10,6 +10,15 @@ import { personResponseSchema } from './schema/response/personResponseSchema.ts'
 
 export const people = builder.router({
   summary: {
+    summary: 'Get a single person',
+    description: `#### ✨ Extended Info
+Returns a single person's details.
+
+#### Gender
+If available, the \`gender\` property will be set to \`male\`, \`female\`, or \`non_binary\`.
+
+#### Known For Department
+If available, the \`known_for_department\` property will be set to \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, or \`editing\`. Many people have credits across departments, \`known_for\` allows you to select their default credits more accurately.`,
     path: '/',
     pathParams: idParamsSchema,
     query: extendedPeopleQuerySchema,
@@ -19,6 +28,11 @@ export const people = builder.router({
     },
   },
   movies: {
+    summary: 'Get movie credits',
+    description: `#### ✨ Extended Info
+Returns all movies where this person is in the \`cast\` or \`crew\`. Each \`cast\` object will have a \`characters\` array and a standard \`movie\` object.
+
+The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`movie\` object.`,
     path: '/movies',
     pathParams: idParamsSchema,
     query: extendedMediaQuerySchema,
@@ -28,6 +42,11 @@ export const people = builder.router({
     },
   },
   shows: {
+    summary: 'Get show credits',
+    description: `#### ✨ Extended Info
+Returns all shows where this person is in the \`cast\` or \`crew\`, including the \`episode_count\` for which they appear. Each \`cast\` object will have a \`characters\` array and a standard \`show\` object. If \`series_regular\` is \`true\`, this person is a series regular and not simply a guest star.
+
+The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, \`editing\`, and \`created  by\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`show\` object.`,
     path: '/shows',
     pathParams: idParamsSchema,
     query: extendedMediaQuerySchema,
@@ -37,6 +56,21 @@ export const people = builder.router({
     },
   },
   report: {
+    summary: 'Report a person',
+    description: `#### 🔒 OAuth Required
+Report a person for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per person.
+
+| reason | description |
+|---|---|
+| \`duplicate\` | Duplicate of another person on Trakt |
+| \`remove\` | Should be removed from Trakt |
+| \`data_refresh\` | Request a full metadata refresh |
+| \`metadata\` | Metadata is wrong (name, biography, etc) |
+| \`adult\` | Marked as adult when it shouldn't be (or vice versa) |
+| \`language\` | Not in English |
+| \`spam\` | Spam or fake person |
+| \`tmdb\` | Should use TMDB as the datasource |
+| \`other\` | Anything else (add details in \`message\`) |`,
     path: '/report',
     method: 'POST',
     pathParams: idParamsSchema,

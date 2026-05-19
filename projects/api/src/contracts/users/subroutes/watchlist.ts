@@ -14,6 +14,10 @@ import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
 export const watchlist = builder.router({
   movies: {
+    summary: 'Get movie watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns movies on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
     path: '/movies/:sort',
     pathParams: profileParamsSchema
       .merge(sortParamsSchema.partial()),
@@ -28,6 +32,10 @@ export const watchlist = builder.router({
     },
   },
   shows: {
+    summary: 'Get show watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns shows on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
     path: '/shows/:sort',
     pathParams: profileParamsSchema
       .merge(sortParamsSchema.partial()),
@@ -42,6 +50,10 @@ export const watchlist = builder.router({
     },
   },
   all: {
+    summary: 'Get media watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns movies and shows on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
     path: '/movie,show/:sort',
     pathParams: profileParamsSchema
       .merge(sortParamsSchema.partial()),
@@ -56,6 +68,13 @@ export const watchlist = builder.router({
     },
   },
   comments: {
+    summary: 'Get all favorites comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for the watchlist. By default, the comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+
+> ### Note
+> _If you send OAuth, comments from blocked users will be automatically filtered out._`,
     path: '/comments/:sort',
     method: 'GET',
     pathParams: profileParamsSchema

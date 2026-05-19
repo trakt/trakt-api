@@ -49,6 +49,15 @@ import { showWatchedResponseSchema } from './schema/response/showWatchedResponse
 
 const EPISODE_LEVEL = builder.router({
   summary: {
+    summary: 'Get a single episode for a show',
+    description: `#### ✨ Extended Info
+Returns a single episode's details. All date and times are in UTC and were calculated using the episode's \`air_date\` and show's \`country\` and \`air_time\`.
+
+> ### Note
+> _If the \`first_aired\` is unknown, it will be set to \`null\`._
+
+> ### Note
+> _When getting \`full\` extended info, the \`episode_type\` field can have a value of \`standard\`, \`series_premiere\` (season 1, episode 1), \`season_premiere\` (episode 1), \`mid_season_finale\`, \`mid_season_premiere\` (the next episode after the mid season finale), \`season_finale\`, or \`series_finale\` (last episode to air for an ended show)._`,
     path: '',
     method: 'GET',
     query: extendedMediaQuerySchema,
@@ -60,6 +69,9 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   translations: {
+    summary: 'Get all episode translations',
+    description:
+      'Returns all translations for an episode, including language, country, and translated values for title and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`).',
     path: '/translations/:language',
     method: 'GET',
     pathParams: idParamsSchema
@@ -71,6 +83,8 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   stats: {
+    summary: 'Get episode stats',
+    description: 'Returns lots of episode stats.',
     path: '/stats',
     method: 'GET',
     pathParams: idParamsSchema
@@ -81,6 +95,9 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   ratings: {
+    summary: 'Get episode ratings',
+    description:
+      'Returns rating (between 0 and 10) and distribution for an episode.',
     path: '/ratings',
     method: 'GET',
     query: extendedQuerySchemaFactory<['all']>(),
@@ -92,6 +109,9 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   watching: {
+    summary: 'Get users watching right now',
+    description: `#### ✨ Extended Info
+Returns all users watching this episode right now.`,
     path: '/watching',
     method: 'GET',
     pathParams: idParamsSchema
@@ -103,6 +123,13 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   comments: {
+    summary: 'Get all episode comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for an episode. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+
+> ### Note
+> _If you send OAuth, comments from blocked users will be automatically filtered out._`,
     path: '/comments/:sort',
     method: 'GET',
     pathParams: idParamsSchema
@@ -117,6 +144,17 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   people: {
+    summary: 'Get all people for an episode',
+    description: `#### ✨ Extended Info
+Returns all \`cast\` and \`crew\` for an episode. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
+
+The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.
+
+#### Guest Stars
+If you add \`?extended=guest_stars\` to the URL, it will return all guest stars that appeared in the episode.
+
+> ### Note
+> _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/people',
     method: 'GET',
     query: extendedQuerySchemaFactory<['images']>(),
@@ -128,6 +166,9 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   watchnow: {
+    summary: 'Get episode watch now sources',
+    description: `#### ✨ Extended Info
+Returns streaming and watch now sources for an episode in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
       .merge(extendedWatchNowQuerySchema),
@@ -140,6 +181,22 @@ const EPISODE_LEVEL = builder.router({
     },
   },
   report: {
+    summary: 'Report an episode',
+    description: `#### 🔒 OAuth Required
+Report an episode for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per episode.
+
+| reason | description |
+|---|---|
+| \`duplicate\` | Duplicate of another episode on Trakt |
+| \`remove\` | Should be removed from Trakt |
+| \`data_refresh\` | Request a full metadata refresh |
+| \`metadata\` | Metadata is wrong (title, overview, etc) |
+| \`adult\` | Marked as adult when it shouldn't be (or vice versa) |
+| \`runtime\` | Runtime is incorrect |
+| \`language\` | Not in English |
+| \`spam\` | Spam or fake episode |
+| \`tmdb\` | Should use TMDB as the datasource |
+| \`other\` | Anything else (add details in \`message\`) |`,
     path: '/report',
     method: 'POST',
     pathParams: idParamsSchema
@@ -158,6 +215,12 @@ const EPISODE_LEVEL = builder.router({
 
 const ENTITY_LEVEL = builder.router({
   summary: {
+    summary: 'Get a single show',
+    description: `#### ✨ Extended Info
+Returns a single shows's details. If you request extended info, the \`airs\` object is relative to the show's country. You can use the \`day\`, \`time\`, and \`timezone\` to construct your own date then convert it to whatever timezone your user is in.
+
+> ### Note
+> _When getting \`full\` extended info, the \`status\` field can have a value of \`returning series\` (airing right now),  \`continuing\` (airing right now), \`in production\` (airing soon), \`planned\` (in development), \`upcoming\` (in development),  \`pilot\`, \`canceled\`, or \`ended\`._`,
     path: '',
     method: 'GET',
     query: extendedMediaQuerySchema,
@@ -167,6 +230,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   ratings: {
+    summary: 'Get show ratings',
+    description:
+      'Returns rating (between 0 and 10) and distribution for a show.',
     path: '/ratings',
     method: 'GET',
     query: extendedQuerySchemaFactory<['all']>(),
@@ -176,6 +242,8 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   stats: {
+    summary: 'Get show stats',
+    description: 'Returns lots of show stats.',
     path: '/stats',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -185,6 +253,18 @@ const ENTITY_LEVEL = builder.router({
   },
   progress: {
     watched: {
+      summary: 'Get show watched progress',
+      description: `#### 🔒 OAuth Required
+Returns watched progress for a show including details on all aired seasons and episodes. The \`next_episode\` will be the next episode the user should watch, if there are no upcoming episodes it will be set to \`null\`. If not \`null\`, the \`reset_at\` date is when the user started re-watching the show. Your app can adjust the progress by ignoring episodes with a \`last_watched_at\` prior to the \`reset_at\`.
+
+By default, any hidden seasons will be removed from the response and stats. To include these and adjust the completion stats, set the \`hidden\` flag to \`true\`.
+
+By default, specials will be excluded from the response. Set the \`specials\` flag to \`true\` to include season 0 and adjust the stats accordingly. If you'd like to include specials, but not adjust the stats, set \`count_specials\` to \`false\`.
+
+By default, the \`last_episode\` and \`next_episode\` are calculated using the last \`aired\` episode the user has watched, even if they've watched older episodes more recently. To use their last watched episode for these calculations, set the \`last_activity\` flag to \`watched\`.
+
+> ### Note
+> _Only aired episodes are used to calculate progress. Episodes in the future or without an air date are ignored._`,
       path: '/progress/watched',
       method: 'GET',
       pathParams: idParamsSchema,
@@ -197,6 +277,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   translations: {
+    summary: 'Get all show translations',
+    description:
+      'Returns all translations for a show, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`).',
     path: '/translations/:language',
     method: 'GET',
     pathParams: idParamsSchema.merge(languageParamsSchema),
@@ -205,6 +288,10 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   related: {
+    summary: 'Get related shows',
+    description: `#### 📄 Pagination ✨ Extended Info
+
+Returns related and similar shows.`,
     path: '/related',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -215,6 +302,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   watching: {
+    summary: 'Get users watching right now',
+    description: `#### ✨ Extended Info
+Returns all users watching this show right now.`,
     path: '/watching',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -224,6 +314,8 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   studios: {
+    summary: 'Get show studios',
+    description: 'Returns all studios for a show.',
     path: '/studios',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -232,6 +324,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   watchnow: {
+    summary: 'Get show watch now sources',
+    description: `#### ✨ Extended Info
+Returns streaming and watch now sources for a show in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
       .merge(extendedWatchNowQuerySchema),
@@ -243,6 +338,9 @@ const ENTITY_LEVEL = builder.router({
   },
   justwatch: builder.router({
     link: {
+      summary: 'Get show JustWatch links',
+      description:
+        'Returns JustWatch links for a show in the requested country. Use the show `id` and two-character `country` path parameter to identify the lookup.',
       path: '/watchnow/justwatch_links/:country',
       method: 'GET',
       pathParams: idParamsSchema,
@@ -252,6 +350,17 @@ const ENTITY_LEVEL = builder.router({
     },
   }),
   people: {
+    summary: 'Get all people for a show',
+    description: `#### ✨ Extended Info
+Returns all \`cast\` and \`crew\` for a show, including the \`episode_count\` for which they appears. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
+
+The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, \`editing\`, and \`created  by\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.
+
+#### Guest Stars
+If you add \`?extended=guest_stars\` to the URL, it will return all guest stars that appeared in at least 1 episode of the show.
+
+> ### Note
+> _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/people',
     method: 'GET',
     query: extendedQuerySchemaFactory<['images']>(),
@@ -261,6 +370,15 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   seasons: {
+    summary: 'Get all seasons for a show',
+    description: `#### ✨ Extended Info
+Returns all seasons for a show including the number of episodes in each season.
+
+#### Episodes
+If you add \`?extended=episodes\` to the URL, it will return all episodes for all seasons.
+
+> ### Note
+> _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/seasons',
     method: 'GET',
     query: extendedMediaQuerySchema,
@@ -271,6 +389,15 @@ const ENTITY_LEVEL = builder.router({
   },
   season: builder.router({
     episodes: {
+      summary: 'Get all episodes for a single season',
+      description: `#### ✨ Extended Info
+Returns all episodes for a specific season of a show.
+
+#### Translations
+If you'd like to included translated episode titles and overviews in the response, include the \`translations\` parameter in the URL. Include all languages by setting the parameter to \`all\` or use a specific 2 digit country language code to further limit it. Each translation includes both \`language\` and \`country\` so regional variants (for example \`fr\`/\`fr\` vs \`fr\`/\`ca\`) can be distinguished.
+
+> ### Note
+> _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
       path: '',
       method: 'GET',
       query: extendedMediaQuerySchema,
@@ -281,6 +408,9 @@ const ENTITY_LEVEL = builder.router({
       },
     },
     videos: {
+      summary: 'Get all videos',
+      description: `#### ✨ Extended Info
+Returns all videos including trailers, teasers, clips, and featurettes.`,
       path: '/videos',
       method: 'GET',
       pathParams: idParamsSchema
@@ -291,6 +421,9 @@ const ENTITY_LEVEL = builder.router({
     },
     justwatch: builder.router({
       link: {
+        summary: 'Get season JustWatch links',
+        description:
+          'Returns JustWatch links for a show season in the requested country. Use `id`, `season`, and the two-character `country` path parameter to identify the lookup.',
         path: '/watchnow/justwatch_links/:country',
         method: 'GET',
         pathParams: idParamsSchema,
@@ -300,6 +433,22 @@ const ENTITY_LEVEL = builder.router({
       },
     }),
     report: {
+      summary: 'Report a season',
+      description: `#### 🔒 OAuth Required
+Report a season for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per season.
+
+| reason | description |
+|---|---|
+| \`duplicate\` | Duplicate of another season on Trakt |
+| \`remove\` | Should be removed from Trakt |
+| \`data_refresh\` | Request a full metadata refresh |
+| \`metadata\` | Metadata is wrong (title, overview, etc) |
+| \`adult\` | Marked as adult when it shouldn't be (or vice versa) |
+| \`runtime\` | Runtime is incorrect |
+| \`language\` | Not in English |
+| \`spam\` | Spam or fake season |
+| \`tmdb\` | Should use TMDB as the datasource |
+| \`other\` | Anything else (add details in \`message\`) |`,
       path: '/report',
       method: 'POST',
       pathParams: idParamsSchema.merge(seasonParamsSchema),
@@ -314,6 +463,9 @@ const ENTITY_LEVEL = builder.router({
     pathPrefix: '/seasons/:season',
   }),
   videos: {
+    summary: 'Get all videos',
+    description: `#### ✨ Extended Info
+Returns all videos including trailers, teasers, clips, and featurettes.`,
     path: '/videos',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -322,6 +474,10 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   lists: {
+    summary: 'Get lists containing this show',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this show. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
     path: '/lists/:type/:sort',
     method: 'GET',
     query: extendedQuerySchemaFactory<['images']>()
@@ -334,6 +490,13 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   comments: {
+    summary: 'Get all show comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for a show. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, highest \`watched\` percentage, most \`plays\`, highest \`rating\`, and \`added\` date.
+
+> ### Note
+> _If you send OAuth, comments from blocked users will be automatically filtered out._`,
     path: '/comments/:sort',
     method: 'GET',
     pathParams: idParamsSchema
@@ -346,6 +509,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   sentiments: {
+    summary: 'Get show sentiments',
+    description:
+      'Returns sentiment counts for comments and reactions attached to a show.',
     path: '/sentiments',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -354,6 +520,22 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   report: {
+    summary: 'Report a show',
+    description: `#### 🔒 OAuth Required
+Report a show for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per show.
+
+| reason | description |
+|---|---|
+| \`duplicate\` | Duplicate of another show on Trakt |
+| \`remove\` | Should be removed from Trakt |
+| \`data_refresh\` | Request a full metadata refresh |
+| \`metadata\` | Metadata is wrong (title, overview, etc) |
+| \`adult\` | Marked as adult when it shouldn't be (or vice versa) |
+| \`runtime\` | Runtime is incorrect |
+| \`language\` | Not in English |
+| \`spam\` | Spam or fake title |
+| \`tmdb\` | Should use TMDB as the datasource |
+| \`other\` | Anything else (add details in \`message\`) |`,
     path: '/report',
     method: 'POST',
     pathParams: idParamsSchema,
@@ -371,6 +553,10 @@ const ENTITY_LEVEL = builder.router({
 
 const GLOBAL_LEVEL = builder.router({
   trending: {
+    summary: 'Get trending shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most watched shows over the last 24 hours. Shows with the most \`watchers\` are returned first.`,
     path: '/trending',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -382,6 +568,10 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   watched: {
+    summary: 'Get the most watched shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most watched (unique users) shows in the specified time \`period\`, defaulting to \`weekly\`. All stats are relative to the specific time \`period\`.`,
     path: '/watched/:period',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -394,6 +584,10 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   anticipated: {
+    summary: 'Get the most anticipated shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most anticipated shows based on the number of lists a show appears on.`,
     path: '/anticipated',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -405,6 +599,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   hot: {
+    summary: 'Get hot shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns shows that are currently hot on Trakt. Results can be filtered by media fields or ignored user state.`,
     path: '/hot',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -416,6 +613,10 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   popular: {
+    summary: 'Get popular shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most popular shows. Popularity is calculated using the rating percentage and the number of ratings.`,
     path: '/popular',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -427,6 +628,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   streaming: {
+    summary: 'Get streaming shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns shows recently available on streaming services for the requested \`period\`. Results can be filtered by media fields or ignored user state.`,
     path: '/streaming/:period',
     method: 'GET',
     pathParams: recentPeriodParamsSchema,

@@ -47,6 +47,12 @@ import { movieWatchedResponseSchema } from './schema/response/movieWatchedRespon
 
 const ENTITY_LEVEL = builder.router({
   summary: {
+    summary: 'Get a movie',
+    description: `#### ✨ Extended Info
+Returns a single movie's details.
+
+> ### Note
+> _When getting \`full\` extended info, the \`status\` field can have a value of \`released\`, \`in production\`, \`post production\`, \`planned\`, \`rumored\`, or \`canceled\`._`,
     path: '',
     method: 'GET',
     query: extendedMediaQuerySchema,
@@ -56,6 +62,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   ratings: {
+    summary: 'Get movie ratings',
+    description:
+      'Returns rating (between 0 and 10) and distribution for a movie.',
     path: '/ratings',
     method: 'GET',
     query: extendedQuerySchemaFactory<['all']>(),
@@ -65,6 +74,8 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   stats: {
+    summary: 'Get movie stats',
+    description: 'Returns lots of movie stats.',
     path: '/stats',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -73,6 +84,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   translations: {
+    summary: 'Get all movie translations',
+    description:
+      'Returns all translations for a movie, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`).',
     path: '/translations/:language',
     method: 'GET',
     pathParams: idParamsSchema.merge(languageParamsSchema),
@@ -81,6 +95,10 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   related: {
+    summary: 'Get related movies',
+    description: `#### 📄 Pagination ✨ Extended Info
+
+Returns related and similar movies.`,
     path: '/related',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -91,6 +109,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   watching: {
+    summary: 'Get users watching right now',
+    description: `#### ✨ Extended Info
+Returns all users watching this movie right now.`,
     path: '/watching',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -100,6 +121,8 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   studios: {
+    summary: 'Get movie studios',
+    description: 'Returns all studios for a movie.',
     path: '/studios',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -108,6 +131,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   watchnow: {
+    summary: 'Get movie watch now sources',
+    description: `#### ✨ Extended Info
+Returns streaming and watch now sources for a movie in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
       .merge(extendedWatchNowQuerySchema),
@@ -119,6 +145,9 @@ const ENTITY_LEVEL = builder.router({
   },
   justwatch: builder.router({
     link: {
+      summary: 'Get movie JustWatch links',
+      description:
+        'Returns JustWatch links for a movie in the requested country. Use the movie `id` and two-character `country` path parameter to identify the lookup.',
       path: '/watchnow/justwatch_links/:country',
       method: 'GET',
       pathParams: idParamsSchema,
@@ -128,6 +157,11 @@ const ENTITY_LEVEL = builder.router({
     },
   }),
   people: {
+    summary: 'Get all people for a movie',
+    description: `#### ✨ Extended Info
+Returns all \`cast\` and \`crew\` for a movie. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
+
+The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.`,
     path: '/people',
     method: 'GET',
     query: extendedQuerySchemaFactory<['images']>(),
@@ -137,6 +171,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   videos: {
+    summary: 'Get all videos',
+    description: `#### ✨ Extended Info
+Returns all videos including trailers, teasers, clips, and featurettes.`,
     path: '/videos',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -145,6 +182,10 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   lists: {
+    summary: 'Get lists containing this movie',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this movie. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
     path: '/lists/:type/:sort',
     method: 'GET',
     query: extendedProfileQuerySchema
@@ -157,6 +198,13 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   comments: {
+    summary: 'Get all movie comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for a movie. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+
+> ### Note
+> _If you send OAuth, comments from blocked users will be automatically filtered out._`,
     path: '/comments/:sort',
     method: 'GET',
     query: extendedProfileQuerySchema
@@ -168,6 +216,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   sentiments: {
+    summary: 'Get movie sentiments',
+    description:
+      'Returns sentiment counts for comments and reactions attached to a movie.',
     path: '/sentiments',
     method: 'GET',
     pathParams: idParamsSchema,
@@ -176,6 +227,22 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   report: {
+    summary: 'Report a movie',
+    description: `#### 🔒 OAuth Required
+Report a movie for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per movie.
+
+| reason | description |
+|---|---|
+| \`duplicate\` | Duplicate of another movie on Trakt |
+| \`remove\` | Should be removed from Trakt |
+| \`data_refresh\` | Request a full metadata refresh |
+| \`metadata\` | Metadata is wrong (title, overview, etc) |
+| \`adult\` | Marked as adult when it shouldn't be (or vice versa) |
+| \`runtime\` | Runtime is incorrect |
+| \`language\` | Not in English |
+| \`spam\` | Spam or fake title |
+| \`tmdb\` | Should use TMDB as the datasource |
+| \`other\` | Anything else (add details in \`message\`) |`,
     path: '/report',
     method: 'POST',
     pathParams: idParamsSchema,
@@ -192,6 +259,10 @@ const ENTITY_LEVEL = builder.router({
 
 const GLOBAL_LEVEL = builder.router({
   trending: {
+    summary: 'Get trending movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most watched movies over the last 24 hours. Movies with the most \`watchers\` are returned first.`,
     path: '/trending',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -203,6 +274,10 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   watched: {
+    summary: 'Get the most watched movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most watched (unique users) movies in the specified time \`period\`, defaulting to \`weekly\`. All stats are relative to the specific time \`period\`.`,
     path: '/watched/:period',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -214,6 +289,10 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   anticipated: {
+    summary: 'Get the most anticipated movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most anticipated movies based on the number of lists a movie appears on.`,
     path: '/anticipated',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -225,6 +304,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   hot: {
+    summary: 'Get hot movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns movies that are currently hot on Trakt. Results can be filtered by media fields or ignored user state.`,
     path: '/hot',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -236,6 +318,10 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   popular: {
+    summary: 'Get popular movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most popular movies. Popularity is calculated using the rating percentage and the number of ratings.`,
     path: '/popular',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -247,6 +333,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   streaming: {
+    summary: 'Get streaming movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns movies recently available on streaming services for the requested \`period\`. Results can be filtered by media fields or ignored user state.`,
     path: '/streaming/:period',
     method: 'GET',
     pathParams: recentPeriodParamsSchema,

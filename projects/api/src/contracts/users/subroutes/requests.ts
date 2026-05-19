@@ -7,6 +7,9 @@ import { requestsResponseSchema } from '../schema/response/requestsResponseSchem
 
 export const requests = builder.router({
   follow: {
+    summary: 'Get follow requests',
+    description: `#### 🔒 OAuth Required ✨ Extended Info
+List a user's pending follow requests so they can either approve or deny them.`,
     path: '/',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full']>(),
@@ -15,6 +18,9 @@ export const requests = builder.router({
     },
   },
   following: {
+    summary: 'Get pending following requests',
+    description: `#### 🔒 OAuth Required ✨ Extended Info
+List a user's pending following requests that they're waiting for the other user's to approve.`,
     path: '/following',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full']>(),
@@ -23,6 +29,9 @@ export const requests = builder.router({
     },
   },
   approve: {
+    summary: 'Approve follow request',
+    description: `#### 🔒 OAuth Required
+Approve a follower using the \`id\` of the request. If the \`id\` is not found, was already approved, or was already denied, a \`404\` error will be returned.`,
     path: '/:id',
     method: 'POST',
     query: extendedQuerySchemaFactory<['full']>(),
@@ -34,6 +43,9 @@ export const requests = builder.router({
     },
   },
   deny: {
+    summary: 'Deny follow request',
+    description: `#### 🔒 OAuth Required
+Deny a follower using the \`id\` of the request. If the \`id\` is not found, was already approved, or was already denied, a \`404\` error will be returned.`,
     path: '/:id',
     method: 'DELETE',
     pathParams: internalIdParamsSchema,

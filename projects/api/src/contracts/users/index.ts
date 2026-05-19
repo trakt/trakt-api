@@ -48,6 +48,17 @@ import { watchlist } from './subroutes/watchlist.ts';
 
 const GLOBAL_LEVEL = builder.router({
   settings: {
+    summary: 'Retrieve settings',
+    description: `#### 🔒 OAuth Required
+Get the user's settings so you can align your app's experience with what they're used to on the trakt website. A globally unique \`uuid\` is also returned, which can be used to identify the user locally in your app if needed. However, the \`uuid\` can't be used to retrieve data from the Trakt API.
+
+#### Limits
+
+The \`limits\` object is useful to customize your user experience. For example, if the user has a \`list\` limit of \`2\`, you might want to show a message to the user that they need to upgrade to [**Trakt VIP**](https://trakt.tv/vip) to add more lists.
+
+#### Permissions
+
+The \`permissions\` object is also useful to customize your user experience. In general, an account will have permissions to do everything. However, we'll temporarily set a permission to \`false\` if the user triggers spam protections.`,
     path: '/settings',
     method: 'GET',
     query: extendedQuerySchemaFactory<['browsing']>(),
@@ -57,6 +68,9 @@ const GLOBAL_LEVEL = builder.router({
   },
   reactions: {
     comments: {
+      summary: 'Get comment reactions',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns comments the authenticated user has reacted to. Use \`extended\`, \`page\`, and \`limit\` to control returned comment detail and pagination.`,
       path: '/reactions/comments',
       method: 'GET',
       query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
@@ -69,6 +83,9 @@ const GLOBAL_LEVEL = builder.router({
   },
   likes: {
     comments: {
+      summary: 'Get liked comments',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns comments the authenticated user has liked. Use \`extended\`, \`page\`, and \`limit\` to control returned comment detail and pagination.`,
       path: '/likes/comments',
       method: 'GET',
       query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
@@ -79,6 +96,9 @@ const GLOBAL_LEVEL = builder.router({
       },
     },
     lists: {
+      summary: 'Get liked lists',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns lists the authenticated user has liked. Use \`extended\`, \`page\`, and \`limit\` to control returned list detail and pagination.`,
       path: '/likes/lists',
       method: 'GET',
       query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
@@ -90,6 +110,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   avatar: {
+    summary: 'Update avatar',
+    description: `#### 🔒 OAuth Required
+Update the authenticated user avatar. Send the avatar request body; a successful update returns a \`204\` response, and invalid image data returns \`400\`.`,
     path: '/avatar',
     method: 'PUT',
     body: avatarRequestSchema,
@@ -99,6 +122,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   cover: {
+    summary: 'Update cover image',
+    description: `#### 🔒 OAuth Required
+Update the authenticated user cover image. Send the cover request body; a successful update returns a \`204\` response, and invalid image data returns \`400\`.`,
     path: '/set_cover',
     method: 'PUT',
     body: coverRequestSchema,
@@ -108,6 +134,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   saveSettings: {
+    summary: 'Update settings',
+    description: `#### 🔒 OAuth Required
+Update settings for the authenticated user. Send the settings request body with the values to change; a successful update returns no response body.`,
     path: '/settings',
     method: 'PUT',
     body: settingsRequestSchema,
@@ -116,6 +145,9 @@ const GLOBAL_LEVEL = builder.router({
     },
   },
   blocked: {
+    summary: 'Get blocked users',
+    description: `#### 🔒 OAuth Required
+Returns all users you have blocked, including when each user was blocked.`,
     path: '/blocked',
     method: 'GET',
     responses: {
@@ -126,6 +158,9 @@ const GLOBAL_LEVEL = builder.router({
 
 const ENTITY_LEVEL = builder.router({
   profile: {
+    summary: 'Get user profile',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Get a user's profile information. If the user is private, info will only be returned if you send OAuth and are either that user or an approved follower. Adding \`?extended=vip\` will return some additional VIP related fields so you can display the user's Trakt VIP status and year count.`,
     path: '/',
     method: 'GET',
     pathParams: profileParamsSchema,
@@ -135,6 +170,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   activities: {
+    summary: 'Get social activity',
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns recent activity for a user social graph. Use \`type\` to choose \`friends\`, \`followers\`, or \`following\`, and use pagination to move through the activity feed.`,
     path: '/:type/activities',
     method: 'GET',
     pathParams: profileParamsSchema.merge(socialActivityParamsSchema),
@@ -145,6 +183,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   stats: {
+    summary: 'Get stats',
+    description: `#### 🔓 OAuth Optional
+Returns stats about the movies, shows, and episodes a user has watched, collected, and rated.`,
     path: '/stats',
     pathParams: profileParamsSchema,
     method: 'GET',
@@ -153,6 +194,11 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   comments: {
+    summary: 'Get comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns the most recently written comments for the user. You can optionally filter by the \`comment_type\` and media \`type\` to limit what gets returned.
+
+By default, only top level comments are returned. Set \`?include_replies=true\` to return replies in addition to top level comments. Set \`?include_replies=only\` to return only replies and no top level comments.`,
     path: '/comments/:comment_type/:type',
     method: 'GET',
     pathParams: profileParamsSchema
@@ -166,6 +212,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   watching: {
+    summary: 'Get watching',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns a movie or episode if the user is currently watching something.  If they are not, it returns no data and a \`204\` HTTP status code.`,
     path: '/watching',
     pathParams: profileParamsSchema,
     method: 'GET',
@@ -176,6 +225,12 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   follow: {
+    summary: 'Follow this user',
+    description: `#### 🔒 OAuth Required
+If the user has a private profile, the follow request will require approval (\`approved_at\` will be null). If a user is public, they will be followed immediately (\`approved_at\` will have a date).
+
+> ### Note
+> _If this user is already being followed or there is a pending follow request, a \`409\` HTTP status code will returned._`,
     path: '/follow',
     method: 'POST',
     pathParams: profileParamsSchema,
@@ -186,6 +241,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   unfollow: {
+    summary: 'Unfollow this user',
+    description: `#### 🔒 OAuth Required
+Unfollow someone you already follow.`,
     path: '/follow',
     method: 'DELETE',
     pathParams: profileParamsSchema,
@@ -194,6 +252,12 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   block: {
+    summary: 'Block this user',
+    description: `#### 🔒 OAuth Required
+Block a user. If they are already following you, they will be removed from your followers. Any pending follow request from this user will be blocked, preventing them from following you in the future until you unblock them.
+
+> ### Note
+> _If the user is already blocked, or you try to block yourself, a \`409\` HTTP status code will be returned._`,
     path: '/block',
     method: 'POST',
     pathParams: profileParamsSchema,
@@ -204,6 +268,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   unblock: {
+    summary: 'Unblock this user',
+    description: `#### 🔒 OAuth Required
+Unblock a user you previously blocked.`,
     path: '/block',
     method: 'DELETE',
     pathParams: profileParamsSchema,
@@ -212,6 +279,16 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   report: {
+    summary: 'Report a user',
+    description: `#### 🔒 OAuth Required
+Report a user for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per reported user.
+
+| reason | description |
+|---|---|
+| \`spam\` | Spam account |
+| \`adult\` | Adult content in profile |
+| \`language\` | Not using English |
+| \`other\` | Anything else (add details in \`message\`) |`,
     path: '/report',
     method: 'POST',
     pathParams: profileParamsSchema,
@@ -223,6 +300,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   followers: {
+    summary: 'Get followers',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns all followers including when the relationship began.`,
     path: '/followers',
     method: 'GET',
     pathParams: profileParamsSchema,
@@ -232,6 +312,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   following: {
+    summary: 'Get following',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns all user's they follow including when the relationship began.`,
     path: '/following',
     method: 'GET',
     pathParams: profileParamsSchema,
@@ -241,6 +324,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   friends: {
+    summary: 'Get friends',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns all friends for a user including when the relationship began. Friendship is a 2 way relationship where each user follows the other.`,
     path: '/friends',
     method: 'GET',
     pathParams: profileParamsSchema,
@@ -250,6 +336,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   month_in_review: {
+    summary: 'Get month in review',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns a month-in-review summary for a user. Send the \`year\` and \`month\` path parameters to choose the review period.`,
     path: '/mir/:year/:month',
     pathParams: profileParamsSchema
       .merge(monthInReviewParamsSchema),
@@ -260,6 +349,9 @@ const ENTITY_LEVEL = builder.router({
     },
   },
   year_in_review: {
+    summary: 'Get year in review',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns a year-in-review summary for a user. Send the \`year\` path parameter to choose the review period.`,
     path: '/yir/:year',
     pathParams: profileParamsSchema
       .merge(yearInReviewParamsSchema),

@@ -8,6 +8,9 @@ import { recommendationsQuerySchema } from '../recommendations/schema/request/re
 
 const movies = builder.router({
   recommend: {
+    summary: 'Get social movie recommendations',
+    description: `#### ✨ Extended Info
+Returns movie recommendations based on the authenticated user social graph. Use \`limit\`, \`watch_window\`, and ignore flags to tune the recommendation set.`,
     path: '/',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -20,6 +23,9 @@ const movies = builder.router({
 
 const shows = builder.router({
   recommend: {
+    summary: 'Get social show recommendations',
+    description: `#### ✨ Extended Info
+Returns show recommendations based on the authenticated user social graph. Use \`limit\`, \`watch_window\`, and ignore flags to tune the recommendation set.`,
     path: '/',
     method: 'GET',
     query: extendedMediaQuerySchema

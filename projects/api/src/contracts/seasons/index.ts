@@ -5,6 +5,9 @@ import { z } from '../_internal/z.ts';
 
 export const seasons = builder.router({
   report: {
+    summary: 'Report a season',
+    description: `#### 🔒 OAuth Required
+Report a season for moderator review. Send a reason and optional message in the request body; duplicate pending reports return \`409\`.`,
     path: '/report',
     method: 'POST',
     pathParams: idParamsSchema,

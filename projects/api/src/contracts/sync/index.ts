@@ -40,6 +40,9 @@ import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts'
 const progress = builder.router({
   upNext: {
     standard: {
+      summary: 'Get up next',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns the authenticated user up next progress ordered by the requested sort. Use \`include_stats\` and \`lifetime_stats\` to include additional watch stats.`,
       method: 'GET',
       path: '/progress/up_next',
       query: extendedQuerySchemaFactory<['full', 'images']>()
@@ -52,6 +55,9 @@ const progress = builder.router({
       },
     },
     nitro: {
+      summary: 'Get up next nitro',
+      description: `#### 🔒 OAuth Required 📄 Pagination
+Returns the authenticated user up next progress optimized for intent-based clients. Use \`intent\` plus sorting and pagination to control the response.`,
       method: 'GET',
       path: '/progress/up_next_nitro',
       query: pageQuerySchema
@@ -63,6 +69,9 @@ const progress = builder.router({
     },
   },
   movies: {
+    summary: 'Get movie playback progress',
+    description: `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info
+Returns in-progress movie playback items for the authenticated user. Use \`start_at\` and \`end_at\` to filter progress updated within a UTC datetime range.`,
     method: 'GET',
     path: '/playback/movies',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
@@ -74,6 +83,9 @@ const progress = builder.router({
   },
   drop: {
     movie: {
+      summary: 'Remove a playback item',
+      description: `#### 🔒 OAuth Required
+Remove a playback item from a user's playback progress list. A \`404\` will be returned if the \`id\` is invalid.`,
       path: '/playback/:id',
       method: 'DELETE',
       pathParams: playbackIdParamsSchema,
@@ -83,6 +95,9 @@ const progress = builder.router({
     },
   },
   watched: {
+    summary: 'Get watched progress',
+    description:
+      '#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info\nReturns watched progress for the authenticated user. Use hide filters to include or exclude completed, incomplete, or currently rewatching shows.',
     method: 'GET',
     path: '/progress/watched',
     query: extendedQuerySchemaFactory<['full', 'images']>()
@@ -105,6 +120,28 @@ const progress = builder.router({
 
 const history = builder.router({
   add: {
+    summary: 'Add items to watched history',
+    description: `#### 🔒 OAuth Required
+Add items to a user's watch history. Accepts shows, seasons, episodes and movies. If only a show is passed, all episodes for the show will be added. If seasons are specified, only episodes in those seasons will be added.
+
+Send a \`watched_at\` UTC datetime to mark items as watched in the past. This is useful for syncing past watches from a media center.
+
+> ### IMPORTANT
+> _Please be careful with sending duplicate data. We don't verify the \`item\` + \`watched_at\` to ensure it's unique, it is up to your app to veify this and not send duplicate plays._
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |
+
+#### Media Object POST Data
+| Key | Type | Value |
+|---|---|---|
+| item * | object | \`movie\`, \`show\`, or \`episode\` object. |
+| \`watched_at\` | datetime | UTC datetime when the item was watched. Set to \`released\` to automatically use the initial release date + runtime *(episodes only)*. Set to \`unknown\` to mark the item as watched without a specific date. |`,
     method: 'POST',
     path: '',
     body: bulkMediaRequestSchema,
@@ -113,6 +150,20 @@ const history = builder.router({
     },
   },
   remove: {
+    summary: 'Remove items from history',
+    description: `#### 🔒 OAuth Required
+Remove items from a user's watch history including all watches, scrobbles, and checkins. Accepts shows, seasons, episodes and movies. If only a show is passed, all episodes for the show will be removed. If seasons are specified, only episodes in those seasons will be removed.
+
+You can also send a list of raw history \`ids\` _(64-bit integers)_ to delete single plays from the watched history. The [**/sync/history**](#reference/sync/get-history) method will return an individual \`id\` _(64-bit integer)_ for each history item.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |
+| \`ids\` | array | Array of history ids. |`,
     method: 'POST',
     path: '/remove',
     body: historyRemoveRequestSchema,
@@ -126,6 +177,25 @@ const history = builder.router({
 
 const watchlist = builder.router({
   add: {
+    summary: 'Add items to watchlist',
+    description: `#### 🔥 VIP Enhanced 🔒 OAuth Required 😁 Emojis
+Add one of more items to a user's watchlist. Accepts shows, seasons, episodes and movies. If only a show is passed, only the show itself will be added. If seasons are specified, all of those seasons will be added.
+
+#### Notes
+
+Each watchlist item can optionally accept a \`notes\` *(500 maximum characters)* field with custom text. The user must be a [**Trakt VIP**](https://trakt.tv/vip) to send \`notes\`.
+
+#### Limits
+
+If the user's watchlist limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://trakt.tv/vip) will increase the limits.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |`,
     method: 'POST',
     path: '',
     body: listRequestSchema,
@@ -134,6 +204,17 @@ const watchlist = builder.router({
     },
   },
   remove: {
+    summary: 'Remove items from watchlist',
+    description: `#### 🔒 OAuth Required
+Remove one or more items from a user's watchlist.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |`,
     method: 'POST',
     path: '/remove',
     body: listRequestSchema,
@@ -147,6 +228,26 @@ const watchlist = builder.router({
 
 const ratings = builder.router({
   add: {
+    summary: 'Add new ratings',
+    description: `#### 🔒 OAuth Required
+Rate one or more items. Accepts shows, seasons, episodes and movies. If only a show is passed, only the show itself will be rated. If seasons are specified, all of those seasons will be rated.
+
+Send a \`rated_at\` UTC datetime to mark items as rated in the past. This is useful for syncing ratings from a media center.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |
+
+#### Media Object POST Data
+| Key | Type | Value |
+|---|---|---|
+| item * | object | \`movie\`, \`show\`, \`season\`, or \`episode\` object. |
+| \`rating\` * | integer | Between 1 and 10. |
+| \`rated_at\` | datetime | UTC datetime when the item was rated. |`,
     method: 'POST',
     path: '',
     body: ratingsParamSchema,
@@ -155,6 +256,17 @@ const ratings = builder.router({
     },
   },
   remove: {
+    summary: 'Remove ratings',
+    description: `#### 🔒 OAuth Required
+Remove ratings for one or more items.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |`,
     method: 'POST',
     path: '/remove',
     body: removeRatingsParamSchema,
@@ -168,6 +280,23 @@ const ratings = builder.router({
 
 const favorites = builder.router({
   add: {
+    summary: 'Add items to favorites',
+    description: `#### 🔒 OAuth Required 😁 Emojis
+If the user only had 50 TV shows and movies to bring with them on a deserted island, what would they be? Apps should encourage user's to add favorites so the algorithm keeps getting better.
+
+#### Notes
+
+Each favorite can optionally accept a \`notes\` *(500 maximum characters)* field explaining why the user favorited the item.
+
+#### Limits
+
+If the user's favorite limit is exceeded, a \`420\` HTTP error code is returned. This limit applies to all users.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |`,
     method: 'POST',
     path: '',
     body: favoriteParamSchema,
@@ -176,6 +305,15 @@ const favorites = builder.router({
     },
   },
   remove: {
+    summary: 'Remove items from favorites',
+    description: `#### 🔒 OAuth Required
+Remove items from a user's favorites. Apps should encourage user's to add favorites so the algorithm keeps getting better.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |`,
     method: 'POST',
     path: '/remove',
     body: favoriteParamSchema,
@@ -189,6 +327,9 @@ const favorites = builder.router({
 
 const collection = builder.router({
   movies: {
+    summary: 'Get movie collection',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies in the authenticated user collection. Use \`available_on\` and pagination to filter and move through collected movies.`,
     method: 'GET',
     path: '/movies',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
@@ -199,6 +340,9 @@ const collection = builder.router({
     },
   },
   shows: {
+    summary: 'Get show collection',
+    description: `#### 🔒 OAuth Required ✨ Extended Info
+Returns shows in the authenticated user collection, including collected seasons and episodes.`,
     method: 'GET',
     path: '/shows',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
@@ -208,6 +352,9 @@ const collection = builder.router({
     },
   },
   episodes: {
+    summary: 'Get episode collection',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns episodes in the authenticated user collection. Use \`available_on\` and pagination to filter and move through collected episodes.`,
     method: 'GET',
     path: '/episodes',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
@@ -218,6 +365,9 @@ const collection = builder.router({
     },
   },
   media: {
+    summary: 'Get media collection',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies, shows, and episodes in the authenticated user collection. Use \`available_on\` and pagination to filter and move through collected media.`,
     method: 'GET',
     path: '/media',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
@@ -229,6 +379,9 @@ const collection = builder.router({
   },
   minimal: builder.router({
     movies: {
+      summary: 'Get minimal movie collection',
+      description: `#### 🔒 OAuth Required
+Returns the authenticated user movie collection in a minimal format optimized for syncing local state.`,
       method: 'GET',
       path: '/movies',
       query: collectionParamSchema,
@@ -237,6 +390,9 @@ const collection = builder.router({
       },
     },
     shows: {
+      summary: 'Get minimal show collection',
+      description: `#### 🔒 OAuth Required
+Returns the authenticated user show collection in a minimal format optimized for syncing local state.`,
       method: 'GET',
       path: '/shows',
       query: collectionParamSchema,
@@ -245,6 +401,9 @@ const collection = builder.router({
       },
     },
     episodes: {
+      summary: 'Get minimal episode collection',
+      description: `#### 🔒 OAuth Required
+Returns the authenticated user episode collection in a minimal format optimized for syncing local state.`,
       method: 'GET',
       path: '/episodes',
       query: collectionParamSchema,

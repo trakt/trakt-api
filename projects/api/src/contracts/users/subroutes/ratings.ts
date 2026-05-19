@@ -6,6 +6,9 @@ import { RatedItemResponseSchema } from '../schema/response/ratedItemResponseSch
 
 export const ratings = builder.router({
   movies: {
+    summary: 'Get movie ratings',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns movies rated by a user including each rating value and when it was rated.`,
     path: '/movies',
     pathParams: profileParamsSchema,
     method: 'GET',
@@ -15,6 +18,9 @@ export const ratings = builder.router({
     },
   },
   shows: {
+    summary: 'Get show ratings',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns shows rated by a user including each rating value and when it was rated.`,
     path: '/shows',
     pathParams: profileParamsSchema,
     method: 'GET',
@@ -24,6 +30,9 @@ export const ratings = builder.router({
     },
   },
   episodes: {
+    summary: 'Get episode ratings',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns episodes rated by a user including each rating value and when it was rated.`,
     path: '/episodes',
     pathParams: profileParamsSchema,
     method: 'GET',

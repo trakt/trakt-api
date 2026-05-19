@@ -9,6 +9,9 @@ import { z } from '../_internal/z.ts';
 
 export const episodes = builder.router({
   watchnow: {
+    summary: 'Get episode watch now sources',
+    description: `#### ✨ Extended Info
+Returns streaming and watch now sources for an episode in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
       .merge(extendedWatchNowQuerySchema),
@@ -19,6 +22,9 @@ export const episodes = builder.router({
     },
   },
   report: {
+    summary: 'Report an episode',
+    description: `#### 🔒 OAuth Required
+Report an episode for moderator review. Send a reason and optional message in the request body; duplicate pending reports return \`409\`.`,
     path: '/report',
     method: 'POST',
     pathParams: idParamsSchema,

@@ -11,6 +11,27 @@ import { hiddenShowResponseSchema } from '../schema/response/hiddenShowResponseS
 
 export const hidden = builder.router({
   add: {
+    summary: 'Add hidden items',
+    description: `#### 🔒 OAuth Required
+Hide items for a specific section. Here's what type of items can hidden for each section. You can optionally specify the \`hidden_at\` date for each item.
+
+#### Hideable Media Objects
+| Section | Objects |
+|---|---|---|
+| \`calendar\` | \`movie\`, \`show\` |
+| \`progress_watched\` | \`show\`, \`season\` |
+| \`progress_collected\` | \`show\`, \`season\` |
+| \`recommendations\` | \`movie\`, \`show\` |
+| \`comments\` | \`user\` |
+| \`dropped\` | \`show\` |
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`users\` | array | Array of \`user\` objects. |`,
     path: '/:section',
     pathParams: hiddenParamsSchema,
     method: 'POST',
@@ -20,6 +41,9 @@ export const hidden = builder.router({
     },
   },
   get: {
+    summary: 'Get hidden progress items',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns shows hidden from watched progress for the authenticated user. Use \`type\`, \`page\`, and \`limit\` to filter and paginate the hidden items.`,
     path: '/progress_watched',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>()
@@ -30,6 +54,9 @@ export const hidden = builder.router({
     },
   },
   dropped: {
+    summary: 'Get dropped shows',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns shows the authenticated user has dropped or hidden from progress. Use pagination to move through the hidden dropped list.`,
     path: '/dropped',
     method: 'GET',
     query: extendedQuerySchemaFactory<['full', 'images']>()
@@ -38,6 +65,9 @@ export const hidden = builder.router({
   },
   remove: {
     progress: {
+      summary: 'Remove hidden progress items',
+      description: `#### 🔒 OAuth Required
+Remove shows or seasons from hidden watched progress. Send hideable media objects in the request body; the response contains remove counts.`,
       path: '/progress_watched/remove',
       method: 'POST',
       body: bulkMediaRequestSchema,
@@ -46,6 +76,9 @@ export const hidden = builder.router({
       },
     },
     calendar: {
+      summary: 'Remove hidden calendar items',
+      description: `#### 🔒 OAuth Required
+Remove movies or shows from hidden calendar items. Send hideable media objects in the request body; the response contains remove counts.`,
       path: '/calendar/remove',
       method: 'POST',
       body: bulkMediaRequestSchema,

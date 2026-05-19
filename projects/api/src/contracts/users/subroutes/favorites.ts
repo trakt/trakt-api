@@ -12,6 +12,9 @@ import { favoritedShowsResponseSchema } from '../schema/response/favoritedShowsR
 
 export const favorites = builder.router({
   media: {
+    summary: 'Get favorite media',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns favorite movies and shows for a user. Use the \`sort\` path parameter plus query sorting and pagination to control the result order.`,
     path: '/media/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
     method: 'GET',
@@ -26,6 +29,9 @@ export const favorites = builder.router({
     },
   },
   movies: {
+    summary: 'Get favorite movies',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns favorite movies for a user. Use the \`sort\` path parameter plus query sorting and pagination to control the result order.`,
     path: '/movies/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
     method: 'GET',
@@ -37,6 +43,9 @@ export const favorites = builder.router({
     },
   },
   shows: {
+    summary: 'Get favorite shows',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns favorite shows for a user. Use the \`sort\` path parameter plus query sorting and pagination to control the result order.`,
     path: '/shows/:sort',
     pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
     method: 'GET',
@@ -48,6 +57,13 @@ export const favorites = builder.router({
     },
   },
   comments: {
+    summary: 'Get all favorites comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for the favorites. By default, the comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+
+> ### Note
+> _If you send OAuth, comments from blocked users will be automatically filtered out._`,
     path: '/comments/:sort',
     method: 'GET',
     pathParams: profileParamsSchema

@@ -31,6 +31,9 @@ export const watched = builder.router({
   },
   minimal: builder.router({
     movies: {
+      summary: 'Get watched movies',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns movies watched by a user in a minimal paginated format. Use \`extended\`, \`page\`, and \`limit\` to control the response.`,
       path: '/movies',
       method: 'GET',
       pathParams: profileParamsSchema,
@@ -40,6 +43,9 @@ export const watched = builder.router({
       },
     },
     shows: {
+      summary: 'Get watched shows',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns shows watched by a user in a minimal paginated format. Use \`specials\` and \`season_numbers\` to control season details in the response.`,
       path: '/shows',
       method: 'GET',
       pathParams: profileParamsSchema,

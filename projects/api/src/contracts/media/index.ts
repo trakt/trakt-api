@@ -10,6 +10,9 @@ import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResp
 
 export const media = builder.router({
   trending: {
+    summary: 'Get trending media',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns trending movies and shows. Results are ordered by current watcher activity and can be filtered by media fields or ignored user state.`,
     path: '/trending',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -21,6 +24,9 @@ export const media = builder.router({
     },
   },
   anticipated: {
+    summary: 'Get anticipated media',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns anticipated movies and shows based on list activity. Results can be filtered by media fields or ignored user state.`,
     path: '/anticipated',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -32,6 +38,9 @@ export const media = builder.router({
     },
   },
   popular: {
+    summary: 'Get popular media',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns popular movies and shows. Results can be filtered by media fields or ignored user state.`,
     path: '/popular',
     method: 'GET',
     query: extendedMediaQuerySchema
