@@ -1,5 +1,6 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
+import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { RatedItemResponseSchema } from '../schema/response/ratedItemResponseSchema.ts';
@@ -12,7 +13,8 @@ Returns movies rated by a user including each rating value and when it was rated
     path: '/movies',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: RatedItemResponseSchema.array(),
     },
@@ -24,7 +26,8 @@ Returns shows rated by a user including each rating value and when it was rated.
     path: '/shows',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: RatedItemResponseSchema.array(),
     },
@@ -36,7 +39,21 @@ Returns episodes rated by a user including each rating value and when it was rat
     path: '/episodes',
     pathParams: profileParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: RatedItemResponseSchema.array(),
+    },
+  },
+  all: {
+    summary: 'Get all ratings',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns all ratings by a user including each rating value and when it was rated.`,
+    path: '/',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
     responses: {
       200: RatedItemResponseSchema.array(),
     },
