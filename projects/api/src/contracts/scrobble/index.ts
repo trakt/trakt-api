@@ -1,5 +1,4 @@
 import { authMetadata, builder } from '../_internal/builder.ts';
-import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { z } from '../_internal/z.ts';
 import { episodeScrobbleRequestSchema } from './schema/request/episodeScrobbleRequestSchema.ts';
 import { movieScrobbleRequestSchema } from './schema/request/movieScrobbleRequestSchema.ts';
@@ -24,7 +23,10 @@ Use this method when the video initially starts playing or is unpaused. This wil
     method: 'POST',
     body: z.union([movieScrobbleRequestSchema, episodeScrobbleRequestSchema]),
     responses: {
-      201: z.union([movieScrobbleResponseSchema, episodeScrobbleResponseSchema]),
+      201: z.union([
+        movieScrobbleResponseSchema,
+        episodeScrobbleResponseSchema,
+      ]),
     },
   },
   pause: {
@@ -35,7 +37,10 @@ Pause an active scrobble for a movie or episode. Send the media object and curre
     method: 'POST',
     body: z.union([movieScrobbleRequestSchema, episodeScrobbleRequestSchema]),
     responses: {
-      201: z.union([movieScrobbleResponseSchema, episodeScrobbleResponseSchema]),
+      201: z.union([
+        movieScrobbleResponseSchema,
+        episodeScrobbleResponseSchema,
+      ]),
     },
   },
   stop: {
@@ -60,7 +65,10 @@ If the progress is between 1% and 79%, it will be treated as a *pause* and the \
     method: 'POST',
     body: z.union([movieScrobbleRequestSchema, episodeScrobbleRequestSchema]),
     responses: {
-      201: z.union([movieScrobbleResponseSchema, episodeScrobbleResponseSchema]),
+      201: z.union([
+        movieScrobbleResponseSchema,
+        episodeScrobbleResponseSchema,
+      ]),
     },
   },
 }, {
@@ -77,5 +85,9 @@ export {
 
 export type MovieScrobbleRequest = z.infer<typeof movieScrobbleRequestSchema>;
 export type MovieScrobbleResponse = z.infer<typeof movieScrobbleResponseSchema>;
-export type EpisodeScrobbleRequest = z.infer<typeof episodeScrobbleRequestSchema>;
-export type EpisodeScrobbleResponse = z.infer<typeof episodeScrobbleResponseSchema>;
+export type EpisodeScrobbleRequest = z.infer<
+  typeof episodeScrobbleRequestSchema
+>;
+export type EpisodeScrobbleResponse = z.infer<
+  typeof episodeScrobbleResponseSchema
+>;
