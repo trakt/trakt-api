@@ -25,6 +25,21 @@ const ratedEpisodesResponseSchema = ratedResponseSchema.extend({
   }).nullish(),
 });
 
+const ratedSeasonResponseSchema = ratedResponseSchema.extend({
+  type: z.literal('season'),
+  season: z.object({
+    number: z.number().int(),
+    ids: episodeIdsResponseSchema,
+    aired_episodes: z.number().int(),
+  }).nullish(),
+  show: z.object({
+    title: z.string(),
+    year: z.number().int().nullish(),
+    aired_episodes: z.number().int(),
+    ids: showIdsResponseSchema,
+  }).nullish(),
+});
+
 const ratedMoviesResponseSchema = ratedResponseSchema
   .merge(z.object({
     type: z.literal('movie'),
@@ -41,4 +56,5 @@ export const RatedItemResponseSchema = z.union([
   ratedEpisodesResponseSchema,
   ratedMoviesResponseSchema,
   ratedShowsResponseSchema,
+  ratedSeasonResponseSchema,
 ]);
