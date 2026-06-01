@@ -1,6 +1,6 @@
 import { episodeIdsResponseSchema } from '../../../_internal/response/episodeIdsResponseSchema.ts';
+import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
-import { showIdsResponseSchema } from '../../../_internal/response/showIdsResponseSchema.ts';
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
@@ -11,18 +11,8 @@ const ratedResponseSchema = z.object({
 
 const ratedEpisodesResponseSchema = ratedResponseSchema.extend({
   type: z.literal('episode'),
-  episode: z.object({
-    season: z.number().int(),
-    number: z.number().int(),
-    title: z.string().nullish(),
-    ids: episodeIdsResponseSchema,
-  }).nullish(),
-  show: z.object({
-    title: z.string(),
-    year: z.number().int().nullish(),
-    aired_episodes: z.number().int(),
-    ids: showIdsResponseSchema,
-  }).nullish(),
+  episode: episodeResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
 });
 
 const ratedSeasonResponseSchema = ratedResponseSchema.extend({
@@ -32,12 +22,7 @@ const ratedSeasonResponseSchema = ratedResponseSchema.extend({
     ids: episodeIdsResponseSchema,
     aired_episodes: z.number().int(),
   }).nullish(),
-  show: z.object({
-    title: z.string(),
-    year: z.number().int().nullish(),
-    aired_episodes: z.number().int(),
-    ids: showIdsResponseSchema,
-  }).nullish(),
+  show: showResponseSchema.nullish(),
 });
 
 const ratedMoviesResponseSchema = ratedResponseSchema
