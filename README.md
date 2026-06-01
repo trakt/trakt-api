@@ -95,6 +95,7 @@ libraries. Please help us keep this list up to date.
 |              | TraktSharp     | https://github.com/wwarby/TraktSharp           |
 | C++          | libtraqt       | https://github.com/RobertMe/libtraqt           |
 | Clojure      | clj-trakt      | https://github.com/niamu/clj-trakt             |
+| Go           | trakt-sync     | https://github.com/mfederowicz/trakt-sync      |
 | Java         | trakt-java     | https://github.com/UweTrottmann/trakt-java     |
 | Kotlin       | trakt-api      | https://github.com/MoviebaseApp/trakt-api      |
 | Node.js      | Trakt.tv       | https://github.com/vankasteelj/trakt.tv        |
