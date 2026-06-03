@@ -17,6 +17,8 @@ import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
 import { sortEnumSchema } from './schema/request/sortParamsSchema.ts';
+import { syncIdParamsSchema } from './schema/request/syncIdParamsSchema.ts';
+import { syncTypeParamsSchema } from './schema/request/syncTypeParamsSchema.ts';
 import { userReportRequestSchema } from './schema/request/userReportRequestSchema.ts';
 import { yearInReviewParamsSchema } from './schema/request/yearInReviewParamsSchema.ts';
 import { blockedUserResponseSchema } from './schema/response/blockedUserResponseSchema.ts';
@@ -31,6 +33,8 @@ import { monthInReviewResponseSchema } from './schema/response/monthInReviewResp
 import { reactedCommentResponseSchema } from './schema/response/reactedCommentResponseSchema.ts';
 import { settingsResponseSchema } from './schema/response/settingsResponseSchema.ts';
 import { socialActivityResponseSchema } from './schema/response/socialActivityResponseSchema.ts';
+import { syncItemSchema } from './schema/response/syncItemResponseSchema.ts';
+import { syncSchema } from './schema/response/syncResponseSchema.ts';
 import { userCommentResponseSchema } from './schema/response/userCommentResponseSchema.ts';
 import { userStatsResponseSchema } from './schema/response/userStatsResponseSchema.ts';
 import { watchActionSchema } from './schema/response/watchActionSchema.ts';
@@ -45,8 +49,8 @@ import { requests } from './subroutes/requests.ts';
 import { userLists } from './subroutes/userLists.ts';
 import { watched } from './subroutes/watched.ts';
 import { watchlist } from './subroutes/watchlist.ts';
-import { mediaFilterParamsSchema } from "../_internal/request/mediaFilterParamsSchema.ts";
-import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
+import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
+import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 
 const GLOBAL_LEVEL = builder.router({
   settings: {
@@ -156,6 +160,95 @@ Returns all users you have blocked, including when each user was blocked.`,
       200: blockedUserResponseSchema.array(),
     },
   },
+});
+
+const syncs = builder.router({
+  list: {
+    summary: 'Get data syncs',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Paginated list of the authenticated user's data syncs across **every** connected app (younify, plex, importers). Counts only — the paused/skipped item arrays are served by the dedicated paginated endpoints.
+
+Pagination is via \`page\` / \`limit\` and the standard \`X-Pagination-*\` headers. \`X-Pagination-Item-Count\` is the total sync count (use it for the "Data has synced N times" banner). All timestamps are normalized to \`.000Z\`.`,
+    method: 'GET',
+    path: '/',
+    query: pageQuerySchema,
+    responses: {
+      200: syncSchema.array(),
+    },
+  },
+  listByType: {
+    summary: 'Get data syncs by type',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Same as the list of data syncs, filtered by the app that created them. The \`type\` matches the \`kind\` returned on each row (\`younify\`, \`plex\`, or \`import\` for anything else, including \`application_id 0\` importers).
+
+An unknown \`type\` returns \`404\` rather than silently returning everything. Pagination and \`X-Pagination-*\` headers are identical to the unfiltered list.`,
+    method: 'GET',
+    path: '/:type',
+    pathParams: syncTypeParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: syncSchema.array(),
+      404: z.undefined(),
+    },
+  },
+  details: {
+    summary: 'Get a data sync',
+    description: `#### 🔒 OAuth Required
+Returns a single sync scoped to the authenticated user — foreign ids return \`404\`. Same shape as a list row: added counts plus \`paused_count\` / \`skipped_count\`, no item arrays.
+
+A numeric segment (\`/users/syncs/157\`) hits this endpoint; a non-numeric segment (\`/users/syncs/younify\`) is the filtered list.`,
+    method: 'GET',
+    path: '/:id',
+    pathParams: syncIdParamsSchema,
+    responses: {
+      200: syncSchema,
+      404: z.undefined(),
+    },
+  },
+  paused: {
+    summary: 'Get paused sync items',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Paginated item array for a sync, scoped to the authenticated user — foreign ids return \`404\`. Split out because a single sync can hold thousands of items.
+
+Paused items are always \`history\` (their \`kind\` is always \`"history"\`). Each item is the raw stored item (so source-specific fields are preserved) plus a normalized envelope, with timestamps normalized to \`.000Z\`. Pagination and \`X-Pagination-*\` headers are identical to the list endpoint.`,
+    method: 'GET',
+    path: '/:id/paused',
+    pathParams: syncIdParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: syncItemSchema.array(),
+      404: z.undefined(),
+    },
+  },
+  skipped: {
+    summary: 'Get skipped sync items',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Paginated item array for a sync, scoped to the authenticated user — foreign ids return \`404\`. Split out because a single sync can hold thousands of items.
+
+Skipped items mix \`history\` and \`rating\` (see each item's \`kind\` discriminator). Each item is the raw stored item (so source-specific fields are preserved) plus a normalized envelope, with timestamps normalized to \`.000Z\`. Pagination and \`X-Pagination-*\` headers are identical to the list endpoint.`,
+    method: 'GET',
+    path: '/:id/skipped',
+    pathParams: syncIdParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: syncItemSchema.array(),
+      404: z.undefined(),
+    },
+  },
+  undo: {
+    summary: 'Undo a data sync',
+    description: `#### 🔒 OAuth Required
+Undoes a sync — reverses every item it imported (history, ratings, paused, watchlist, collection) and marks it undone. Scoped to the authenticated user; a foreign sync returns \`404\`.`,
+    method: 'DELETE',
+    path: '/:id',
+    pathParams: syncIdParamsSchema,
+    responses: {
+      204: z.undefined(),
+      404: z.undefined(),
+    },
+  },
+}, {
+  pathPrefix: '/syncs',
 });
 
 const ENTITY_LEVEL = builder.router({
@@ -371,6 +464,7 @@ Returns a year-in-review summary for a user. Send the \`year\` path parameter to
 
 export const users = builder.router({
   ...GLOBAL_LEVEL,
+  syncs,
   ...ENTITY_LEVEL,
   watched,
   history,
@@ -415,6 +509,10 @@ export {
   settingsResponseSchema,
   socialActivityResponseSchema,
   sortEnumSchema,
+  syncIdParamsSchema,
+  syncItemSchema,
+  syncSchema,
+  syncTypeParamsSchema,
   userCommentResponseSchema,
   userReportRequestSchema,
   userStatsResponseSchema,
@@ -466,3 +564,8 @@ export type YearInReviewResponse = z.infer<typeof yearInReviewResponseSchema>;
 export type ReactedCommentResponse = z.infer<
   typeof reactedCommentResponseSchema
 >;
+
+export type SyncResponse = z.infer<typeof syncSchema>;
+export type SyncItemResponse = z.infer<typeof syncItemSchema>;
+export type SyncTypeParams = z.infer<typeof syncTypeParamsSchema>;
+export type SyncIdParams = z.infer<typeof syncIdParamsSchema>;

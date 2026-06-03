@@ -19,6 +19,7 @@ import { sync } from './sync/index.ts';
 import { team } from './team/index.ts';
 import { users } from './users/index.ts';
 import { watchnow } from './watchnow/index.ts';
+import { younify } from './younify/index.ts';
 
 export const traktContract = builder
   .router({
@@ -42,4 +43,5 @@ export const traktContract = builder
     certifications,
     scrobble,
     team,
+    younify,
   });

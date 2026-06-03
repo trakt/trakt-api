@@ -57,6 +57,7 @@ module.exports = {
         'team',
         'user',
         'watchnow',
+        'younify',
       ],
     ],
     'type-case': [RuleConfigSeverity.Error, 'always', 'lower-case'],
