@@ -21,6 +21,7 @@ export * from './contracts/sync/index.ts';
 export * from './contracts/team/index.ts';
 export * from './contracts/users/index.ts';
 export * from './contracts/watchnow/index.ts';
+export * from './contracts/younify/index.ts';
 
 export { Environment, traktContract };
 
