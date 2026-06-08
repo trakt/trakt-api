@@ -13,6 +13,10 @@ import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts
 import { commentTypeParamsSchema } from './schema/request/commentTypeParamsSchema.ts';
 import { coverRequestSchema } from './schema/request/coverRequestSchema.ts';
 import { monthInReviewParamsSchema } from './schema/request/monthInReviewParamsSchema.ts';
+import { plexConnectRequestSchema } from './schema/request/plexConnectRequestSchema.ts';
+import { plexServerParamsSchema } from './schema/request/plexServerParamsSchema.ts';
+import { plexSettingsUpdateSchema } from './schema/request/plexSettingsUpdateSchema.ts';
+import { plexSyncRequestSchema } from './schema/request/plexSyncRequestSchema.ts';
 import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
@@ -30,6 +34,18 @@ import {
   likedListResponseSchema,
 } from './schema/response/likedItemResponseSchema.ts';
 import { monthInReviewResponseSchema } from './schema/response/monthInReviewResponseSchema.ts';
+import { plexConnectResponseSchema } from './schema/response/plexConnectResponseSchema.ts';
+import { plexErrorResponseSchema } from './schema/response/plexErrorResponseSchema.ts';
+import {
+  plexAccountSchema,
+  plexLibrarySchema,
+  plexServerAccountsResponseSchema,
+} from './schema/response/plexServerAccountsResponseSchema.ts';
+import {
+  plexServerSchema,
+  plexServersResponseSchema,
+} from './schema/response/plexServersResponseSchema.ts';
+import { plexSettingsResponseSchema } from './schema/response/plexSettingsResponseSchema.ts';
 import { reactedCommentResponseSchema } from './schema/response/reactedCommentResponseSchema.ts';
 import { settingsResponseSchema } from './schema/response/settingsResponseSchema.ts';
 import { socialActivityResponseSchema } from './schema/response/socialActivityResponseSchema.ts';
@@ -251,6 +267,104 @@ Undoes a sync — reverses every item it imported (history, ratings, paused, wat
   pathPrefix: '/syncs',
 });
 
+const plex = builder.router({
+  settings: {
+    summary: 'Get Plex settings',
+    description: `#### 🔒 OAuth Required
+Returns the authenticated user's Plex connection status, real-time scrobbler webhook info, server/library/home-user selection, and both toggle sets (batch \`sync\` + real-time \`scrobbler\`). Read-only, though the VIP webhook URL lazily mints its tokens.
+
+\`connection.connected\` reflects that a Plex authorization exists; for a live auth check call \`servers\` and watch for a \`bad_auth\` error. \`webhook.url\` is null unless the user is VIP. \`sync.configured\` indicates the initial sync has been set up. Toggles are booleans (unset ⇒ \`false\`); sync toggles include \`watching\`/\`watchlist\`, scrobbler toggles do not carry \`watchlist\`. All timestamps are normalized to \`.000Z\`.`,
+    method: 'GET',
+    path: '/',
+    responses: {
+      200: plexSettingsResponseSchema,
+    },
+  },
+  updateSettings: {
+    summary: 'Update Plex settings',
+    description: `#### 🔒 OAuth Required
+Writes the Plex toggles, selection, and home users. Mirrors the GET shape so it round-trips; omitted toggle keys are left unchanged (no clobbering), and \`library_ids\` is sent structured and rebuilt into the \`server|uuid\` storage server-side.
+
+The optional \`trigger_sync\` block is the only thing that touches sync timestamps or enqueues work: any \`*_all_data: true\` resets the affected cursors and enqueues a full sync per selected server; present-but-all-false seeds every cursor to "now" (the first sync skips old history); absent writes settings without syncing.`,
+    method: 'PUT',
+    path: '/',
+    body: plexSettingsUpdateSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
+  connect: {
+    summary: 'Connect Plex',
+    description: `#### 🔒 OAuth Required
+Mints a Plex web-auth URL for the client to open. Plex uses a 2-step PIN OAuth; the PIN is stashed server-side under an opaque \`state\` token and Plex is forwarded to a website return endpoint that exchanges it and redirects back to your \`return_url\` with \`?plex_status=connected|error\`.
+
+\`return_url\` is validated against the trakt-owned allowlist (\`trakt://\`, \`http(s)://localhost\`, \`https://*.trakt.tv\`); a \`400\` is returned otherwise.`,
+    method: 'POST',
+    path: '/connect',
+    body: plexConnectRequestSchema,
+    responses: {
+      200: plexConnectResponseSchema,
+      400: z.undefined(),
+    },
+  },
+  disconnect: {
+    summary: 'Disconnect Plex',
+    description: `#### 🔒 OAuth Required
+Disconnects Plex: destroys the authorization, clears server/library/user selection and sync state, and busts the connection caches.`,
+    method: 'DELETE',
+    path: '/connect',
+    responses: {
+      204: z.undefined(),
+    },
+  },
+  servers: {
+    summary: 'Get Plex servers',
+    description: `#### 🔒 OAuth Required
+Lists the authenticated user's Plex servers. Network-bound — probes each server's remote URL. On a Plex/auth failure it returns the shared \`{ error_code, message, guidance }\` envelope: \`bad_auth\` (401), \`plex_timeout\` (504), \`plex_bad_response\`/\`plex_generic_error\` (502).`,
+    method: 'GET',
+    path: '/servers',
+    responses: {
+      200: plexServersResponseSchema,
+      401: plexErrorResponseSchema,
+      502: plexErrorResponseSchema,
+      504: plexErrorResponseSchema,
+    },
+  },
+  serverAccounts: {
+    summary: 'Get Plex server accounts and libraries',
+    description: `#### 🔒 OAuth Required
+Returns the home accounts (owned servers only) and syncable libraries for a Plex server, with the user's current library selection flagged. Network-bound.
+
+Errors use the shared \`{ error_code, message, guidance }\` envelope: \`missing_token\`/\`bad_auth\` (401), \`missing_server_id\`/\`plex_unprocessable\` (422), \`invalid_server_id\`/\`plex_not_found\` (404), \`invalid_server_url\` (503), \`plex_timeout\` (504), \`plex_bad_response\`/\`plex_generic_error\` (502).`,
+    method: 'GET',
+    path: '/servers/:server_id',
+    pathParams: plexServerParamsSchema,
+    responses: {
+      200: plexServerAccountsResponseSchema,
+      401: plexErrorResponseSchema,
+      404: plexErrorResponseSchema,
+      422: plexErrorResponseSchema,
+      502: plexErrorResponseSchema,
+      503: plexErrorResponseSchema,
+      504: plexErrorResponseSchema,
+    },
+  },
+  sync: {
+    summary: 'Sync Plex now',
+    description: `#### 🔒 OAuth Required
+Enqueues a Plex sync immediately. With \`server_id\`, syncs that server; without it, syncs every server in the saved selection. \`all_data: true\` re-pulls full history, otherwise an incremental sync. A \`422\` is returned when there is no server to sync.`,
+    method: 'POST',
+    path: '/sync',
+    body: plexSyncRequestSchema,
+    responses: {
+      201: z.undefined(),
+      422: z.undefined(),
+    },
+  },
+}, {
+  pathPrefix: '/settings/plex',
+});
+
 const ENTITY_LEVEL = builder.router({
   profile: {
     summary: 'Get user profile',
@@ -465,6 +579,7 @@ Returns a year-in-review summary for a user. Send the \`year\` path parameter to
 export const users = builder.router({
   ...GLOBAL_LEVEL,
   syncs,
+  plex,
   ...ENTITY_LEVEL,
   watched,
   history,
@@ -503,6 +618,18 @@ export {
   likedListResponseSchema,
   monthInReviewParamsSchema,
   monthInReviewResponseSchema,
+  plexAccountSchema,
+  plexConnectRequestSchema,
+  plexConnectResponseSchema,
+  plexErrorResponseSchema,
+  plexLibrarySchema,
+  plexServerAccountsResponseSchema,
+  plexServerParamsSchema,
+  plexServerSchema,
+  plexServersResponseSchema,
+  plexSettingsResponseSchema,
+  plexSettingsUpdateSchema,
+  plexSyncRequestSchema,
   profileParamsSchema,
   reactedCommentResponseSchema,
   settingsRequestSchema,
@@ -569,3 +696,20 @@ export type SyncResponse = z.infer<typeof syncSchema>;
 export type SyncItemResponse = z.infer<typeof syncItemSchema>;
 export type SyncTypeParams = z.infer<typeof syncTypeParamsSchema>;
 export type SyncIdParams = z.infer<typeof syncIdParamsSchema>;
+
+export type PlexSettingsResponse = z.infer<typeof plexSettingsResponseSchema>;
+export type PlexSettingsUpdateRequest = z.infer<
+  typeof plexSettingsUpdateSchema
+>;
+export type PlexConnectRequest = z.infer<typeof plexConnectRequestSchema>;
+export type PlexConnectResponse = z.infer<typeof plexConnectResponseSchema>;
+export type PlexServersResponse = z.infer<typeof plexServersResponseSchema>;
+export type PlexServer = z.infer<typeof plexServerSchema>;
+export type PlexServerAccountsResponse = z.infer<
+  typeof plexServerAccountsResponseSchema
+>;
+export type PlexAccount = z.infer<typeof plexAccountSchema>;
+export type PlexLibrary = z.infer<typeof plexLibrarySchema>;
+export type PlexServerParams = z.infer<typeof plexServerParamsSchema>;
+export type PlexSyncRequest = z.infer<typeof plexSyncRequestSchema>;
+export type PlexError = z.infer<typeof plexErrorResponseSchema>;

@@ -49,6 +49,7 @@ module.exports = {
         'movie',
         'oauth',
         'person',
+        'plex',
         'recommendation',
         'scrobble',
         'search',
