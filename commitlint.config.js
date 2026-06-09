@@ -57,6 +57,7 @@ module.exports = {
         'team',
         'user',
         'watchnow',
+        'yir',
         'younify',
       ],
     ],
