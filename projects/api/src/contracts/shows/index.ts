@@ -15,6 +15,7 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
@@ -348,6 +349,18 @@ Returns streaming and watch now sources for a show in the requested country. Use
         200: justWatchLinkResponseSchema,
       },
     },
+    refresh: {
+      summary: 'Refresh show JustWatch links',
+      description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a refresh of a show's JustWatch watch now links.`,
+      path: '/refresh/justwatch',
+      method: 'PUT',
+      pathParams: idParamsSchema,
+      body: z.undefined(),
+      responses: {
+        201: z.undefined(),
+      },
+    },
   }),
   people: {
     summary: 'Get all people for a show',
@@ -544,6 +557,19 @@ Report a show for moderator review. Send a \`reason\` and optional \`message\` w
       201: z.undefined(),
       400: z.undefined(),
       409: z.undefined(),
+    },
+  },
+  refresh: {
+    summary: 'Refresh show metadata',
+    description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a full metadata refresh for a show. Pass \`images=true\` to also refresh the show's images.`,
+    path: '/refresh',
+    method: 'PUT',
+    query: refreshQuerySchema,
+    pathParams: idParamsSchema,
+    body: z.undefined(),
+    responses: {
+      201: z.undefined(),
     },
   },
   episode: EPISODE_LEVEL,

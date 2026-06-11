@@ -2,6 +2,7 @@ import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
+import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { z } from '../_internal/z.ts';
 import { peopleReportRequestSchema } from './schema/request/peopleReportRequestSchema.ts';
 import { peopleMovieCreditsResponseSchema } from './schema/response/peopleMovieCreditsResponseSchema.ts';
@@ -79,6 +80,19 @@ Report a person for moderator review. Send a \`reason\` and optional \`message\`
       201: z.undefined(),
       400: z.undefined(),
       409: z.undefined(),
+    },
+  },
+  refresh: {
+    summary: 'Refresh person metadata',
+    description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a full metadata refresh for a person. Pass \`images=true\` to also refresh the person's images.`,
+    path: '/refresh',
+    method: 'PUT',
+    query: refreshQuerySchema,
+    pathParams: idParamsSchema,
+    body: z.undefined(),
+    responses: {
+      201: z.undefined(),
     },
   },
 }, {
