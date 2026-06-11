@@ -87,7 +87,7 @@ Report a person for moderator review. Send a \`reason\` and optional \`message\`
     description: `#### 🔥 VIP Only 🔒 OAuth Required
 Queue a full metadata refresh for a person. Pass \`images=true\` to also refresh the person's images.`,
     path: '/refresh',
-    method: 'PUT',
+    method: 'POST',
     query: refreshQuerySchema,
     pathParams: idParamsSchema,
     body: z.undefined(),

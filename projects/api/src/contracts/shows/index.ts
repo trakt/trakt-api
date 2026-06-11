@@ -354,7 +354,7 @@ Returns streaming and watch now sources for a show in the requested country. Use
       description: `#### 🔥 VIP Only 🔒 OAuth Required
 Queue a refresh of a show's JustWatch watch now links.`,
       path: '/refresh/justwatch',
-      method: 'PUT',
+      method: 'POST',
       pathParams: idParamsSchema,
       body: z.undefined(),
       responses: {
@@ -564,7 +564,7 @@ Report a show for moderator review. Send a \`reason\` and optional \`message\` w
     description: `#### 🔥 VIP Only 🔒 OAuth Required
 Queue a full metadata refresh for a show. Pass \`images=true\` to also refresh the show's images.`,
     path: '/refresh',
-    method: 'PUT',
+    method: 'POST',
     query: refreshQuerySchema,
     pathParams: idParamsSchema,
     body: z.undefined(),
