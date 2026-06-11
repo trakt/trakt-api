@@ -161,7 +161,7 @@ Returns streaming and watch now sources for a movie in the requested country. Us
       description: `#### 🔥 VIP Only 🔒 OAuth Required
 Queue a refresh of a movie's JustWatch watch now links.`,
       path: '/refresh/justwatch',
-      method: 'PUT',
+      method: 'POST',
       pathParams: idParamsSchema,
       body: z.undefined(),
       responses: {
@@ -271,7 +271,7 @@ Report a movie for moderator review. Send a \`reason\` and optional \`message\` 
     description: `#### 🔥 VIP Only 🔒 OAuth Required
 Queue a full metadata refresh for a movie. Pass \`images=true\` to also refresh the movie's images.`,
     path: '/refresh',
-    method: 'PUT',
+    method: 'POST',
     query: refreshQuerySchema,
     pathParams: idParamsSchema,
     body: z.undefined(),
