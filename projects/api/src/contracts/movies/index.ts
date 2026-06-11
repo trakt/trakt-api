@@ -15,6 +15,7 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
@@ -155,6 +156,18 @@ Returns streaming and watch now sources for a movie in the requested country. Us
         200: justWatchLinkResponseSchema,
       },
     },
+    refresh: {
+      summary: 'Refresh movie JustWatch links',
+      description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a refresh of a movie's JustWatch watch now links.`,
+      path: '/refresh/justwatch',
+      method: 'PUT',
+      pathParams: idParamsSchema,
+      body: z.undefined(),
+      responses: {
+        201: z.undefined(),
+      },
+    },
   }),
   people: {
     summary: 'Get all people for a movie',
@@ -251,6 +264,19 @@ Report a movie for moderator review. Send a \`reason\` and optional \`message\` 
       201: z.undefined(),
       400: z.undefined(),
       409: z.undefined(),
+    },
+  },
+  refresh: {
+    summary: 'Refresh movie metadata',
+    description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a full metadata refresh for a movie. Pass \`images=true\` to also refresh the movie's images.`,
+    path: '/refresh',
+    method: 'PUT',
+    query: refreshQuerySchema,
+    pathParams: idParamsSchema,
+    body: z.undefined(),
+    responses: {
+      201: z.undefined(),
     },
   },
 }, {
