@@ -5,4 +5,5 @@ export const listMetadataResponseSchema = z.object({
   id: z.number().int(),
   listed_at: z.string().datetime(),
   notes: z.string().nullish(),
+  my_rating: z.number().int().nullish(),
 });

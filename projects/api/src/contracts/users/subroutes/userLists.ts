@@ -216,7 +216,7 @@ Remove one or more items from a personal list.
     summary: 'Reorder items on a list',
     description: `#### 🔒 OAuth Required
 Reorder items on a personal list. Send the ordered list item IDs in the request body; the response returns the updated item order.`,
-    path: '/reorder',
+    path: '/items/reorder',
     method: 'POST',
     pathParams: profileParamsSchema
       .merge(listParamsSchema),
