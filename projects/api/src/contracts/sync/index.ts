@@ -32,6 +32,7 @@ import { favoritesRemoveResponseSchema } from './schema/response/favoritesRemove
 import { favoritesResponseSchema } from './schema/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './schema/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './schema/response/historyResponseSchema.ts';
+import { lastActivitiesResponseSchema } from './schema/response/lastActivitiesResponseSchema.ts';
 import { movieProgressResponseSchema } from './schema/response/movieProgressResponseSchema.ts';
 import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
 import { removeRatingsResponseSchema } from './schema/response/removeRatingsResponseSchema.ts';
@@ -420,6 +421,16 @@ Returns the authenticated user episode collection in a minimal format optimized 
 });
 
 export const sync = builder.router({
+  lastActivities: {
+    summary: 'Get last activity',
+    description: `#### 🔒 OAuth Required
+Returns the latest activity timestamps for the authenticated user. Cache these dates locally and compare them before syncing to avoid fetching data that has not changed.`,
+    method: 'GET',
+    path: '/last_activities',
+    responses: {
+      200: lastActivitiesResponseSchema,
+    },
+  },
   history,
   progress,
   watchlist,
@@ -441,6 +452,7 @@ export {
   favoritesResponseSchema,
   historyRemoveRequestSchema,
   historyResponseSchema,
+  lastActivitiesResponseSchema,
   minimalParamSchema,
   movieProgressResponseSchema,
   ratingsParamSchema,
@@ -458,6 +470,9 @@ export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
 export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
 export type HistoryResponse = z.infer<typeof historyResponseSchema>;
 export type HistoryRemoveResponse = z.infer<typeof historyRemoveResponseSchema>;
+export type LastActivitiesResponse = z.infer<
+  typeof lastActivitiesResponseSchema
+>;
 
 export type WatchlistRequest = z.infer<typeof listRequestSchema>;
 
