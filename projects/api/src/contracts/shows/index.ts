@@ -168,7 +168,9 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
   },
   watchnow: {
     summary: 'Get episode watch now sources',
-    description: `#### ✨ Extended Info
+    description: `#### 🫣 Limited Access ✨ Extended Info
+This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
+
 Returns streaming and watch now sources for an episode in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
@@ -326,7 +328,9 @@ Returns all users watching this show right now.`,
   },
   watchnow: {
     summary: 'Get show watch now sources',
-    description: `#### ✨ Extended Info
+    description: `#### 🫣 Limited Access ✨ Extended Info
+This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
+
 Returns streaming and watch now sources for a show in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
@@ -341,7 +345,7 @@ Returns streaming and watch now sources for a show in the requested country. Use
     link: {
       summary: 'Get show JustWatch links',
       description:
-        'Returns JustWatch links for a show in the requested country. Use the show `id` and two-character `country` path parameter to identify the lookup.',
+        '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a show in the requested country. Use the show `id` and two-character `country` path parameter to identify the lookup.',
       path: '/watchnow/justwatch_links/:country',
       method: 'GET',
       pathParams: idParamsSchema,
@@ -436,7 +440,7 @@ Returns all videos including trailers, teasers, clips, and featurettes.`,
       link: {
         summary: 'Get season JustWatch links',
         description:
-          'Returns JustWatch links for a show season in the requested country. Use `id`, `season`, and the two-character `country` path parameter to identify the lookup.',
+          '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a show season in the requested country. Use `id`, `season`, and the two-character `country` path parameter to identify the lookup.',
         path: '/watchnow/justwatch_links/:country',
         method: 'GET',
         pathParams: idParamsSchema,

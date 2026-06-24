@@ -10,7 +10,9 @@ import { z } from '../_internal/z.ts';
 export const episodes = builder.router({
   watchnow: {
     summary: 'Get episode watch now sources',
-    description: `#### ✨ Extended Info
+    description: `#### 🫣 Limited Access ✨ Extended Info
+This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
+
 Returns streaming and watch now sources for an episode in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema

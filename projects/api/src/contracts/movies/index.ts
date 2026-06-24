@@ -133,7 +133,9 @@ Returns all users watching this movie right now.`,
   },
   watchnow: {
     summary: 'Get movie watch now sources',
-    description: `#### ✨ Extended Info
+    description: `#### 🫣 Limited Access ✨ Extended Info
+This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
+
 Returns streaming and watch now sources for a movie in the requested country. Use \`links\` to include provider links when available.`,
     path: '/watchnow/:country',
     query: linksQuerySchema
@@ -148,7 +150,7 @@ Returns streaming and watch now sources for a movie in the requested country. Us
     link: {
       summary: 'Get movie JustWatch links',
       description:
-        'Returns JustWatch links for a movie in the requested country. Use the movie `id` and two-character `country` path parameter to identify the lookup.',
+        '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a movie in the requested country. Use the movie `id` and two-character `country` path parameter to identify the lookup.',
       path: '/watchnow/justwatch_links/:country',
       method: 'GET',
       pathParams: idParamsSchema,
