@@ -6,6 +6,7 @@ import { listRequestSchema } from '../../_internal/request/listRequestSchema.ts'
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
+import { ignoreQuerySchema } from '../../_internal/request/ignoreQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../../_internal/response/likeResponseSchema.ts';
 import { listAddResponseSchema } from '../../_internal/response/listAddResponseSchema.ts';
@@ -18,6 +19,7 @@ import { listedShowResponseSchema } from '../../_internal/response/listedShowRes
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../../_internal/response/listResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
+import { listReportRequestSchema } from '../../lists/schema/listReportRequestSchema.ts';
 import { createListRequestSchema } from '../schema/request/createListRequestSchema.ts';
 import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
 import { listParamsSchema } from '../schema/request/listParamsSchema.ts';
@@ -26,7 +28,25 @@ import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { reorderRequestSchema } from '../schema/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../schema/response/reorderListResponseSchema.ts';
 import { reorderListsResponseSchema } from '../schema/response/reorderListsResponseSchema.ts';
-import { ignoreQuerySchema } from "../../_internal/request/ignoreQuerySchema.ts";
+
+const listItemsPathParamsSchema = profileParamsSchema
+  .merge(listParamsSchema)
+  .extend({
+    type: z.string().describe('List item type filter.'),
+    sort_by: z.string().describe('Sort by a specific property.'),
+    sort_how: z.string().describe('Sort direction.'),
+  });
+
+const listItemParamsSchema = profileParamsSchema
+  .merge(listParamsSchema)
+  .extend({
+    list_item_id: z.string().describe('List item ID.'),
+  });
+
+const listItemUpdateRequestSchema = z.object({
+  notes: z.string().nullable().optional(),
+  rank: z.number().int().optional(),
+}).passthrough();
 
 const list = builder.router({
   summary: {
@@ -162,6 +182,23 @@ Returns movie, show, season, and episode items on a personal list. Use \`list_id
         200: listedAllResponseSchema.array(),
       },
     },
+    typedSorted: {
+      summary: 'Get items on a personal list',
+      description:
+        `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns items on a personal list. Use \`type\`, \`sort_by\`, and \`sort_how\` to control the returned item set and order.`,
+      path: '/items/:type/:sort_by/:sort_how',
+      method: 'GET',
+      pathParams: listItemsPathParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedAllResponseSchema.array(),
+      },
+    },
   },
   add: {
     summary: 'Add items to personal list',
@@ -225,6 +262,31 @@ Reorder items on a personal list. Send the ordered list item IDs in the request 
       200: reorderListResponseSchema,
     },
   },
+  reorderItems: {
+    summary: 'Reorder items on a list',
+    description: `#### 🔒 OAuth Required
+Reorder items on a personal list. Send the ordered list item IDs in the request body; the response returns the updated item order.`,
+    path: '/items/reorder',
+    method: 'POST',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    body: reorderRequestSchema,
+    responses: {
+      200: reorderListResponseSchema,
+    },
+  },
+  updateItem: {
+    summary: 'Update a list item',
+    description:
+      'Update a single personal list item by list item ID. A successful update returns no response body.',
+    path: '/items/:list_item_id',
+    method: 'PUT',
+    pathParams: listItemParamsSchema,
+    body: listItemUpdateRequestSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
   likes: {
     summary: 'Get all users who liked a list',
     description: `#### 🔓 OAuth Optional 📄 Pagination
@@ -236,6 +298,31 @@ Returns all users who liked a list.`,
     query: pageQuerySchema,
     responses: {
       200: likeResponseSchema.array(),
+    },
+  },
+  like: {
+    summary: 'Like a list',
+    description: `#### 🔒 OAuth Required
+Votes help determine popular lists. Only one like is allowed per list per user.`,
+    path: '/like',
+    method: 'POST',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    body: z.undefined(),
+    responses: {
+      204: z.undefined(),
+    },
+  },
+  unlike: {
+    summary: 'Remove like on a list',
+    description: `#### 🔒 OAuth Required
+Remove a like on a list.`,
+    path: '/like',
+    method: 'DELETE',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    responses: {
+      204: z.undefined(),
     },
   },
   comments: {
@@ -254,6 +341,21 @@ Returns all top level comments for a list. By default, the comments are sorted b
     query: pageQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
+    },
+  },
+  report: {
+    summary: "Report a user's list",
+    description: `#### 🔒 OAuth Required
+Report a list for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per list.`,
+    path: '/report',
+    method: 'POST',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    body: listReportRequestSchema,
+    responses: {
+      201: z.undefined(),
+      400: z.undefined(),
+      409: z.undefined(),
     },
   },
 }, {

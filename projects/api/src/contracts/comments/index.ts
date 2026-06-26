@@ -5,17 +5,39 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
+import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
+import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
+import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import {
   reactionEnumSchema,
   reactionsResponseSchema,
   reactionsSummaryResponseSchema,
   reactionTypeSchema,
 } from '../_internal/response/reactionsResponseSchema.ts';
+import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { commentPostParamsSchema } from './schema/requests/commentPostParamsSchema.ts';
 import { commentReplyParamsSchema } from './schema/requests/commentReplyParamsSchema.ts';
 import { commentReportRequestSchema } from './schema/requests/commentReportRequestSchema.ts';
+
+const commentActivityParamsSchema = z.object({
+  comment_type: z.string().describe('Comment type filter.'),
+  type: z.string().describe('Media type filter.'),
+});
+
+const includeRepliesQuerySchema = z.object({
+  include_replies: z.boolean().optional().describe(
+    'Include replies inline alongside top level comments.',
+  ),
+});
+
+const commentItemResponseSchema = z.union([
+  movieResponseSchema,
+  showResponseSchema,
+  episodeResponseSchema,
+  listResponseSchema,
+]);
 
 const REACTIONS_LEVEL = builder.router({
   summary: {
@@ -71,6 +93,29 @@ Remove a reaction from a comment. Use \`reaction_type\` to choose the reaction; 
 });
 
 const ENTITY_LEVEL = builder.router({
+  summary: {
+    summary: 'Get a comment or reply',
+    description: `#### 😁 Emojis
+Returns a single comment and indicates how many replies it has. Use [**/comments/:id/replies**](/reference/comments/replies/) to get the actual replies.`,
+    path: '',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    responses: {
+      200: commentResponseSchema,
+    },
+  },
+  item: {
+    summary: 'Get the attached media item',
+    description:
+      '#### ✨ Extended Info\nReturns the media item this comment is attached to. The media type can be `movie`, `show`, `season`, `episode`, or `list` and it also returns the standard media object for that media type.',
+    path: '/item',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: commentItemResponseSchema,
+    },
+  },
   likes: {
     summary: 'Get all users who liked a comment',
     description: `#### 📄 Pagination
@@ -207,6 +252,51 @@ Delete a single comment. The OAuth user must match the author of the comment in 
 });
 
 const GLOBAL_LEVEL = builder.router({
+  trending: {
+    summary: 'Get trending comments',
+    description:
+      '#### 📄 Pagination ✨ Extended Info 😁 Emojis\nReturns all comments with the most likes and replies over the last 7 days. You can optionally filter by the `comment_type` and media `type` to limit what gets returned. If you want to `include_replies` that will return replies in place alongside top level comments.',
+    path: '/trending/:comment_type/:type',
+    method: 'GET',
+    pathParams: commentActivityParamsSchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema)
+      .merge(includeRepliesQuerySchema),
+    responses: {
+      200: commentResponseSchema.array(),
+    },
+  },
+  recent: {
+    summary: 'Get recently created comments',
+    description:
+      '#### 📄 Pagination ✨ Extended Info 😁 Emojis\nReturns the most recently written comments across all of Trakt. You can optionally filter by the `comment_type` and media `type` to limit what gets returned. If you want to `include_replies` that will return replies in place alongside top level comments.',
+    path: '/recent/:comment_type/:type',
+    method: 'GET',
+    pathParams: commentActivityParamsSchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema)
+      .merge(includeRepliesQuerySchema),
+    responses: {
+      200: commentResponseSchema.array(),
+    },
+  },
+  updates: {
+    summary: 'Get recently updated comments',
+    description:
+      '#### 📄 Pagination ✨ Extended Info 😁 Emojis\nReturns the most recently updated comments across all of Trakt. You can optionally filter by the `comment_type` and media `type` to limit what gets returned. If you want to `include_replies` that will return replies in place alongside top level comments.',
+    path: '/updates/:comment_type/:type',
+    method: 'GET',
+    pathParams: commentActivityParamsSchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema)
+      .merge(includeRepliesQuerySchema),
+    responses: {
+      200: commentResponseSchema.array(),
+    },
+  },
   post: {
     summary: 'Post a comment',
     description: `#### 🔒 OAuth Required 😁 Emojis

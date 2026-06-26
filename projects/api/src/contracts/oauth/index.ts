@@ -9,6 +9,19 @@ import { tokenRequestSchema } from './schema/request/tokenRequestSchema.ts';
 import { codeResponseSchema } from './schema/response/codeResponseSchema.ts';
 import { tokenResponseSchema } from './schema/response/tokenResponseSchema.ts';
 
+const authorizeQuerySchema = z.object({
+  response_type: z.string().optional(),
+  client_id: z.string().optional(),
+  redirect_uri: z.string().optional(),
+  state: z.string().optional(),
+});
+
+const revokeRequestSchema = z.object({
+  token: z.string(),
+  client_id: z.string(),
+  client_secret: z.string(),
+});
+
 const device = builder.router({
   code: {
     summary: 'Generate new device codes',
@@ -88,6 +101,29 @@ export type OAuthTokenResponse = z.infer<typeof tokenResponseSchema>;
 
 export const oauth = builder
   .router({
+    authorize: {
+      summary: 'Authorize Application',
+      description:
+        `Construct then redirect to this URL. The Trakt website will request permissions for your app, which the user needs to approve. If the user isn't signed into Trakt, it will ask them to do so.
+
+> ### Important
+> _Use the website **https://trakt.tv** hostname when creating this URL and not the API URL._
+
+#### Optional URL Parameters
+
+When building the authorization URL, you can optionally include the following query parameters in the URL.
+
+| Parameter | Value | Description |
+|---|---|---|
+| \`signup\` | \`true\` | Prefer the account sign up page to be the default. |
+| \`prompt\` | \`login\` | Force the user to sign in and authorize your app. |`,
+      path: '/authorize',
+      method: 'GET',
+      query: authorizeQuerySchema,
+      responses: {
+        200: z.undefined(),
+      },
+    },
     device,
     token: {
       summary: 'Exchange a token',
@@ -102,6 +138,24 @@ export const oauth = builder
       responses: {
         200: tokenResponseSchema,
         400: z.undefined(),
+      },
+    },
+    revoke: {
+      summary: 'Revoke an access_token',
+      description:
+        `An \`access_token\` can be revoked when a user signs out of their Trakt account in your app. This is not required, but might improve the user experience so the user doesn't have an unused app connection hanging around.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`token\` * | string | A valid OAuth \`access_token\`. |
+| \`client_id\` * | string | Get this from your app settings. |
+| \`client_secret\` * | string | Get this from your app settings. |`,
+      path: '/revoke',
+      method: 'POST',
+      body: revokeRequestSchema,
+      responses: {
+        200: z.undefined(),
       },
     },
   }, {

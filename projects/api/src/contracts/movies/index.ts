@@ -46,6 +46,33 @@ import { movieStreamingResponseSchema } from './schema/response/movieStreamingRe
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
 
+const startDateParamsSchema = z.object({
+  start_date: z.string().describe('UTC date to start checking for updates.'),
+});
+
+const movieAliasResponseSchema = z.object({
+  title: z.string(),
+  country: z.string().nullable().optional(),
+});
+
+const movieReleaseResponseSchema = z.object({
+  country: z.string(),
+  certification: z.string().nullable().optional(),
+  release_date: z.string(),
+  release_type: z.string().optional(),
+  note: z.string().nullable().optional(),
+}).passthrough();
+
+const movieBoxOfficeResponseSchema = z.object({
+  revenue: z.number().int().optional(),
+  movie: movieResponseSchema,
+});
+
+const movieUpdatedResponseSchema = z.object({
+  updated_at: z.string().datetime(),
+  movie: movieResponseSchema,
+});
+
 const ENTITY_LEVEL = builder.router({
   summary: {
     summary: 'Get a movie',
@@ -82,6 +109,28 @@ Returns a single movie's details.
     pathParams: idParamsSchema,
     responses: {
       200: movieStatsResponseSchema,
+    },
+  },
+  aliases: {
+    summary: 'Get all movie aliases',
+    description:
+      'Returns all title aliases for a movie. Includes localized and alternate titles when available.',
+    path: '/aliases',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    responses: {
+      200: movieAliasResponseSchema.array(),
+    },
+  },
+  releases: {
+    summary: 'Get all movie releases',
+    description:
+      'Returns release dates for a movie in the requested country, including certification and release type when available.',
+    path: '/releases/:country',
+    method: 'GET',
+    pathParams: idParamsSchema.merge(countryParamsSchema),
+    responses: {
+      200: movieReleaseResponseSchema.array(),
     },
   },
   translations: {
@@ -314,6 +363,87 @@ Returns the most watched (unique users) movies in the specified time \`period\`,
     pathParams: periodParamsSchema,
     responses: {
       200: movieWatchedResponseSchema.array(),
+    },
+  },
+  favorited: {
+    summary: 'Get the most favorited movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most favorited movies in the specified time \`period\`, defaulting to \`weekly\`.`,
+    path: '/favorited/:period',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    pathParams: periodParamsSchema,
+    responses: {
+      200: movieWatchedResponseSchema.array(),
+    },
+  },
+  played: {
+    summary: 'Get the most played movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most played movies in the specified time \`period\`, defaulting to \`weekly\`.`,
+    path: '/played/:period',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    pathParams: periodParamsSchema,
+    responses: {
+      200: movieWatchedResponseSchema.array(),
+    },
+  },
+  collected: {
+    summary: 'Get the most collected movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most collected movies in the specified time \`period\`, defaulting to \`weekly\`.`,
+    path: '/collected/:period',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    pathParams: periodParamsSchema,
+    responses: {
+      200: movieWatchedResponseSchema.array(),
+    },
+  },
+  boxoffice: {
+    summary: 'Get the weekend box office',
+    description:
+      'Returns the top 10 grossing movies in the U.S. box office last weekend. Updated every Monday morning.',
+    path: '/boxoffice',
+    method: 'GET',
+    query: extendedMediaQuerySchema,
+    responses: {
+      200: movieBoxOfficeResponseSchema.array(),
+    },
+  },
+  updates: {
+    summary: 'Get recently updated movies',
+    description:
+      'Returns all movies updated since the specified UTC date. We recommend storing the latest `updated_at` locally and using it for the next request.',
+    path: '/updates/:start_date',
+    method: 'GET',
+    pathParams: startDateParamsSchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: movieUpdatedResponseSchema.array(),
+    },
+  },
+  updatedIds: {
+    summary: 'Get recently updated movie Trakt IDs',
+    description:
+      'Returns Trakt IDs for movies updated since the specified UTC date.',
+    path: '/updates/id/:start_date',
+    method: 'GET',
+    pathParams: startDateParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
     },
   },
   anticipated: {

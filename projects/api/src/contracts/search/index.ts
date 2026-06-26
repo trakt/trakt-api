@@ -44,6 +44,15 @@ Remove a recent search for the authenticated user. Send the search request body;
   },
 }, { pathPrefix: '/recent' });
 
+const idLookupParamsSchema = z.object({
+  id_type: z.string().describe('External ID type to look up.'),
+  id: z.string().describe('External ID value.'),
+});
+
+const idLookupQuerySchema = z.object({
+  type: z.string().optional().describe('Optional media type filter.'),
+});
+
 export const search = builder.router({
   query: {
     summary: 'Get text query results',
@@ -111,6 +120,22 @@ Search for exact movie or show matches using the requested search \`type\` and \
     >(),
     query: searchQuerySchema
       .merge(searchEngineSchema)
+      .merge(pageQuerySchema)
+      .merge(
+        extendedQuerySchemaFactory<['full,images']>(),
+      ),
+    responses: {
+      200: searchResultResponseSchema.array(),
+    },
+  },
+  lookup: {
+    summary: 'Get ID lookup results',
+    description: `#### 📄 Pagination ✨ Extended Info
+Lookup items by external ID. Use \`id_type\` and \`id\` to identify the external ID, and optionally send \`type\` to limit the result media type.`,
+    path: '/:id_type/:id',
+    method: 'GET',
+    pathParams: idLookupParamsSchema,
+    query: idLookupQuerySchema
       .merge(pageQuerySchema)
       .merge(
         extendedQuerySchemaFactory<['full,images']>(),

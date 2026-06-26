@@ -10,6 +10,12 @@ import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 import { favoritedMoviesResponseSchema } from '../schema/response/favoritedMoviesResponseSchema.ts';
 import { favoritedShowsResponseSchema } from '../schema/response/favoritedShowsResponseSchema.ts';
 
+const typedSortedFavoritesParamsSchema = profileParamsSchema.extend({
+  type: z.string().describe('Favorites media type filter.'),
+  sort_by: z.string().describe('Sort by a specific property.'),
+  sort_how: z.string().describe('Sort direction.'),
+});
+
 export const favorites = builder.router({
   media: {
     summary: 'Get favorite media',
@@ -54,6 +60,24 @@ Returns favorite shows for a user. Use the \`sort\` path parameter plus query so
       .merge(pageQuerySchema),
     responses: {
       200: favoritedShowsResponseSchema.array(),
+    },
+  },
+  typedSorted: {
+    summary: 'Get favorites',
+    description:
+      `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Returns the top 100 shows and movies a user has favorited.`,
+    path: '/:type/:sort_by/:sort_how',
+    pathParams: typedSortedFavoritesParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: z.union([
+        favoritedShowsResponseSchema,
+        favoritedMoviesResponseSchema,
+      ]).array(),
     },
   },
   comments: {

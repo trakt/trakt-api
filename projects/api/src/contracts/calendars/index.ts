@@ -1,11 +1,11 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
+import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import type { z } from '../_internal/z.ts';
 import { calendarRequestParamsSchema } from './schema/request/calendarParamsSchema.ts';
 import { calendarMovieResponseSchema } from './schema/response/calendarMovieResponseSchema.ts';
 import { calendarShowResponseSchema } from './schema/response/calendarShowListResponseSchema.ts';
-import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
 
 export const calendars = builder.router({
   shows: {
@@ -78,6 +78,20 @@ Returns movies with a release date during the requested UTC date range. Use \`ta
       200: calendarMovieResponseSchema.array(),
     },
   },
+  streaming: {
+    summary: 'Get streaming releases',
+    description: `#### ✨ Extended Info 🎚 Filters
+Returns all movies with a streaming release date during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+    method: 'GET',
+    path: '/:target/streaming/:start_date/:days',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(ignoreQuerySchema),
+    pathParams: calendarRequestParamsSchema,
+    responses: {
+      200: calendarMovieResponseSchema.array(),
+    },
+  },
   dvdReleases: {
     summary: 'Get DVD releases',
     description: `#### ✨ Extended Info 🎚 Filters
@@ -92,7 +106,7 @@ Returns DVD and physical media releases during the requested UTC date range. Use
       200: calendarMovieResponseSchema.array(),
     },
   },
-}, {pathPrefix: '/calendars'});
+}, { pathPrefix: '/calendars' });
 
 export { calendarRequestParamsSchema };
 export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;

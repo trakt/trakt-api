@@ -1,15 +1,29 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQuerySchema.ts';
+import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
+import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
+import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
+import { listSortSchema } from '../_internal/response/listSortSchema.ts';
+import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
 import { z } from '../_internal/z.ts';
 import { peopleReportRequestSchema } from './schema/request/peopleReportRequestSchema.ts';
 import { peopleMovieCreditsResponseSchema } from './schema/response/peopleMovieCreditsResponseSchema.ts';
 import { peopleShowCreditsResponseSchema } from './schema/response/peopleShowCreditsResponseSchema.ts';
 import { personResponseSchema } from './schema/response/personResponseSchema.ts';
 
-export const people = builder.router({
+const startDateParamsSchema = z.object({
+  start_date: z.string().describe('UTC date to start checking for updates.'),
+});
+
+const personUpdatedResponseSchema = z.object({
+  updated_at: z.string().datetime(),
+  person: personResponseSchema,
+});
+
+const ENTITY_LEVEL = builder.router({
   summary: {
     summary: 'Get a single person',
     description: `#### ✨ Extended Info
@@ -56,6 +70,22 @@ The \`crew\` object will be broken up by department into \`production\`, \`art\`
       200: peopleShowCreditsResponseSchema,
     },
   },
+  lists: {
+    summary: 'Get lists containing this person',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this person. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
+    path: '/lists/:type/:sort',
+    method: 'GET',
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema
+      .merge(listSortSchema)
+      .merge(listTypeSchema),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
   report: {
     summary: 'Report a person',
     description: `#### 🔒 OAuth Required
@@ -96,7 +126,42 @@ Queue a full metadata refresh for a person. Pass \`images=true\` to also refresh
     },
   },
 }, {
-  pathPrefix: '/people/:id',
+  pathPrefix: '/:id',
+});
+
+const GLOBAL_LEVEL = builder.router({
+  updates: {
+    summary: 'Get recently updated people',
+    description:
+      'Returns all people updated since the specified UTC date. We recommend storing the latest `updated_at` locally and using it for the next request.',
+    path: '/updates/:start_date',
+    method: 'GET',
+    pathParams: startDateParamsSchema,
+    query: extendedPeopleQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: personUpdatedResponseSchema.array(),
+    },
+  },
+  updatedIds: {
+    summary: 'Get recently updated people Trakt IDs',
+    description:
+      'Returns Trakt IDs for people updated since the specified UTC date.',
+    path: '/updates/id/:start_date',
+    method: 'GET',
+    pathParams: startDateParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
+    },
+  },
+});
+
+export const people = builder.router({
+  ...GLOBAL_LEVEL,
+  ...ENTITY_LEVEL,
+}, {
+  pathPrefix: '/people',
 });
 
 export { personResponseSchema };

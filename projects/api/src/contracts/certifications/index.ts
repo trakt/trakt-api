@@ -1,11 +1,31 @@
 import { builder } from '../_internal/builder.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
 import {
   movieCertificationsResponseSchema,
 } from './schema/movieCertificationsResponseSchema.ts';
 import { showCertificationsResponseSchema } from './schema/showCertificationsResponseSchema.ts';
 
+const certificationTypeParamsSchema = z.object({
+  type: z.string().describe(
+    'Certification media type, typically `movies` or `shows`.',
+  ),
+});
+
 export const certifications = builder.router({
+  list: {
+    summary: 'Get certifications',
+    description:
+      'Get a list of all certifications, including names, slugs, and descriptions.',
+    method: 'GET',
+    path: '/:type',
+    pathParams: certificationTypeParamsSchema,
+    responses: {
+      200: z.union([
+        movieCertificationsResponseSchema,
+        showCertificationsResponseSchema,
+      ]),
+    },
+  },
   shows: {
     summary: 'Get show certifications',
     description:
