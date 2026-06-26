@@ -8,9 +8,16 @@ import { commentResponseSchema } from '../../_internal/response/commentResponseS
 import { listedMediaResponseSchema } from '../../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
+import { z } from '../../_internal/z.ts';
 import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
+
+const typedSortedWatchlistParamsSchema = profileParamsSchema.extend({
+  type: z.string().describe('Watchlist media type filter.'),
+  sort_by: z.string().describe('Sort by a specific property.'),
+  sort_how: z.string().describe('Sort direction.'),
+});
 
 export const watchlist = builder.router({
   movies: {
@@ -67,8 +74,25 @@ Returns movies and shows on a user watchlist. Use the \`sort\` path parameter pl
       200: listedMediaResponseSchema.array(),
     },
   },
+  typedSorted: {
+    summary: 'Get watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns all items in a user's watchlist filtered by type.`,
+    path: '/:type/:sort_by/:sort_how',
+    pathParams: typedSortedWatchlistParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
+    responses: {
+      200: listedMediaResponseSchema.array(),
+    },
+  },
   comments: {
-    summary: 'Get all favorites comments',
+    summary: 'Get all watchlist comments',
     description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for the watchlist. By default, the comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.

@@ -1,7 +1,8 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
+import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
-import type { z } from '../../_internal/z.ts';
+import { z } from '../../_internal/z.ts';
 import { dateRangeParamsSchema } from '../schema/request/dateRangeParamsSchema.ts';
 import { historyItemIdParamsSchema } from '../schema/request/historyItemIdParamsSchema.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
@@ -9,7 +10,12 @@ import { activityHistoryResponseSchema } from '../schema/response/activityHistor
 import { episodeActivityHistoryResponseSchema } from '../schema/response/episodeActivityHistoryResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from '../schema/response/movieActivityHistoryResponseSchema.ts';
 import { showActivityHistoryResponseSchema } from '../schema/response/showActivityHistoryResponseSchema.ts';
-import { mediaFilterParamsSchema } from "../../_internal/request/mediaFilterParamsSchema.ts";
+
+const historyTypedItemParamsSchema = profileParamsSchema
+  .merge(historyItemIdParamsSchema)
+  .extend({
+    type: z.string().describe('History media type filter.'),
+  });
 
 export const history = builder.router({
   all: {
@@ -114,6 +120,20 @@ Returns watched history entries for one episode. Use \`item_id\` to identify the
       .merge(pageQuerySchema),
     responses: {
       200: episodeActivityHistoryResponseSchema.array(),
+    },
+  },
+  typedItem: {
+    summary: 'Get watched history',
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns watched history entries for one item. Use \`type\`, \`item_id\`, \`start_at\`, and \`end_at\` to limit the result set.`,
+    path: '/:type/:item_id',
+    method: 'GET',
+    pathParams: historyTypedItemParamsSchema,
+    query: extendedMediaQuerySchema
+      .merge(dateRangeParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: activityHistoryResponseSchema.array(),
     },
   },
 }, {

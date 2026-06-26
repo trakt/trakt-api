@@ -3,6 +3,7 @@ import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSch
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { lifetimeStatsQuerySchema } from '../_internal/request/lifetimeStatsQuerySchema.ts';
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
+import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
@@ -37,7 +38,67 @@ import { movieProgressResponseSchema } from './schema/response/movieProgressResp
 import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
 import { removeRatingsResponseSchema } from './schema/response/removeRatingsResponseSchema.ts';
 import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
-import { mediaFilterParamsSchema } from "../_internal/request/mediaFilterParamsSchema.ts";
+
+const syncTypeParamsSchema = z.object({
+  type: z.string().describe('Sync media type filter.'),
+});
+
+const syncHistoryParamsSchema = syncTypeParamsSchema.extend({
+  id: z.string().describe('Trakt ID for a specific item.'),
+});
+
+const syncRatingsParamsSchema = syncTypeParamsSchema.extend({
+  rating: z.string().describe('Rating filter from 1 to 10.'),
+});
+
+const syncSortedListParamsSchema = syncTypeParamsSchema.extend({
+  sort_by: z.string().describe('Sort by a specific property.'),
+  sort_how: z.string().describe('Sort direction.'),
+});
+
+const syncListItemParamsSchema = z.object({
+  list_item_id: z.string().describe('List item ID.'),
+});
+
+const syncListItemUpdateRequestSchema = z.object({
+  notes: z.string().nullable().optional(),
+  rank: z.number().int().optional(),
+}).passthrough();
+
+const syncReorderRequestSchema = z.object({
+  rank: z.array(z.number().int()).optional(),
+}).passthrough();
+
+const syncListItemResponseSchema = z.object({
+  rank: z.number().int().optional(),
+  id: z.number().int().optional(),
+  listed_at: z.string().datetime().optional(),
+  type: z.string().optional(),
+}).passthrough();
+
+const syncHistoryItemResponseSchema = z.object({
+  id: z.number().int(),
+  watched_at: z.string().datetime(),
+  action: z.string(),
+  type: z.string(),
+}).passthrough();
+
+const syncWatchedItemResponseSchema = z.object({
+  plays: z.number().int().optional(),
+  last_watched_at: z.string().datetime().optional(),
+  type: z.string().optional(),
+}).passthrough();
+
+const syncRatingItemResponseSchema = z.object({
+  rated_at: z.string().datetime(),
+  rating: z.number().int(),
+  type: z.string(),
+}).passthrough();
+
+const syncReorderResponseSchema = z.object({
+  updated: z.number().int().optional(),
+  skipped_ids: z.array(z.number().int()).optional(),
+}).passthrough();
 
 const progress = builder.router({
   upNext: {
@@ -85,6 +146,21 @@ Returns in-progress movie playback items for the authenticated user. Use \`start
       200: movieProgressResponseSchema.array(),
     },
   },
+  playback: {
+    summary: 'Get playback progress',
+    description: `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info
+Returns playback progress for the requested media \`type\`. Use \`start_at\` and \`end_at\` to filter progress updated within a UTC datetime range.`,
+    method: 'GET',
+    path: '/playback/:type',
+    pathParams: syncTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema),
+    responses: {
+      200: movieProgressResponseSchema.array(),
+    },
+  },
   drop: {
     movie: {
       summary: 'Remove a playback item',
@@ -123,6 +199,20 @@ Remove a playback item from a user's playback progress list. A \`404\` will be r
 });
 
 const history = builder.router({
+  get: {
+    summary: 'Get watched history',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies and episodes that a user has watched, sorted by most recent. Specify a \`type\` and Trakt \`id\` to limit the history for just that item.`,
+    method: 'GET',
+    path: '/:type/:id',
+    pathParams: syncHistoryParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema),
+    responses: {
+      200: syncHistoryItemResponseSchema.array(),
+    },
+  },
   add: {
     summary: 'Add items to watched history',
     description: `#### 🔒 OAuth Required
@@ -180,6 +270,31 @@ You can also send a list of raw history \`ids\` _(64-bit integers)_ to delete si
 });
 
 const watchlist = builder.router({
+  get: {
+    summary: 'Get watchlist',
+    description:
+      `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Returns all items in the authenticated user's watchlist filtered by type.`,
+    method: 'GET',
+    path: '/:type/:sort_by/:sort_how',
+    pathParams: syncSortedListParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: syncListItemResponseSchema.array(),
+    },
+  },
+  update: {
+    summary: 'Update watchlist',
+    description:
+      'Update watchlist item metadata such as notes or rank for multiple items.',
+    method: 'PUT',
+    path: '',
+    body: listRequestSchema,
+    responses: {
+      200: listAddResponseSchema,
+    },
+  },
   add: {
     summary: 'Add items to watchlist',
     description: `#### 🔥 VIP Enhanced 🔒 OAuth Required 😁 Emojis
@@ -226,11 +341,47 @@ Remove one or more items from a user's watchlist.
       200: listRemoveResponseSchema,
     },
   },
+  reorder: {
+    summary: 'Reorder watchlist items',
+    description:
+      'Reorder all items in a user watchlist by sending the ordered list item IDs.',
+    method: 'POST',
+    path: '/reorder',
+    body: syncReorderRequestSchema,
+    responses: {
+      200: syncReorderResponseSchema,
+    },
+  },
+  updateItem: {
+    summary: 'Update a watchlist item',
+    description:
+      'Update a single watchlist item by list item ID. A successful update returns no response body.',
+    method: 'PUT',
+    path: '/:list_item_id',
+    pathParams: syncListItemParamsSchema,
+    body: syncListItemUpdateRequestSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
 }, {
   pathPrefix: '/watchlist',
 });
 
 const ratings = builder.router({
+  get: {
+    summary: 'Get ratings',
+    description:
+      'Returns all ratings for the requested media type and rating value.',
+    method: 'GET',
+    path: '/:type/:rating',
+    pathParams: syncRatingsParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: syncRatingItemResponseSchema.array(),
+    },
+  },
   add: {
     summary: 'Add new ratings',
     description: `#### 🔒 OAuth Required
@@ -283,6 +434,31 @@ Remove ratings for one or more items.
 });
 
 const favorites = builder.router({
+  get: {
+    summary: 'Get favorites',
+    description:
+      `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Returns all items in the authenticated user's favorites filtered by type.`,
+    method: 'GET',
+    path: '/:type/:sort_by/:sort_how',
+    pathParams: syncSortedListParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: syncListItemResponseSchema.array(),
+    },
+  },
+  update: {
+    summary: 'Update favorites',
+    description:
+      'Update favorite item metadata such as notes or rank for multiple items.',
+    method: 'PUT',
+    path: '',
+    body: favoriteParamSchema,
+    responses: {
+      200: favoritesResponseSchema,
+    },
+  },
   add: {
     summary: 'Add items to favorites',
     description: `#### 🔒 OAuth Required 😁 Emojis
@@ -325,11 +501,48 @@ Remove items from a user's favorites. Apps should encourage user's to add favori
       200: favoritesRemoveResponseSchema,
     },
   },
+  reorder: {
+    summary: 'Reorder favorited items',
+    description:
+      'Reorder all items in a user favorites list by sending the ordered list item IDs.',
+    method: 'POST',
+    path: '/reorder',
+    body: syncReorderRequestSchema,
+    responses: {
+      200: syncReorderResponseSchema,
+    },
+  },
+  updateItem: {
+    summary: 'Update a favorite item',
+    description:
+      'Update a single favorite item by list item ID. A successful update returns no response body.',
+    method: 'PUT',
+    path: '/:list_item_id',
+    pathParams: syncListItemParamsSchema,
+    body: syncListItemUpdateRequestSchema,
+    responses: {
+      204: z.undefined(),
+    },
+  },
 }, {
   pathPrefix: '/favorites',
 });
 
 const collection = builder.router({
+  all: {
+    summary: 'Get collection',
+    description: `#### 🔒 OAuth Required ✨ Extended Info
+Returns all collected items for a media \`type\`.`,
+    method: 'GET',
+    path: '/:type',
+    pathParams: syncTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: collectionResponseSchema.array(),
+    },
+  },
   movies: {
     summary: 'Get movie collection',
     description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
@@ -379,6 +592,28 @@ Returns movies, shows, and episodes in the authenticated user collection. Use \`
       .merge(pageQuerySchema),
     responses: {
       200: collectionResponseSchema.array(),
+    },
+  },
+  add: {
+    summary: 'Add items to collection',
+    description:
+      'Add items to a user collection. Accepts shows, seasons, episodes, and movies.',
+    method: 'POST',
+    path: '',
+    body: listRequestSchema,
+    responses: {
+      201: listAddResponseSchema,
+    },
+  },
+  remove: {
+    summary: 'Remove items from collection',
+    description:
+      'Remove items from a user collection. Accepts shows, seasons, episodes, and movies.',
+    method: 'POST',
+    path: '/remove',
+    body: listRequestSchema,
+    responses: {
+      200: listRemoveResponseSchema,
     },
   },
   minimal: builder.router({
@@ -433,6 +668,18 @@ Returns the latest activity timestamps for the authenticated user. Cache these d
   },
   history,
   progress,
+  watched: {
+    summary: 'Get watched',
+    description:
+      'Returns all movies, shows, seasons, or episodes watched by the authenticated user.',
+    method: 'GET',
+    path: '/watched/:type',
+    pathParams: syncTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>(),
+    responses: {
+      200: syncWatchedItemResponseSchema.array(),
+    },
+  },
   watchlist,
   ratings,
   favorites,

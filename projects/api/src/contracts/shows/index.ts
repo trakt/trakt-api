@@ -29,7 +29,7 @@ import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
-import type { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
+import { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
 import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
 import { showStatsResponseSchema } from '../_internal/response/showStatsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
@@ -47,6 +47,20 @@ import { showProgressResponseSchema } from './schema/response/showProgressRespon
 import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
+
+const startDateParamsSchema = z.object({
+  start_date: z.string().describe('UTC date to start checking for updates.'),
+});
+
+const showAliasResponseSchema = z.object({
+  title: z.string(),
+  country: z.string().nullable().optional(),
+});
+
+const showUpdatedResponseSchema = z.object({
+  updated_at: z.string().datetime(),
+  show: showResponseSchema,
+});
 
 const EPISODE_LEVEL = builder.router({
   summary: {
@@ -166,6 +180,37 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
       200: peopleResponseSchema,
     },
   },
+  lists: {
+    summary: 'Get lists containing this episode',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this episode. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
+    path: '/lists/:type/:sort',
+    method: 'GET',
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema
+      .merge(seasonParamsSchema)
+      .merge(episodeParamsSchema)
+      .merge(listSortSchema)
+      .merge(listTypeSchema),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  videos: {
+    summary: 'Get all videos',
+    description: `#### ✨ Extended Info
+Returns all videos including trailers, teasers, clips, and featurettes.`,
+    path: '/videos',
+    method: 'GET',
+    pathParams: idParamsSchema
+      .merge(seasonParamsSchema)
+      .merge(episodeParamsSchema),
+    responses: {
+      200: videoResponseSchema.array(),
+    },
+  },
   watchnow: {
     summary: 'Get episode watch now sources',
     description: `#### 🫣 Limited Access ✨ Extended Info
@@ -254,7 +299,45 @@ Returns a single shows's details. If you request extended info, the \`airs\` obj
       200: showStatsResponseSchema,
     },
   },
+  aliases: {
+    summary: 'Get all show aliases',
+    description:
+      'Returns all title aliases for a show. Includes localized and alternate titles when available.',
+    path: '/aliases',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    responses: {
+      200: showAliasResponseSchema.array(),
+    },
+  },
+  certifications: {
+    summary: 'Get all show certifications',
+    description:
+      'Returns all content certifications for a show, grouped by country.',
+    path: '/certifications',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    responses: {
+      200: showCertificationResponseSchema,
+    },
+  },
   progress: {
+    collection: {
+      summary: 'Get show collection progress',
+      description: `#### 🔒 OAuth Required
+Returns collection progress for a show including details on all aired seasons and episodes. The \`next_episode\` will be the next episode the user should collect, if there are no upcoming episodes it will be set to \`null\`.
+
+By default, any hidden seasons will be removed from the response and stats. To include these and adjust the completion stats, set the \`hidden\` flag to \`true\`.`,
+      path: '/progress/collection',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(showQueryParamsSchema)
+        .merge(statsQuerySchema),
+      responses: {
+        200: showProgressResponseSchema,
+      },
+    },
     watched: {
       summary: 'Get show watched progress',
       description: `#### 🔒 OAuth Required
@@ -276,6 +359,29 @@ By default, the \`last_episode\` and \`next_episode\` are calculated using the l
         .merge(statsQuerySchema),
       responses: {
         200: showProgressResponseSchema,
+      },
+    },
+    reset: {
+      summary: 'Reset show progress',
+      description:
+        'Reset a show progress. This starts re-watching a show and allows watched progress calculations to ignore previous watches.',
+      path: '/progress/watched/reset',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: z.undefined(),
+      responses: {
+        200: z.undefined(),
+      },
+    },
+    undoReset: {
+      summary: 'Undo reset show progress',
+      description:
+        'Undo a show progress reset and restore normal watched progress calculations.',
+      path: '/progress/watched/reset',
+      method: 'DELETE',
+      pathParams: idParamsSchema,
+      responses: {
+        204: z.undefined(),
       },
     },
   },
@@ -314,6 +420,32 @@ Returns all users watching this show right now.`,
     query: extendedQuerySchemaFactory<['full']>(),
     responses: {
       200: profileResponseSchema.array(),
+    },
+  },
+  nextEpisode: {
+    summary: 'Get next episode',
+    description:
+      'Returns the next scheduled episode for a show. If no episode is found, a `204` response is returned.',
+    path: '/next_episode',
+    method: 'GET',
+    query: extendedMediaQuerySchema,
+    pathParams: idParamsSchema,
+    responses: {
+      200: episodeResponseSchema,
+      204: z.undefined(),
+    },
+  },
+  lastEpisode: {
+    summary: 'Get last episode',
+    description:
+      'Returns the most recently aired episode for a show. If no episode is found, a `204` response is returned.',
+    path: '/last_episode',
+    method: 'GET',
+    query: extendedMediaQuerySchema,
+    pathParams: idParamsSchema,
+    responses: {
+      200: episodeResponseSchema,
+      204: z.undefined(),
     },
   },
   studios: {
@@ -405,6 +537,19 @@ If you add \`?extended=episodes\` to the URL, it will return all episodes for al
     },
   },
   season: builder.router({
+    info: {
+      summary: 'Get single seasons for a show',
+      description:
+        'Returns a single season for a show including the number of episodes in that season.',
+      path: '/info',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      responses: {
+        200: seasonResponseSchema,
+      },
+    },
     episodes: {
       summary: 'Get all episodes for a single season',
       description: `#### ✨ Extended Info
@@ -422,6 +567,103 @@ If you'd like to included translated episode titles and overviews in the respons
         .merge(seasonParamsSchema),
       responses: {
         200: episodeResponseSchema.array(),
+      },
+    },
+    translations: {
+      summary: 'Get all season translations',
+      description:
+        'Returns all translations for a season, including language, country, and translated title and overview values.',
+      path: '/translations/:language',
+      method: 'GET',
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema)
+        .merge(languageParamsSchema),
+      responses: {
+        200: translationResponseSchema,
+      },
+    },
+    comments: {
+      summary: 'Get all season comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for a season. By default, comments are sorted by most \`likes\`.`,
+      path: '/comments/:sort',
+      method: 'GET',
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema)
+        .merge(commentsSortParamsSchema),
+      query: extendedProfileQuerySchema
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: commentResponseSchema.array(),
+      },
+    },
+    lists: {
+      summary: 'Get lists containing this season',
+      description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this season. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
+      path: '/lists/:type/:sort',
+      method: 'GET',
+      query: extendedProfileQuerySchema
+        .merge(pageQuerySchema),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema)
+        .merge(listSortSchema)
+        .merge(listTypeSchema),
+      responses: {
+        200: listResponseSchema.array(),
+      },
+    },
+    people: {
+      summary: 'Get all people for a season',
+      description:
+        'Returns all cast and crew for a season. Each cast member will have a characters array and a standard person object.',
+      path: '/people',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['images']>(),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      responses: {
+        200: peopleResponseSchema,
+      },
+    },
+    ratings: {
+      summary: 'Get season ratings',
+      description:
+        'Returns rating (between 0 and 10) and distribution for a season.',
+      path: '/ratings',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['all']>(),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      responses: {
+        200: ratingsResponseSchema,
+      },
+    },
+    stats: {
+      summary: 'Get season stats',
+      description: 'Returns lots of season stats.',
+      path: '/stats',
+      method: 'GET',
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      responses: {
+        200: episodeStatsResponseSchema,
+      },
+    },
+    watching: {
+      summary: 'Get users watching right now',
+      description: `#### ✨ Extended Info
+Returns all users watching this season right now.`,
+      path: '/watching',
+      method: 'GET',
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      query: extendedQuerySchemaFactory<['full']>(),
+      responses: {
+        200: profileResponseSchema.array(),
       },
     },
     videos: {
@@ -611,6 +853,79 @@ Returns the most watched (unique users) shows in the specified time \`period\`, 
     pathParams: periodParamsSchema,
     responses: {
       200: showWatchedResponseSchema.array(),
+    },
+  },
+  favorited: {
+    summary: 'Get the most favorited shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most favorited shows in the specified time \`period\`, defaulting to \`weekly\`.`,
+    path: '/favorited/:period',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    pathParams: periodParamsSchema,
+    responses: {
+      200: showWatchedResponseSchema.array(),
+    },
+  },
+  played: {
+    summary: 'Get the most played shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most played shows in the specified time \`period\`, defaulting to \`weekly\`.`,
+    path: '/played/:period',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    pathParams: periodParamsSchema,
+    responses: {
+      200: showWatchedResponseSchema.array(),
+    },
+  },
+  collected: {
+    summary: 'Get the most collected shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most collected shows in the specified time \`period\`, defaulting to \`weekly\`.`,
+    path: '/collected/:period',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    pathParams: periodParamsSchema,
+    responses: {
+      200: showWatchedResponseSchema.array(),
+    },
+  },
+  updates: {
+    summary: 'Get recently updated shows',
+    description:
+      'Returns all shows updated since the specified UTC date. We recommend storing the latest `updated_at` locally and using it for the next request.',
+    path: '/updates/:start_date',
+    method: 'GET',
+    pathParams: startDateParamsSchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: showUpdatedResponseSchema.array(),
+    },
+  },
+  updatedIds: {
+    summary: 'Get recently updated show Trakt IDs',
+    description:
+      'Returns Trakt IDs for shows updated since the specified UTC date.',
+    path: '/updates/id/:start_date',
+    method: 'GET',
+    pathParams: startDateParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
     },
   },
   anticipated: {

@@ -3,10 +3,12 @@ import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuer
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
+import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
+import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
 import {
   listedAllResponseSchema,
@@ -18,7 +20,20 @@ import { listResponseSchema } from '../_internal/response/listResponseSchema.ts'
 import { z } from '../_internal/z.ts';
 import { listReportRequestSchema } from './schema/listReportRequestSchema.ts';
 import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
-import { ignoreQuerySchema } from "../_internal/request/ignoreQuerySchema.ts";
+
+const listItemsPathParamsSchema = idParamsSchema.extend({
+  type: z.string().describe('List item type filter.'),
+  sort_by: z.string().describe('Sort by a specific property.'),
+  sort_how: z.string().describe('Sort direction.'),
+});
+
+const listCommentsSortParamsSchema = idParamsSchema.extend({
+  sort: z.string().describe('Comment sort option.'),
+});
+
+const listTypePathParamsSchema = z.object({
+  type: z.string().describe('List type filter.'),
+});
 
 const ENTITY_LEVEL = builder.router({
   summary: {
@@ -107,6 +122,41 @@ Returns movie, show, episode, and season items on a public list. Use \`id\` to i
         200: listedAllResponseSchema.array(),
       },
     },
+    typedSorted: {
+      summary: 'Get items on a list',
+      description:
+        `#### 🔥 VIP Enhanced 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`, \`episode\`, or \`person\`. You can optionally specify the \`type\` parameter with a single value or comma delimited string for multiple item types.`,
+      path: '/items/:type/:sort_by/:sort_how',
+      method: 'GET',
+      pathParams: listItemsPathParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedAllResponseSchema.array(),
+      },
+    },
+  },
+  comments: {
+    summary: 'Get all list comments',
+    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+
+Returns all top level comments for a list. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+
+> ### Note
+> _If you send OAuth, comments from blocked users will be automatically filtered out._`,
+    path: '/comments/:sort',
+    method: 'GET',
+    pathParams: listCommentsSortParamsSchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
+    responses: {
+      200: commentResponseSchema.array(),
+    },
   },
   likes: {
     summary: 'Get all users who liked a list',
@@ -186,12 +236,40 @@ Returns trending lists ordered by current activity. Use pagination and filters t
       200: prominentListResponseSchema.array(),
     },
   },
+  trendingByType: {
+    summary: 'Get trending lists',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+Returns trending lists ordered by current activity. Use \`type\`, pagination, and filters to control the result set.`,
+    path: '/trending/:type',
+    method: 'GET',
+    pathParams: listTypePathParamsSchema,
+    query: extendedQuerySchemaFactory<['full']>()
+      .merge(pageQuerySchema)
+      .merge(mediaFilterParamsSchema),
+    responses: {
+      200: prominentListResponseSchema.array(),
+    },
+  },
   popular: {
     summary: 'Get popular lists',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
 Returns popular lists ordered by long-term activity. Use pagination and filters to control the result set.`,
     path: '/popular',
     method: 'GET',
+    query: extendedQuerySchemaFactory<['full']>()
+      .merge(pageQuerySchema)
+      .merge(mediaFilterParamsSchema),
+    responses: {
+      200: prominentListResponseSchema.array(),
+    },
+  },
+  popularByType: {
+    summary: 'Get popular lists',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+Returns popular lists ordered by long-term activity. Use \`type\`, pagination, and filters to control the result set.`,
+    path: '/popular/:type',
+    method: 'GET',
+    pathParams: listTypePathParamsSchema,
     query: extendedQuerySchemaFactory<['full']>()
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema),

@@ -10,6 +10,10 @@ import { watchedMoviesResponseSchema } from '../schema/response/watchedMoviesRes
 import { watchedShowsMinimalResponseSchema } from '../schema/response/watchedShowsMinimalResponseSchema.ts';
 import { watchedShowsResponseSchema } from '../schema/response/watchedShowsResponseSchema.ts';
 
+const watchedTypeParamsSchema = profileParamsSchema.extend({
+  type: z.string().describe('Watched media type filter.'),
+});
+
 export const watched = builder.router({
   movies: {
     path: '/movies',
@@ -27,6 +31,23 @@ export const watched = builder.router({
     ),
     responses: {
       200: watchedShowsResponseSchema,
+    },
+  },
+  typed: {
+    summary: 'Get watched',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns all movies or shows a user has watched sorted by most recently watched.`,
+    path: '/:type',
+    method: 'GET',
+    pathParams: watchedTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['noseasons']>().merge(
+      showQueryParamsSchema,
+    ),
+    responses: {
+      200: z.union([
+        watchedMoviesResponseSchema,
+        watchedShowsResponseSchema,
+      ]),
     },
   },
   minimal: builder.router({

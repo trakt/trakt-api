@@ -2,11 +2,14 @@ import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
+import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
 import { z } from '../_internal/z.ts';
+import { noteResponseSchema } from '../notes/index.ts';
 import { avatarRequestSchema } from './schema/request/avatarRequestSchema.ts';
 import { commentOnTypeParamsSchema } from './schema/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts';
@@ -65,8 +68,15 @@ import { requests } from './subroutes/requests.ts';
 import { userLists } from './subroutes/userLists.ts';
 import { watched } from './subroutes/watched.ts';
 import { watchlist } from './subroutes/watchlist.ts';
-import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
-import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
+
+const userTypeParamsSchema = profileParamsSchema.extend({
+  type: z.string().describe('User media type filter.'),
+});
+
+const userCollectionItemResponseSchema = z.object({
+  type: z.string().optional(),
+  collected_at: z.string().datetime().optional(),
+}).passthrough();
 
 const GLOBAL_LEVEL = builder.router({
   settings: {
@@ -420,6 +430,51 @@ By default, only top level comments are returned. Set \`?include_replies=true\` 
       .merge(commentsRequestSchema),
     responses: {
       200: userCommentResponseSchema.array(),
+    },
+  },
+  likes: {
+    summary: 'Get likes',
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns likes for a user filtered by type.`,
+    path: '/likes/:type',
+    method: 'GET',
+    pathParams: userTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
+    responses: {
+      200: z.union([
+        likedCommentResponseSchema,
+        likedListResponseSchema,
+      ]).array(),
+    },
+  },
+  collection: {
+    summary: 'Get collection',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns collection items for a user filtered by type.`,
+    path: '/collection/:type',
+    method: 'GET',
+    pathParams: userTypeParamsSchema,
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: userCollectionItemResponseSchema.array(),
+    },
+  },
+  notes: {
+    summary: 'Get notes',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 😁 Emojis
+Returns notes for a user filtered by type.`,
+    path: '/notes/:type',
+    method: 'GET',
+    pathParams: userTypeParamsSchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: noteResponseSchema.array(),
     },
   },
   watching: {

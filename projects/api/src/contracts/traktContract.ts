@@ -3,10 +3,15 @@ import { calendars } from './calendars/index.ts';
 import { certifications } from './certifications/index.ts';
 import { checkin } from './checkin/index.ts';
 import { comments } from './comments/index.ts';
+import { countries } from './countries/index.ts';
 import { episodes } from './episodes/index.ts';
+import { genres } from './genres/index.ts';
+import { languages } from './languages/index.ts';
 import { lists } from './lists/index.ts';
 import { media } from './media/index.ts';
 import { movies } from './movies/index.ts';
+import { networks } from './networks/index.ts';
+import { notes } from './notes/index.ts';
 import { oauth } from './oauth/index.ts';
 import { people } from './people/index.ts';
 import { recommendations } from './recommendations/index.ts';
@@ -32,6 +37,7 @@ export const traktContract = builder
     social_recommendations,
     media,
     movies,
+    notes,
     shows,
     search,
     people,
@@ -41,6 +47,10 @@ export const traktContract = builder
     lists,
     comments,
     certifications,
+    countries,
+    genres,
+    languages,
+    networks,
     scrobble,
     team,
     younify,
