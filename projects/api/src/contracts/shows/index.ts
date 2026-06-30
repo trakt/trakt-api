@@ -42,6 +42,7 @@ import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
+import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
 import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
 import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
@@ -868,7 +869,7 @@ Returns the most favorited shows in the specified time \`period\`, defaulting to
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
     responses: {
-      200: showWatchedResponseSchema.array(),
+      200: showFavoritedResponseSchema.array(),
     },
   },
   played: {
@@ -1012,6 +1013,9 @@ export type ShowTrendingResponse = z.infer<typeof showTrendingResponseSchema>;
 
 export { showWatchedResponseSchema };
 export type ShowWatchedResponse = z.infer<typeof showWatchedResponseSchema>;
+
+export { showFavoritedResponseSchema };
+export type ShowFavoritedResponse = z.infer<typeof showFavoritedResponseSchema>;
 
 export type ShowStatsResponse = z.infer<typeof showStatsResponseSchema>;
 
