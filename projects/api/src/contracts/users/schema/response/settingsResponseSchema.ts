@@ -44,6 +44,7 @@ export const settingsResponseSchema = z.object({
     watch_after_rating: z.string().nullish(),
     watch_only_once: z.boolean(),
     show_rating_prompt: z.boolean().nullish(),
+    locale: z.string().nullish(),
     other_site_ratings: z.boolean(),
     release_date_ignore_runtime: z.boolean(),
     display_early_ratings: z.boolean(),
