@@ -29,6 +29,7 @@ const browsingSettingsSchema = z.object({
   dark_knight: z.enum(['true', 'false', 'auto']).nullish(),
   watch_only_once: z.boolean().nullish(),
   show_rating_prompt: z.boolean().nullish(),
+  locale: z.string().nullish(),
 });
 
 export const settingsRequestSchema = z.object({
