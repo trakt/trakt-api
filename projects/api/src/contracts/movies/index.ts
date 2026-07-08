@@ -18,6 +18,7 @@ import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParam
 import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
+import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
@@ -273,7 +274,8 @@ Returns all top level comments for a movie. By default, comments are sorted by m
     method: 'GET',
     query: extendedProfileQuerySchema
       .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
+      .merge(limitlessQuerySchema)
+      .merge(languageQuerySchema),
     pathParams: idParamsSchema.merge(commentsSortParamsSchema),
     responses: {
       200: commentResponseSchema.array(),
