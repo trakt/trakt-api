@@ -21,6 +21,7 @@ import { commentResponseSchema } from '../_internal/response/commentResponseSche
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
+import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
@@ -153,7 +154,8 @@ Returns all top level comments for an episode. By default, comments are sorted b
       .merge(commentsSortParamsSchema),
     query: extendedProfileQuerySchema
       .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
+      .merge(limitlessQuerySchema)
+      .merge(languageQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -594,7 +596,8 @@ Returns all top level comments for a season. By default, comments are sorted by 
         .merge(commentsSortParamsSchema),
       query: extendedProfileQuerySchema
         .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(limitlessQuerySchema)
+        .merge(languageQuerySchema),
       responses: {
         200: commentResponseSchema.array(),
       },
@@ -762,7 +765,8 @@ Returns all top level comments for a show. By default, comments are sorted by mo
       .merge(commentsSortParamsSchema),
     query: extendedProfileQuerySchema
       .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
+      .merge(limitlessQuerySchema)
+      .merge(languageQuerySchema),
     responses: {
       200: commentResponseSchema.array(),
     },
