@@ -2,10 +2,11 @@ import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
 import { calendarRequestParamsSchema } from './schema/request/calendarParamsSchema.ts';
 import { calendarMovieResponseSchema } from './schema/response/calendarMovieResponseSchema.ts';
 import { calendarShowResponseSchema } from './schema/response/calendarShowListResponseSchema.ts';
+import { hotReleaseResponseSchema } from './schema/response/hotReleaseResponseSchema.ts';
 
 export const calendars = builder.router({
   shows: {
@@ -106,6 +107,25 @@ Returns DVD and physical media releases during the requested UTC date range. Use
       200: calendarMovieResponseSchema.array(),
     },
   },
+  releasesHot: {
+    summary: 'Get hot releases',
+    description: `#### ✨ Extended Info 🎚 Filters
+Returns the merged feed of upcoming movies and episodes during the requested UTC date range that are trending or highly anticipated, ordered by availability date. This is the global feed only; use \`type\` to narrow to a single media type.`,
+    method: 'GET',
+    path: '/releases/hot/:start_date/:days',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(z.object({
+        type: z.enum(['movie', 'show']).optional().openapi({
+          description:
+            'Narrow the feed to a single media type. Omit to return both.',
+        }),
+      })),
+    pathParams: calendarRequestParamsSchema.omit({ target: true }),
+    responses: {
+      200: hotReleaseResponseSchema.array(),
+    },
+  },
 }, { pathPrefix: '/calendars' });
 
 export { calendarRequestParamsSchema };
@@ -118,3 +138,6 @@ export type CalendarShowResponse = z.infer<
 
 export { calendarMovieResponseSchema };
 export type CalendarMovieResponse = z.infer<typeof calendarMovieResponseSchema>;
+
+export { hotReleaseResponseSchema };
+export type HotReleaseResponse = z.infer<typeof hotReleaseResponseSchema>;
