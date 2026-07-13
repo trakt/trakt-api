@@ -107,6 +107,25 @@ Returns DVD and physical media releases during the requested UTC date range. Use
       200: calendarMovieResponseSchema.array(),
     },
   },
+  media: {
+    summary: 'Get media',
+    description: `#### ✨ Extended Info 🎚 Filters
+Returns the merged feed of movies and episodes during the requested UTC date range, ordered by availability date. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`), and \`type\` to narrow to a single media type.`,
+    method: 'GET',
+    path: '/:target/media/:start_date/:days',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(z.object({
+        type: z.enum(['movie', 'show']).optional().openapi({
+          description:
+            'Narrow the feed to a single media type. Omit to return both.',
+        }),
+      })),
+    pathParams: calendarRequestParamsSchema,
+    responses: {
+      200: hotReleaseResponseSchema.array(),
+    },
+  },
   releasesHot: {
     summary: 'Get hot releases',
     description: `#### ✨ Extended Info 🎚 Filters
