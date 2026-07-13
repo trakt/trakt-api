@@ -8,6 +8,13 @@ import { calendarMovieResponseSchema } from './schema/response/calendarMovieResp
 import { calendarShowResponseSchema } from './schema/response/calendarShowListResponseSchema.ts';
 import { hotReleaseResponseSchema } from './schema/response/hotReleaseResponseSchema.ts';
 
+const groupQuery = z.object({
+  group: z.enum(['day']).optional().openapi({
+    description:
+      'Collapse same-show-same-day episodes into a single card (`full_season` / `multiple_episodes`). Omit for one entry per episode.',
+  }),
+});
+
 export const calendars = builder.router({
   shows: {
     summary: 'Get shows',
@@ -17,7 +24,8 @@ Returns shows airing during the requested UTC date range. Use \`target\` to choo
     path: '/:target/shows/:start_date/:days',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+      .merge(ignoreQuerySchema)
+      .merge(groupQuery),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -120,7 +128,8 @@ Returns the merged feed of movies and episodes during the requested UTC date ran
           description:
             'Narrow the feed to a single media type. Omit to return both.',
         }),
-      })),
+      }))
+      .merge(groupQuery),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: hotReleaseResponseSchema.array(),
@@ -139,7 +148,8 @@ Returns the merged feed of upcoming movies and episodes during the requested UTC
           description:
             'Narrow the feed to a single media type. Omit to return both.',
         }),
-      })),
+      }))
+      .merge(groupQuery),
     pathParams: calendarRequestParamsSchema.omit({ target: true }),
     responses: {
       200: hotReleaseResponseSchema.array(),
