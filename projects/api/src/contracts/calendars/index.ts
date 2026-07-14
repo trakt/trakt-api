@@ -155,6 +155,42 @@ Returns the merged feed of upcoming movies and episodes during the requested UTC
       200: hotReleaseResponseSchema.array(),
     },
   },
+  releasesHotPremieres: {
+    summary: 'Get hot premieres',
+    description: `#### ✨ Extended Info 🎚 Filters
+Returns upcoming show premieres during the requested UTC date range that are trending or highly anticipated. Curated global feed - daily-cadence formats (soap, talk, news, game shows) and specials are excluded.`,
+    method: 'GET',
+    path: '/releases/hot/premieres/:start_date/:days',
+    query: extendedMediaQuerySchema.merge(mediaFilterParamsSchema),
+    pathParams: calendarRequestParamsSchema.omit({ target: true }),
+    responses: {
+      200: calendarShowResponseSchema.array(),
+    },
+  },
+  releasesHotFinales: {
+    summary: 'Get hot finales',
+    description: `#### ✨ Extended Info 🎚 Filters
+Returns upcoming show finales during the requested UTC date range that are trending or highly anticipated. Curated global feed - daily-cadence formats (soap, talk, news, game shows) and specials are excluded.`,
+    method: 'GET',
+    path: '/releases/hot/finales/:start_date/:days',
+    query: extendedMediaQuerySchema.merge(mediaFilterParamsSchema),
+    pathParams: calendarRequestParamsSchema.omit({ target: true }),
+    responses: {
+      200: calendarShowResponseSchema.array(),
+    },
+  },
+  releasesHotNew: {
+    summary: 'Get hot new shows',
+    description: `#### ✨ Extended Info 🎚 Filters
+Returns upcoming series premieres during the requested UTC date range that are trending or highly anticipated. Curated global feed - daily-cadence formats (soap, talk, news, game shows) and specials are excluded.`,
+    method: 'GET',
+    path: '/releases/hot/new/:start_date/:days',
+    query: extendedMediaQuerySchema.merge(mediaFilterParamsSchema),
+    pathParams: calendarRequestParamsSchema.omit({ target: true }),
+    responses: {
+      200: calendarShowResponseSchema.array(),
+    },
+  },
 }, { pathPrefix: '/calendars' });
 
 export { calendarRequestParamsSchema };
