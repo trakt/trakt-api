@@ -5,5 +5,5 @@ export const favoritedMoviesResponseSchema = z.object({
   id: z.number().int(),
   listed_at: z.string().datetime(),
   notes: z.string().nullish(),
-  rank: z.number().int(),
+  rank: z.number().int()
 }).merge(typedMovieResponseSchema);
