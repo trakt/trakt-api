@@ -1,9 +1,20 @@
 name: The Rite of Ascension aka Publish to JSR
 
+# Version is driven by the git tag, not by `deno.json` (which stays at the
+# `0.0.0` placeholder). Push a `vX.Y.Z` or `X.Y.Z` tag - the workflow extracts
+# the version, writes it into `deno.json`, and publishes to JSR via OIDC
+# (tokenless, with provenance).
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*.*.*'
+      - '[0-9]*.*.*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish, e.g. 0.5.2'
+        required: true
+        type: string
 
 concurrency:
   group: publish-jsr
@@ -26,11 +37,29 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: The Reading of the Sign aka Resolve Version
+        id: version
+        run: |
+          RAW="${{ github.event.inputs.version || github.ref_name }}"
+          VERSION="${RAW#v}"
+          if ! printf '%s' "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Invalid version '$VERSION' (from '$RAW'). Expected x.y.z or vx.y.z."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: The Inscription aka Set Version
+        run: |
+          sed -i -E "s/\"version\": \"[^\"]*\"/\"version\": \"${{ steps.version.outputs.version }}\"/" projects/api/deno.json
+          grep '"version"' projects/api/deno.json
+
       - name: The Sacred Assembly aka Install Dependencies
         run: deno task install
 
       - name: The Transcription aka Generate Static Types
         run: cd projects/api && deno task build:types
 
+      # `--allow-dirty`: the version was injected into deno.json above, so the
+      # working tree intentionally differs from the tagged commit.
       - name: The Offering aka Publish
-        run: cd projects/api && deno publish
+        run: cd projects/api && deno publish --allow-dirty
