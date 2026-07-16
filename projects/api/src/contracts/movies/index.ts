@@ -42,6 +42,7 @@ import {
 } from '../_internal/response/watchNowResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
+import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
 import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
 import { movieStreamingResponseSchema } from './schema/response/movieStreamingResponseSchema.ts';
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
@@ -379,7 +380,7 @@ Returns the most favorited movies in the specified time \`period\`, defaulting t
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
     responses: {
-      200: movieWatchedResponseSchema.array(),
+      200: movieFavoritedResponseSchema.array(),
     },
   },
   played: {
@@ -540,6 +541,11 @@ export type MovieTrendingResponse = z.infer<
 export { movieWatchedResponseSchema };
 export type MovieWatchedResponse = z.infer<
   typeof movieWatchedResponseSchema
+>;
+
+export { movieFavoritedResponseSchema };
+export type MovieFavoritedResponse = z.infer<
+  typeof movieFavoritedResponseSchema
 >;
 
 export { movieAnticipatedResponseSchema };
