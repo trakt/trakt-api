@@ -1,6 +1,8 @@
 import { initContract } from '@ts-rest/core';
 
-export const builder = initContract();
+// Explicit type keeps JSR/tsc from inlining ts-rest's internal (unnameable)
+// contract type into the emitted declarations.
+export const builder: ReturnType<typeof initContract> = initContract();
 
 export type AuthRequirement = 'none' | 'optional' | 'required';
 

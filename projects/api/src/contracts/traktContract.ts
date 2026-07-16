@@ -27,7 +27,40 @@ import { users } from './users/index.ts';
 import { watchnow } from './watchnow/index.ts';
 import { younify } from './younify/index.ts';
 
-export const traktContract = builder
+// Explicit type built from per-domain `typeof` references. The fully inferred
+// aggregate exceeds TypeScript's declaration-serialization limit (TS7056);
+// referencing each domain by name keeps the emitted type static and precise.
+type TraktContract = {
+  oauth: typeof oauth;
+  calendars: typeof calendars;
+  checkin: typeof checkin;
+  users: typeof users;
+  sync: typeof sync;
+  recommendations: typeof recommendations;
+  social_recommendations: typeof social_recommendations;
+  media: typeof media;
+  movies: typeof movies;
+  notes: typeof notes;
+  shows: typeof shows;
+  search: typeof search;
+  people: typeof people;
+  watchnow: typeof watchnow;
+  seasons: typeof seasons;
+  episodes: typeof episodes;
+  lists: typeof lists;
+  smart_lists: typeof smartLists;
+  comments: typeof comments;
+  certifications: typeof certifications;
+  countries: typeof countries;
+  genres: typeof genres;
+  languages: typeof languages;
+  networks: typeof networks;
+  scrobble: typeof scrobble;
+  team: typeof team;
+  younify: typeof younify;
+};
+
+export const traktContract: TraktContract = builder
   .router({
     oauth,
     calendars,
