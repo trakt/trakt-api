@@ -62,4 +62,36 @@ async function copyDeclarations(dir: string): Promise<void> {
 await copyDeclarations(esm);
 await Deno.remove(tmp, { recursive: true });
 
+// `mod.js` uses `@ts-self-types` to point at `types/index.d.ts`, so JSR reads
+// the module doc from there - not from `mod.js`. tsc drops module-level JSDoc
+// on emit, so prepend it back onto the generated entry declaration.
+const moduleDoc = `/**
+ * Fully typed [ts-rest](https://ts-rest.com) contract and client for the
+ * [Trakt API](https://trakt.docs.apiary.io), backed by Zod schemas.
+ *
+ * \`traktApi()\` returns a client with precise request/response types for every
+ * endpoint; the individual Zod schemas and inferred model types are also
+ * exported for validation and reuse.
+ *
+ * @example
+ * \`\`\`ts
+ * import { traktApi } from '@trakt/api';
+ *
+ * const client = traktApi({ apiKey: '<client-id>' });
+ *
+ * const res = await client.movies.summary({ params: { id: 'tron-legacy-2010' } });
+ * if (res.status === 200) {
+ *   console.log(res.body.title); // fully typed
+ * }
+ * \`\`\`
+ *
+ * @module
+ */
+`;
+const indexDts = join(typesDir, 'index.d.ts');
+await Deno.writeTextFile(
+  indexDts,
+  moduleDoc + await Deno.readTextFile(indexDts),
+);
+
 console.log(`Wrote ${count} declaration files to ./types`);
