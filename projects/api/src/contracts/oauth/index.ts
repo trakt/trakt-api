@@ -82,23 +82,30 @@ This method will send various HTTP status codes that you should handle according
 });
 
 export { codeRequestSchema };
+/** The o auth device code request payload. */
 export type OAuthDeviceCodeRequest = z.infer<typeof codeRequestSchema>;
 
 export { codeResponseSchema };
+/** The o auth device code response payload. */
 export type OAuthDeviceCodeResponse = z.infer<typeof codeResponseSchema>;
 
 export { deviceTokenRequestSchema };
+/** The o auth device token request payload. */
 export type OAuthDeviceTokenRequest = z.infer<typeof deviceTokenRequestSchema>;
 
 export { tokenRequestSchema };
+/** The o auth token request payload. */
 export type OAuthTokenRequest = z.infer<typeof tokenRequestSchema>;
 
 export { tokenRefreshSchema };
+/** The o auth token refresh type. */
 export type OAuthTokenRefresh = z.infer<typeof tokenRefreshSchema>;
 
 export { tokenResponseSchema };
+/** The o auth token response payload. */
 export type OAuthTokenResponse = z.infer<typeof tokenResponseSchema>;
 
+/** ts-rest contract for the `oauth` endpoints. */
 export const oauth = builder
   .router({
     authorize: {

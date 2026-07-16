@@ -3,6 +3,7 @@ import { seasonIdsResponseSchema } from '../../../_internal/response/seasonIdsRe
 import { statsResponseSchema } from '../../../_internal/response/statsResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the show progress response. */
 export const showProgressResponseSchema = progressResponseSchema.extend({
   seasons: z.array(
     z.object({

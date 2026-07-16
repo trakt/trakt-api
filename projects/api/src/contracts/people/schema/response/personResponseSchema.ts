@@ -2,6 +2,7 @@ import { crewPositionResponseSchema } from '../../../_internal/response/crewPosi
 import { socialIdsResponseSchema } from '../../../_internal/response/socialIdsResponseSchema.ts';
 import { asString, z } from '../../../_internal/z.ts';
 
+/** Zod schema for the person response. */
 export const personResponseSchema = z.object({
   name: z.string(),
   ids: z.object({

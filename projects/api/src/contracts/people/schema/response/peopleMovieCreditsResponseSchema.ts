@@ -4,6 +4,7 @@ import { jobsResponseSchema } from '../../../_internal/response/jobsResponseSche
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the people movie credits response. */
 export const peopleMovieCreditsResponseSchema = z.object({
   cast: z.array(
     z.object({

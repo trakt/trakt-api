@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the progress parameters. */
 export const progressParamsSchema = z.object({
   start_at: z.string().optional().openapi({
     description: 'Start date for the range. Must be formatted as "YYYY-MM-DD".',

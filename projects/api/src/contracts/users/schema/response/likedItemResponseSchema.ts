@@ -63,6 +63,7 @@ const likedExtendedCommentResponseSchema = z.union(
   ],
 );
 
+/** Zod schema for the liked comment response. */
 export const likedCommentResponseSchema = z.object({
   liked_at: z.string().datetime(),
   type: z.literal('comment'),
@@ -70,9 +71,10 @@ export const likedCommentResponseSchema = z.object({
    * When using extended 'min', only the id is returned
    */
   comment: commentResponseSchema.partial()
-    .extend({ id: z.number().int() }).nullish()
+    .extend({ id: z.number().int() }).nullish(),
 }).and(likedExtendedCommentResponseSchema);
 
+/** Zod schema for the liked list response. */
 export const likedListResponseSchema = z.object({
   liked_at: z.string().datetime(),
   type: z.literal('list'),

@@ -1,5 +1,6 @@
 import { z } from '../z.ts';
 
+/** Zod schema for the media filter parameters. */
 export const mediaFilterParamsSchema = z.object({
   watchnow: z.enum([
     'favorites',

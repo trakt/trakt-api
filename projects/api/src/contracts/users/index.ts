@@ -660,6 +660,7 @@ type UsersRouter = ReturnType<
   typeof builder.router<UsersInput, '/users', { pathPrefix: '/users' }>
 >;
 
+/** ts-rest contract for the `users` endpoints. */
 export const users = builder.router({
   ...GLOBAL_LEVEL,
   syncs,
@@ -733,69 +734,112 @@ export {
   watchingResponseSchema,
 };
 
+/** The profile parameters. */
 export type ProfileParams = z.infer<typeof profileParamsSchema>;
+/** The user report request payload. */
 export type UserReportRequest = z.infer<typeof userReportRequestSchema>;
+/** The settings response payload. */
 export type SettingsResponse = z.infer<typeof settingsResponseSchema>;
 
+/** The sort direction type. */
 export type SortDirection = z.infer<typeof sortDirectionSchema>;
+/** The sort type type. */
 export type SortType = z.infer<typeof sortEnumSchema>;
 
+/** The watch action type. */
 export type WatchAction = z.infer<typeof watchActionSchema>;
 
+/** The liked comment item response payload. */
 export type LikedCommentItemResponse = z.infer<
   typeof likedCommentResponseSchema
 >;
+/** The liked list item response payload. */
 export type LikedListItemResponse = z.infer<typeof likedListResponseSchema>;
 
+/** The social activity response payload. */
 export type SocialActivityResponse = z.infer<
   typeof socialActivityResponseSchema
 >;
+/** The follower response payload. */
 export type FollowerResponse = z.infer<
   typeof followerResponseSchema
 >;
+/** The follow response payload. */
 export type FollowResponse = z.infer<typeof followResponseSchema>;
+/** The blocked user response payload. */
 export type BlockedUserResponse = z.infer<typeof blockedUserResponseSchema>;
+/** The friend response payload. */
 export type FriendResponse = z.infer<typeof friendResponseSchema>;
 
+/** The user stats response payload. */
 export type UserStatsResponse = z.infer<typeof userStatsResponseSchema>;
 
+/** The comment type parameters. */
 export type CommentTypeParams = z.infer<typeof commentTypeParamsSchema>;
+/** The comment on type parameters. */
 export type CommentOnTypeParams = z.infer<typeof commentOnTypeParamsSchema>;
+/** The comment request payload. */
 export type CommentRequest = z.infer<typeof commentsRequestSchema>;
+/** The user comment response payload. */
 export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
 
+/** The watching response payload. */
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
+/** The avatar request payload. */
 export type AvatarRequest = z.infer<typeof avatarRequestSchema>;
+/** The cover request payload. */
 export type CoverRequest = z.infer<typeof coverRequestSchema>;
+/** The settings request payload. */
 export type SettingsRequest = z.infer<typeof settingsRequestSchema>;
 
+/** The month in review parameters. */
 export type MonthInReviewParams = z.infer<typeof monthInReviewParamsSchema>;
+/** The month in review response payload. */
 export type MonthInReviewResponse = z.infer<typeof monthInReviewResponseSchema>;
+/** The year in review parameters. */
 export type YearInReviewParams = z.infer<typeof yearInReviewParamsSchema>;
+/** The year in review response payload. */
 export type YearInReviewResponse = z.infer<typeof yearInReviewResponseSchema>;
 
+/** The reacted comment response payload. */
 export type ReactedCommentResponse = z.infer<
   typeof reactedCommentResponseSchema
 >;
 
+/** The sync response payload. */
 export type SyncResponse = z.infer<typeof syncSchema>;
+/** The sync item response payload. */
 export type SyncItemResponse = z.infer<typeof syncItemSchema>;
+/** The sync type parameters. */
 export type SyncTypeParams = z.infer<typeof syncTypeParamsSchema>;
+/** The sync id parameters. */
 export type SyncIdParams = z.infer<typeof syncIdParamsSchema>;
 
+/** The plex settings response payload. */
 export type PlexSettingsResponse = z.infer<typeof plexSettingsResponseSchema>;
+/** The plex settings update request payload. */
 export type PlexSettingsUpdateRequest = z.infer<
   typeof plexSettingsUpdateSchema
 >;
+/** The plex connect request payload. */
 export type PlexConnectRequest = z.infer<typeof plexConnectRequestSchema>;
+/** The plex connect response payload. */
 export type PlexConnectResponse = z.infer<typeof plexConnectResponseSchema>;
+/** The plex servers response payload. */
 export type PlexServersResponse = z.infer<typeof plexServersResponseSchema>;
+/** The plex server type. */
 export type PlexServer = z.infer<typeof plexServerSchema>;
+/** The plex server accounts response payload. */
 export type PlexServerAccountsResponse = z.infer<
   typeof plexServerAccountsResponseSchema
 >;
+/** The plex account type. */
 export type PlexAccount = z.infer<typeof plexAccountSchema>;
+/** The plex library type. */
 export type PlexLibrary = z.infer<typeof plexLibrarySchema>;
+/** The plex server parameters. */
 export type PlexServerParams = z.infer<typeof plexServerParamsSchema>;
+/** The plex sync request payload. */
 export type PlexSyncRequest = z.infer<typeof plexSyncRequestSchema>;
+/** The plex error type. */
 export type PlexError = z.infer<typeof plexErrorResponseSchema>;

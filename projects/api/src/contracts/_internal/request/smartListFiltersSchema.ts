@@ -3,6 +3,7 @@ import { z } from '../z.ts';
 const list = z.array(z.string());
 const range = z.array(z.number()).max(2);
 
+/** Zod schema for smart list filters. */
 export const smartListFiltersSchema = z.object({
   genres: list.optional(),
   subgenres: list.optional(),

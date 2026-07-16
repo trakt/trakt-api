@@ -26,6 +26,7 @@ const episodeIdsSchema = allMediaIdsSchema.omit({
   tmdb: true,
 });
 
+/** Zod schema for the show ids request. */
 export const showIdsRequestSchema = z.union([
   showMediaIdsSchema.extend({ trakt: z.number().int() }),
   showMediaIdsSchema.extend({ slug: z.string() }),
@@ -34,6 +35,7 @@ export const showIdsRequestSchema = z.union([
   showMediaIdsSchema.extend({ tvdb: z.number().int() }),
 ]);
 
+/** Zod schema for the movie ids request. */
 export const movieIdsRequestSchema = z.union([
   movieMediaIdsSchema.extend({ trakt: z.number().int() }),
   movieMediaIdsSchema.extend({ slug: z.string() }),
@@ -41,12 +43,14 @@ export const movieIdsRequestSchema = z.union([
   movieMediaIdsSchema.extend({ tmdb: z.number().int() }),
 ]);
 
+/** Zod schema for the season ids request. */
 export const seasonIdsRequestSchema = z.union([
   seasonIdsSchema.extend({ trakt: z.number().int() }),
   seasonIdsSchema.extend({ tmdb: z.string() }),
   seasonIdsSchema.extend({ tvdb: z.number().int() }),
 ]);
 
+/** Zod schema for the episode ids request. */
 export const episodeIdsRequestSchema = z.union([
   episodeIdsSchema.extend({ trakt: z.number().int() }),
   episodeIdsSchema.extend({ tvdb: z.number().int() }),

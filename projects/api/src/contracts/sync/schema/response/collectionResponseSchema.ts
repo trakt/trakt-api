@@ -20,12 +20,14 @@ const collectedItemSchema = z.object({
   updated_at: z.string().datetime(),
 }).merge(availableOnSchema);
 
+/** Zod schema for collected movie. */
 export const collectedMovieSchema = z.object({
   type: z.literal('movie'),
   movie: movieResponseSchema.nullish(),
 })
   .merge(collectedItemSchema);
 
+/** Zod schema for collected episode. */
 export const collectedEpisodeSchema = z.object({
   type: z.literal('episode'),
   episode: episodeResponseSchema.nullish(),
@@ -43,6 +45,7 @@ const collectedSeasonResponseSchema = z.object({
   episodes: collectedSeasonEpisodeSchema.array(),
 });
 
+/** Zod schema for collected show. */
 export const collectedShowSchema = z.object({
   last_collected_at: z.string().datetime().nullish(),
   last_updated_at: z.string().datetime().nullish(),
@@ -53,6 +56,7 @@ export const collectedShowSchema = z.object({
     show: showResponseSchema.nullish(),
   }));
 
+/** Zod schema for the collection response. */
 export const collectionResponseSchema = z.union([
   collectedMovieSchema,
   collectedShowSchema,

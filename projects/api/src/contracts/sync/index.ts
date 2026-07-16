@@ -655,6 +655,7 @@ Returns the authenticated user episode collection in a minimal format optimized 
   pathPrefix: '/collection',
 });
 
+/** ts-rest contract for the `sync` endpoints. */
 export const sync = builder.router({
   lastActivities: {
     summary: 'Get last activity',
@@ -709,39 +710,61 @@ export {
   upNextResponseSchema,
 };
 
+/** The up next response payload. */
 export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
+/** The movie progress response payload. */
 export type MovieProgressResponse = z.infer<typeof movieProgressResponseSchema>;
+/** The up next intent request payload. */
 export type UpNextIntentRequest = z.infer<typeof upNextIntentQuerySchema>;
 
+/** The history add request payload. */
 export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
+/** The history remove request payload. */
 export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
+/** The history response payload. */
 export type HistoryResponse = z.infer<typeof historyResponseSchema>;
+/** The history remove response payload. */
 export type HistoryRemoveResponse = z.infer<typeof historyRemoveResponseSchema>;
+/** The last activities response payload. */
 export type LastActivitiesResponse = z.infer<
   typeof lastActivitiesResponseSchema
 >;
 
+/** The watchlist request payload. */
 export type WatchlistRequest = z.infer<typeof listRequestSchema>;
 
+/** The ratings sync request payload. */
 export type RatingsSyncRequest = z.infer<typeof ratingsParamSchema>;
+/** The ratings sync response payload. */
 export type RatingsSyncResponse = z.infer<typeof ratingsSyncResponseSchema>;
 
+/** The favorites request payload. */
 export type FavoritesRequest = z.infer<typeof favoriteParamSchema>;
+/** The favorites response payload. */
 export type FavoritesResponse = z.infer<typeof favoritesResponseSchema>;
+/** The favorites remove response payload. */
 export type FavoritesRemoveResponse = z.infer<
   typeof favoritesRemoveResponseSchema
 >;
 
+/** The collection request payload. */
 export type CollectionRequest = z.infer<typeof collectionParamSchema>;
+/** The collection response payload. */
 export type CollectionResponse = z.infer<typeof collectionResponseSchema>;
+/** The collection movie response payload. */
 export type CollectionMovieResponse = z.infer<typeof collectedMovieSchema>;
+/** The collection show response payload. */
 export type CollectionShowResponse = z.infer<typeof collectedShowSchema>;
+/** The collection episode response payload. */
 export type CollectionEpisodeResponse = z.infer<typeof collectedEpisodeSchema>;
+/** The collection minimal response payload. */
 export type CollectionMinimalResponse = z.infer<
   typeof collectionMinimalResponseSchema
 >;
+/** The collection minimal show response payload. */
 export type CollectionMinimalShowResponse = z.infer<
   typeof collectionMinimalShowResponseSchema
 >;
 
+/** The remove ratings parameters. */
 export type RemoveRatingsParams = z.infer<typeof removeRatingsParamSchema>;

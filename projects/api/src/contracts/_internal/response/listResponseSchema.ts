@@ -4,6 +4,7 @@ import { listPrivacyEnumSchema } from './listPrivacyEnumSchema.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';
 import { sortDirectionSchema } from './sortDirectionSchema.ts';
 
+/** Zod schema for the list response. */
 export const listResponseSchema = z.object({
   name: z.string(),
   description: z.string().nullish(),

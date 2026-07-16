@@ -1,3 +1,4 @@
+/** Trakt API environment base URLs to target with {@link traktApi}. */
 export enum Environment {
   production_private = 'https://apiz.trakt.tv',
   production = 'https://api.trakt.tv',

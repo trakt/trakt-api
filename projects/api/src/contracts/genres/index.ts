@@ -6,6 +6,7 @@ const genreTypeParamsSchema = z.object({
   type: z.string().describe('Media type to return genres for.'),
 });
 
+/** Zod schema for the genre response. */
 export const genreResponseSchema = z.object({
   name: z.string(),
   slug: z.string(),
@@ -15,6 +16,7 @@ export const genreResponseSchema = z.object({
   })).optional(),
 });
 
+/** ts-rest contract for the `genres` endpoints. */
 export const genres = builder.router({
   list: {
     summary: 'Get genres',
@@ -35,4 +37,5 @@ Send \`?extended=subgenres\` to get a list of subgenres for each genre. You can 
   pathPrefix: '/genres',
 });
 
+/** The genre response payload. */
 export type GenreResponse = z.infer<typeof genreResponseSchema>;

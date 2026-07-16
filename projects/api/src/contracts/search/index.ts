@@ -53,6 +53,7 @@ const idLookupQuerySchema = z.object({
   type: z.string().optional().describe('Optional media type filter.'),
 });
 
+/** ts-rest contract for the `search` endpoints. */
 export const search = builder.router({
   query: {
     summary: 'Get text query results',
@@ -168,37 +169,46 @@ Returns globally trending recent searches by \`type\`. Use \`query\` to narrow t
 });
 
 export { searchEngineSchema, searchQuerySchema };
+/** The search query parameters. */
 export type SearchQueryParams = z.infer<typeof searchQuerySchema>;
 export { searchResultResponseSchema };
+/** The search result response payload. */
 export type SearchResultResponse = z.infer<typeof searchResultResponseSchema>;
 export { searchTypeParamFactory };
 
 export { searchMovieResponseSchema } from './schema/response/searchMovieResponseSchema.ts';
+/** The search movie result response payload. */
 export type SearchMovieResultResponse = z.infer<
   typeof searchMovieResponseSchema
 >;
 export { searchShowResponseSchema } from './schema/response/searchShowResponseSchema.ts';
+/** The search show result response payload. */
 export type SearchShowResultResponse = z.infer<typeof searchShowResponseSchema>;
 
 export { searchPersonResponseSchema } from './schema/response/searchPersonResponseSchema.ts';
+/** The search person result response payload. */
 export type SearchPersonResultResponse = z.infer<
   typeof searchPersonResponseSchema
 >;
 
 export { trendingSearchMovieResponseSchema } from './schema/response/trendingSearchMovieResponseSchema.ts';
+/** The trending search movie result response payload. */
 export type TrendingSearchMovieResultResponse = z.infer<
   typeof trendingSearchMovieResponseSchema
 >;
 
 export { trendingSearchShowResponseSchema } from './schema/response/trendingSearchShowResponseSchema.ts';
+/** The trending search show result response payload. */
 export type TrendingSearchShowResultResponse = z.infer<
   typeof trendingSearchShowResponseSchema
 >;
 
 export { trendingSearchPersonResponseSchema } from './schema/response/trendingSearchPersonResponseSchema.ts';
+/** The trending search person result response payload. */
 export type TrendingSearchPersonResultResponse = z.infer<
   typeof trendingSearchPersonResponseSchema
 >;
 
 export { recentSearchRequestSchema };
+/** The recent search request payload. */
 export type RecentSearchRequest = z.infer<typeof recentSearchRequestSchema>;

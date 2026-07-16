@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';
 
+/** Zod schema for the comment response. */
 export const commentResponseSchema = z.object({
   id: z.number().int(),
   parent_id: z.number().int(),

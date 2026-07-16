@@ -6,6 +6,7 @@ import { checkin409ErrorResponse } from './schema/response/checkin409ErrorRespon
 import { movieCheckinResponseSchema } from './schema/response/movieCheckinResponseSchema.ts';
 import { showCheckinResponseSchema } from './schema/response/showCheckinResponseSchema.ts';
 
+/** ts-rest contract for the `checkin` endpoints. */
 export const checkin = builder.router({
   start: {
     summary: 'Check into an item',
@@ -57,16 +58,21 @@ Removes any active checkins, no need to provide a specific item.`,
 });
 
 export { showCheckinRequestSchema };
+/** The show checkin request payload. */
 export type ShowCheckinRequest = z.infer<typeof showCheckinRequestSchema>;
 
 export { showCheckinResponseSchema };
+/** The show checkin response payload. */
 export type ShowCheckinResponse = z.infer<typeof showCheckinResponseSchema>;
 
 export { movieCheckinRequestSchema };
+/** The movie checkin request payload. */
 export type MovieCheckinRequest = z.infer<typeof movieCheckinRequestSchema>;
 
 export { movieCheckinResponseSchema };
+/** The movie checkin response payload. */
 export type MovieCheckinResponse = z.infer<typeof movieCheckinResponseSchema>;
 
 export { checkin409ErrorResponse };
+/** The checkin409 error response payload. */
 export type Checkin409ErrorResponse = z.infer<typeof checkin409ErrorResponse>;

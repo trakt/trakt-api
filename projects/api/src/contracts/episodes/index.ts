@@ -7,6 +7,7 @@ import { watchNowParamsSchema } from '../_internal/request/watchNowParamsSchema.
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 
+/** ts-rest contract for the `episodes` endpoints. */
 export const episodes = builder.router({
   watchnow: {
     summary: 'Get episode watch now sources',

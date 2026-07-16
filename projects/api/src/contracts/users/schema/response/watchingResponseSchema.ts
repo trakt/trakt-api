@@ -22,6 +22,7 @@ const episodeWatchingResponseSchema = commonWatchingResponseSchema
     show: showResponseSchema.nullish(),
   }));
 
+/** Zod schema for the watching response. */
 export const watchingResponseSchema = z.union([
   movieWatchingResponseSchema,
   episodeWatchingResponseSchema,

@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { countryParamsSchema } from './countryParamsSchema.ts';
 
+/** Zod schema for the watch now parameters. */
 export const watchNowParamsSchema = z.object({
   id: z.string().or(z.number().int()).openapi({
     description:

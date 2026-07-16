@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { smartListFiltersSchema } from './smartListFiltersSchema.ts';
 
+/** Zod schema for smart list write. */
 export const smartListWriteSchema = z.object({
   name: z.string().min(1),
   source: z.enum([

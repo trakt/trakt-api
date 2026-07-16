@@ -30,6 +30,7 @@ export * from './contracts/younify/index.ts';
 
 export { Environment, traktContract };
 
+/** Options for constructing a Trakt API client via {@link traktApi}. */
 export type TraktApiOptions = {
   /**
    * Trakt API environment target (production, staging, development)
@@ -58,10 +59,12 @@ export type TraktApiOptions = {
   cancellationId?: string;
 };
 
+/** A fully typed Trakt API client, as returned by {@link traktApi}. */
 export type TraktApi = ReturnType<typeof traktApiFactory>;
 
 const controllers = new Map<string, AbortController>();
 
+/** Error thrown when an in-flight request is aborted by a newer one with the same cancellation id. */
 export class AbortError extends Error {
   constructor(message: string) {
     super(message);
@@ -103,6 +106,7 @@ function createCancellationHandler(cancellable: boolean, id: string) {
   };
 }
 
+/** Aborts every in-flight request whose cancellation id matches `matcher`, with the given `reason`. */
 export function abortRequest(matcher: (id: string) => boolean, reason: Error) {
   for (const [id, controller] of controllers) {
     if (!matcher(id)) {
@@ -113,6 +117,10 @@ export function abortRequest(matcher: (id: string) => boolean, reason: Error) {
   }
 }
 
+/**
+ * Builds a Trakt API client bound to the given environment and credentials.
+ * Prefer {@link traktApi}, which defaults `environment` to production.
+ */
 export function traktApiFactory({
   environment,
   apiKey,
@@ -178,6 +186,20 @@ export function traktApiFactory({
   });
 }
 
+/**
+ * Creates a fully typed Trakt API client.
+ *
+ * @example
+ * ```ts
+ * import { traktApi } from '@trakt/api';
+ *
+ * const client = traktApi({ apiKey: '<client-id>' });
+ * const res = await client.movies.summary({ params: { id: 'tron-legacy-2010' } });
+ * if (res.status === 200) {
+ *   console.log(res.body.title);
+ * }
+ * ```
+ */
 export function traktApi({
   environment = Environment.production,
   apiKey,

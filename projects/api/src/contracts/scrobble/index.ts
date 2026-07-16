@@ -5,6 +5,7 @@ import { movieScrobbleRequestSchema } from './schema/request/movieScrobbleReques
 import { episodeScrobbleResponseSchema } from './schema/response/episodeScrobbleResponseSchema.ts';
 import { movieScrobbleResponseSchema } from './schema/response/movieScrobbleResponseSchema.ts';
 
+/** ts-rest contract for the `scrobble` endpoints. */
 export const scrobble = builder.router({
   start: {
     summary: 'Start watching in a media center',
@@ -83,11 +84,15 @@ export {
   movieScrobbleResponseSchema,
 };
 
+/** The movie scrobble request payload. */
 export type MovieScrobbleRequest = z.infer<typeof movieScrobbleRequestSchema>;
+/** The movie scrobble response payload. */
 export type MovieScrobbleResponse = z.infer<typeof movieScrobbleResponseSchema>;
+/** The episode scrobble request payload. */
 export type EpisodeScrobbleRequest = z.infer<
   typeof episodeScrobbleRequestSchema
 >;
+/** The episode scrobble response payload. */
 export type EpisodeScrobbleResponse = z.infer<
   typeof episodeScrobbleResponseSchema
 >;

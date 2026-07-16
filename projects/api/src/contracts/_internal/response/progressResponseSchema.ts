@@ -2,6 +2,7 @@ import { z } from '../z.ts';
 import { episodeResponseSchema } from './episodeResponseSchema.ts';
 import { statsResponseSchema } from './statsResponseSchema.ts';
 
+/** Zod schema for the progress response. */
 export const progressResponseSchema = z.object({
   aired: z.number().int(),
   completed: z.number().int(),

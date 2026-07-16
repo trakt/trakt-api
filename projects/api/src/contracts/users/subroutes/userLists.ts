@@ -362,6 +362,7 @@ Report a list for moderator review. Send a \`reason\` and optional \`message\` w
   pathPrefix: '/:list_id',
 });
 
+/** ts-rest contract for the `userLists` endpoints. */
 export const userLists = builder.router({
   personal: {
     summary: "Get a user's personal lists",
@@ -441,16 +442,23 @@ Lists will be \`private\` by default. Here is what each value means.
   pathPrefix: '/:id/lists',
 });
 
+/** The reorder request payload. */
 export type ReorderRequest = z.infer<typeof reorderRequestSchema>;
+/** The reorder lists response payload. */
 export type ReorderListsResponse = z.infer<typeof reorderListsResponseSchema>;
+/** The reorder list response schema type. */
 export type ReorderListResponseSchema = z.infer<
   typeof reorderListResponseSchema
 >;
 
+/** The list comments sort parameters. */
 export type ListCommentsSortParams = z.infer<
   typeof listCommentsSortParamsSchema
 >;
+/** The list request payload. */
 export type ListRequest = z.infer<typeof listRequestSchema>;
+/** The list update request payload. */
 export type ListUpdateRequest = z.infer<typeof listUpdateRequestSchema>;
 
+/** The create list request payload. */
 export type CreateListRequest = z.infer<typeof createListRequestSchema>;

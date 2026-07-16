@@ -21,6 +21,7 @@ const historyMovieSchema = z.object({
   movie: movieResponseSchema.nullish(),
 });
 
+/** Zod schema for the activity history response. */
 export const activityHistoryResponseSchema = z.union([
   historyBaseSchema.merge(historyEpisodeSchema),
   historyBaseSchema.merge(historyMovieSchema),

@@ -2,6 +2,7 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 import { userProfileWithNotesSchema } from './userProfileWithNotesSchema.ts';
 
+/** Recommended show response. */
 export const recommendedShowResponse = z.array(
   showResponseSchema
     .extend({

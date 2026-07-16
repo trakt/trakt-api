@@ -31,11 +31,13 @@ const listedEpisodeSchema = listMetadataResponseSchema
     show: showResponseSchema.nullish(),
   }));
 
+/** Zod schema for the listed media response. */
 export const listedMediaResponseSchema = z.union([
   listedMovieSchema,
   listedShowSchema,
 ]);
 
+/** Zod schema for the listed all response. */
 export const listedAllResponseSchema = z.union([
   listedMovieSchema,
   listedShowSchema,

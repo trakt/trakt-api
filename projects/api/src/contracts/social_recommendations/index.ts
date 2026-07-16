@@ -36,6 +36,7 @@ Returns show recommendations based on the authenticated user social graph. Use \
   },
 }, { pathPrefix: '/shows' });
 
+/** ts-rest contract for the `social_recommendations` endpoints. */
 export const social_recommendations = builder.router({
   movies,
   shows,

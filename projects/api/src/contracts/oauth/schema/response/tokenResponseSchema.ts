@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the token response. */
 export const tokenResponseSchema = z.object({
   access_token: z.string(),
   token_type: z.string(),

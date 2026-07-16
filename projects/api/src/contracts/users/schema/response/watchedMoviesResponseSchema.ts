@@ -1,6 +1,7 @@
 import { movieIdsResponseSchema } from '../../../_internal/response/movieIdsResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the watched movies response. */
 export const watchedMoviesResponseSchema = z.array(
   z.object({
     plays: z.number().int(),

@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { videoTypeEnumSchema } from './videoTypeEnumSchema.ts';
 
+/** Zod schema for the video response. */
 export const videoResponseSchema = z.object({
   title: z.string(),
   url: z.string(),

@@ -993,6 +993,7 @@ Returns shows recently available on streaming services for the requested \`perio
   },
 });
 
+/** ts-rest contract for the `shows` endpoints. */
 export const shows = builder.router({
   ...ENTITY_LEVEL,
   ...GLOBAL_LEVEL,
@@ -1000,43 +1001,55 @@ export const shows = builder.router({
   pathPrefix: '/shows',
 });
 
+/** The show id parameters. */
 export type ShowIdParams = z.infer<typeof idParamsSchema>;
 
 export { showResponseSchema };
+/** The show response payload. */
 export type ShowResponse = z.infer<typeof showResponseSchema>;
 
 export { showProgressResponseSchema };
+/** The show progress response payload. */
 export type ShowProgressResponse = z.infer<typeof showProgressResponseSchema>;
 
 export { showQueryParamsSchema };
+/** The show query parameters. */
 export type ShowQueryParams = z.infer<typeof showQueryParamsSchema>;
 
 export { showTrendingResponseSchema };
+/** The show trending response payload. */
 export type ShowTrendingResponse = z.infer<typeof showTrendingResponseSchema>;
 
 export { showWatchedResponseSchema };
+/** The show watched response payload. */
 export type ShowWatchedResponse = z.infer<typeof showWatchedResponseSchema>;
 
+/** The show stats response payload. */
 export type ShowStatsResponse = z.infer<typeof showStatsResponseSchema>;
 
 export { showAnticipatedResponseSchema };
+/** The show anticipated response payload. */
 export type ShowAnticipatedResponse = z.infer<
   typeof showAnticipatedResponseSchema
 >;
 
 export { showHotResponseSchema };
+/** The show hot response payload. */
 export type ShowHotResponse = z.infer<
   typeof showHotResponseSchema
 >;
 
+/** The show certification response payload. */
 export type ShowCertificationResponse = z.infer<
   typeof showCertificationResponseSchema
 >;
 
 export { seasonResponseSchema };
+/** The seasons response payload. */
 export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
 
 export { showStreamingResponseSchema };
+/** The show streaming response payload. */
 export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;
 
 export { episodeParamsSchema };
@@ -1044,4 +1057,5 @@ export { episodeParamsSchema };
 export { seasonParamsSchema };
 
 export { mediaReportRequestSchema };
+/** The media report request payload. */
 export type MediaReportRequest = z.infer<typeof mediaReportRequestSchema>;

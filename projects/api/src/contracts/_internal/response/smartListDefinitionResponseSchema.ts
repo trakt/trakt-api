@@ -1,6 +1,7 @@
 import { smartListFiltersSchema } from '../request/smartListFiltersSchema.ts';
 import { z } from '../z.ts';
 
+/** Zod schema for the smart list definition response. */
 export const smartListDefinitionResponseSchema = z.object({
   name: z.string(),
   privacy: z.string(),

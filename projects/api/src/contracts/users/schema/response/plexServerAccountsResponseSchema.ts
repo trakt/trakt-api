@@ -1,10 +1,12 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for plex account. */
 export const plexAccountSchema = z.object({
   id: z.number().int(),
   name: z.string(),
 });
 
+/** Zod schema for plex library. */
 export const plexLibrarySchema = z.object({
   id: z.number().int(),
   uuid: z.string(),
@@ -19,6 +21,7 @@ export const plexLibrarySchema = z.object({
   url: z.string(),
 });
 
+/** Zod schema for the plex server accounts response. */
 export const plexServerAccountsResponseSchema = z.object({
   accounts: plexAccountSchema.array().openapi({
     description:

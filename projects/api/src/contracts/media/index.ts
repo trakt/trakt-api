@@ -8,6 +8,7 @@ import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipat
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
 
+/** ts-rest contract for the `media` endpoints. */
 export const media = builder.router({
   trending: {
     summary: 'Get trending media',
@@ -55,8 +56,11 @@ Returns popular movies and shows. Results can be filtered by media fields or ign
   pathPrefix: '/media',
 });
 
+/** The media popular response payload. */
 export type MediaPopularResponse = z.infer<typeof mediaPopularResponseSchema>;
+/** The media trending response payload. */
 export type MediaTrendingResponse = z.infer<typeof mediaTrendingResponseSchema>;
+/** The media anticipated response payload. */
 export type MediaAnticipatedResponse = z.infer<
   typeof mediaAnticipatedResponseSchema
 >;

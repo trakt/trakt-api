@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the calendar request parameters. */
 export const calendarRequestParamsSchema = z.object({
   target: z.enum(['my', 'all']).openapi({
     description:

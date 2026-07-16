@@ -63,6 +63,7 @@ const accountActivitiesSchema = z.object({
   requested_at: timestampSchema,
 });
 
+/** Zod schema for the last activities response. */
 export const lastActivitiesResponseSchema = z.object({
   all: timestampSchema,
   movies: movieActivitiesSchema,

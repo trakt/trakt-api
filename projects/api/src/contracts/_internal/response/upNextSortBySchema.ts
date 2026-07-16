@@ -1,5 +1,6 @@
 import { z } from '../z.ts';
 
+/** Zod schema for up next sort by. */
 export const upNextSortBySchema = z.enum([
   'activity',
   'added',

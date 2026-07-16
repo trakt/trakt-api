@@ -4,6 +4,7 @@ import {
 } from '../../../_internal/request/idsRequestSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for favorite param. */
 export const favoriteParamSchema = z.object({
   movies: z.array(
     z.object({ ids: movieIdsRequestSchema }),

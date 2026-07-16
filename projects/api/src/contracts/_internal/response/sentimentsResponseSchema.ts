@@ -5,6 +5,7 @@ const sentimentResponseSchema = z.object({
   comment_ids: z.array(z.number().int()).nullish(),
 });
 
+/** Zod schema for the sentiments response. */
 export const sentimentsResponseSchema = z.object({
   bad: sentimentResponseSchema.array(),
   good: sentimentResponseSchema.array(),

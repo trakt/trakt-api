@@ -16,6 +16,7 @@ const fullStatsResponseSchema = extendedStatsResponseSchema.extend({
   minutes: z.number().int(),
 });
 
+/** Zod schema for the user stats response. */
 export const userStatsResponseSchema = z.object({
   seasons: simpleStatsResponseSchema,
   shows: extendedStatsResponseSchema,

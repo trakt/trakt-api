@@ -62,6 +62,7 @@ const addEpisodeToHistorySchema = z
     ids: episodeIdsRequestSchema,
   }).merge(watchedAtSchema);
 
+/** Zod schema for the bulk media request. */
 export const bulkMediaRequestSchema = z.object({
   movies: z.array(addMovieToHistorySchema).nullish(),
   shows: z.array(addShowToHistorySchema).nullish(),

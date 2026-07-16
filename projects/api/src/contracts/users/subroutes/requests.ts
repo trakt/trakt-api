@@ -5,6 +5,7 @@ import { z } from '../../_internal/z.ts';
 import { followerResponseSchema } from '../schema/response/followerResponseSchema.ts';
 import { requestsResponseSchema } from '../schema/response/requestsResponseSchema.ts';
 
+/** ts-rest contract for the `requests` endpoints. */
 export const requests = builder.router({
   follow: {
     summary: 'Get follow requests',
@@ -58,4 +59,5 @@ Deny a follower using the \`id\` of the request. If the \`id\` is not found, was
   pathPrefix: '/requests',
 });
 
+/** The requests response payload. */
 export type RequestsResponse = z.infer<typeof requestsResponseSchema>;

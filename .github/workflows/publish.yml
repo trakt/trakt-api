@@ -1,0 +1,36 @@
+name: The Rite of Ascension aka Publish to JSR
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: publish-jsr
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: The Offering aka Publish @trakt/api
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required for JSR provenance via OIDC.
+      id-token: write
+    steps:
+      - name: The Oracle's Gaze aka Checkout Code
+        uses: actions/checkout@v4
+
+      - name: The Summoning aka Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: The Sacred Assembly aka Install Dependencies
+        run: deno task install
+
+      - name: The Transcription aka Generate Static Types
+        run: cd projects/api && deno task build:types
+
+      - name: The Offering aka Publish
+        run: cd projects/api && deno publish

@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the show query parameters. */
 export const showQueryParamsSchema = z.object({
   hidden: z.boolean().nullish().openapi({
     description: 'Whether to include any hidden seasons',

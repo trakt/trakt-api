@@ -19,6 +19,7 @@ const typedSortedWatchlistParamsSchema = profileParamsSchema.extend({
   sort_how: z.string().describe('Sort direction.'),
 });
 
+/** ts-rest contract for the `watchlist` endpoints. */
 export const watchlist = builder.router({
   movies: {
     summary: 'Get movie watchlist',

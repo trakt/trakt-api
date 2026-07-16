@@ -94,6 +94,7 @@ const streamingServicesSchema = z.object({
 
 // Shared by both the month- and year-in-review endpoints. Year in Review does
 // not include `streaming_services` (the catalog scan is bounded to a month).
+/** Zod schema for review base. */
 export const reviewBaseSchema = z.object({
   stats: z.object({
     all: statsCategoriesSchema.merge(z.object({
@@ -113,6 +114,7 @@ export const reviewBaseSchema = z.object({
   thanks: thanksSchema,
 });
 
+/** Zod schema for the month in review response. */
 export const monthInReviewResponseSchema = reviewBaseSchema.merge(z.object({
   streaming_services: streamingServicesSchema,
 }));

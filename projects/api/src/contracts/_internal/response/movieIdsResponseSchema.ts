@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { streamingIdsResponseSchema } from './streamingIdsResponseSchema.ts';
 
+/** Zod schema for the movie ids response. */
 export const movieIdsResponseSchema = z.object({
   trakt: z.number().int(),
   slug: z.string(),

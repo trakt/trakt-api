@@ -1,6 +1,7 @@
 import type { CombinationsFrom } from '../../../../types/CombinationsFrom.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Search type param factory. */
 export const searchTypeParamFactory = <T extends string[]>(): z.ZodObject<{
   type: z.ZodOptional<z.ZodNullable<z.ZodType<CombinationsFrom<T>>>>;
 }> =>

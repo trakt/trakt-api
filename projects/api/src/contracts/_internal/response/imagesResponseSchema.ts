@@ -1,5 +1,6 @@
 import { z } from '../z.ts';
 
+/** Zod schema for the images response. */
 export const imagesResponseSchema = z
   .object({
     fanart: z.array(z.string()),

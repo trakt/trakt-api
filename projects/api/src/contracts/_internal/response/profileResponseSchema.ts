@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 
 // FIXME: split up in user profile, and official user
+/** Zod schema for the profile response. */
 export const profileResponseSchema = z.object({
   username: z.string(),
   private: z.boolean(),

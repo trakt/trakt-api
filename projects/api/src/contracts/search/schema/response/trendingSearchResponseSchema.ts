@@ -3,6 +3,7 @@ import { trendingSearchMovieResponseSchema } from './trendingSearchMovieResponse
 import { trendingSearchPersonResponseSchema } from './trendingSearchPersonResponseSchema.ts';
 import { trendingSearchShowResponseSchema } from './trendingSearchShowResponseSchema.ts';
 
+/** Zod schema for the trending search response. */
 export const trendingSearchResponseSchema = z.union([
   trendingSearchMovieResponseSchema,
   trendingSearchShowResponseSchema,
