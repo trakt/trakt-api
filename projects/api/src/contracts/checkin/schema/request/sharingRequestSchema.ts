@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the sharing request. */
 export const sharingRequestSchema = z
   .object({
     twitter: z.boolean().nullish(),

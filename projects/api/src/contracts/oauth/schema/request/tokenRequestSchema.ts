@@ -1,6 +1,7 @@
 import { z } from '../../../_internal/z.ts';
 import { tokenBaseSchema } from './tokenBaseSchema.ts';
 
+/** Zod schema for the token request. */
 export const tokenRequestSchema = tokenBaseSchema.extend({
   code: z.string({
     description:

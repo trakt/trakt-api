@@ -5,6 +5,7 @@ import {
   watchNowSourcesResponseSchema,
 } from './schema/response/watchNowSourcesResponseSchema.ts';
 
+/** ts-rest contract for the `watchnow` endpoints. */
 export const watchnow = builder.router({
   sources: {
     all: {
@@ -37,9 +38,11 @@ export const watchnow = builder.router({
 
 export { watchNowSourceResponseSchema, watchNowSourcesResponseSchema };
 
+/** The watch now sources response payload. */
 export type WatchNowSourcesResponse = z.infer<
   typeof watchNowSourcesResponseSchema
 >;
+/** The watch now source response payload. */
 export type WatchNowSourceResponse = z.infer<
   typeof watchNowSourceResponseSchema
 >;

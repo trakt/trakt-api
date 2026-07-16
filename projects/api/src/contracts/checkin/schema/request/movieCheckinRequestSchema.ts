@@ -4,6 +4,7 @@ import {
 import { z } from '../../../_internal/z.ts';
 import { sharingRequestSchema } from './sharingRequestSchema.ts';
 
+/** Zod schema for the movie checkin request. */
 export const movieCheckinRequestSchema = z.object({
   movie: z.object({
     title: z.string().nullish(),

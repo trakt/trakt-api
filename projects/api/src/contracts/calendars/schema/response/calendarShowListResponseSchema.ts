@@ -2,6 +2,7 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 import { calendarEpisodeResponseSchema } from './calendarEpisodeResponseSchema.ts';
 
+/** Zod schema for the calendar show response. */
 export const calendarShowResponseSchema = z.object({
   first_aired: z.string(),
   episode: calendarEpisodeResponseSchema,

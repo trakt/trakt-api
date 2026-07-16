@@ -2,6 +2,7 @@ import { episodeIdsResponseSchema } from '../../../_internal/response/episodeIds
 import { showIdsResponseSchema } from '../../../_internal/response/showIdsResponseSchema.ts';
 import { int64, z } from '../../../_internal/z.ts';
 
+/** Zod schema for the show checkin response. */
 export const showCheckinResponseSchema = z.object({
   id: int64(z.number().int()),
   watched_at: z.string().datetime(),

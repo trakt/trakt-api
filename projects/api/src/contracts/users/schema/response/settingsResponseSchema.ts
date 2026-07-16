@@ -4,6 +4,7 @@ import { sortDirectionSchema } from '../../../_internal/response/sortDirectionSc
 import { upNextSortBySchema } from '../../../_internal/response/upNextSortBySchema.ts';
 import { watchActionSchema } from './watchActionSchema.ts';
 
+/** Zod schema for the settings response. */
 export const settingsResponseSchema = z.object({
   user: z.object({
     username: z.string(),

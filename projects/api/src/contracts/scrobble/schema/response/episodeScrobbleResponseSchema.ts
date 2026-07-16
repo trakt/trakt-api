@@ -2,6 +2,7 @@ import { episodeResponseSchema } from '../../../_internal/response/episodeRespon
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { asString, float, int64, z } from '../../../_internal/z.ts';
 
+/** Zod schema for the episode scrobble response. */
 export const episodeScrobbleResponseSchema = z.object({
   id: int64(z.number().int()),
   progress: float(z.number()),

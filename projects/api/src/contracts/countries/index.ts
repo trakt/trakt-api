@@ -5,11 +5,13 @@ const countryTypeParamsSchema = z.object({
   type: z.string().describe('Media type to return countries for.'),
 });
 
+/** Zod schema for the country response. */
 export const countryResponseSchema = z.object({
   name: z.string(),
   code: z.string(),
 });
 
+/** ts-rest contract for the `countries` endpoints. */
 export const countries = builder.router({
   list: {
     summary: 'Get countries',
@@ -25,4 +27,5 @@ export const countries = builder.router({
   pathPrefix: '/countries',
 });
 
+/** The country response payload. */
 export type CountryResponse = z.infer<typeof countryResponseSchema>;

@@ -34,12 +34,14 @@ const episodeVariantSchema = z.object({
   show: showVariantSchema.nullable(),
 });
 
+/** Zod schema for trakt item. */
 export const traktItemSchema = z.discriminatedUnion('type', [
   movieVariantSchema,
   showVariantSchema,
   episodeVariantSchema,
 ]);
 
+/** Zod schema for sync item. */
 export const syncItemSchema = z.object({
   kind: z.enum(['history', 'rating']).openapi({
     description:

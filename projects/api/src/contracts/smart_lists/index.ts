@@ -15,6 +15,7 @@ const listItemsPathParamsSchema = listParamsSchema.extend({
   sort_how: z.string().describe('Sort direction.'),
 });
 
+/** ts-rest contract for the `smartLists` endpoints. */
 export const smartLists = builder.router({
   summary: {
     summary: 'Get smart list',
@@ -52,4 +53,5 @@ Returns the dynamic items a smart list resolves to. Use \`type\`, \`sort_by\`, a
   pathPrefix: '/smart-lists',
 });
 
+/** The smart list item response payload. */
 export type SmartListItemResponse = z.infer<typeof smartListItemResponseSchema>;

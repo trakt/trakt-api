@@ -17,6 +17,7 @@ const historyTypedItemParamsSchema = profileParamsSchema
     type: z.string().describe('History media type filter.'),
   });
 
+/** ts-rest contract for the `history` endpoints. */
 export const history = builder.router({
   all: {
     summary: 'Get watched history',
@@ -140,15 +141,19 @@ Returns watched history entries for one item. Use \`type\`, \`item_id\`, \`start
   pathPrefix: '/:id/history',
 });
 
+/** The movie activity history response payload. */
 export type MovieActivityHistoryResponse = z.infer<
   typeof movieActivityHistoryResponseSchema
 >;
+/** The show activity history response payload. */
 export type ShowActivityHistoryResponse = z.infer<
   typeof showActivityHistoryResponseSchema
 >;
+/** The activity history response payload. */
 export type ActivityHistoryResponse = z.infer<
   typeof activityHistoryResponseSchema
 >;
+/** The episode activity history response payload. */
 export type EpisodeActivityHistoryResponse = z.infer<
   typeof episodeActivityHistoryResponseSchema
 >;

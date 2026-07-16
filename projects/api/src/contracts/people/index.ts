@@ -157,6 +157,7 @@ const GLOBAL_LEVEL = builder.router({
   },
 });
 
+/** ts-rest contract for the `people` endpoints. */
 export const people = builder.router({
   ...GLOBAL_LEVEL,
   ...ENTITY_LEVEL,
@@ -165,6 +166,7 @@ export const people = builder.router({
 });
 
 export { personResponseSchema };
+/** The person response payload. */
 export type PersonResponse = z.infer<
   typeof personResponseSchema
 >;
@@ -174,10 +176,13 @@ export { peopleMovieCreditsResponseSchema };
 export { peopleShowCreditsResponseSchema };
 
 export { peopleReportRequestSchema };
+/** The people report request payload. */
 export type PeopleReportRequest = z.infer<typeof peopleReportRequestSchema>;
+/** The people movie credits response payload. */
 export type PeopleMovieCreditsResponse = z.infer<
   typeof peopleMovieCreditsResponseSchema
 >;
+/** The people show credits response payload. */
 export type PeopleShowCreditsResponse = z.infer<
   typeof peopleShowCreditsResponseSchema
 >;

@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the sync id parameters. */
 export const syncIdParamsSchema = z.object({
   id: z.number().int().openapi({
     description:

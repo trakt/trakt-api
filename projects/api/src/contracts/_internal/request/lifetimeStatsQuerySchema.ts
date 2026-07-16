@@ -1,5 +1,6 @@
 import { z } from '../z.ts';
 
+/** Zod schema for the lifetime stats query parameters. */
 export const lifetimeStatsQuerySchema = z.object({
   lifetime_stats: z.boolean().optional().openapi({
     description:

@@ -7,6 +7,7 @@ const countBlock = z.object({
   seasons: z.number().int().optional(),
 });
 
+/** Zod schema for sync. */
 export const syncSchema = z.object({
   id: z.number().int(),
   created_at: z.string().datetime().openapi({

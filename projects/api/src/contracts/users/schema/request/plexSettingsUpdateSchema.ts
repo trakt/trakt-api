@@ -14,6 +14,7 @@ import {
 // Mirrors the GET shape so it round-trips. Every key is optional and omitted
 // toggle keys are left unchanged server-side (no clobbering), so each toggle
 // group is a partial of its response counterpart.
+/** Zod schema for plex settings update. */
 export const plexSettingsUpdateSchema = z.object({
   sync: z.object({
     selection: z.object({

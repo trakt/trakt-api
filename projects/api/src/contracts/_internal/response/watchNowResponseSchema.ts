@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { watchNowRankResponseSchema } from './watchNowRankResponseSchema.ts';
 
+/** Zod schema for the watch now service response. */
 export const watchNowServiceResponseSchema = z.object({
   source: z.string(),
   link: z.string(),
@@ -33,6 +34,7 @@ export const watchNowServiceResponseSchema = z.object({
   }).nullish(),
 });
 
+/** Zod schema for the watch now response. */
 export const watchNowResponseSchema = z.record(
   z.string(),
   z.object({

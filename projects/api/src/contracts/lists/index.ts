@@ -279,6 +279,7 @@ Returns popular lists ordered by long-term activity. Use \`type\`, pagination, a
   },
 });
 
+/** ts-rest contract for the `lists` endpoints. */
 export const lists = builder.router({
   ...GLOBAL_LEVEL,
   ...ENTITY_LEVEL,
@@ -288,7 +289,9 @@ export const lists = builder.router({
 
 export { prominentListResponseSchema };
 
+/** The prominent list response payload. */
 export type ProminentListResponse = z.infer<typeof prominentListResponseSchema>;
 
 export { listReportRequestSchema };
+/** The list report request payload. */
 export type ListReportRequest = z.infer<typeof listReportRequestSchema>;

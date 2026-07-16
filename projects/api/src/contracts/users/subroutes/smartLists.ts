@@ -48,6 +48,7 @@ Remove a smart list.`,
   pathPrefix: '/:list_id',
 });
 
+/** ts-rest contract for the `smartLists` endpoints. */
 export const smartLists = builder.router({
   personal: {
     summary: "Get a user's smart lists",
@@ -85,10 +86,13 @@ Create a new smart list. A smart list is a dynamic list driven by a \`source\` a
   pathPrefix: '/:id/smart-lists',
 });
 
+/** The smart list write request payload. */
 export type SmartListWriteRequest = z.infer<typeof smartListWriteSchema>;
+/** The smart list definition response payload. */
 export type SmartListDefinitionResponse = z.infer<
   typeof smartListDefinitionResponseSchema
 >;
+/** The smart list create response payload. */
 export type SmartListCreateResponse = z.infer<
   typeof smartListCreateResponseSchema
 >;

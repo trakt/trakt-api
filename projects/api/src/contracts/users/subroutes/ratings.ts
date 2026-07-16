@@ -10,6 +10,7 @@ const typedRatingParamsSchema = profileParamsSchema.extend({
   rating: z.string().describe('Rating filter from 1 to 10.'),
 });
 
+/** ts-rest contract for the `ratings` endpoints. */
 export const ratings = builder.router({
   movies: {
     summary: 'Get movie ratings',
@@ -80,4 +81,5 @@ Returns all ratings by a user including each rating value and when it was rated.
   pathPrefix: '/:id/ratings',
 });
 
+/** The rated item response payload. */
 export type RatedItemResponse = z.infer<typeof RatedItemResponseSchema>;

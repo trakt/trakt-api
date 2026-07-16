@@ -23,6 +23,7 @@ const socialMovieResponseSchema = z.object({
   movie: movieResponseSchema.nullish(),
 });
 
+/** Zod schema for the social activity response. */
 export const socialActivityResponseSchema = z.union([
   activitySchema.merge(socialEpisodeResponseSchema),
   activitySchema.merge(socialMovieResponseSchema),

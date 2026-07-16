@@ -2,6 +2,7 @@ import { commentResponseSchema } from '../../../_internal/response/commentRespon
 import { reactionEnumSchema } from '../../../_internal/response/reactionsResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the reacted comment response. */
 export const reactedCommentResponseSchema = z.object({
   reacted_at: z.string().datetime(),
   reaction: z.object({

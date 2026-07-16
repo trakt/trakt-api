@@ -1,5 +1,6 @@
 import { float, z } from '../z.ts';
 
+/** Zod schema for the distribution response. */
 export const distributionResponseSchema = z.object({
   1: float(z.number()),
   2: float(z.number()),

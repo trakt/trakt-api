@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the device token request. */
 export const deviceTokenRequestSchema = z.object({
   code: z.string({
     description:

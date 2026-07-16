@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the date range parameters. */
 export const dateRangeParamsSchema = z.object({
   start_at: z.string().datetime().nullish()
     .openapi({

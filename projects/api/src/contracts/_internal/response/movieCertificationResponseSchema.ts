@@ -1,5 +1,6 @@
 import { asString, z } from '../z.ts';
 
+/** Zod schema for the movie certification response. */
 export const movieCertificationResponseSchema = asString(z.enum([
   // In the data, there are entries with the value 'undefined'
   'undefined',

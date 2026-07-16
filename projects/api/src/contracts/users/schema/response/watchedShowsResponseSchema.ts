@@ -1,6 +1,7 @@
 import { showIdsResponseSchema } from '../../../_internal/response/showIdsResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the watched shows response. */
 export const watchedShowsResponseSchema = z.array(z.object({
   plays: z.number().int(),
   last_watched_at: z.string().datetime(),

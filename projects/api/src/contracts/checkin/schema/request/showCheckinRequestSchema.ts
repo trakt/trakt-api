@@ -31,6 +31,7 @@ const episodeWithShowCheckinRequestSchema = z.object({
   message: z.string().nullish(),
 });
 
+/** Zod schema for the show checkin request. */
 export const showCheckinRequestSchema = z.union([
   episodeCheckinRequestSchema,
   showAbsoluteCheckinRequestSchema,

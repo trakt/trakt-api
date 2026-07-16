@@ -7,6 +7,7 @@ const idOnlySchema = z.object({
   }),
 }).nullish();
 
+/** Zod schema for the comment post parameters. */
 export const commentPostParamsSchema = commentReplyParamsSchema.and(
   z.union([
     z.object({ movie: idOnlySchema }),

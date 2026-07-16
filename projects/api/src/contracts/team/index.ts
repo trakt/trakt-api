@@ -3,6 +3,7 @@ import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySc
 import type { z } from '../_internal/z.ts';
 import { teamMemberResponseSchema } from './schema/response/teamMemberResponseSchema.ts';
 
+/** ts-rest contract for the `team` endpoints. */
 export const team = builder.router({
   members: {
     summary: 'Get team members',
@@ -20,4 +21,5 @@ Returns Trakt team members. Use \`extended\` to include additional person detail
 });
 
 export { teamMemberResponseSchema };
+/** The team member response payload. */
 export type TeamMemberResponse = z.infer<typeof teamMemberResponseSchema>;

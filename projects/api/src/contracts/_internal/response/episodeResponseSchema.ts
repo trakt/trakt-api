@@ -2,6 +2,7 @@ import { float, z } from '../z.ts';
 import { episodeIdsResponseSchema } from './episodeIdsResponseSchema.ts';
 import { showResponseSchema } from './showResponseSchema.ts';
 
+/** Zod schema for the episode response. */
 export const episodeResponseSchema = z.object({
   season: z.number().int(),
   number: z.number().int(),
@@ -73,6 +74,7 @@ export const episodeResponseSchema = z.object({
     .nullish(),
 });
 
+/** Zod schema for the typed episode response. */
 export const typedEpisodeResponseSchema = z.object({
   type: z.literal('episode'),
   episode: episodeResponseSchema,

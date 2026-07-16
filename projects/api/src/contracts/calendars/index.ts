@@ -15,6 +15,7 @@ const groupQuery = z.object({
   }),
 });
 
+/** ts-rest contract for the `calendars` endpoints. */
 export const calendars = builder.router({
   shows: {
     summary: 'Get shows',
@@ -194,15 +195,19 @@ Returns upcoming series premieres during the requested UTC date range that are t
 }, { pathPrefix: '/calendars' });
 
 export { calendarRequestParamsSchema };
+/** The calendar parameters. */
 export type CalendarParams = z.infer<typeof calendarRequestParamsSchema>;
 
 export { calendarShowResponseSchema };
+/** The calendar show response payload. */
 export type CalendarShowResponse = z.infer<
   typeof calendarShowResponseSchema
 >;
 
 export { calendarMovieResponseSchema };
+/** The calendar movie response payload. */
 export type CalendarMovieResponse = z.infer<typeof calendarMovieResponseSchema>;
 
 export { hotReleaseResponseSchema };
+/** The hot release response payload. */
 export type HotReleaseResponse = z.infer<typeof hotReleaseResponseSchema>;

@@ -14,6 +14,7 @@ const watchedTypeParamsSchema = profileParamsSchema.extend({
   type: z.string().describe('Watched media type filter.'),
 });
 
+/** ts-rest contract for the `watched` endpoints. */
 export const watched = builder.router({
   movies: {
     path: '/movies',
@@ -86,13 +87,17 @@ Returns shows watched by a user in a minimal paginated format. Use \`specials\` 
   pathPrefix: '/:id/watched',
 });
 
+/** The watched movies response payload. */
 export type WatchedMoviesResponse = z.infer<typeof watchedMoviesResponseSchema>;
+/** The watched shows response payload. */
 export type WatchedShowsResponse = z.infer<typeof watchedShowsResponseSchema>;
 
+/** The watched movies minimal response payload. */
 export type WatchedMoviesMinimalResponse = z.infer<
   typeof watchedMoviesMinimalResponseSchema
 >;
 
+/** The watched shows minimal response payload. */
 export type WatchedShowsMinimalResponse = z.infer<
   typeof watchedShowsMinimalResponseSchema
 >;

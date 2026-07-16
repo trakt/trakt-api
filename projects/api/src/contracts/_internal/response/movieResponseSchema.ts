@@ -7,6 +7,7 @@ import { movieIdsResponseSchema } from './movieIdsResponseSchema.ts';
 import { socialIdsResponseSchema } from './socialIdsResponseSchema.ts';
 import { statusResponseSchema } from './statusResponseSchema.ts';
 
+/** Zod schema for the movie response. */
 export const movieResponseSchema = z.object({
   title: z.string(),
   year: z.number().int().nullish(),
@@ -110,6 +111,7 @@ export const movieResponseSchema = z.object({
   social_ids: socialIdsResponseSchema.nullish(),
 });
 
+/** Zod schema for the typed movie response. */
 export const typedMovieResponseSchema = z.object({
   type: z.literal('movie'),
   movie: movieResponseSchema,

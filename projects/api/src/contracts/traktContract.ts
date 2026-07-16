@@ -60,6 +60,7 @@ type TraktContract = {
   younify: typeof younify;
 };
 
+/** ts-rest contract for the `traktContract` endpoints. */
 export const traktContract: TraktContract = builder
   .router({
     oauth,

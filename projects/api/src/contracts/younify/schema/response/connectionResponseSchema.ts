@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for connection. */
 export const connectionSchema = z.object({
   id: z.string().openapi({
     description: 'The streaming service id (e.g. `netflix`).',

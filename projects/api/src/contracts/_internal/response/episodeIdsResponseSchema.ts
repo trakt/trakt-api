@@ -1,6 +1,7 @@
 import { z } from '../z.ts';
 import { streamingIdsResponseSchema } from './streamingIdsResponseSchema.ts';
 
+/** Zod schema for the episode ids response. */
 export const episodeIdsResponseSchema = z.object({
   trakt: z.number().int(),
   tvdb: z.number().int().nullish(),

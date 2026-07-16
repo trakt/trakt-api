@@ -6,6 +6,7 @@ const externalRatingsResponseSchema = z.object({
   link: z.string().nullish(),
 });
 
+/** Zod schema for the ratings response. */
 export const ratingsResponseSchema = z.object({
   trakt: z.object({
     rating: float(z.number()),

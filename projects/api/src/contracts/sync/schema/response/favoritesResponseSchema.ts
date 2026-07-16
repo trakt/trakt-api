@@ -1,6 +1,7 @@
 import { z } from '../../../_internal/z.ts';
 import { favoriteParamSchema } from '../request/favoritesParamSchema.ts';
 
+/** Zod schema for the favorites response. */
 export const favoritesResponseSchema = z.object({
   added: z.object({
     movies: z.number().int(),

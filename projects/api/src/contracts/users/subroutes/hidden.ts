@@ -13,6 +13,7 @@ const hiddenTypeQuerySchema = z.object({
   type: z.string().optional().describe('Hidden item type filter.'),
 });
 
+/** ts-rest contract for the `hidden` endpoints. */
 export const hidden = builder.router({
   add: {
     summary: 'Add hidden items',
@@ -121,7 +122,9 @@ Remove hidden items for a specific section. Send hideable media objects in the r
   pathPrefix: '/hidden',
 });
 
+/** The hidden show item response payload. */
 export type HiddenShowItemResponse = z.infer<
   typeof hiddenShowResponseSchema
 >;
+/** The hidden media request payload. */
 export type HiddenMediaRequest = z.infer<typeof bulkMediaRequestSchema>;

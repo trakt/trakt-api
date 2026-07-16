@@ -1,6 +1,7 @@
 import type { CombinationsFrom } from '../../../../types/CombinationsFrom.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Trending search type param factory. */
 export const trendingSearchTypeParamFactory = <
   T extends string[],
 >(): z.ZodObject<{

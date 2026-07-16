@@ -6,6 +6,7 @@ import {
 } from '../../../_internal/request/idsRequestSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for remove ratings param. */
 export const removeRatingsParamSchema = z.object({
   movies: z.array(z.object({ ids: movieIdsRequestSchema })).nullish(),
   shows: z.array(z.object({ ids: showIdsRequestSchema })).nullish(),

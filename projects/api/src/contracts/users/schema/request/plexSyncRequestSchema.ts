@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the plex sync request. */
 export const plexSyncRequestSchema = z.object({
   server_id: z.string().optional().openapi({
     description:

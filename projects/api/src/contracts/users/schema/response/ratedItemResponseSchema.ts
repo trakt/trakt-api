@@ -37,6 +37,7 @@ const ratedShowsResponseSchema = ratedResponseSchema
     show: showResponseSchema.nullish(),
   }));
 
+/** Zod schema for the rated item response. */
 export const RatedItemResponseSchema = z.union([
   ratedEpisodesResponseSchema,
   ratedMoviesResponseSchema,

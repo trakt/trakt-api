@@ -1,6 +1,7 @@
 import { typedMovieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the favorited movies response. */
 export const favoritedMoviesResponseSchema = z.object({
   id: z.number().int(),
   listed_at: z.string().datetime(),

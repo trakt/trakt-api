@@ -1,6 +1,7 @@
 import { z } from '../../../_internal/z.ts';
 import { tokenBaseSchema } from './tokenBaseSchema.ts';
 
+/** Zod schema for token refresh. */
 export const tokenRefreshSchema = tokenBaseSchema.extend({
   refresh_token: z.string({
     description:

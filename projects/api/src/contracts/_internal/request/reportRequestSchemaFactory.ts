@@ -1,5 +1,6 @@
 import { z } from '../z.ts';
 
+/** Report request schema factory. */
 export const reportRequestSchemaFactory = <
   const T extends readonly [string, ...string[]],
 >(reasons: T) =>

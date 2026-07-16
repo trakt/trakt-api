@@ -18,6 +18,7 @@
     "include": [
       "mod.ts",
       "deno.json",
+      "README.md",
       "src",
       "types"
     ],

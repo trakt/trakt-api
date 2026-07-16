@@ -6,10 +6,12 @@ import {
 } from '../../../_internal/request/idsRequestSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for media rating. */
 export const mediaRatingSchema = z.object({
   rating: z.number().int().min(1).max(10),
 });
 
+/** Zod schema for ratings param. */
 export const ratingsParamSchema = z.object({
   movies: z.array(
     mediaRatingSchema

@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the plex error response. */
 export const plexErrorResponseSchema = z.object({
   error_code: z.string().openapi({
     description:

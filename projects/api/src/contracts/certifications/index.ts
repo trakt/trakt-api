@@ -11,6 +11,7 @@ const certificationTypeParamsSchema = z.object({
   ),
 });
 
+/** ts-rest contract for the `certifications` endpoints. */
 export const certifications = builder.router({
   list: {
     summary: 'Get certifications',
@@ -52,9 +53,11 @@ export const certifications = builder.router({
 
 export { movieCertificationsResponseSchema, showCertificationsResponseSchema };
 
+/** The movie certifications response payload. */
 export type MovieCertificationsResponse = z.infer<
   typeof movieCertificationsResponseSchema
 >;
+/** The show certifications response payload. */
 export type ShowCertificationsResponse = z.infer<
   typeof showCertificationsResponseSchema
 >;

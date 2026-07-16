@@ -5,6 +5,7 @@ import { showResponseSchema } from '../../../_internal/response/showResponseSche
 import { z } from '../../../_internal/z.ts';
 import { seasonResponseSchema } from '../../../shows/schema/response/seasonResponseSchema.ts';
 
+/** Zod schema for the user comment response. */
 export const userCommentResponseSchema = z.object({
   type: z.enum(['movie', 'show', 'season', 'episode']),
   comment: commentResponseSchema,

@@ -1,5 +1,6 @@
 import { asString, z } from '../z.ts';
 
+/** Zod schema for genre enum. */
 export const genreEnumSchema = asString(z.enum([
   'action',
   'adventure',

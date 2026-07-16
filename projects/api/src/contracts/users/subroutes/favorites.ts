@@ -16,6 +16,7 @@ const typedSortedFavoritesParamsSchema = profileParamsSchema.extend({
   sort_how: z.string().describe('Sort direction.'),
 });
 
+/** ts-rest contract for the `favorites` endpoints. */
 export const favorites = builder.router({
   media: {
     summary: 'Get favorite media',
@@ -101,7 +102,9 @@ Returns all top level comments for the favorites. By default, the comments are s
   pathPrefix: '/:id/favorites',
 });
 
+/** The favorite show response payload. */
 export type FavoriteShowResponse = z.infer<typeof favoritedShowsResponseSchema>;
+/** The favorite movie response payload. */
 export type FavoriteMovieResponse = z.infer<
   typeof favoritedMoviesResponseSchema
 >;

@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for the watch now source response. */
 export const watchNowSourceResponseSchema = z.object({
   source: z.string(),
   name: z.string(),
@@ -14,6 +15,7 @@ export const watchNowSourceResponseSchema = z.object({
   }),
 });
 
+/** Zod schema for the watch now sources response. */
 export const watchNowSourcesResponseSchema = z.record(
   z.string(),
   z.array(watchNowSourceResponseSchema),

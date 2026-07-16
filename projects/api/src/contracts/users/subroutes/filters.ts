@@ -7,6 +7,7 @@ import { sectionParamsSchema } from '../schema/request/sectionParamsSchema.ts';
 import { addFilterResponseSchema } from '../schema/response/addFilterResponseSchema.ts';
 import { filterResponseSchema } from '../schema/response/filterResponseSchema.ts';
 
+/** ts-rest contract for the `filters` endpoints. */
 export const filters = builder.router({
   saved: {
     summary: 'Get saved filters',
@@ -47,5 +48,7 @@ Delete a saved filter by \`id\`. A successful delete returns \`204\`; an unknown
   pathPrefix: '/saved_filters',
 });
 
+/** The filter section type. */
 export type FilterSection = z.infer<typeof sectionParamsSchema>;
+/** The filter response payload. */
 export type FilterResponse = z.infer<typeof filterResponseSchema>;

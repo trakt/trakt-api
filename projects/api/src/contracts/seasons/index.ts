@@ -3,6 +3,7 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { mediaReportRequestSchema } from '../_internal/request/mediaReportRequestSchema.ts';
 import { z } from '../_internal/z.ts';
 
+/** ts-rest contract for the `seasons` endpoints. */
 export const seasons = builder.router({
   report: {
     summary: 'Report a season',

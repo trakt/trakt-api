@@ -327,6 +327,7 @@ The \`sharing\` object is optional and will apply the user's settings if not sen
   },
 });
 
+/** ts-rest contract for the `comments` endpoints. */
 export const comments = builder.router({
   ...ENTITY_LEVEL,
   ...GLOBAL_LEVEL,
@@ -343,12 +344,18 @@ export {
   reactionTypeSchema,
 };
 
+/** The comment reply parameters. */
 export type CommentReplyParams = z.infer<typeof commentReplyParamsSchema>;
+/** The comment post parameters. */
 export type CommentPostParams = z.infer<typeof commentPostParamsSchema>;
+/** The comment report request payload. */
 export type CommentReportRequest = z.infer<typeof commentReportRequestSchema>;
 
+/** The reactions summary response payload. */
 export type ReactionsSummaryResponse = z.infer<
   typeof reactionsSummaryResponseSchema
 >;
+/** The reactions response payload. */
 export type ReactionsResponse = z.infer<typeof reactionsResponseSchema>;
+/** The reaction type type. */
 export type ReactionType = z.infer<typeof reactionTypeSchema>;

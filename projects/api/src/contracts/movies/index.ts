@@ -509,6 +509,7 @@ Returns movies recently available on streaming services for the requested \`peri
   },
 });
 
+/** ts-rest contract for the `movies` endpoints. */
 export const movies = builder.router({
   ...ENTITY_LEVEL,
   ...GLOBAL_LEVEL,
@@ -516,47 +517,59 @@ export const movies = builder.router({
   pathPrefix: '/movies',
 });
 
+/** The movie id parameters. */
 export type MovieIdParams = z.infer<typeof idParamsSchema>;
 
 export { movieResponseSchema };
+/** The movie response payload. */
 export type MovieResponse = z.infer<typeof movieResponseSchema>;
 
+/** The genre type. */
 export type Genre = z.infer<typeof genreEnumSchema>;
 
+/** The watch now service response payload. */
 export type WatchNowServiceResponse = z.infer<
   typeof watchNowServiceResponseSchema
 >;
+/** The watch now rank response payload. */
 export type watchNowRankResponse = z.infer<
   typeof watchNowRankResponseSchema
 >;
 
+/** The movie stats response payload. */
 export type MovieStatsResponse = z.infer<typeof movieStatsResponseSchema>;
 
 export { movieTrendingResponseSchema };
+/** The movie trending response payload. */
 export type MovieTrendingResponse = z.infer<
   typeof movieTrendingResponseSchema
 >;
 
 export { movieWatchedResponseSchema };
+/** The movie watched response payload. */
 export type MovieWatchedResponse = z.infer<
   typeof movieWatchedResponseSchema
 >;
 
 export { movieAnticipatedResponseSchema };
+/** The movie anticipated response payload. */
 export type MovieAnticipatedResponse = z.infer<
   typeof movieAnticipatedResponseSchema
 >;
 
 export { movieHotResponseSchema };
+/** The movie hot response payload. */
 export type MovieHotResponse = z.infer<
   typeof movieHotResponseSchema
 >;
 
+/** The movie certification response payload. */
 export type MovieCertificationResponse = z.infer<
   typeof movieCertificationResponseSchema
 >;
 
 export { movieStreamingResponseSchema };
+/** The movie streaming response payload. */
 export type MovieStreamingResponse = z.infer<
   typeof movieStreamingResponseSchema
 >;

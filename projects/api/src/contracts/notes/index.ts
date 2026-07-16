@@ -13,6 +13,7 @@ const noteRequestSchema = z.object({
   spoiler: z.boolean().optional(),
 }).passthrough();
 
+/** Zod schema for the note response. */
 export const noteResponseSchema = z.object({
   id: z.number().int(),
   notes: z.string().nullable().optional(),
@@ -70,6 +71,7 @@ const ENTITY_LEVEL = builder.router({
   pathPrefix: '/:id',
 });
 
+/** ts-rest contract for the `notes` endpoints. */
 export const notes = builder.router({
   create: {
     summary: 'Add notes',
@@ -88,5 +90,7 @@ Add a new note to a movie, show, season, episode, person, or list.`,
   metadata: authMetadata('required'),
 });
 
+/** The note request payload. */
 export type NoteRequest = z.infer<typeof noteRequestSchema>;
+/** The note response payload. */
 export type NoteResponse = z.infer<typeof noteResponseSchema>;

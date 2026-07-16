@@ -1,5 +1,6 @@
 import { reportRequestSchemaFactory } from './reportRequestSchemaFactory.ts';
 
+/** Zod schema for the media report request. */
 export const mediaReportRequestSchema = reportRequestSchemaFactory(
   [
     'duplicate',

@@ -1,6 +1,7 @@
 import { seasonIdsResponseSchema } from '../../../_internal/response/seasonIdsResponseSchema.ts';
 import { float, z } from '../../../_internal/z.ts';
 
+/** Zod schema for the season response. */
 export const seasonResponseSchema = z.object({
   number: z.number().int(),
   ids: seasonIdsResponseSchema,

@@ -1,6 +1,7 @@
 import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
 import { asString, float, int64, z } from '../../../_internal/z.ts';
 
+/** Zod schema for the movie scrobble response. */
 export const movieScrobbleResponseSchema = z.object({
   id: int64(z.number().int()),
   progress: float(z.number()),

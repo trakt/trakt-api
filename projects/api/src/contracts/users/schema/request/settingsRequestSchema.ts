@@ -32,6 +32,7 @@ const browsingSettingsSchema = z.object({
   locale: z.string().nullish(),
 });
 
+/** Zod schema for the settings request. */
 export const settingsRequestSchema = z.object({
   user: userSettingsSettingsSchema.nullish(),
   browsing: browsingSettingsSchema.nullish(),

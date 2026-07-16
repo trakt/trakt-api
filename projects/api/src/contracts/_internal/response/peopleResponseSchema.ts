@@ -8,6 +8,7 @@ const headshotSchema = z.object({
   headshot: z.array(z.string()),
 });
 
+/** Zod schema for the cast response. */
 export const castResponseSchema = z.object({
   episode_count: z.number().int().nullish(),
   person: personResponseSchema,
@@ -17,6 +18,7 @@ export const castResponseSchema = z.object({
   images: headshotSchema.nullish(),
 }).merge(characterResponseSchema);
 
+/** Zod schema for the crew response. */
 export const crewResponseSchema = z.object({
   person: personResponseSchema,
   episode_count: z.number().int().nullish(),
@@ -26,6 +28,7 @@ export const crewResponseSchema = z.object({
   images: headshotSchema.nullish(),
 }).merge(jobsResponseSchema);
 
+/** Zod schema for the people response. */
 export const peopleResponseSchema = z.object({
   cast: z.array(castResponseSchema).nullish(),
   crew: z.record(

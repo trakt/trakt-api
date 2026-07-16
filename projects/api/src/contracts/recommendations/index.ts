@@ -65,6 +65,7 @@ Hide a show from getting recommended anymore.`,
   },
 }, { pathPrefix: '/shows' });
 
+/** ts-rest contract for the `recommendations` endpoints. */
 export const recommendations = builder.router({
   movies,
   shows,
@@ -74,12 +75,15 @@ export const recommendations = builder.router({
 });
 
 export { hideParamsSchema };
+/** The hide recommendation parameters. */
 export type HideRecommendationParams = z.infer<typeof hideParamsSchema>;
 
 export { recommendedMovieResponse };
+/** The recommended movie response payload. */
 export type RecommendedMovieResponse = z.infer<typeof recommendedMovieResponse>;
 
 export { recommendedShowResponse };
+/** The recommended show response payload. */
 export type RecommendedShowResponse = z.infer<typeof recommendedShowResponse>;
 
 export { recommendationsQuerySchema };

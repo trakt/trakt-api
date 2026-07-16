@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for token base. */
 export const tokenBaseSchema = z.object({
   client_id: z.string({
     description: `The client ID of the application. 

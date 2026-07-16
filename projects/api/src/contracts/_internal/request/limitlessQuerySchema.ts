@@ -1,5 +1,6 @@
 import { z } from '../z.ts';
 
+/** Zod schema for the limitless query parameters. */
 export const limitlessQuerySchema = z.object({
   limit: z.number()
     .int()

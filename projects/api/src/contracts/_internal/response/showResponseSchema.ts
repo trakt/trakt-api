@@ -7,6 +7,7 @@ import { showIdsResponseSchema } from './showIdsResponseSchema.ts';
 import { socialIdsResponseSchema } from './socialIdsResponseSchema.ts';
 import { statusResponseSchema } from './statusResponseSchema.ts';
 
+/** Zod schema for the show response. */
 export const showResponseSchema = z.object({
   title: z.string(),
   year: z.number().int().nullish(),
@@ -121,6 +122,7 @@ export const showResponseSchema = z.object({
   social_ids: socialIdsResponseSchema.nullish(),
 });
 
+/** Zod schema for the typed show response. */
 export const typedShowResponseSchema = z.object({
   type: z.literal('show'),
   show: showResponseSchema,

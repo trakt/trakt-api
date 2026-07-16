@@ -1,6 +1,7 @@
 import { sortDirectionSchema } from '../response/sortDirectionSchema.ts';
 import { z } from '../z.ts';
 
+/** Zod schema for the sort query parameters. */
 export const sortQuerySchema = z.object({
   sort_by: z.string().nullish().openapi({
     description: 'The field to sort by',

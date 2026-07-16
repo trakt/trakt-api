@@ -1,5 +1,6 @@
 import { z } from '../../../_internal/z.ts';
 
+/** Zod schema for plex server. */
 export const plexServerSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -16,6 +17,7 @@ export const plexServerSchema = z.object({
   }),
 });
 
+/** Zod schema for the plex servers response. */
 export const plexServersResponseSchema = z.object({
   servers: plexServerSchema.array(),
 });

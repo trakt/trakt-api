@@ -6,6 +6,7 @@ import { serviceIdParamsSchema } from './schema/request/serviceIdParamsSchema.ts
 import { connectionSchema } from './schema/response/connectionResponseSchema.ts';
 import { connectResponseSchema } from './schema/response/connectResponseSchema.ts';
 
+/** ts-rest contract for the `younify` endpoints. */
 export const younify = builder.router({
   connections: {
     summary: 'Get streaming connections',
@@ -85,6 +86,9 @@ export {
   serviceIdParamsSchema,
 };
 
+/** The younify connection type. */
 export type YounifyConnection = z.infer<typeof connectionSchema>;
+/** The younify connect request payload. */
 export type YounifyConnectRequest = z.infer<typeof connectRequestSchema>;
+/** The younify connect response payload. */
 export type YounifyConnectResponse = z.infer<typeof connectResponseSchema>;

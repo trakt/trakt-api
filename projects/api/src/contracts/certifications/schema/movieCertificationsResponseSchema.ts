@@ -14,6 +14,7 @@ const certificationResponseSchema = z.object({
   description: z.string(),
 });
 
+/** Zod schema for the movie certifications response. */
 export const movieCertificationsResponseSchema = z.object({
   us: certificationResponseSchema.array(),
 });
