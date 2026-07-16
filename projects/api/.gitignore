@@ -1,0 +1,5 @@
+# Generated static declarations (built by `deno task build:types` before publish)
+/types/
+
+# Local node_modules from declaration generation
+/node_modules/

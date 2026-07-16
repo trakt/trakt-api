@@ -632,6 +632,34 @@ Returns a year-in-review summary for a user. Send the \`year\` path parameter to
   pathPrefix: '/:id',
 });
 
+// The fully inferred `users` type exceeds TypeScript's declaration-
+// serialization limit (TS7056) as a single literal. Composing the type from
+// `typeof` references to its already-declared parts (and reusing ts-rest's own
+// `router` return-type computation via `ReturnType`) keeps every emitted
+// type-literal small while staying fully precise. The `as` cast is needed only
+// because TS can't prove the spread-merged value equals the reference-composed
+// type through ts-rest's mapped types - they are structurally identical.
+type UsersInput =
+  & typeof GLOBAL_LEVEL
+  & typeof ENTITY_LEVEL
+  & {
+    syncs: typeof syncs;
+    plex: typeof plex;
+    watched: typeof watched;
+    history: typeof history;
+    watchlist: typeof watchlist;
+    ratings: typeof ratings;
+    favorites: typeof favorites;
+    lists: typeof userLists;
+    smartLists: typeof smartLists;
+    hidden: typeof hidden;
+    requests: typeof requests;
+    filters: typeof filters;
+  };
+type UsersRouter = ReturnType<
+  typeof builder.router<UsersInput, '/users', { pathPrefix: '/users' }>
+>;
+
 export const users = builder.router({
   ...GLOBAL_LEVEL,
   syncs,
@@ -649,7 +677,7 @@ export const users = builder.router({
   filters,
 }, {
   pathPrefix: '/users',
-});
+}) as unknown as UsersRouter;
 
 export type * from './subroutes/favorites.ts';
 export type * from './subroutes/filters.ts';

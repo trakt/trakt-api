@@ -1,7 +1,7 @@
 {
   "name": "@trakt/api",
-  "exports": "./src/index.ts",
-  "version": "0.4.27",
+  "exports": "./mod.ts",
+  "version": "0.5.0",
   "imports": {
     "@anatine/zod-openapi": "npm:@anatine/zod-openapi@^2.2.6",
     "@std/testing": "jsr:@std/testing@^1.0.5",
@@ -9,13 +9,26 @@
     "zod": "npm:zod@^3.24.1"
   },
   "lint": {
-    "rules": {
-      "exclude": [
-        "no-slow-types"
-      ]
-    }
+    "exclude": [
+      "scripts",
+      "types"
+    ]
+  },
+  "publish": {
+    "include": [
+      "mod.ts",
+      "deno.json",
+      "src",
+      "types"
+    ],
+    "exclude": [
+      "**/*.test.ts"
+    ]
   },
   "tasks": {
-    "test": "deno test --unstable --allow-all"
+    "test": "deno test --unstable --allow-all",
+    "build:types": "deno run -A --no-lock scripts/build-types.ts",
+    "publish": "deno task build:types && deno publish",
+    "publish:check": "deno task build:types && deno publish --dry-run --allow-dirty"
   }
 }
