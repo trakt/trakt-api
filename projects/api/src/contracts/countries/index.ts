@@ -2,7 +2,9 @@ import { builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 
 const countryTypeParamsSchema = z.object({
-  type: z.string().describe('Media type to return countries for.'),
+  type: z.enum(['movies', 'shows']).describe(
+    'Media type to return countries for.',
+  ),
 });
 
 /** Zod schema for the country response. */
