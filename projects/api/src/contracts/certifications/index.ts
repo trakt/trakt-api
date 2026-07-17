@@ -6,8 +6,8 @@ import {
 import { showCertificationsResponseSchema } from './schema/showCertificationsResponseSchema.ts';
 
 const certificationTypeParamsSchema = z.object({
-  type: z.string().describe(
-    'Certification media type, typically `movies` or `shows`.',
+  type: z.enum(['movies', 'shows']).describe(
+    'Certification media type.',
   ),
 });
 
