@@ -30,7 +30,7 @@ jobs:
       id-token: write
     steps:
       - name: The Oracle's Gaze aka Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: The Summoning aka Setup Deno
         uses: denoland/setup-deno@v2
