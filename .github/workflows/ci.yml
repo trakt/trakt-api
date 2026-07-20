@@ -26,7 +26,7 @@ jobs:
       workflows: ${{ steps.changes.outputs.workflows }}
     steps:
       - name: The Oracle's Gaze aka Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: The Seer's Vision aka Filter Paths
         uses: dorny/paths-filter@v3
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Summoning the Ancient Scrolls aka Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: The Oracle's Gaze aka Setup Deno
         uses: denoland/setup-deno@v2
