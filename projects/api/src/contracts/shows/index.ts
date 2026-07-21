@@ -29,6 +29,7 @@ import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
 import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
+import { showRatingsResponseSchema } from '../_internal/response/showRatingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
 import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
@@ -288,7 +289,7 @@ Returns a single shows's details. If you request extended info, the \`airs\` obj
     query: extendedQuerySchemaFactory<['all']>(),
     pathParams: idParamsSchema,
     responses: {
-      200: ratingsResponseSchema,
+      200: showRatingsResponseSchema,
     },
   },
   stats: {
