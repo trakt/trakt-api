@@ -1,7 +1,8 @@
 import { float, z } from '../z.ts';
 import { distributionResponseSchema } from './distributionResponseSchema.ts';
 
-const externalRatingsResponseSchema = z.object({
+/** Shared shape for an external rating source: a rating and a link, both nullish. */
+export const externalRatingsResponseSchema = z.object({
   rating: float(z.number()).nullish(),
   link: z.string().nullish(),
 });

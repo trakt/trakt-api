@@ -30,7 +30,7 @@ import {
   peopleResponseSchema,
 } from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
-import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
+import { movieRatingsResponseSchema } from '../_internal/response/movieRatingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
@@ -99,7 +99,7 @@ Returns a single movie's details.
     query: extendedQuerySchemaFactory<['all']>(),
     pathParams: idParamsSchema,
     responses: {
-      200: ratingsResponseSchema,
+      200: movieRatingsResponseSchema,
     },
   },
   stats: {
