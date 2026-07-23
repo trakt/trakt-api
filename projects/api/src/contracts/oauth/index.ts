@@ -114,7 +114,7 @@ export const oauth = builder
         `Construct then redirect to this URL. The Trakt website will request permissions for your app, which the user needs to approve. If the user isn't signed into Trakt, it will ask them to do so.
 
 > ### Important
-> _Use the website **https://trakt.tv** hostname when creating this URL and not the API URL._
+> _Use the **https://auth.trakt.tv** hostname for all OAuth requests, including authorization, device authentication, token exchange and refresh, and token revocation. Do not use the API hostname for these requests._
 
 #### Optional URL Parameters
 
