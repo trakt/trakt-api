@@ -40,7 +40,7 @@ function getSecurityFromAuth(
   }
 }
 
-const servers = [
+const apiServers = [
   {
     url: Environment.production,
     description: 'Production',
@@ -55,6 +55,13 @@ const servers = [
   },
 ];
 
+const authServers = [
+  {
+    url: 'https://auth.trakt.tv',
+    description: 'Authentication',
+  },
+];
+
 export function generate(): ReturnType<typeof generateOpenApi> {
   return generateOpenApi(
     traktContract,
@@ -63,7 +70,7 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         title: 'Trakt API',
         version: '2.0.0',
       },
-      servers,
+      servers: apiServers,
       components: {
         securitySchemes: {
           traktAPI: {
@@ -75,8 +82,8 @@ export function generate(): ReturnType<typeof generateOpenApi> {
             type: 'oauth2',
             flows: {
               authorizationCode: {
-                authorizationUrl: 'https://trakt.tv/oauth/authorize',
-                tokenUrl: 'https://api.trakt.tv/oauth/token',
+                authorizationUrl: 'https://auth.trakt.tv/oauth/authorize',
+                tokenUrl: 'https://auth.trakt.tv/oauth/token',
                 scopes: {
                   public: 'Access public data',
                 },
@@ -106,10 +113,12 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         ];
 
         const auth = getAuthRequirement(route.metadata, operation.tags ?? []);
+        const isAuthEndpoint = operation.tags?.includes('oauth') ?? false;
 
         return {
           ...operation,
           security: getSecurityFromAuth(auth),
+          ...(isAuthEndpoint ? { servers: authServers } : {}),
           operationId: `${route.method.toLowerCase()}${
             parts
               .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
