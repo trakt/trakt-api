@@ -3,7 +3,6 @@ import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySc
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { z } from '../_internal/z.ts';
 import { recentSearchRequestSchema } from './schema/request/recentSearchRequestSchema.ts';
-import { searchEngineSchema } from './schema/request/searchEngineSchema.ts';
 import { searchQuerySchema } from './schema/request/searchQuerySchema.ts';
 import { searchTypeParamFactory } from './schema/request/searchTypeParamFactory.ts';
 import { trendingSearchTypeParamFactory } from './schema/request/trendingSearchTypeParamFactory.ts';
@@ -15,15 +14,12 @@ import type { trendingSearchMovieResponseSchema } from './schema/response/trendi
 import type { trendingSearchPersonResponseSchema } from './schema/response/trendingSearchPersonResponseSchema.ts';
 import { trendingSearchResponseSchema } from './schema/response/trendingSearchResponseSchema.ts';
 import type { trendingSearchShowResponseSchema } from './schema/response/trendingSearchShowResponseSchema.ts';
-/**
- * TODO: add support for 'episode'
- */
 
 const recent = builder.router({
   add: {
     summary: 'Add recent search',
     description: `#### 🔒 OAuth Required
-Add a recent search for the authenticated user. Send the search request body; a successful create returns \`201\` with no response body.`,
+Add a recent search to the global search trends. This is not a user-specific recent search history. Send the search request body; a successful create returns \`201\` with no response body.`,
     path: '/',
     method: 'POST',
     body: recentSearchRequestSchema,
@@ -34,7 +30,7 @@ Add a recent search for the authenticated user. Send the search request body; a 
   remove: {
     summary: 'Remove recent search',
     description: `#### 🔒 OAuth Required
-Remove a recent search for the authenticated user. Send the search request body; a successful delete returns \`204\` with no response body.`,
+Remove a recent search from the global search trends. This is not a user-specific recent search history. Send the search request body; a successful delete returns \`204\` with no response body.`,
     path: '/remove',
     method: 'POST',
     body: recentSearchRequestSchema,
@@ -97,11 +93,14 @@ By default, certain text fields are used to search for the \`query\`. You can op
 |  | \`description\` | &#10003; |`,
     path: '/:type',
     method: 'GET',
-    pathParams: searchTypeParamFactory<
-      ['movie', 'show', 'person', 'list']
-    >(),
+    pathParams: searchTypeParamFactory([
+      'movie',
+      'show',
+      'episode',
+      'person',
+      'list',
+    ]),
     query: searchQuerySchema
-      .merge(searchEngineSchema)
       .merge(pageQuerySchema)
       .merge(
         extendedQuerySchemaFactory<['full,images']>(),
@@ -116,11 +115,8 @@ By default, certain text fields are used to search for the \`query\`. You can op
 Search for exact movie or show matches using the requested search \`type\` and \`query\`. Results are paginated and can include extended media details.`,
     path: '/:type/exact',
     method: 'GET',
-    pathParams: searchTypeParamFactory<
-      ['movie', 'show']
-    >(),
+    pathParams: searchTypeParamFactory(['movie', 'show']),
     query: searchQuerySchema
-      .merge(searchEngineSchema)
       .merge(pageQuerySchema)
       .merge(
         extendedQuerySchemaFactory<['full,images']>(),
@@ -168,7 +164,7 @@ Returns globally trending recent searches by \`type\`. Use \`query\` to narrow t
   pathPrefix: '/search',
 });
 
-export { searchEngineSchema, searchQuerySchema };
+export { searchQuerySchema };
 /** The search query parameters. */
 export type SearchQueryParams = z.infer<typeof searchQuerySchema>;
 export { searchResultResponseSchema };

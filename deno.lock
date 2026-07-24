@@ -200,6 +200,7 @@
       },
       "projects/openapi": {
         "dependencies": [
+          "jsr:@std/assert@^1.0.13",
           "npm:@anatine/zod-openapi@1.12.0",
           "npm:@hono/swagger-ui@0.5",
           "npm:@seriousme/openapi-schema-validator@^2.3.1",
