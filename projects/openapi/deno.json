@@ -7,6 +7,7 @@
   },
   "imports": {
     "@anatine/zod-openapi": "npm:@anatine/zod-openapi@1.12.0",
+    "@std/assert": "jsr:@std/assert@^1.0.13",
     "@hono/swagger-ui": "npm:@hono/swagger-ui@^0.5.0",
     "@seriousme/openapi-schema-validator": "npm:@seriousme/openapi-schema-validator@^2.3.1",
     "@ts-rest/core": "npm:@ts-rest/core@^3.52.1",
