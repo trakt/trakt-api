@@ -1,9 +1,9 @@
-import { int64, z } from '../../../_internal/z.ts';
+import { double, z } from '../../../_internal/z.ts';
 import { listResponseSchema } from '../../../models/index.ts';
 
 /** Zod schema for the search list response. */
 export const searchListResponseSchema = z.object({
-  score: int64(z.number().int()),
+  score: double(z.number()),
   type: z.literal('list'),
   list: listResponseSchema.nullish(),
 });

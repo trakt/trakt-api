@@ -19,6 +19,18 @@ export function float(schema: z.ZodNumber) {
 /**
  * Helper function to mark a number schema as a double in OpenAPI metadata
  */
+export function double(schema: z.ZodNumber) {
+  // Use type assertion to access the openapi method added by extendZodWithOpenApi
+  return (schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber })
+    .openapi({
+      type: 'number',
+      format: 'double',
+    });
+}
+
+/**
+ * Helper function to mark a number schema as an int64 in OpenAPI metadata
+ */
 export function int64(schema: z.ZodNumber) {
   // Use type assertion to access the openapi method added by extendZodWithOpenApi
   return (schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber })
