@@ -15,6 +15,20 @@ const groupQuery = z.object({
   }),
 });
 
+/*
+  Scoped to the feeds that resolve their own episodes. The dedicated
+  `shows/{new,premieres,finales}` and `releases/hot/*` routes already fix their
+  roles, and `movies` / `streaming` / `dvd` have no episodes to narrow.
+*/
+const episodeTypesQuery = z.object({
+  episode_types: z.string().nullish().openapi({
+    description:
+      `Comma separated list of episode roles: "series_premiere", "season_premiere", "mid_season_premiere", "mid_season_finale", "season_finale", "series_finale".
+      Prefix a role with "-" to exclude it instead, e.g. "-season_finale,-series_finale" drops every finale. Included roles match any of the listed roles; excluded roles must all be absent. Unrecognised values are ignored.
+      On the merged media feed, including a role returns matching episodes only, since a movie carries no episode role; excluding one leaves movies in place.`,
+  }),
+});
+
 /** ts-rest contract for the `calendars` endpoints. */
 export const calendars = builder.router({
   shows: {
@@ -26,7 +40,8 @@ Returns shows airing during the requested UTC date range. Use \`target\` to choo
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
       .merge(ignoreQuerySchema)
-      .merge(groupQuery),
+      .merge(groupQuery)
+      .merge(episodeTypesQuery),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -130,7 +145,8 @@ Returns the merged feed of movies and episodes during the requested UTC date ran
             'Narrow the feed to a single media type. Omit to return both.',
         }),
       }))
-      .merge(groupQuery),
+      .merge(groupQuery)
+      .merge(episodeTypesQuery),
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: hotReleaseResponseSchema.array(),
