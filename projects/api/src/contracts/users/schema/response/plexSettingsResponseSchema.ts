@@ -107,6 +107,10 @@ export const plexSettingsResponseSchema = z.object({
     error: z.boolean().openapi({
       description: 'Whether a persisted Plex-sync error is currently active.',
     }),
+    server_limit: z.number().int().nullable().openapi({
+      description:
+        'Max number of Plex servers this user may sync. null = unlimited (VIP), 1 = free.',
+    }),
     selection: z.object({
       server_ids: z.string().array(),
       library_ids: plexLibrarySelectionSchema.array(),
