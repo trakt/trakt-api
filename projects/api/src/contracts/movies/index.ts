@@ -4,6 +4,7 @@ import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedRatingsQuerySchema } from '../_internal/request/extendedRatingsQuerySchema.ts';
 import { extendedWatchNowQuerySchema } from '../_internal/request/extendedWatchNowQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
@@ -93,10 +94,12 @@ Returns a single movie's details.
   ratings: {
     summary: 'Get movie ratings',
     description:
-      'Returns rating (between 0 and 10) and distribution for a movie.',
+      `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a movie.
+
+Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Tomatoes, Letterboxd, and MyAnimeList. External ratings, vote counts, and links can be \`null\` when unavailable.`,
     path: '/ratings',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['all']>(),
+    query: extendedRatingsQuerySchema,
     pathParams: idParamsSchema,
     responses: {
       200: movieRatingsResponseSchema,

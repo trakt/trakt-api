@@ -4,6 +4,7 @@ import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { extendedRatingsQuerySchema } from '../_internal/request/extendedRatingsQuerySchema.ts';
 import { extendedWatchNowQuerySchema } from '../_internal/request/extendedWatchNowQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
@@ -114,10 +115,12 @@ Returns a single episode's details. All date and times are in UTC and were calcu
   ratings: {
     summary: 'Get episode ratings',
     description:
-      'Returns rating (between 0 and 10) and distribution for an episode.',
+      `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for an episode.
+
+Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten Tomatoes. External ratings, vote counts, and links can be \`null\` when unavailable.`,
     path: '/ratings',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['all']>(),
+    query: extendedRatingsQuerySchema,
     pathParams: idParamsSchema
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema),
@@ -283,10 +286,12 @@ Returns a single shows's details. If you request extended info, the \`airs\` obj
   ratings: {
     summary: 'Get show ratings',
     description:
-      'Returns rating (between 0 and 10) and distribution for a show.',
+      `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a show.
+
+Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Tomatoes, and MyAnimeList. External ratings, vote counts, and links can be \`null\` when unavailable.`,
     path: '/ratings',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['all']>(),
+    query: extendedRatingsQuerySchema,
     pathParams: idParamsSchema,
     responses: {
       200: showRatingsResponseSchema,
@@ -636,10 +641,12 @@ Returns all lists that contain this season. By default, \`personal\` lists are r
     ratings: {
       summary: 'Get season ratings',
       description:
-        'Returns rating (between 0 and 10) and distribution for a season.',
+        `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a season.
+
+Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten Tomatoes. External ratings, vote counts, and links can be \`null\` when unavailable.`,
       path: '/ratings',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['all']>(),
+      query: extendedRatingsQuerySchema,
       pathParams: idParamsSchema
         .merge(seasonParamsSchema),
       responses: {
