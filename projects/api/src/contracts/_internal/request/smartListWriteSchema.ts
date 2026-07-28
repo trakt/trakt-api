@@ -10,6 +10,8 @@ export const smartListWriteSchema = z.object({
     'anticipated',
     'recommendations',
     'discover',
+    'watchlist',
+    'library',
   ]),
   media_type: z.enum(['movies', 'shows', 'media']),
   filters: smartListFiltersSchema.optional(),

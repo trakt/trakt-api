@@ -70,7 +70,7 @@ Create a new smart list. A smart list is a dynamic list driven by a \`source\` a
 | Key | Type | Value |
 |---|---|---|
 | \`name\` * | string | Name of the smart list. |
-| \`source\` * | string | \`trending\`, \`popular\`, \`anticipated\`, \`recommendations\`, \`discover\` |
+| \`source\` * | string | \`trending\`, \`popular\`, \`anticipated\`, \`recommendations\`, \`discover\`, \`watchlist\`, \`library\` |
 | \`media_type\` * | string | \`movies\`, \`shows\`, \`media\` |
 | \`filters\` | object | Filter constraints applied to the source. |
 | \`privacy\` | string | \`public\`, \`private\`, \`friends\` |`,
