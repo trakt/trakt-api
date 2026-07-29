@@ -5,7 +5,7 @@ import { tokenBaseSchema } from './tokenBaseSchema.ts';
 export const tokenRefreshSchema = tokenBaseSchema.extend({
   refresh_token: z.string({
     description:
-      'The refresh token which was sent from the server during the exchange of the code.',
+      'The current refresh token. Refresh tokens are single-use; after a successful exchange, replace it with the new `refresh_token` returned in the response.',
   }),
   grant_type: z.string({
     description: 'Defines how an access token is obtained.',

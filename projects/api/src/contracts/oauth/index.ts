@@ -7,6 +7,9 @@ import {
 import { tokenRefreshSchema } from './schema/request/tokenRefreshSchema.ts';
 import { tokenRequestSchema } from './schema/request/tokenRequestSchema.ts';
 import { codeResponseSchema } from './schema/response/codeResponseSchema.ts';
+import {
+  tokenErrorResponseSchema,
+} from './schema/response/tokenErrorResponseSchema.ts';
 import { tokenResponseSchema } from './schema/response/tokenResponseSchema.ts';
 
 const authorizeQuerySchema = z.object({
@@ -135,7 +138,13 @@ When building the authorization URL, you can optionally include the following qu
     token: {
       summary: 'Exchange a token',
       description:
-        'Exchange an OAuth authorization code or refresh token for an access token. Send the appropriate token request body; returns token details on success or a `400` response when the request cannot be processed.',
+        `Exchange an OAuth authorization code or refresh token for an access token.
+
+#### Refreshing Tokens
+
+Refresh tokens are single-use. Each successful refresh returns a new \`refresh_token\` and invalidates the previous one. Store the new \`access_token\` and \`refresh_token\` from the response before the next refresh.
+
+If the exchange cannot be completed, this endpoint returns a \`400\` response with an OAuth error and description.`,
       path: '/token',
       method: 'POST',
       body: z.union([
@@ -144,7 +153,7 @@ When building the authorization URL, you can optionally include the following qu
       ]),
       responses: {
         200: tokenResponseSchema,
-        400: z.undefined(),
+        400: tokenErrorResponseSchema,
       },
     },
     revoke: {
