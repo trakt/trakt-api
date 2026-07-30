@@ -33,7 +33,7 @@ const device = builder.router({
 
 #### QR Code
 
-You might consider generating a QR code for the user to easily scan on their mobile device. The QR code should be a URL that redirects to the \`verification_url\` and appends the \`user_code\`. For example, \`https://trakt.tv/activate/5055CC52\` would load the Trakt hosted \`verification_url\` and pre-fill in the \`user_code\`.
+You might consider generating a QR code for the user to easily scan on their mobile device. The QR code should use \`https://auth.trakt.tv/activate\`, which loads the Trakt hosted activation page.
 
 #### JSON POST Data
 | Key | Type | Value |

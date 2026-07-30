@@ -302,11 +302,11 @@ Add one of more items to a user's watchlist. Accepts shows, seasons, episodes an
 
 #### Notes
 
-Each watchlist item can optionally accept a \`notes\` *(500 maximum characters)* field with custom text. The user must be a [**Trakt VIP**](https://trakt.tv/vip) to send \`notes\`.
+Each watchlist item can optionally accept a \`notes\` *(500 maximum characters)* field with custom text. The user must be a [**Trakt VIP**](https://app.trakt.tv/vip) to send \`notes\`.
 
 #### Limits
 
-If the user's watchlist limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://trakt.tv/vip) will increase the limits.
+If the user's watchlist limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://app.trakt.tv/vip) will increase the limits.
 
 #### JSON POST Data
 | Key | Type | Value |

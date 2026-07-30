@@ -207,11 +207,11 @@ Add one or more items to a personal list. Items can be movies, shows, seasons, e
 
 #### Notes
 
-Each list item can optionally accept a \`notes\` *(500 maximum characters)* field with custom text. The user must be a [**Trakt VIP**](https://trakt.tv/vip) to send \`notes\`.
+Each list item can optionally accept a \`notes\` *(500 maximum characters)* field with custom text. The user must be a [**Trakt VIP**](https://app.trakt.tv/vip) to send \`notes\`.
 
 #### Limits
 
-If the user's list item limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://trakt.tv/vip) will increase the limits.
+If the user's list item limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://app.trakt.tv/vip) will increase the limits.
 
 #### JSON POST Data
 | Key | Type | Value |
@@ -407,7 +407,7 @@ Create a new personal list. The \`name\` is the only required field, but the oth
 
 #### Limits
 
-If the user's list limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://trakt.tv/vip) will increase the limits.
+If the user's list limit is exceeded, a \`420\` HTTP error code is returned. Use the [**/users/settings**](/reference/users/settings) method to get all limits for a user account. In most cases, upgrading to [**Trakt VIP**](https://app.trakt.tv/vip) will increase the limits.
 
 #### Privacy
 

@@ -36,7 +36,7 @@ properly:
 Want to contribute to Trakt ? Here's how to set up your development environment:
 
 1. **Create a Trakt Application:** Navigate to
-   [Trakt Settings](https://trakt.tv/oauth/applications) and create a new
+   [Trakt Settings](https://app.trakt.tv/settings/apps) and create a new
    application.
 1. Once your Trakt application is created, use the provided Client ID and Client
    Secret in your development environment.

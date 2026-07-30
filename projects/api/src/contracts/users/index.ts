@@ -87,7 +87,7 @@ Get the user's settings so you can align your app's experience with what they're
 
 #### Limits
 
-The \`limits\` object is useful to customize your user experience. For example, if the user has a \`list\` limit of \`2\`, you might want to show a message to the user that they need to upgrade to [**Trakt VIP**](https://trakt.tv/vip) to add more lists.
+The \`limits\` object is useful to customize your user experience. For example, if the user has a \`list\` limit of \`2\`, you might want to show a message to the user that they need to upgrade to [**Trakt VIP**](https://app.trakt.tv/vip) to add more lists.
 
 #### Permissions
 
