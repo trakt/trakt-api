@@ -46,10 +46,6 @@ const apiServers = [
     description: 'Production',
   },
   {
-    url: Environment.staging,
-    description: 'Staging',
-  },
-  {
     url: Environment.production_private,
     description: 'Private production',
   },

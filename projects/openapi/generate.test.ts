@@ -23,7 +23,16 @@ Deno.test('uses the API host by default', () => {
   const document = generate();
   const apiOperation = document.paths['/movies/trending']?.get;
 
-  assertEquals(document.servers?.[0]?.url, 'https://api.trakt.tv');
+  assertEquals(document.servers, [
+    {
+      url: 'https://api.trakt.tv',
+      description: 'Production',
+    },
+    {
+      url: 'https://apiz.trakt.tv',
+      description: 'Private production',
+    },
+  ]);
   assertEquals(apiOperation?.servers, undefined);
 });
 
