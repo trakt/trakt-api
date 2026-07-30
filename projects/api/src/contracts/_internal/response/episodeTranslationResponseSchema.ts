@@ -6,6 +6,6 @@ export const episodeTranslationResponseSchema = z.array(
     title: z.string().nullish(),
     overview: z.string().nullish(),
     language: z.string(),
-    country: z.string(),
+    country: z.string().nullish(),
   }),
 );
