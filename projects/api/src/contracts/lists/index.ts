@@ -70,6 +70,9 @@ Returns movie items on a public list. Use \`id\` to identify the list and query 
         .merge(limitlessQuerySchema),
       responses: {
         200: listedMovieResponseSchema.array(),
+        400: z.undefined(),
+        403: z.undefined(),
+        404: z.undefined(),
       },
     },
     show: {
@@ -87,6 +90,9 @@ Returns show items on a public list. Use \`id\` to identify the list and query s
         .merge(limitlessQuerySchema),
       responses: {
         200: listedShowResponseSchema.array(),
+        400: z.undefined(),
+        403: z.undefined(),
+        404: z.undefined(),
       },
     },
     media: {
@@ -104,6 +110,9 @@ Returns movie and show items on a public list. Use \`id\` to identify the list a
         .merge(limitlessQuerySchema),
       responses: {
         200: listedMediaResponseSchema.array(),
+        400: z.undefined(),
+        403: z.undefined(),
+        404: z.undefined(),
       },
     },
     all: {
@@ -121,6 +130,9 @@ Returns movie, show, episode, and season items on a public list. Use \`id\` to i
         .merge(limitlessQuerySchema),
       responses: {
         200: listedAllResponseSchema.array(),
+        400: z.undefined(),
+        403: z.undefined(),
+        404: z.undefined(),
       },
     },
     typedSorted: {
@@ -138,6 +150,9 @@ Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`
         .merge(limitlessQuerySchema),
       responses: {
         200: listedAllResponseSchema.array(),
+        400: z.undefined(),
+        403: z.undefined(),
+        404: z.undefined(),
       },
     },
   },
