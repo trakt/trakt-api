@@ -1,4 +1,8 @@
-import { initClient } from '@ts-rest/core';
+import {
+  type ClientArgs,
+  initClient,
+  type InitClientReturn,
+} from '@ts-rest/core';
 import { traktContract } from './contracts/traktContract.ts';
 import { Environment } from './Environment.ts';
 
@@ -127,7 +131,7 @@ export function traktApiFactory({
   fetch = globalThis.fetch,
   cancellable,
   cancellationId,
-}: TraktApiOptions) {
+}: TraktApiOptions): InitClientReturn<typeof traktContract, ClientArgs> {
   return initClient(traktContract, {
     baseUrl: environment,
     baseHeaders: {
