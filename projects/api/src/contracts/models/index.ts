@@ -1,4 +1,5 @@
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
+import { containingListResponseSchema } from '../_internal/response/containingListResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
@@ -12,6 +13,7 @@ import { listedMovieResponseSchema } from '../_internal/response/listedMovieResp
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
+import { mediaSocialResponseSchema } from '../_internal/response/mediaSocialResponseSchema.ts';
 import {
   castResponseSchema,
   crewResponseSchema,
@@ -31,6 +33,12 @@ import type { z } from '../_internal/z.ts';
 export { commentResponseSchema };
 /** The comment response payload. */
 export type CommentResponse = z.infer<typeof commentResponseSchema>;
+
+export { containingListResponseSchema };
+/** The containing list response payload. */
+export type ContainingListResponse = z.infer<
+  typeof containingListResponseSchema
+>;
 
 export { episodeResponseSchema };
 /** The episode response payload. */
@@ -86,6 +94,12 @@ export type ListRemoveResponse = z.infer<
 export { listResponseSchema };
 /** The list response payload. */
 export type ListResponse = z.infer<typeof listResponseSchema>;
+
+export { mediaSocialResponseSchema };
+/** The media social response payload. */
+export type MediaSocialResponse = z.infer<
+  typeof mediaSocialResponseSchema
+>;
 
 export { peopleResponseSchema };
 /** The people response payload. */
