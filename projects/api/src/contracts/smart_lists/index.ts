@@ -1,6 +1,5 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
-import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
@@ -13,6 +12,33 @@ const listItemsPathParamsSchema = listParamsSchema.extend({
   type: z.string().describe('Smart list item type filter.'),
   sort_by: z.string().describe('Sort by a specific property.'),
   sort_how: z.string().describe('Sort direction.'),
+});
+
+const smartListIgnoreQuerySchema = z.object({
+  ignore_watched: z.boolean().nullish().openapi({
+    description: 'Ignore watched items.',
+  }),
+  ignore_watchlisted: z.boolean().nullish().openapi({
+    description: 'Ignore watchlisted items.',
+  }),
+  ignore_watching: z.boolean().nullish().openapi({
+    description: 'Ignore items the user is currently watching.',
+  }),
+  ignore_unreleased: z.boolean().nullish().openapi({
+    description: 'Ignore unreleased items.',
+  }),
+  ignore_released: z.boolean().nullish().openapi({
+    description: 'Ignore released items.',
+  }),
+  ignore_ended: z.boolean().nullish().openapi({
+    description: 'Ignore ended shows.',
+  }),
+  ignore_airing: z.boolean().nullish().openapi({
+    description: 'Ignore currently airing shows.',
+  }),
+  ignore_no_release_date: z.boolean().nullish().openapi({
+    description: 'Ignore items without a release date.',
+  }),
 });
 
 /** ts-rest contract for the `smartLists` endpoints. */
@@ -42,7 +68,7 @@ Returns the dynamic items a smart list resolves to. Use \`type\`, \`sort_by\`, a
     pathParams: listItemsPathParamsSchema,
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema)
+      .merge(smartListIgnoreQuerySchema)
       .merge(pageQuerySchema)
       .merge(limitlessQuerySchema),
     responses: {
