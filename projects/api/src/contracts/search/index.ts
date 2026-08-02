@@ -98,6 +98,7 @@ By default, certain text fields are used to search for the \`query\`. You can op
     path: '/:type',
     method: 'GET',
     pathParams: searchTypeParamFactory([
+      'media',
       'movie',
       'show',
       'episode',
@@ -116,10 +117,10 @@ By default, certain text fields are used to search for the \`query\`. You can op
   exact: {
     summary: 'Get exact text query results',
     description: `#### 📄 Pagination ✨ Extended Info
-Search for exact movie or show matches using the requested search \`type\` and \`query\`. Results are paginated and can include extended media details.`,
+Search for exact movie or show matches using the requested search \`type\` and \`query\`. Use \`media\` to search movies and shows together. Results can include extended media details and are capped at 3 items.`,
     path: '/:type/exact',
     method: 'GET',
-    pathParams: searchTypeParamFactory(['movie', 'show']),
+    pathParams: searchTypeParamFactory(['media', 'movie', 'show']),
     query: searchQuerySchema
       .merge(pageQuerySchema)
       .merge(
