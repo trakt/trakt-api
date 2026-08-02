@@ -1,9 +1,14 @@
+import { movieResponseSchema } from '../../../_internal/response/movieResponseSchema.ts';
+import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
-import { movieTrendingResponseSchema } from '../../../movies/index.ts';
-import { showTrendingResponseSchema } from '../../../shows/index.ts';
 
-/** Zod schema for the media trending response. */
-export const mediaTrendingResponseSchema = z.union([
-  movieTrendingResponseSchema,
-  showTrendingResponseSchema,
-]);
+/**
+ * A single entry in the mixed trending media feed: a trending movie OR a
+ * trending show, as one flat object with the shape-specific fields nullish.
+ * Discriminate by shape (movie entries carry `movie`, show entries `show`).
+ */
+export const mediaTrendingResponseSchema = z.object({
+  watchers: z.number().int(),
+  movie: movieResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
+});
