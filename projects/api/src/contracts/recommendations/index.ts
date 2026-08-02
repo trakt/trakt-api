@@ -11,7 +11,7 @@ const movies = builder.router({
   recommend: {
     summary: 'Get movie recommendations',
     description: `#### 🔒 OAuth Required ✨ Extended Info
-Movie recommendations for a user. By default, \`10\` results are returned. You can send a \`limit\` to get up to \`100\` results per page. Set \`ignore_collected=true\` to filter out movies the user has already collected or \`ignore_watchlisted=true\` to filter out movies the user has already watchlisted.`,
+Movie recommendations for a user. By default, \`10\` results are returned. You can send a \`limit\` to get up to \`100\` results per page. Set \`ignore_watchlisted=true\` to filter out movies the user has already watchlisted.`,
     path: '/',
     method: 'GET',
     query: extendedMediaQuerySchema
@@ -38,7 +38,7 @@ const shows = builder.router({
   recommend: {
     summary: 'Get show recommendations',
     description: `#### 🔒 OAuth Required ✨ Extended Info
-TV show recommendations for a user. By default, \`10\` results are returned. You can send a \`limit\` to get up to \`100\` results per page. Set \`ignore_collected=true\` to filter out shows the user has already collected or \`ignore_watchlisted=true\` to filter out shows the user has already watchlisted.`,
+TV show recommendations for a user. By default, \`10\` results are returned. You can send a \`limit\` to get up to \`100\` results per page. Set \`ignore_watchlisted=true\` to filter out shows the user has already watchlisted.`,
     path: '/',
     method: 'GET',
     query: extendedMediaQuerySchema
