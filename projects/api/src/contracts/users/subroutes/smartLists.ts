@@ -16,7 +16,7 @@ Returns a single smart list definition. Use the [**/users/:id/smart-lists/:list_
     pathParams: profileParamsSchema.merge(listParamsSchema),
     responses: {
       200: smartListDefinitionResponseSchema,
-      404: z.undefined(),
+      204: z.undefined(),
     },
   },
   update: {

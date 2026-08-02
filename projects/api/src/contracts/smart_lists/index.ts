@@ -29,7 +29,7 @@ Returns a single smart list definition by its globally-unique slug. Use the [**/
     pathParams: listParamsSchema,
     responses: {
       200: smartListDefinitionResponseSchema,
-      404: z.undefined(),
+      204: z.undefined(),
     },
   },
   items: {
