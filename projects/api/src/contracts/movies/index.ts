@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
@@ -16,6 +16,7 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { recommendationsFilterParamsSchema } from '../_internal/request/recommendationsFilterParamsSchema.ts';
 import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
@@ -24,6 +25,7 @@ import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLink
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
+import { mediaSocialResponseSchema } from '../_internal/response/mediaSocialResponseSchema.ts';
 import type { movieCertificationResponseSchema } from '../_internal/response/movieCertificationResponseSchema.ts';
 import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import { movieStatsResponseSchema } from '../_internal/response/movieStatsResponseSchema.ts';
@@ -45,9 +47,16 @@ import { z } from '../_internal/z.ts';
 import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
 import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
 import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
+import { moviePopularNextResponseSchema } from './schema/response/moviePopularNextResponseSchema.ts';
+import { movieRecommendationResponseSchema } from './schema/response/movieRecommendationResponseSchema.ts';
+import { movieRecommendationSourceResponseSchema } from './schema/response/movieRecommendationSourceResponseSchema.ts';
 import { movieStreamingResponseSchema } from './schema/response/movieStreamingResponseSchema.ts';
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
+
+const movieFilterParamsSchema = mediaFilterParamsSchema.omit({
+  networks: true,
+});
 
 const startDateParamsSchema = z.object({
   start_date: z.string().describe('UTC date to start checking for updates.'),
@@ -74,6 +83,13 @@ const movieBoxOfficeResponseSchema = z.object({
 const movieUpdatedResponseSchema = z.object({
   updated_at: z.string().datetime(),
   movie: movieResponseSchema,
+});
+
+const recommendationsWatchWindowQuerySchema = z.object({
+  watch_window: z.number().int().nullish().openapi({
+    description:
+      "The number of the user's most recently watched titles used to seed recommendations.",
+  }),
 });
 
 const ENTITY_LEVEL = builder.router({
@@ -155,6 +171,20 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
 
 Returns related and similar movies.`,
     path: '/related',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema,
+    responses: {
+      200: movieResponseSchema.array(),
+    },
+  },
+  relatedSmart: {
+    summary: 'Get related movies (smart alias)',
+    description: `#### 📄 Pagination ✨ Extended Info
+
+Alias of [**related**](#reference/movies/related) kept for clients pinned to the pre-default \`/smart\` path. Returns related and similar movies.`,
+    path: '/related/smart',
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(pageQuerySchema),
@@ -266,6 +296,50 @@ Returns all lists that contain this movie. By default, \`personal\` lists are re
       200: listResponseSchema.array(),
     },
   },
+  listsByType: {
+    summary: 'Get lists containing this movie',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this movie, sorted by the most \`popular\`.`,
+    path: '/lists/:type',
+    method: 'GET',
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema
+      .merge(listTypeSchema),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  listsDefault: {
+    summary: 'Get lists containing this movie',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this movie. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
+    path: '/lists',
+    method: 'GET',
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema,
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  social: {
+    summary: 'Get followers who watched or watchlisted a movie',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+
+Returns the authenticated user's followed users who have watched or watchlisted this movie.`,
+    path: '/social',
+    method: 'GET',
+    query: pageQuerySchema,
+    pathParams: idParamsSchema,
+    metadata: authMetadata('required'),
+    responses: {
+      200: mediaSocialResponseSchema.array(),
+      404: z.undefined(),
+    },
+  },
   comments: {
     summary: 'Get all movie comments',
     description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
@@ -349,7 +423,7 @@ Returns the most watched movies over the last 24 hours. Movies with the most \`w
     path: '/trending',
     method: 'GET',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -364,9 +438,25 @@ Returns the most watched (unique users) movies in the specified time \`period\`,
     path: '/watched/:period',
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
+    responses: {
+      200: movieWatchedResponseSchema.array(),
+    },
+  },
+  watchedDefault: {
+    summary: 'Get the most watched movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most watched (unique users) movies, defaulting to the \`weekly\` time period. All stats are relative to the specific time period.`,
+    path: '/watched',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: movieWatchedResponseSchema.array(),
     },
@@ -379,9 +469,25 @@ Returns the most favorited movies in the specified time \`period\`, defaulting t
     path: '/favorited/:period',
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
+    responses: {
+      200: movieFavoritedResponseSchema.array(),
+    },
+  },
+  favoritedDefault: {
+    summary: 'Get the most favorited movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most favorited movies, defaulting to the \`weekly\` time period.`,
+    path: '/favorited',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: movieFavoritedResponseSchema.array(),
     },
@@ -394,9 +500,25 @@ Returns the most played movies in the specified time \`period\`, defaulting to \
     path: '/played/:period',
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
+    responses: {
+      200: movieWatchedResponseSchema.array(),
+    },
+  },
+  playedDefault: {
+    summary: 'Get the most played movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most played movies, defaulting to the \`weekly\` time period.`,
+    path: '/played',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: movieWatchedResponseSchema.array(),
     },
@@ -409,9 +531,25 @@ Returns the most collected movies in the specified time \`period\`, defaulting t
     path: '/collected/:period',
     method: 'GET',
     query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
+    responses: {
+      200: movieWatchedResponseSchema.array(),
+    },
+  },
+  collectedDefault: {
+    summary: 'Get the most collected movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most collected movies, defaulting to the \`weekly\` time period.`,
+    path: '/collected',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: movieWatchedResponseSchema.array(),
     },
@@ -440,6 +578,18 @@ Returns the most collected movies in the specified time \`period\`, defaulting t
       200: movieUpdatedResponseSchema.array(),
     },
   },
+  updatesDefault: {
+    summary: 'Get recently updated movies',
+    description:
+      'Returns all movies updated since the start of the current UTC day. We recommend storing the latest `updated_at` locally and using it for the next request.',
+    path: '/updates',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: movieUpdatedResponseSchema.array(),
+    },
+  },
   updatedIds: {
     summary: 'Get recently updated movie Trakt IDs',
     description:
@@ -447,6 +597,17 @@ Returns the most collected movies in the specified time \`period\`, defaulting t
     path: '/updates/id/:start_date',
     method: 'GET',
     pathParams: startDateParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
+    },
+  },
+  updatedIdsDefault: {
+    summary: 'Get recently updated movie Trakt IDs',
+    description:
+      'Returns Trakt IDs for movies updated since the start of the current UTC day.',
+    path: '/updates/id',
+    method: 'GET',
     query: pageQuerySchema,
     responses: {
       200: z.number().int().array(),
@@ -460,7 +621,7 @@ Returns the most anticipated movies based on the number of lists a movie appears
     path: '/anticipated',
     method: 'GET',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -474,11 +635,25 @@ Returns movies that are currently hot on Trakt. Results can be filtered by media
     path: '/hot',
     method: 'GET',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
       200: movieHotResponseSchema.array(),
+    },
+  },
+  popularNext: {
+    summary: 'Get popular movies with stats',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns the same popular ranking as the popular endpoint, with rank, play and watcher counts on each entry. Results can be filtered by media fields or ignored user state.`,
+    path: '/popular/next',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: moviePopularNextResponseSchema.array(),
     },
   },
   popular: {
@@ -489,7 +664,7 @@ Returns the most popular movies. Popularity is calculated using the rating perce
     path: '/popular',
     method: 'GET',
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -504,11 +679,57 @@ Returns movies recently available on streaming services for the requested \`peri
     method: 'GET',
     pathParams: recentPeriodParamsSchema,
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
+      .merge(movieFilterParamsSchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
       200: movieStreamingResponseSchema.array(),
+    },
+  },
+  streamingDefault: {
+    summary: 'Get streaming movies',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns movies recently available on streaming services, defaulting to the \`weekly\` time period. Results can be filtered by media fields or ignored user state.`,
+    path: '/streaming',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(movieFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: movieStreamingResponseSchema.array(),
+    },
+  },
+  recommendations: {
+    summary: 'Get movie recommendations for a user',
+    description: `#### 🔒 OAuth Required 🎚 Filters
+
+Returns personalized movie recommendations for the authenticated user, scored and annotated with the activity, favorites, and shared subgenres that produced each one. \`ignore_watched\` defaults to true.`,
+    path: '/recommendations',
+    method: 'GET',
+    query: recommendationsFilterParamsSchema
+      .merge(pageQuerySchema.omit({ page: true }))
+      .merge(ignoreQuerySchema)
+      .merge(recommendationsWatchWindowQuerySchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: movieRecommendationResponseSchema.array(),
+    },
+  },
+  recommendationsSmart: {
+    summary: 'Get movie recommendations for a user (smart alias)',
+    description: `#### 🔒 OAuth Required 🎚 Filters
+
+Alias of [**recommendations**](#reference/movies/recommendations) kept for clients pinned to the pre-default \`/smart\` path. \`ignore_watched\` defaults to true.`,
+    path: '/recommendations/smart',
+    method: 'GET',
+    query: recommendationsFilterParamsSchema
+      .merge(pageQuerySchema.omit({ page: true }))
+      .merge(ignoreQuerySchema)
+      .merge(recommendationsWatchWindowQuerySchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: movieRecommendationResponseSchema.array(),
     },
   },
 });
@@ -582,4 +803,22 @@ export { movieStreamingResponseSchema };
 /** The movie streaming response payload. */
 export type MovieStreamingResponse = z.infer<
   typeof movieStreamingResponseSchema
+>;
+
+export { moviePopularNextResponseSchema };
+/** The movie popular/next response payload. */
+export type MoviePopularNextResponse = z.infer<
+  typeof moviePopularNextResponseSchema
+>;
+
+export { movieRecommendationResponseSchema };
+/** The movie recommendation response payload. */
+export type MovieRecommendationResponse = z.infer<
+  typeof movieRecommendationResponseSchema
+>;
+
+export { movieRecommendationSourceResponseSchema };
+/** The movie recommendation source response payload. */
+export type MovieRecommendationSourceResponse = z.infer<
+  typeof movieRecommendationSourceResponseSchema
 >;
