@@ -9,4 +9,9 @@ export const studioResponseSchema = z.object({
     trakt: z.number().int(),
     tmdb: z.number().int().nullish(),
   }),
+  images: z.object({
+    logo: z.array(z.string()).describe(
+      'Studio logo image URLs. Currently always empty.',
+    ),
+  }).nullish(),
 });
