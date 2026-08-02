@@ -18,7 +18,7 @@ import type { trendingSearchShowResponseSchema } from './schema/response/trendin
 const recent = builder.router({
   add: {
     summary: 'Add recent search',
-    description: `#### 🔒 OAuth Required
+    description: `#### 🔓 OAuth Optional
 Add a recent search to the global search trends. This is not a user-specific recent search history. Send the search request body; a successful create returns \`201\` with no response body.`,
     path: '/',
     method: 'POST',
