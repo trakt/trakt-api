@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
@@ -16,14 +16,17 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { recommendationsFilterParamsSchema } from '../_internal/request/recommendationsFilterParamsSchema.ts';
 import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
+import { containingListResponseSchema } from '../_internal/response/containingListResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
 import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
+import { mediaSocialResponseSchema } from '../_internal/response/mediaSocialResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
@@ -44,10 +47,14 @@ import { episodeParamsSchema } from './schema/request/episodeParamsSchema.ts';
 import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts';
+import { seasonStatsResponseSchema } from './schema/response/seasonStatsResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
 import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
+import { showPopularNextResponseSchema } from './schema/response/showPopularNextResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
+import { showRecommendationResponseSchema } from './schema/response/showRecommendationResponseSchema.ts';
+import { showRecommendationSourceResponseSchema } from './schema/response/showRecommendationSourceResponseSchema.ts';
 import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
@@ -64,6 +71,19 @@ const showAliasResponseSchema = z.object({
 const showUpdatedResponseSchema = z.object({
   updated_at: z.string().datetime(),
   show: showResponseSchema,
+});
+
+const seasonVideosParamsSchema = idParamsSchema.extend({
+  season: z.union([z.number().int().nonnegative(), z.literal('all')]).openapi({
+    description: 'Season number, or `all` for videos across every season.',
+  }),
+});
+
+const recommendationsWatchWindowQuerySchema = z.object({
+  watch_window: z.number().int().nullish().openapi({
+    description:
+      "The number of the user's most recently watched titles used to seed recommendations.",
+  }),
 });
 
 const EPISODE_LEVEL = builder.router({
@@ -85,6 +105,7 @@ Returns a single episode's details. All date and times are in UTC and were calcu
       .merge(episodeParamsSchema),
     responses: {
       200: episodeResponseSchema,
+      404: z.undefined(),
     },
   },
   translations: {
@@ -111,6 +132,7 @@ Returns a single episode's details. All date and times are in UTC and were calcu
       .merge(episodeParamsSchema),
     responses: {
       200: episodeStatsResponseSchema,
+      204: z.undefined(),
     },
   },
   ratings: {
@@ -127,6 +149,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
       .merge(episodeParamsSchema),
     responses: {
       200: ratingsResponseSchema,
+      204: z.undefined(),
     },
   },
   watching: {
@@ -179,7 +202,7 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images']>(),
+    query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
     pathParams: idParamsSchema
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema),
@@ -264,6 +287,40 @@ Report an episode for moderator review. Send a \`reason\` and optional \`message
       409: z.undefined(),
     },
   },
+  listed: {
+    summary: 'Get lists containing this episode',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+
+Returns all personal lists that contain this episode for the authenticated user.`,
+    path: '/listed',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['images']>()
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema
+      .merge(seasonParamsSchema)
+      .merge(episodeParamsSchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: containingListResponseSchema.array(),
+    },
+  },
+  social: {
+    summary: 'Get social activity for this episode',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+
+Returns activity from people the authenticated user follows for this episode.`,
+    path: '/social',
+    method: 'GET',
+    query: pageQuerySchema,
+    pathParams: idParamsSchema
+      .merge(seasonParamsSchema)
+      .merge(episodeParamsSchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: mediaSocialResponseSchema.array(),
+      404: z.undefined(),
+    },
+  },
 }, {
   pathPrefix: '/seasons/:season/episodes/:episode',
 });
@@ -282,6 +339,7 @@ Returns a single shows's details. If you request extended info, the \`airs\` obj
     pathParams: idParamsSchema,
     responses: {
       200: showResponseSchema,
+      404: z.undefined(),
     },
   },
   ratings: {
@@ -296,6 +354,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
     pathParams: idParamsSchema,
     responses: {
       200: showRatingsResponseSchema,
+      204: z.undefined(),
     },
   },
   stats: {
@@ -306,6 +365,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
     pathParams: idParamsSchema,
     responses: {
       200: showStatsResponseSchema,
+      204: z.undefined(),
     },
   },
   aliases: {
@@ -343,6 +403,7 @@ By default, any hidden seasons will be removed from the response and stats. To i
       query: extendedMediaQuerySchema
         .merge(showQueryParamsSchema)
         .merge(statsQuerySchema),
+      metadata: authMetadata('required'),
       responses: {
         200: showProgressResponseSchema,
       },
@@ -366,6 +427,7 @@ By default, the \`last_episode\` and \`next_episode\` are calculated using the l
       query: extendedMediaQuerySchema
         .merge(showQueryParamsSchema)
         .merge(statsQuerySchema),
+      metadata: authMetadata('required'),
       responses: {
         200: showProgressResponseSchema,
       },
@@ -411,6 +473,20 @@ By default, the \`last_episode\` and \`next_episode\` are calculated using the l
 
 Returns related and similar shows.`,
     path: '/related',
+    method: 'GET',
+    pathParams: idParamsSchema,
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: showResponseSchema.array(),
+    },
+  },
+  relatedSmart: {
+    summary: 'Get related shows (smart alias)',
+    description: `#### 📄 Pagination ✨ Extended Info
+
+Alias of [**related**](#reference/shows/related) kept for clients pinned to the pre-default \`/smart\` path. Returns related and similar shows.`,
+    path: '/related/smart',
     method: 'GET',
     pathParams: idParamsSchema,
     query: extendedMediaQuerySchema
@@ -521,7 +597,7 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images']>(),
+    query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
     pathParams: idParamsSchema,
     responses: {
       200: peopleResponseSchema,
@@ -539,7 +615,10 @@ If you add \`?extended=episodes\` to the URL, it will return all episodes for al
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/seasons',
     method: 'GET',
-    query: extendedMediaQuerySchema,
+    query: extendedQuerySchemaFactory<
+      ['full', 'images', 'colors', 'streaming_ids', 'episodes']
+    >()
+      .merge(showQueryParamsSchema.pick({ specials: true })),
     pathParams: idParamsSchema,
     responses: {
       200: seasonResponseSchema.array(),
@@ -557,6 +636,7 @@ If you add \`?extended=episodes\` to the URL, it will return all episodes for al
         .merge(seasonParamsSchema),
       responses: {
         200: seasonResponseSchema,
+        204: z.undefined(),
       },
     },
     episodes: {
@@ -626,13 +706,29 @@ Returns all lists that contain this season. By default, \`personal\` lists are r
         200: listResponseSchema.array(),
       },
     },
+    listed: {
+      summary: 'Get lists containing this season',
+      description: `#### 🔒 OAuth Required 📄 Pagination
+
+Returns all personal lists that contain this season for the authenticated user.`,
+      path: '/listed',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['images']>()
+        .merge(pageQuerySchema),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema),
+      metadata: authMetadata('required'),
+      responses: {
+        200: containingListResponseSchema.array(),
+      },
+    },
     people: {
       summary: 'Get all people for a season',
       description:
         'Returns all cast and crew for a season. Each cast member will have a characters array and a standard person object.',
       path: '/people',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['images']>(),
+      query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
       pathParams: idParamsSchema
         .merge(seasonParamsSchema),
       responses: {
@@ -652,6 +748,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
         .merge(seasonParamsSchema),
       responses: {
         200: ratingsResponseSchema,
+        204: z.undefined(),
       },
     },
     stats: {
@@ -662,7 +759,8 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
       pathParams: idParamsSchema
         .merge(seasonParamsSchema),
       responses: {
-        200: episodeStatsResponseSchema,
+        200: seasonStatsResponseSchema,
+        204: z.undefined(),
       },
     },
     watching: {
@@ -681,11 +779,10 @@ Returns all users watching this season right now.`,
     videos: {
       summary: 'Get all videos',
       description: `#### ✨ Extended Info
-Returns all videos including trailers, teasers, clips, and featurettes.`,
+Returns all videos including trailers, teasers, clips, and featurettes. Use \`all\` as the season number to return videos across every season.`,
       path: '/videos',
       method: 'GET',
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonVideosParamsSchema,
       responses: {
         200: videoResponseSchema.array(),
       },
@@ -744,6 +841,36 @@ Returns all videos including trailers, teasers, clips, and featurettes.`,
       200: videoResponseSchema.array(),
     },
   },
+  listed: {
+    summary: 'Get lists containing this show',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+
+Returns all personal lists that contain this show for the authenticated user.`,
+    path: '/listed',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['images']>()
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema,
+    metadata: authMetadata('required'),
+    responses: {
+      200: containingListResponseSchema.array(),
+    },
+  },
+  social: {
+    summary: 'Get social activity for this show',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+
+Returns activity from people the authenticated user follows for this show.`,
+    path: '/social',
+    method: 'GET',
+    query: pageQuerySchema,
+    pathParams: idParamsSchema,
+    metadata: authMetadata('required'),
+    responses: {
+      200: mediaSocialResponseSchema.array(),
+      404: z.undefined(),
+    },
+  },
   lists: {
     summary: 'Get lists containing this show',
     description: `#### 📄 Pagination 😁 Emojis
@@ -756,6 +883,35 @@ Returns all lists that contain this show. By default, \`personal\` lists are ret
     pathParams: idParamsSchema
       .merge(listSortSchema)
       .merge(listTypeSchema),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  listsByType: {
+    summary: 'Get lists containing this show',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this show, sorted by the most \`popular\`.`,
+    path: '/lists/:type',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['images']>()
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema
+      .merge(listTypeSchema),
+    responses: {
+      200: listResponseSchema.array(),
+    },
+  },
+  listsDefault: {
+    summary: 'Get lists containing this show',
+    description: `#### 📄 Pagination 😁 Emojis
+
+Returns all lists that contain this show. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
+    path: '/lists',
+    method: 'GET',
+    query: extendedQuerySchemaFactory<['images']>()
+      .merge(pageQuerySchema),
+    pathParams: idParamsSchema,
     responses: {
       200: listResponseSchema.array(),
     },
@@ -868,6 +1024,21 @@ Returns the most watched (unique users) shows in the specified time \`period\`, 
       200: showWatchedResponseSchema.array(),
     },
   },
+  watchedDefault: {
+    summary: 'Get the most watched shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most watched (unique users) shows, defaulting to the \`weekly\` time period. All stats are relative to the specific time period.`,
+    path: '/watched',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: showWatchedResponseSchema.array(),
+    },
+  },
   favorited: {
     summary: 'Get the most favorited shows',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -880,6 +1051,21 @@ Returns the most favorited shows in the specified time \`period\`, defaulting to
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
+    responses: {
+      200: showFavoritedResponseSchema.array(),
+    },
+  },
+  favoritedDefault: {
+    summary: 'Get the most favorited shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most favorited shows, defaulting to the \`weekly\` time period.`,
+    path: '/favorited',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: showFavoritedResponseSchema.array(),
     },
@@ -900,6 +1086,21 @@ Returns the most played shows in the specified time \`period\`, defaulting to \`
       200: showWatchedResponseSchema.array(),
     },
   },
+  playedDefault: {
+    summary: 'Get the most played shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most played shows, defaulting to the \`weekly\` time period.`,
+    path: '/played',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: showWatchedResponseSchema.array(),
+    },
+  },
   collected: {
     summary: 'Get the most collected shows',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -912,6 +1113,21 @@ Returns the most collected shows in the specified time \`period\`, defaulting to
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     pathParams: periodParamsSchema,
+    responses: {
+      200: showWatchedResponseSchema.array(),
+    },
+  },
+  collectedDefault: {
+    summary: 'Get the most collected shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+
+Returns the most collected shows, defaulting to the \`weekly\` time period.`,
+    path: '/collected',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: showWatchedResponseSchema.array(),
     },
@@ -929,6 +1145,18 @@ Returns the most collected shows in the specified time \`period\`, defaulting to
       200: showUpdatedResponseSchema.array(),
     },
   },
+  updatesDefault: {
+    summary: 'Get recently updated shows',
+    description:
+      'Returns all shows updated since the start of the current UTC day. We recommend storing the latest `updated_at` locally and using it for the next request.',
+    path: '/updates',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(pageQuerySchema),
+    responses: {
+      200: showUpdatedResponseSchema.array(),
+    },
+  },
   updatedIds: {
     summary: 'Get recently updated show Trakt IDs',
     description:
@@ -936,6 +1164,17 @@ Returns the most collected shows in the specified time \`period\`, defaulting to
     path: '/updates/id/:start_date',
     method: 'GET',
     pathParams: startDateParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
+    },
+  },
+  updatedIdsDefault: {
+    summary: 'Get recently updated show Trakt IDs',
+    description:
+      'Returns Trakt IDs for shows updated since the start of the current UTC day.',
+    path: '/updates/id',
+    method: 'GET',
     query: pageQuerySchema,
     responses: {
       200: z.number().int().array(),
@@ -970,6 +1209,20 @@ Returns shows that are currently hot on Trakt. Results can be filtered by media 
       200: showHotResponseSchema.array(),
     },
   },
+  popularNext: {
+    summary: 'Get popular shows with stats',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns the same popular ranking as the popular endpoint, with rank, play and watcher counts on each entry. Results can be filtered by media fields or ignored user state.`,
+    path: '/popular/next',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: showPopularNextResponseSchema.array(),
+    },
+  },
   popular: {
     summary: 'Get popular shows',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -998,6 +1251,52 @@ Returns shows recently available on streaming services for the requested \`perio
       .merge(ignoreQuerySchema),
     responses: {
       200: showStreamingResponseSchema.array(),
+    },
+  },
+  streamingDefault: {
+    summary: 'Get streaming shows',
+    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns shows recently available on streaming services, defaulting to the \`weekly\` time period. Results can be filtered by media fields or ignored user state.`,
+    path: '/streaming',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(pageQuerySchema)
+      .merge(ignoreQuerySchema),
+    responses: {
+      200: showStreamingResponseSchema.array(),
+    },
+  },
+  recommendations: {
+    summary: 'Get show recommendations for a user',
+    description: `#### 🔒 OAuth Required 🎚 Filters
+
+Returns personalized show recommendations for the authenticated user, scored and annotated with the activity, favorites, and shared subgenres that produced each one. \`ignore_watched\` defaults to true.`,
+    path: '/recommendations',
+    method: 'GET',
+    query: recommendationsFilterParamsSchema
+      .merge(pageQuerySchema.omit({ page: true }))
+      .merge(ignoreQuerySchema)
+      .merge(recommendationsWatchWindowQuerySchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: showRecommendationResponseSchema.array(),
+    },
+  },
+  recommendationsSmart: {
+    summary: 'Get show recommendations for a user (smart alias)',
+    description: `#### 🔒 OAuth Required 🎚 Filters
+
+Alias of [**recommendations**](#reference/shows/recommendations) kept for clients pinned to the pre-default \`/smart\` path. \`ignore_watched\` defaults to true.`,
+    path: '/recommendations/smart',
+    method: 'GET',
+    query: recommendationsFilterParamsSchema
+      .merge(pageQuerySchema.omit({ page: true }))
+      .merge(ignoreQuerySchema)
+      .merge(recommendationsWatchWindowQuerySchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: showRecommendationResponseSchema.array(),
     },
   },
 });
@@ -1064,6 +1363,24 @@ export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
 export { showStreamingResponseSchema };
 /** The show streaming response payload. */
 export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;
+
+export { showPopularNextResponseSchema };
+/** The show popular/next response payload. */
+export type ShowPopularNextResponse = z.infer<
+  typeof showPopularNextResponseSchema
+>;
+
+export { showRecommendationResponseSchema };
+/** The show recommendation response payload. */
+export type ShowRecommendationResponse = z.infer<
+  typeof showRecommendationResponseSchema
+>;
+
+export { showRecommendationSourceResponseSchema };
+/** The show recommendation source response payload. */
+export type ShowRecommendationSourceResponse = z.infer<
+  typeof showRecommendationSourceResponseSchema
+>;
 
 export { episodeParamsSchema };
 

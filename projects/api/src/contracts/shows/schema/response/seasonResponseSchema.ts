@@ -1,3 +1,4 @@
+import { episodeResponseSchema } from '../../../_internal/response/episodeResponseSchema.ts';
 import { seasonIdsResponseSchema } from '../../../_internal/response/seasonIdsResponseSchema.ts';
 import { float, z } from '../../../_internal/z.ts';
 
@@ -55,4 +56,8 @@ export const seasonResponseSchema = z.object({
     poster: z.array(z.string()),
     thumb: z.array(z.string()),
   }).nullish(),
+  /**
+   * Available if requesting extended `episodes`.
+   */
+  episodes: episodeResponseSchema.array().nullish(),
 });

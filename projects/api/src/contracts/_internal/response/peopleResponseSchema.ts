@@ -12,6 +12,7 @@ const headshotSchema = z.object({
 export const castResponseSchema = z.object({
   episode_count: z.number().int().nullish(),
   person: personResponseSchema,
+  order: z.number().int().nullish(),
   /***
    * Available if requesting extended `images`.
    */
@@ -35,4 +36,8 @@ export const peopleResponseSchema = z.object({
     crewPositionResponseSchema,
     z.array(crewResponseSchema),
   ).nullish(),
+  /***
+   * Available if requesting extended `guest_stars`.
+   */
+  guest_stars: z.array(castResponseSchema).nullish(),
 });
