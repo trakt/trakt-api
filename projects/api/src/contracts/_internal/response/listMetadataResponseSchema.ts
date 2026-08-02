@@ -6,4 +6,8 @@ export const listMetadataResponseSchema = z.object({
   id: z.number().int(),
   listed_at: z.string().datetime(),
   notes: z.string().nullish(),
+  /**
+   * The caller's rating for the item; `null` unless sorting by `my_rating`.
+   */
+  my_rating: z.number().int().nullish(),
 });
