@@ -6,18 +6,22 @@ import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
-import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
+import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
+import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
 import { z } from '../_internal/z.ts';
+import { showQueryParamsSchema } from '../shows/schema/request/showQueryParamsSchema.ts';
 import { collectionParamSchema } from './schema/request/collectionParamSchema.ts';
 import { favoriteParamSchema } from './schema/request/favoritesParamSchema.ts';
 import { historyRemoveRequestSchema } from './schema/request/historyRemoveRequestSchema.ts';
+import { historyTypeParamsSchema } from './schema/request/historyTypeParamsSchema.ts';
 import { minimalParamSchema } from './schema/request/minimalParamSchema.ts';
 import { playbackIdParamsSchema } from './schema/request/playbackIdParamsSchema.ts';
 import { progressParamsSchema } from './schema/request/progressParamsSchema.ts';
 import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
 import { removeRatingsParamSchema } from './schema/request/removeRatingsParamSchema.ts';
+import { updatesTypeParamsSchema } from './schema/request/updatesTypeParamsSchema.ts';
 import { upNextIntentQuerySchema } from './schema/request/upNextIntentQuerySchema.ts';
 import {
   collectionMinimalResponseSchema,
@@ -43,8 +47,30 @@ const syncTypeParamsSchema = z.object({
   type: z.string().describe('Sync media type filter.'),
 });
 
-const syncHistoryParamsSchema = syncTypeParamsSchema.extend({
+const syncHistoryParamsSchema = historyTypeParamsSchema.extend({
   id: z.string().describe('Trakt ID for a specific item.'),
+});
+
+const historyFilterParamsSchema = mediaFilterParamsSchema.omit({
+  networks: true,
+  keywords: true,
+  keywords_operator: true,
+  genres_operator: true,
+  letterboxd_ratings: true,
+  mal_ratings: true,
+});
+
+const syncIdQuerySchema = z.object({
+  sync_id: z.number().int().nullish().openapi({
+    description:
+      'Filter by a specific sync event id. Requires an Official app tier; other apps receive a 403.',
+  }),
+});
+
+const syncUpdatesParamsSchema = updatesTypeParamsSchema.extend({
+  start_date: z.string().describe(
+    'UTC start date. Invalid values default to the start of the current UTC day.',
+  ),
 });
 
 const syncRatingsParamsSchema = syncTypeParamsSchema.extend({
@@ -100,18 +126,49 @@ const syncReorderResponseSchema = z.object({
   skipped_ids: z.array(z.number().int()).optional(),
 }).passthrough();
 
+/**
+ * A single `/sync/updates` entry: a movie or a show, as one flat object with
+ * both fields nullish. Discriminate by which of `movie` / `show` is present.
+ */
+const syncUpdatesResponseSchema = z.object({
+  updated_at: z.string().datetime(),
+  movie: movieResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
+});
+
+const watchedMoviesMinimalResponseSchema = z.record(
+  z.string(),
+  z.string().datetime().array(),
+);
+
+const watchedShowsMinimalResponseSchema = z.record(
+  z.string(),
+  z.record(
+    z.string(),
+    z.record(
+      z.string(),
+      z.string().datetime().array(),
+    ),
+  ),
+);
+
+const watchedEpisodesMinimalResponseSchema = z.record(
+  z.string(),
+  z.string().datetime().array(),
+);
+
 const progress = builder.router({
   upNext: {
     standard: {
       summary: 'Get up next',
-      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
-Returns the authenticated user up next progress ordered by the requested sort. Use \`include_stats\` and \`lifetime_stats\` to include additional watch stats.`,
+      description: `#### 🔒 OAuth Required 📄 Pagination
+Returns the authenticated user up next progress ordered by the requested sort. Use \`intent\` plus sorting, filters, and pagination to control the response. Same response as the \`/users/:id/progress/up_next\` alias, which ignores \`:id\` in favor of the authenticated user.`,
       method: 'GET',
       path: '/progress/up_next',
-      query: extendedQuerySchemaFactory<['full', 'images']>()
-        .merge(pageQuerySchema)
+      query: pageQuerySchema
         .merge(sortQuerySchema)
-        .merge(statsQuerySchema)
+        .merge(mediaFilterParamsSchema)
+        .merge(upNextIntentQuerySchema)
         .merge(lifetimeStatsQuerySchema),
       responses: {
         200: upNextResponseSchema.array(),
@@ -120,13 +177,14 @@ Returns the authenticated user up next progress ordered by the requested sort. U
     nitro: {
       summary: 'Get up next nitro',
       description: `#### 🔒 OAuth Required 📄 Pagination
-Returns the authenticated user up next progress optimized for intent-based clients. Use \`intent\` plus sorting and pagination to control the response.`,
+Returns the authenticated user up next progress optimized for intent-based clients. Use \`intent\` plus sorting, filters, and pagination to control the response.`,
       method: 'GET',
       path: '/progress/up_next_nitro',
       query: pageQuerySchema
-        .merge(mediaFilterParamsSchema)
         .merge(sortQuerySchema)
-        .merge(upNextIntentQuerySchema),
+        .merge(mediaFilterParamsSchema)
+        .merge(upNextIntentQuerySchema)
+        .merge(lifetimeStatsQuerySchema),
       responses: {
         200: upNextResponseSchema.array(),
       },
@@ -187,9 +245,45 @@ Remove a playback item from a user's playback progress list. A \`404\` will be r
       .merge(z.object({
         hide_completed: z.boolean().optional(),
         hide_not_completed: z.boolean().optional(),
+        hide_ended: z.boolean().optional(),
+        hide_airing: z.boolean().optional(),
+        hide_rewatching: z.boolean().optional(),
         only_rewatching: z.boolean().optional().openapi({
           description:
             'When true, restrict the list to shows the user is currently rewatching (i.e. those with an active `progress.reset_at`).',
+        }),
+        hidden: z.boolean().optional().openapi({
+          description:
+            'When true, hidden seasons are counted in the progress totals and kept in `progress.seasons`.',
+        }),
+        terms: z.string().optional().openapi({
+          description:
+            'Search terms matched against the show title or the next episode title.',
+        }),
+        last_activity: z.string().optional().openapi({
+          description:
+            'Set to `watched` to sort the underlying activity scan by last watched instead of last updated.',
+        }),
+        specials: z.boolean().optional().openapi({
+          description: 'Whether to include special seasons as season 0.',
+        }),
+        count_specials: z.boolean().optional().openapi({
+          description:
+            'Whether to count specials in the overall stats (only applies if specials are included).',
+        }),
+        include_seasons: z.boolean().optional().openapi({
+          description: 'Whether to include per-season progress detail.',
+        }),
+        include_hidden_seasons: z.boolean().optional().openapi({
+          description: 'Whether to include hidden seasons in the response.',
+        }),
+        list: z.string().optional().openapi({
+          description:
+            'Comma-separated list ids to further restrict the shows in scope. VIP only.',
+        }),
+        exclude: z.boolean().optional().openapi({
+          description:
+            'When true, excludes (instead of restricts to) `list`. VIP only.',
         }),
       })),
     responses: {
@@ -199,6 +293,39 @@ Remove a playback item from a user's playback progress list. A \`404\` will be r
 });
 
 const history = builder.router({
+  list: {
+    summary: 'Get watched history',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies and episodes that a user has watched, sorted by most recent, across all media types.`,
+    method: 'GET',
+    path: '',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema)
+      .merge(historyFilterParamsSchema)
+      .merge(syncIdQuerySchema),
+    responses: {
+      200: syncHistoryItemResponseSchema.array(),
+      403: z.undefined(),
+    },
+  },
+  byType: {
+    summary: 'Get watched history',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies and episodes that a user has watched, sorted by most recent. Specify a \`type\` to limit the history to just that media type.`,
+    method: 'GET',
+    path: '/:type',
+    pathParams: historyTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema)
+      .merge(historyFilterParamsSchema)
+      .merge(syncIdQuerySchema),
+    responses: {
+      200: syncHistoryItemResponseSchema.array(),
+      403: z.undefined(),
+    },
+  },
   get: {
     summary: 'Get watched history',
     description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
@@ -208,9 +335,12 @@ Returns movies and episodes that a user has watched, sorted by most recent. Spec
     pathParams: syncHistoryParamsSchema,
     query: extendedQuerySchemaFactory<['full', 'images']>()
       .merge(pageQuerySchema)
-      .merge(progressParamsSchema),
+      .merge(progressParamsSchema)
+      .merge(historyFilterParamsSchema)
+      .merge(syncIdQuerySchema),
     responses: {
       200: syncHistoryItemResponseSchema.array(),
+      403: z.undefined(),
     },
   },
   add: {
@@ -551,19 +681,34 @@ Returns movies in the authenticated user collection. Use \`available_on\` and pa
     path: '/movies',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema)
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: collectedMovieSchema.array(),
     },
   },
+  moviesMinimal: {
+    summary: 'Get minimal movie collection',
+    description: `#### 🔒 OAuth Required
+When \`extended=min\` is sent, returns a map of Trakt movie id to the \`collected_at\` timestamp instead of full movie objects. Optimized for syncing local collection state.`,
+    method: 'GET',
+    path: '/movies',
+    query: minimalParamSchema
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: collectionMinimalResponseSchema,
+    },
+  },
   shows: {
     summary: 'Get show collection',
-    description: `#### 🔒 OAuth Required ✨ Extended Info
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
 Returns shows in the authenticated user collection, including collected seasons and episodes.`,
     method: 'GET',
     path: '/shows',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema),
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
     responses: {
       200: collectedShowSchema.array(),
     },
@@ -576,9 +721,23 @@ Returns episodes in the authenticated user collection. Use \`available_on\` and 
     path: '/episodes',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema)
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: collectedEpisodeSchema.array(),
+    },
+  },
+  episodesMinimal: {
+    summary: 'Get minimal episode collection',
+    description: `#### 🔒 OAuth Required
+When \`extended=min\` is sent, returns a map of Trakt episode id to the \`collected_at\` timestamp instead of full episode objects. Optimized for syncing local collection state.`,
+    method: 'GET',
+    path: '/episodes',
+    query: minimalParamSchema
+      .merge(collectionParamSchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: collectionMinimalResponseSchema,
     },
   },
   media: {
@@ -589,6 +748,7 @@ Returns movies, shows, and episodes in the authenticated user collection. Use \`
     path: '/media',
     query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
       .merge(collectionParamSchema)
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: collectionResponseSchema.array(),
@@ -655,6 +815,66 @@ Returns the authenticated user episode collection in a minimal format optimized 
   pathPrefix: '/collection',
 });
 
+const updates = builder.router({
+  byType: {
+    summary: 'Get recently updated movies/shows',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies or shows updated since the start of the current UTC day. Send \`start_date\` to widen the window (up to 30 days back); results are capped at 100 per page. Only items the user has watched, collected or watchlisted are considered.`,
+    method: 'GET',
+    path: '/:type',
+    pathParams: updatesTypeParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: syncUpdatesResponseSchema.array(),
+    },
+  },
+  byTypeAndDate: {
+    summary: 'Get recently updated movies/shows',
+    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+Returns movies or shows updated since \`start_date\` (up to 30 days back); results are capped at 100 per page. Only items the user has watched, collected or watchlisted are considered.`,
+    method: 'GET',
+    path: '/:type/:start_date',
+    pathParams: syncUpdatesParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema),
+    responses: {
+      200: syncUpdatesResponseSchema.array(),
+    },
+  },
+}, {
+  pathPrefix: '/updates',
+});
+
+const updatesId = builder.router({
+  byType: {
+    summary: 'Get recently updated movie/show Trakt ids',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Returns the Trakt ids of movies or shows updated since the start of the current UTC day. Send \`start_date\` to widen the window (up to 30 days back); results are capped at 100 per page. Only items the user has watched, collected or watchlisted are considered.`,
+    method: 'GET',
+    path: '/:type',
+    pathParams: updatesTypeParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
+    },
+  },
+  byTypeAndDate: {
+    summary: 'Get recently updated movie/show Trakt ids',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Returns the Trakt ids of movies or shows updated since \`start_date\` (up to 30 days back); results are capped at 100 per page. Only items the user has watched, collected or watchlisted are considered.`,
+    method: 'GET',
+    path: '/:type/:start_date',
+    pathParams: syncUpdatesParamsSchema,
+    query: pageQuerySchema,
+    responses: {
+      200: z.number().int().array(),
+    },
+  },
+}, {
+  pathPrefix: '/updates/id',
+});
+
 /** ts-rest contract for the `sync` endpoints. */
 export const sync = builder.router({
   lastActivities: {
@@ -681,10 +901,54 @@ Returns the latest activity timestamps for the authenticated user. Cache these d
       200: syncWatchedItemResponseSchema.array(),
     },
   },
+  watchedMoviesMinimal: {
+    summary: 'Get watched movies (minimal)',
+    description: `#### 🔒 OAuth Required 📄 Pagination Optional
+When \`extended=min\` is sent, returns a map of Trakt movie id to an array of watched timestamps instead of full movie objects. Optimized for syncing local watched state.`,
+    method: 'GET',
+    path: '/watched/movies',
+    query: minimalParamSchema
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema),
+    responses: {
+      200: watchedMoviesMinimalResponseSchema,
+    },
+  },
+  watchedShowsMinimal: {
+    summary: 'Get watched shows (minimal)',
+    description: `#### 🔒 OAuth Required 📄 Pagination Optional
+When \`extended=min\` is sent, returns a map of Trakt show id to season to episode id to an array of watched timestamps instead of full show objects. Use \`specials\` and \`season_numbers\` to control season detail.`,
+    method: 'GET',
+    path: '/watched/shows',
+    query: minimalParamSchema
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema)
+      .merge(showQueryParamsSchema.pick({ specials: true }))
+      .extend({ season_numbers: z.boolean().nullish() }),
+    responses: {
+      200: watchedShowsMinimalResponseSchema,
+    },
+  },
+  watchedEpisodesMinimal: {
+    summary: 'Get watched episodes (minimal)',
+    description: `#### 🔒 OAuth Required 📄 Pagination Optional
+When \`extended=min\` is sent, returns a map of Trakt episode id to an array of watched timestamps instead of full episode objects.`,
+    method: 'GET',
+    path: '/watched/episodes',
+    query: minimalParamSchema
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema)
+      .merge(showQueryParamsSchema.pick({ specials: true })),
+    responses: {
+      200: watchedEpisodesMinimalResponseSchema,
+    },
+  },
   watchlist,
   ratings,
   favorites,
   collection,
+  updates,
+  updatesId,
 }, {
   pathPrefix: '/sync',
   metadata: authMetadata('required'),

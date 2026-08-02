@@ -56,9 +56,29 @@ export const collectedShowSchema = z.object({
     show: showResponseSchema.nullish(),
   }));
 
-/** Zod schema for the collection response. */
-export const collectionResponseSchema = z.union([
-  collectedMovieSchema,
-  collectedShowSchema,
-  collectedEpisodeSchema,
-]);
+/**
+ * A single entry in the merged collection feed (`/sync/collection/media`,
+ * `/sync/collection/:type`): a collected movie, show, or episode, as one flat
+ * object with the shape-specific fields nullish. Discriminate by `type`.
+ */
+export const collectionResponseSchema = z.object({
+  type: z.enum(['movie', 'show', 'episode']),
+  collected_at: z.string().datetime().nullish(),
+  updated_at: z.string().datetime().nullish(),
+  available_on: z.array(z.object({ name: availableOnEnumSchema })).nullish(),
+  /** Collection metadata (media type, resolution, audio, 3D). */
+  metadata: z.object({
+    media_type: z.string().nullable(),
+    resolution: z.string().nullable(),
+    hdr: z.string().nullable(),
+    audio: z.string().nullable(),
+    audio_channels: z.string().nullable(),
+    '3d': z.boolean().nullable(),
+  }).nullable(),
+  movie: movieResponseSchema.nullish(),
+  episode: episodeResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
+  last_collected_at: z.string().datetime().nullish(),
+  last_updated_at: z.string().datetime().nullish(),
+  seasons: collectedSeasonResponseSchema.array().nullish(),
+});
