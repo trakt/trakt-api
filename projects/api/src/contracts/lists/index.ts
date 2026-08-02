@@ -51,6 +51,7 @@ Returns a single list. Use the [**/lists/:id/items**](#reference/lists/list-item
       .merge(ignoreQuerySchema),
     responses: {
       200: listResponseSchema,
+      204: z.undefined(),
     },
   },
   items: {
