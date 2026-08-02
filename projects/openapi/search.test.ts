@@ -66,6 +66,7 @@ Deno.test('search type docs list the types supported by each endpoint', () => {
     getParameter(getOperation('/search/{type}'), 'type'),
   );
   assertEquals(queryType.enum, [
+    'media',
     'movie',
     'show',
     'episode',
@@ -76,7 +77,7 @@ Deno.test('search type docs list the types supported by each endpoint', () => {
   const exactType = getSchema(
     getParameter(getOperation('/search/{type}/exact'), 'type'),
   );
-  assertEquals(exactType.enum, ['movie', 'show']);
+  assertEquals(exactType.enum, ['media', 'movie', 'show']);
 });
 
 Deno.test('search result docs expose one flat schema with episode support', () => {
