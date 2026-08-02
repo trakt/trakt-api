@@ -41,12 +41,16 @@ Remove a recent search from the global search trends. This is not a user-specifi
 }, { pathPrefix: '/recent' });
 
 const idLookupParamsSchema = z.object({
-  id_type: z.string().describe('External ID type to look up.'),
+  id_type: z.enum(['trakt', 'imdb', 'tmdb', 'tvdb']).describe(
+    'External ID type to look up.',
+  ),
   id: z.string().describe('External ID value.'),
 });
 
 const idLookupQuerySchema = z.object({
-  type: z.string().optional().describe('Optional media type filter.'),
+  type: z.enum(['movie', 'show', 'episode', 'person']).optional().describe(
+    'Optional media type filter. Ignored for `imdb`, which infers the type from the ID.',
+  ),
 });
 
 /** ts-rest contract for the `search` endpoints. */
@@ -127,13 +131,12 @@ Search for exact movie or show matches using the requested search \`type\` and \
   },
   lookup: {
     summary: 'Get ID lookup results',
-    description: `#### 📄 Pagination ✨ Extended Info
+    description: `#### ✨ Extended Info
 Lookup items by external ID. Use \`id_type\` and \`id\` to identify the external ID, and optionally send \`type\` to limit the result media type.`,
     path: '/:id_type/:id',
     method: 'GET',
     pathParams: idLookupParamsSchema,
     query: idLookupQuerySchema
-      .merge(pageQuerySchema)
       .merge(
         extendedQuerySchemaFactory<['full,images']>(),
       ),
