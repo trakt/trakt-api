@@ -35,6 +35,10 @@ export const personResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
+  height: z.number().nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
   homepage: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
