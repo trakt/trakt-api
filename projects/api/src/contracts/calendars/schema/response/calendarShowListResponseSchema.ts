@@ -5,6 +5,7 @@ import { calendarEpisodeResponseSchema } from './calendarEpisodeResponseSchema.t
 /** Zod schema for the calendar show response. */
 export const calendarShowResponseSchema = z.object({
   first_aired: z.string(),
+  released: z.string().nullable(),
   episode: calendarEpisodeResponseSchema,
   show: showResponseSchema,
 });
