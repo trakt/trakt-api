@@ -14,6 +14,6 @@ export const trendingSearchTypeParamFactory = <
       .openapi({
         description:
           'Specify the type of results by sending a single value or a comma delimited string for multiple types.',
-        enum: ['movies', 'shows', 'people'],
+        enum: ['movies', 'shows'],
       }),
   });

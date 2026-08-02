@@ -148,7 +148,7 @@ Returns globally trending recent searches by \`type\`. Use \`query\` to narrow t
     path: '/recent_by_id/global/:type',
     method: 'GET',
     pathParams: trendingSearchTypeParamFactory<
-      ['movies', 'shows', 'people']
+      ['movies', 'shows']
     >(),
     query: pageQuerySchema
       .merge(searchQuerySchema)
