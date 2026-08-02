@@ -3,27 +3,17 @@ import { movieResponseSchema } from '../../../_internal/response/movieResponseSc
 import { showResponseSchema } from '../../../_internal/response/showResponseSchema.ts';
 import { asString, z } from '../../../_internal/z.ts';
 
-const commonWatchingResponseSchema = z.object({
+/**
+ * The user's currently-watching item: a movie or an episode. One flat
+ * object with every shape-specific field nullish rather than `z.union` -
+ * see schemas.md. Discriminate by which of `movie` / `episode` is present.
+ */
+export const watchingResponseSchema = z.object({
   expires_at: z.string().datetime(),
   started_at: z.string().datetime(),
   action: asString(z.enum(['checkin', 'scrobble'])),
+  type: z.enum(['movie', 'episode']),
+  movie: movieResponseSchema.nullish(),
+  episode: episodeResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
 });
-
-const movieWatchingResponseSchema = commonWatchingResponseSchema
-  .merge(z.object({
-    type: z.literal('movie'),
-    movie: movieResponseSchema.nullish(),
-  }));
-
-const episodeWatchingResponseSchema = commonWatchingResponseSchema
-  .merge(z.object({
-    type: z.literal('episode'),
-    episode: episodeResponseSchema.nullish(),
-    show: showResponseSchema.nullish(),
-  }));
-
-/** Zod schema for the watching response. */
-export const watchingResponseSchema = z.union([
-  movieWatchingResponseSchema,
-  episodeWatchingResponseSchema,
-]);

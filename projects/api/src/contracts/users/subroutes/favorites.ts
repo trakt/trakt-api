@@ -3,6 +3,8 @@ import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQ
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
+import { movieResponseSchema } from '../../_internal/response/movieResponseSchema.ts';
+import { showResponseSchema } from '../../_internal/response/showResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
 import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSortParamsSchema.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
@@ -10,10 +12,38 @@ import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 import { favoritedMoviesResponseSchema } from '../schema/response/favoritedMoviesResponseSchema.ts';
 import { favoritedShowsResponseSchema } from '../schema/response/favoritedShowsResponseSchema.ts';
 
-const typedSortedFavoritesParamsSchema = profileParamsSchema.extend({
+const favoritesByTypeParamsSchema = profileParamsSchema.extend({
   type: z.string().describe('Favorites media type filter.'),
+});
+
+const favoritesByTypeSortParamsSchema = favoritesByTypeParamsSchema.extend({
   sort_by: z.string().describe('Sort by a specific property.'),
-  sort_how: z.string().describe('Sort direction.'),
+});
+
+const typedSortedFavoritesParamsSchema = favoritesByTypeSortParamsSchema.extend(
+  {
+    sort_how: z.string().describe('Sort direction.'),
+  },
+);
+
+/**
+ * A single favorited item: a movie or a show, as one flat object with the
+ * shape-specific fields nullish. Discriminate by which of `movie` / `show`
+ * is present.
+ */
+const favoritedItemResponseSchema = z.object({
+  id: z.number().int(),
+  listed_at: z.string().datetime(),
+  notes: z.string().nullish(),
+  rank: z.number().int(),
+  /**
+   * Available when sorting by `my_rating`; always present, `null` for any
+   * other sort.
+   */
+  my_rating: z.number().int().nullish(),
+  type: z.enum(['movie', 'show']),
+  movie: movieResponseSchema.nullish(),
+  show: showResponseSchema.nullish(),
 });
 
 /** ts-rest contract for the `favorites` endpoints. */
@@ -29,10 +59,7 @@ Returns favorite movies and shows for a user. Use the \`sort\` path parameter pl
       .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
-      200: z.union([
-        favoritedShowsResponseSchema,
-        favoritedMoviesResponseSchema,
-      ]).array(),
+      200: favoritedItemResponseSchema.array(),
     },
   },
   movies: {
@@ -75,10 +102,52 @@ Returns the top 100 shows and movies a user has favorited.`,
       .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
-      200: z.union([
-        favoritedShowsResponseSchema,
-        favoritedMoviesResponseSchema,
-      ]).array(),
+      200: favoritedItemResponseSchema.array(),
+    },
+  },
+  byTypeSort: {
+    summary: 'Get favorites',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Returns the top 100 shows and movies a user has favorited, filtered by type and sorted by \`sort_by\` (default direction).`,
+    path: '/:type/:sort_by',
+    pathParams: favoritesByTypeSortParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: favoritedItemResponseSchema.array(),
+    },
+  },
+  byType: {
+    summary: 'Get favorites',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Returns the top 100 shows and movies a user has favorited, filtered by type.`,
+    path: '/:type',
+    pathParams: favoritesByTypeParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: favoritedItemResponseSchema.array(),
+    },
+  },
+  default: {
+    summary: 'Get favorites',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Returns the top 100 shows and movies a user has favorited.`,
+    path: '',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema),
+    responses: {
+      200: favoritedItemResponseSchema.array(),
     },
   },
   comments: {

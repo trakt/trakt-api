@@ -3,13 +3,18 @@ import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuer
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
+import { lifetimeStatsQuerySchema } from '../_internal/request/lifetimeStatsQuerySchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
 import { z } from '../_internal/z.ts';
 import { noteResponseSchema } from '../notes/index.ts';
+import { collectionParamSchema } from '../sync/schema/request/collectionParamSchema.ts';
+import { upNextIntentQuerySchema } from '../sync/schema/request/upNextIntentQuerySchema.ts';
+import { upNextResponseSchema } from '../sync/schema/response/upNextResponseSchema.ts';
 import { avatarRequestSchema } from './schema/request/avatarRequestSchema.ts';
 import { commentOnTypeParamsSchema } from './schema/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts';
@@ -32,6 +37,7 @@ import { blockedUserResponseSchema } from './schema/response/blockedUserResponse
 import { followerResponseSchema } from './schema/response/followerResponseSchema.ts';
 import { followResponseSchema } from './schema/response/followResponseSchema.ts';
 import { friendResponseSchema } from './schema/response/friendResponseSchema.ts';
+import { globalLeaderboardEntryResponseSchema } from './schema/response/globalLeaderboardEntryResponseSchema.ts';
 import {
   likedCommentResponseSchema,
   likedListResponseSchema,
@@ -55,6 +61,7 @@ import { socialActivityResponseSchema } from './schema/response/socialActivityRe
 import { syncItemSchema } from './schema/response/syncItemResponseSchema.ts';
 import { syncSchema } from './schema/response/syncResponseSchema.ts';
 import { userCommentResponseSchema } from './schema/response/userCommentResponseSchema.ts';
+import { userLeaderboardEntryResponseSchema } from './schema/response/userLeaderboardEntryResponseSchema.ts';
 import { userStatsResponseSchema } from './schema/response/userStatsResponseSchema.ts';
 import { watchActionSchema } from './schema/response/watchActionSchema.ts';
 import { watchingResponseSchema } from './schema/response/watchingResponseSchema.ts';
@@ -185,6 +192,16 @@ Returns all users you have blocked, including when each user was blocked.`,
     method: 'GET',
     responses: {
       200: blockedUserResponseSchema.array(),
+    },
+  },
+  globalLeaderboard: {
+    summary: 'Get the global leaderboard',
+    description: `#### 🔓 OAuth Optional
+Returns the global watch-time leaderboard. VIP viewers get the top 100 VIP accounts by all-time minutes; free or unauthenticated viewers get the Trakt team only.`,
+    path: '/leaderboard',
+    method: 'GET',
+    responses: {
+      200: globalLeaderboardEntryResponseSchema.array(),
     },
   },
 });
@@ -453,12 +470,13 @@ Returns likes for a user filtered by type.`,
   collection: {
     summary: 'Get collection',
     description: `#### 🔓 OAuth Optional ✨ Extended Info
-Returns collection items for a user filtered by type.`,
+Returns collection items for a user filtered by type. Use \`available_on\`, \`start_at\`/\`end_at\`, and \`sync_id\` to filter, and \`sort_by\`/\`sort_how\` to sort (ignored for the \`shows\` type).`,
     path: '/collection/:type',
     method: 'GET',
     pathParams: userTypeParamsSchema,
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
+      .merge(sortQuerySchema)
+      .merge(collectionParamSchema)
       .merge(pageQuerySchema),
     responses: {
       200: userCollectionItemResponseSchema.array(),
@@ -568,36 +586,71 @@ Report a user for moderator review. Send a \`reason\` and optional \`message\` w
   },
   followers: {
     summary: 'Get followers',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns all followers including when the relationship began.`,
     path: '/followers',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedProfileQuerySchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: followerResponseSchema.array(),
     },
   },
   following: {
     summary: 'Get following',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns all user's they follow including when the relationship began.`,
     path: '/following',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedProfileQuerySchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: followerResponseSchema.array(),
     },
   },
+  leaderboard: {
+    summary: 'Get the follows leaderboard',
+    description: `#### 🔓 OAuth Optional 📄 Pagination
+Returns the authenticated user's own follows ranked by all-time watch minutes. \`:id\` must resolve to the authenticated user - any other value returns \`404\`. VIP follows are ranked; free follows trail with \`locked: true\` and null stats.`,
+    path: '/leaderboard',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: pageQuerySchema.merge(limitlessQuerySchema),
+    responses: {
+      200: userLeaderboardEntryResponseSchema.array(),
+      404: z.undefined(),
+    },
+  },
+  upNext: {
+    summary: 'Get up next',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Returns the authenticated user's up next progress ordered by the requested sort. \`:id\` is ignored in favor of the authenticated user - same response as the \`/sync/progress/up_next\` endpoint.`,
+    path: '/progress/up_next',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: pageQuerySchema
+      .merge(sortQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(upNextIntentQuerySchema)
+      .merge(lifetimeStatsQuerySchema),
+    responses: {
+      200: upNextResponseSchema.array(),
+    },
+  },
   friends: {
     summary: 'Get friends',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns all friends for a user including when the relationship began. Friendship is a 2 way relationship where each user follows the other.`,
     path: '/friends',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedProfileQuerySchema,
+    query: extendedProfileQuerySchema
+      .merge(pageQuerySchema)
+      .merge(limitlessQuerySchema),
     responses: {
       200: friendResponseSchema.array(),
     },
@@ -701,6 +754,7 @@ export {
   followerResponseSchema,
   followResponseSchema,
   friendResponseSchema,
+  globalLeaderboardEntryResponseSchema,
   likedCommentResponseSchema,
   likedListResponseSchema,
   monthInReviewParamsSchema,
@@ -728,6 +782,7 @@ export {
   syncSchema,
   syncTypeParamsSchema,
   userCommentResponseSchema,
+  userLeaderboardEntryResponseSchema,
   userReportRequestSchema,
   userStatsResponseSchema,
   watchActionSchema,
@@ -770,6 +825,14 @@ export type FollowResponse = z.infer<typeof followResponseSchema>;
 export type BlockedUserResponse = z.infer<typeof blockedUserResponseSchema>;
 /** The friend response payload. */
 export type FriendResponse = z.infer<typeof friendResponseSchema>;
+/** The global leaderboard entry response payload. */
+export type GlobalLeaderboardEntryResponse = z.infer<
+  typeof globalLeaderboardEntryResponseSchema
+>;
+/** The per-user leaderboard entry response payload. */
+export type UserLeaderboardEntryResponse = z.infer<
+  typeof userLeaderboardEntryResponseSchema
+>;
 
 /** The user stats response payload. */
 export type UserStatsResponse = z.infer<typeof userStatsResponseSchema>;

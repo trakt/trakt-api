@@ -37,6 +37,16 @@ const listItemsPathParamsSchema = profileParamsSchema
     sort_how: z.string().describe('Sort direction.'),
   });
 
+const listItemsByTypeParamsSchema = profileParamsSchema
+  .merge(listParamsSchema)
+  .extend({
+    type: z.string().describe('List item type filter.'),
+  });
+
+const listItemsByTypeSortParamsSchema = listItemsByTypeParamsSchema.extend({
+  sort_by: z.string().describe('Sort by a specific property.'),
+});
+
 const listItemParamsSchema = profileParamsSchema
   .merge(listParamsSchema)
   .extend({
@@ -190,6 +200,57 @@ Returns items on a personal list. Use \`type\`, \`sort_by\`, and \`sort_how\` to
       path: '/items/:type/:sort_by/:sort_how',
       method: 'GET',
       pathParams: listItemsPathParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedAllResponseSchema.array(),
+      },
+    },
+    byTypeSort: {
+      summary: 'Get items on a personal list',
+      description:
+        `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns items on a personal list. Use \`type\` and \`sort_by\` to control the returned item set and order.`,
+      path: '/items/:type/:sort_by',
+      method: 'GET',
+      pathParams: listItemsByTypeSortParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedAllResponseSchema.array(),
+      },
+    },
+    byType: {
+      summary: 'Get items on a personal list',
+      description:
+        `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns items on a personal list. Use \`type\` to control the returned item set.`,
+      path: '/items/:type',
+      method: 'GET',
+      pathParams: listItemsByTypeParamsSchema,
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(ignoreQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: listedAllResponseSchema.array(),
+      },
+    },
+    default: {
+      summary: 'Get items on a personal list',
+      description:
+        `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns items on a personal list.`,
+      path: '/items',
+      method: 'GET',
+      pathParams: profileParamsSchema.merge(listParamsSchema),
       query: extendedMediaQuerySchema
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
@@ -372,6 +433,7 @@ Returns all personal lists for a user. Use the [**/users/:id/lists/:list_id/item
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedProfileQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: listResponseSchema.array(),

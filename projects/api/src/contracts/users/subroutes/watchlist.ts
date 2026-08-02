@@ -5,7 +5,10 @@ import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterPara
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
-import { listedMediaResponseSchema } from '../../_internal/response/listedMediaResponseSchema.ts';
+import {
+  listedAllResponseSchema,
+  listedMediaResponseSchema,
+} from '../../_internal/response/listedMediaResponseSchema.ts';
 import { listedMovieResponseSchema } from '../../_internal/response/listedMovieResponseSchema.ts';
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
@@ -13,11 +16,19 @@ import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSort
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
-const typedSortedWatchlistParamsSchema = profileParamsSchema.extend({
+const watchlistByTypeParamsSchema = profileParamsSchema.extend({
   type: z.string().describe('Watchlist media type filter.'),
-  sort_by: z.string().describe('Sort by a specific property.'),
-  sort_how: z.string().describe('Sort direction.'),
 });
+
+const watchlistByTypeSortParamsSchema = watchlistByTypeParamsSchema.extend({
+  sort_by: z.string().describe('Sort by a specific property.'),
+});
+
+const typedSortedWatchlistParamsSchema = watchlistByTypeSortParamsSchema.extend(
+  {
+    sort_how: z.string().describe('Sort direction.'),
+  },
+);
 
 /** ts-rest contract for the `watchlist` endpoints. */
 export const watchlist = builder.router({
@@ -89,7 +100,58 @@ Returns all items in a user's watchlist filtered by type.`,
       .merge(mediaFilterParamsSchema)
       .merge(hideFilterParamsSchema),
     responses: {
-      200: listedMediaResponseSchema.array(),
+      200: listedAllResponseSchema.array(),
+    },
+  },
+  byTypeSort: {
+    summary: 'Get watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns all items in a user's watchlist filtered by type, sorted by \`sort_by\` (default direction).`,
+    path: '/:type/:sort_by',
+    pathParams: watchlistByTypeSortParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
+    responses: {
+      200: listedAllResponseSchema.array(),
+    },
+  },
+  byType: {
+    summary: 'Get watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns all items in a user's watchlist filtered by type.`,
+    path: '/:type',
+    pathParams: watchlistByTypeParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
+    responses: {
+      200: listedAllResponseSchema.array(),
+    },
+  },
+  default: {
+    summary: 'Get watchlist',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+Returns all items in a user's watchlist.`,
+    path: '',
+    pathParams: profileParamsSchema,
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(sortQuerySchema)
+      .merge(pageQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(hideFilterParamsSchema),
+    responses: {
+      200: listedAllResponseSchema.array(),
     },
   },
   comments: {

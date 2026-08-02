@@ -1,10 +1,15 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
+import { movieIdsResponseSchema } from '../../_internal/response/movieIdsResponseSchema.ts';
+import { showIdsResponseSchema } from '../../_internal/response/showIdsResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
 import { showQueryParamsSchema } from '../../shows/schema/request/showQueryParamsSchema.ts';
 import { minimalParamSchema } from '../../sync/schema/request/minimalParamSchema.ts';
+import { dateRangeParamsSchema } from '../schema/request/dateRangeParamsSchema.ts';
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
+import { watchedEpisodesMinimalResponseSchema } from '../schema/response/watchedEpisodesMinimalResponseSchema.ts';
+import { watchedEpisodesResponseSchema } from '../schema/response/watchedEpisodesResponseSchema.ts';
 import { watchedMoviesMinimalResponseSchema } from '../schema/response/watchedMoviesMinimalResponseSchema.ts';
 import { watchedMoviesResponseSchema } from '../schema/response/watchedMoviesResponseSchema.ts';
 import { watchedShowsMinimalResponseSchema } from '../schema/response/watchedShowsMinimalResponseSchema.ts';
@@ -13,6 +18,41 @@ import { watchedShowsResponseSchema } from '../schema/response/watchedShowsRespo
 const watchedTypeParamsSchema = profileParamsSchema.extend({
   type: z.string().describe('Watched media type filter.'),
 });
+
+/**
+ * A single `/:id/watched/:type` entry: a watched movie or a watched show, as
+ * one flat object with the shape-specific fields nullish. Discriminate by
+ * which of `movie` / `show` is present.
+ */
+const watchedTypedResponseSchema = z.array(z.object({
+  plays: z.number().int(),
+  last_watched_at: z.string().datetime(),
+  last_updated_at: z.string().datetime(),
+  reset_at: z.string().datetime().nullish(),
+  movie: z.object({
+    title: z.string(),
+    year: z.number().int(),
+    ids: movieIdsResponseSchema,
+  }).nullish(),
+  show: z.object({
+    aired_episodes: z.number().int(),
+    title: z.string(),
+    year: z.number().int().nullish(),
+    ids: showIdsResponseSchema,
+  }).nullish(),
+  seasons: z.array(
+    z.object({
+      number: z.number().int(),
+      episodes: z.array(
+        z.object({
+          number: z.number().int(),
+          plays: z.number().int(),
+          last_watched_at: z.string().datetime(),
+        }),
+      ),
+    }),
+  ).nullish(),
+}));
 
 /** ts-rest contract for the `watched` endpoints. */
 export const watched = builder.router({
@@ -34,6 +74,27 @@ export const watched = builder.router({
       200: watchedShowsResponseSchema,
     },
   },
+  episodes: {
+    summary: 'Get watched episodes',
+    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns episodes watched by a user, sorted by most recently watched. Use \`specials\` and \`start_at\`/\`end_at\` to filter.`,
+    path: '/episodes',
+    method: 'GET',
+    pathParams: profileParamsSchema,
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(dateRangeParamsSchema)
+      .merge(showQueryParamsSchema.pick({ specials: true }))
+      .extend({
+        translations: z.string().nullish().openapi({
+          description:
+            'Two-letter language code; returns episode titles translated into that language.',
+        }),
+      }),
+    responses: {
+      200: watchedEpisodesResponseSchema,
+    },
+  },
   typed: {
     summary: 'Get watched',
     description: `#### 🔓 OAuth Optional ✨ Extended Info
@@ -45,10 +106,7 @@ Returns all movies or shows a user has watched sorted by most recently watched.`
       showQueryParamsSchema,
     ),
     responses: {
-      200: z.union([
-        watchedMoviesResponseSchema,
-        watchedShowsResponseSchema,
-      ]),
+      200: watchedTypedResponseSchema,
     },
   },
   minimal: builder.router({
@@ -82,6 +140,21 @@ Returns shows watched by a user in a minimal paginated format. Use \`specials\` 
         200: watchedShowsMinimalResponseSchema,
       },
     },
+    episodes: {
+      summary: 'Get watched episodes',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns episodes watched by a user in a minimal paginated format. Use \`specials\` to control season detail.`,
+      path: '/episodes',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: minimalParamSchema
+        .merge(pageQuerySchema)
+        .merge(dateRangeParamsSchema)
+        .merge(showQueryParamsSchema.pick({ specials: true })),
+      responses: {
+        200: watchedEpisodesMinimalResponseSchema,
+      },
+    },
   }),
 }, {
   pathPrefix: '/:id/watched',
@@ -100,4 +173,14 @@ export type WatchedMoviesMinimalResponse = z.infer<
 /** The watched shows minimal response payload. */
 export type WatchedShowsMinimalResponse = z.infer<
   typeof watchedShowsMinimalResponseSchema
+>;
+
+/** The watched episodes response payload. */
+export type WatchedEpisodesResponse = z.infer<
+  typeof watchedEpisodesResponseSchema
+>;
+
+/** The watched episodes minimal response payload. */
+export type WatchedEpisodesMinimalResponse = z.infer<
+  typeof watchedEpisodesMinimalResponseSchema
 >;
