@@ -28,7 +28,7 @@ Update a smart list by sending 1 or more parameters. The \`source\`, \`media_typ
     pathParams: profileParamsSchema.merge(listParamsSchema),
     body: smartListWriteSchema.partial(),
     responses: {
-      200: smartListDefinitionResponseSchema,
+      204: z.undefined(),
       404: z.undefined(),
     },
   },
