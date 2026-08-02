@@ -6,7 +6,6 @@ export const periodParamsSchema = z.object({
     'daily',
     'weekly',
     'monthly',
-    'yearly',
     'all',
   ]),
 });
