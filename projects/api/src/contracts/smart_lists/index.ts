@@ -9,12 +9,6 @@ import { smartListItemResponseSchema } from '../_internal/response/smartListItem
 import { z } from '../_internal/z.ts';
 import { listParamsSchema } from '../users/schema/request/listParamsSchema.ts';
 
-const listItemsPathParamsSchema = listParamsSchema.extend({
-  type: z.string().describe('Smart list item type filter.'),
-  sort_by: z.string().describe('Sort by a specific property.'),
-  sort_how: z.string().describe('Sort direction.'),
-});
-
 /** ts-rest contract for the `smartLists` endpoints. */
 export const smartLists = builder.router({
   summary: {
@@ -36,13 +30,16 @@ Returns a single smart list definition by its globally-unique slug. Use the [**/
     summary: 'Get smart list items',
     description:
       `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
-Returns the dynamic items a smart list resolves to. Use \`type\`, \`sort_by\`, and \`sort_how\` to control the returned item set and order, plus query filters and pagination to refine the result set.`,
-    path: '/:list_id/items/:type/:sort_by/:sort_how',
+Returns the dynamic items a smart list resolves to. Items always match the list's \`media_type\`, so a movie list only ever resolves to movies and a show list to shows. Use query filters and pagination to refine the result set.`,
+    path: '/:list_id/items',
     method: 'GET',
-    pathParams: listItemsPathParamsSchema,
+    pathParams: listParamsSchema,
     query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema)
+      .merge(mediaFilterParamsSchema.omit({
+        start_date: true,
+        end_date: true,
+      }))
+      .merge(ignoreQuerySchema.omit({ ignore_collected: true }))
       .merge(pageQuerySchema)
       .merge(limitlessQuerySchema),
     responses: {
