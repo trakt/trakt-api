@@ -10,7 +10,7 @@ const smartList = builder.router({
   summary: {
     summary: 'Get smart list',
     description: `#### 🔓 OAuth Optional
-Returns a single smart list definition. Use the [**/users/:id/smart-lists/:list_id/items**](#reference/users) method to get the dynamic items this smart list resolves to.`,
+Returns a single smart list definition. Use the [**/smart-lists/:list_id/items**](#reference/smart-lists) method to get the dynamic items this smart list resolves to.`,
     path: '/',
     method: 'GET',
     pathParams: profileParamsSchema.merge(listParamsSchema),
@@ -53,7 +53,7 @@ export const smartLists = builder.router({
   personal: {
     summary: "Get a user's smart lists",
     description: `#### 🔓 OAuth Optional
-Returns all smart list definitions for a user. Use the [**/users/:id/smart-lists/:list_id/items**](#reference/users) method to get the dynamic items a specific smart list resolves to.`,
+Returns all smart list definitions for a user. Use the [**/smart-lists/:list_id/items**](#reference/smart-lists) method to get the dynamic items a specific smart list resolves to.`,
     path: '',
     method: 'GET',
     pathParams: profileParamsSchema,
