@@ -8,7 +8,7 @@ import { extendedRatingsQuerySchema } from '../_internal/request/extendedRatings
 import { extendedWatchNowQuerySchema } from '../_internal/request/extendedWatchNowQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
-import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
+import { translationsLanguageQuerySchema } from '../_internal/request/translationsLanguageQuerySchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
@@ -141,10 +141,11 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
   translations: {
     summary: 'Get all movie translations',
     description:
-      'Returns all translations for a movie, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`).',
-    path: '/translations/:language',
+      'Returns all translations for a movie, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
+    path: '/translations',
     method: 'GET',
-    pathParams: idParamsSchema.merge(languageParamsSchema),
+    pathParams: idParamsSchema,
+    query: translationsLanguageQuerySchema,
     responses: {
       200: translationResponseSchema,
     },
