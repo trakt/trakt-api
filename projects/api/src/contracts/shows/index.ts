@@ -8,7 +8,7 @@ import { extendedRatingsQuerySchema } from '../_internal/request/extendedRatings
 import { extendedWatchNowQuerySchema } from '../_internal/request/extendedWatchNowQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
-import { languageParamsSchema } from '../_internal/request/languageParamsSchema.ts';
+import { translationsLanguageQuerySchema } from '../_internal/request/translationsLanguageQuerySchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
@@ -90,13 +90,13 @@ Returns a single episode's details. All date and times are in UTC and were calcu
   translations: {
     summary: 'Get all episode translations',
     description:
-      'Returns all translations for an episode, including language, country, and translated values for title and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`).',
-    path: '/translations/:language',
+      'Returns all translations for an episode, including language, country, and translated values for title and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
+    path: '/translations',
     method: 'GET',
     pathParams: idParamsSchema
       .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema)
-      .merge(languageParamsSchema),
+      .merge(episodeParamsSchema),
+    query: translationsLanguageQuerySchema,
     responses: {
       200: episodeTranslationResponseSchema,
     },
@@ -397,10 +397,11 @@ By default, the \`last_episode\` and \`next_episode\` are calculated using the l
   translations: {
     summary: 'Get all show translations',
     description:
-      'Returns all translations for a show, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`).',
-    path: '/translations/:language',
+      'Returns all translations for a show, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
+    path: '/translations',
     method: 'GET',
-    pathParams: idParamsSchema.merge(languageParamsSchema),
+    pathParams: idParamsSchema,
+    query: translationsLanguageQuerySchema,
     responses: {
       200: translationResponseSchema,
     },
@@ -581,12 +582,12 @@ If you'd like to included translated episode titles and overviews in the respons
     translations: {
       summary: 'Get all season translations',
       description:
-        'Returns all translations for a season, including language, country, and translated title and overview values.',
-      path: '/translations/:language',
+        'Returns all translations for a season, including language, country, and translated title and overview values. Use the optional `language` query param to filter to a single language.',
+      path: '/translations',
       method: 'GET',
       pathParams: idParamsSchema
-        .merge(seasonParamsSchema)
-        .merge(languageParamsSchema),
+        .merge(seasonParamsSchema),
+      query: translationsLanguageQuerySchema,
       responses: {
         200: translationResponseSchema,
       },
