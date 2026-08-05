@@ -89,6 +89,9 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         },
       },
       'x-readme': {
+        'oauth-options': {
+          usePkce: true,
+        },
         headers: [
           {
             key: 'User-Agent',
