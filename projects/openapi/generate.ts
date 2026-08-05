@@ -89,6 +89,11 @@ export function generate(): ReturnType<typeof generateOpenApi> {
         },
       },
       'x-readme': {
+        // Try It exchanges the OAuth code with PKCE instead of HTTP Basic
+        // client authentication, which the auth server does not accept.
+        'oauth-options': {
+          usePkce: true,
+        },
         headers: [
           {
             key: 'User-Agent',
