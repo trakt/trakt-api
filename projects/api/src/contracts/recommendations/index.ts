@@ -1,11 +1,11 @@
 import { authMetadata, builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
+import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { z } from '../_internal/z.ts';
 import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
 import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
-import { idParamsSchema } from "../_internal/request/idParamsSchema.ts";
 
 const movies = builder.router({
   recommend: {
