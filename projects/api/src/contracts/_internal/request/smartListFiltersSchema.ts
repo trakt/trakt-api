@@ -1,7 +1,8 @@
-import { z } from '../z.ts';
+import { float, z } from '../z.ts';
 
 const list = z.array(z.string());
-const range = z.array(z.number()).max(2);
+const intRange = z.array(z.number().int()).max(2);
+const floatRange = z.array(float(z.number())).min(2);
 
 // Applies to the include arm only: 'and' requires every value, 'or' (default)
 // any of them. Exclusion is always "carries none of".
@@ -20,14 +21,14 @@ export const smartListFiltersSchema = z.object({
   keywords: list.optional(),
   keywords_operator: operator.optional(),
   watchnow: list.optional(),
-  years: range.optional(),
-  ratings: range.optional(),
-  runtimes: range.optional(),
-  imdb_ratings: range.optional(),
-  rt_meters: range.optional(),
-  rt_user_meters: range.optional(),
-  letterboxd_ratings: range.optional(),
-  mal_ratings: range.optional(),
+  years: intRange.optional(),
+  ratings: intRange.optional(),
+  runtimes: intRange.optional(),
+  imdb_ratings: floatRange.optional(),
+  rt_meters: intRange.optional(),
+  rt_user_meters: intRange.optional(),
+  letterboxd_ratings: floatRange.optional(),
+  mal_ratings: floatRange.optional(),
   ignore_watched: z.boolean().optional(),
   ignore_watchlisted: z.boolean().optional(),
   ignore_watching: z.boolean().optional(),
