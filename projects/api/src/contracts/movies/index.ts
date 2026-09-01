@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
@@ -16,6 +16,7 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
 import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
@@ -32,6 +33,10 @@ import {
 } from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { movieRatingsResponseSchema } from '../_internal/response/movieRatingsResponseSchema.ts';
+import {
+  recommendationSourceSchema,
+  recommendationSubgenreSchema,
+} from '../_internal/response/recommendationSourceSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
@@ -45,6 +50,7 @@ import { z } from '../_internal/z.ts';
 import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
 import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
 import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
+import { movieRecommendationsResponseSchema } from './schema/response/movieRecommendationsResponseSchema.ts';
 import { movieStreamingResponseSchema } from './schema/response/movieStreamingResponseSchema.ts';
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
@@ -357,6 +363,21 @@ Returns the most watched movies over the last 24 hours. Movies with the most \`w
       200: movieTrendingResponseSchema.array(),
     },
   },
+  recommendations: {
+    summary: 'Get personalized movie recommendations',
+    description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
+
+Personalized movie recommendations for a user. Each entry contains the recommended \`movie\`, its relevance \`score\`, and the \`sources\` that produced it - a \`favorite\`, watch \`activity\`, or shared \`subgenre\` affinity, each carrying the source item.`,
+    path: '/recommendations',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(recommendationsQuerySchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: movieRecommendationsResponseSchema.array(),
+    },
+  },
   watched: {
     summary: 'Get the most watched movies',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -548,6 +569,20 @@ export { movieTrendingResponseSchema };
 /** The movie trending response payload. */
 export type MovieTrendingResponse = z.infer<
   typeof movieTrendingResponseSchema
+>;
+
+export { movieRecommendationsResponseSchema };
+
+export type MovieRecommendationsResponse = z.infer<
+  typeof movieRecommendationsResponseSchema
+>;
+
+export { recommendationSourceSchema, recommendationSubgenreSchema };
+
+export type RecommendationSource = z.infer<typeof recommendationSourceSchema>;
+
+export type RecommendationSubgenre = z.infer<
+  typeof recommendationSubgenreSchema
 >;
 
 export { movieWatchedResponseSchema };

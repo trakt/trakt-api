@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
@@ -16,6 +16,7 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
+import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
 import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
@@ -48,6 +49,7 @@ import { showAnticipatedResponseSchema } from './schema/response/showAnticipated
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
 import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
+import { showRecommendationsResponseSchema } from './schema/response/showRecommendationsResponseSchema.ts';
 import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
@@ -853,6 +855,21 @@ Returns the most watched shows over the last 24 hours. Shows with the most \`wat
       200: showTrendingResponseSchema.array(),
     },
   },
+  recommendations: {
+    summary: 'Get personalized show recommendations',
+    description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
+
+Personalized show recommendations for a user. Each entry contains the recommended \`show\`, its relevance \`score\`, and the \`sources\` that produced it - a \`favorite\`, watch \`activity\`, or shared \`subgenre\` affinity, each carrying the source item.`,
+    path: '/recommendations',
+    method: 'GET',
+    query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
+      .merge(recommendationsQuerySchema),
+    metadata: authMetadata('required'),
+    responses: {
+      200: showRecommendationsResponseSchema.array(),
+    },
+  },
   watched: {
     summary: 'Get the most watched shows',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -1029,6 +1046,12 @@ export type ShowQueryParams = z.infer<typeof showQueryParamsSchema>;
 export { showTrendingResponseSchema };
 /** The show trending response payload. */
 export type ShowTrendingResponse = z.infer<typeof showTrendingResponseSchema>;
+
+export { showRecommendationsResponseSchema };
+/** The show recommendations response payload. */
+export type ShowRecommendationsResponse = z.infer<
+  typeof showRecommendationsResponseSchema
+>;
 
 export { showWatchedResponseSchema };
 /** The show watched response payload. */
