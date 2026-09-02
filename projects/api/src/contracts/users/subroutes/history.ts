@@ -27,6 +27,7 @@ Returns watched history for a user across all supported media types. Use \`start
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedMediaQuerySchema
+      .merge(mediaFilterParamsSchema)
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
