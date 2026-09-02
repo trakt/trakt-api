@@ -2,10 +2,10 @@ import { authMetadata, builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { z } from '../_internal/z.ts';
-import { hideParamsSchema } from './schema/request/hideParamsSchema.ts';
 import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
 import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
+import { idParamsSchema } from "../_internal/request/idParamsSchema.ts";
 
 const movies = builder.router({
   recommend: {
@@ -29,7 +29,7 @@ The \`favorited_by\` array contains all users who favorited the item along with 
 Hide a movie from getting recommended anymore.`,
     path: '/:id',
     method: 'DELETE',
-    pathParams: hideParamsSchema,
+    pathParams: idParamsSchema,
     responses: {
       204: z.undefined(),
     },
@@ -58,7 +58,7 @@ The \`favorited_by\` array contains all users who favorited the item along with 
 Hide a show from getting recommended anymore.`,
     path: '/:id',
     method: 'DELETE',
-    pathParams: hideParamsSchema,
+    pathParams: idParamsSchema,
     responses: {
       204: z.undefined(),
     },
@@ -73,10 +73,6 @@ export const recommendations = builder.router({
   pathPrefix: '/recommendations',
   metadata: authMetadata('required'),
 });
-
-export { hideParamsSchema };
-/** The hide recommendation parameters. */
-export type HideRecommendationParams = z.infer<typeof hideParamsSchema>;
 
 export { recommendedMovieResponse };
 /** The recommended movie response payload. */
