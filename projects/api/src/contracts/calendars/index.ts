@@ -15,12 +15,17 @@ const groupQuery = z.object({
   }),
 });
 
+const globalCalendarCurationNotice =
+  'When `target` is `all`, the global calendar uses automatic quality filters to reduce incorrect or low-quality entries. As a result, it may not include every matching item in the database, even when that item has complete information. An omitted item may appear later after it meets the filter requirements.';
+
 /** ts-rest contract for the `calendars` endpoints. */
 export const calendars = builder.router({
   shows: {
     summary: 'Get shows',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns shows airing during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`), and send \`start_date\` and \`days\` to define the window.`,
+Returns shows airing during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`), and send \`start_date\` and \`days\` to define the window.
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -35,7 +40,9 @@ Returns shows airing during the requested UTC date range. Use \`target\` to choo
   newShows: {
     summary: 'Get new shows',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns new shows airing their first season during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+Returns new shows airing their first season during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/new/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -49,7 +56,9 @@ Returns new shows airing their first season during the requested UTC date range.
   seasonPremieres: {
     summary: 'Get season premieres',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns season premieres airing during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+Returns season premieres airing during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/premieres/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -63,7 +72,9 @@ Returns season premieres airing during the requested UTC date range. Use \`targe
   finales: {
     summary: 'Get finales',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns show finales airing during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+Returns show finales airing during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/finales/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -77,7 +88,9 @@ Returns show finales airing during the requested UTC date range. Use \`target\` 
   movies: {
     summary: 'Get movies',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns movies with a release date during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+Returns movies with a release date during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/movies/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -91,7 +104,9 @@ Returns movies with a release date during the requested UTC date range. Use \`ta
   streaming: {
     summary: 'Get streaming releases',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns all movies with a streaming release date during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+Returns all movies with a streaming release date during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/streaming/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -105,7 +120,9 @@ Returns all movies with a streaming release date during the requested UTC date r
   dvdReleases: {
     summary: 'Get DVD releases',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns DVD and physical media releases during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).`,
+Returns DVD and physical media releases during the requested UTC date range. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`).
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/dvd/:start_date/:days',
     query: extendedMediaQuerySchema
@@ -119,7 +136,9 @@ Returns DVD and physical media releases during the requested UTC date range. Use
   media: {
     summary: 'Get media',
     description: `#### ✨ Extended Info 🎚 Filters
-Returns the merged feed of movies and episodes during the requested UTC date range, ordered by availability date. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`), and \`type\` to narrow to a single media type.`,
+Returns the merged feed of movies and episodes during the requested UTC date range, ordered by availability date. Use \`target\` to choose the authenticated user calendar (\`my\`) or the global calendar (\`all\`), and \`type\` to narrow to a single media type.
+
+${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/media/:start_date/:days',
     query: extendedMediaQuerySchema
