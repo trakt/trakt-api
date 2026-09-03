@@ -29,12 +29,14 @@ import {
   collectedShowSchema,
   collectionResponseSchema,
 } from './schema/response/collectionResponseSchema.ts';
+import { episodeProgressResponseSchema } from './schema/response/episodeProgressResponseSchema.ts';
 import { favoritesRemoveResponseSchema } from './schema/response/favoritesRemoveResponseSchema.ts';
 import { favoritesResponseSchema } from './schema/response/favoritesResponseSchema.ts';
 import { historyRemoveResponseSchema } from './schema/response/historyRemoveResponseSchema.ts';
 import { historyResponseSchema } from './schema/response/historyResponseSchema.ts';
 import { lastActivitiesResponseSchema } from './schema/response/lastActivitiesResponseSchema.ts';
 import { movieProgressResponseSchema } from './schema/response/movieProgressResponseSchema.ts';
+import { playbackResponseSchema } from './schema/response/playbackResponseSchema.ts';
 import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSchema.ts';
 import { removeRatingsResponseSchema } from './schema/response/removeRatingsResponseSchema.ts';
 import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
@@ -100,6 +102,9 @@ const syncReorderResponseSchema = z.object({
   skipped_ids: z.array(z.number().int()).optional(),
 }).passthrough();
 
+const PLAYBACK_PAGINATION_NOTE =
+  `Pagination is opt-in: without \`page\` or \`limit\` the whole set is returned and no \`X-Pagination-*\` headers are sent. Sending either paginates and adds the headers.`;
+
 const progress = builder.router({
   upNext: {
     standard: {
@@ -135,30 +140,48 @@ Returns the authenticated user up next progress optimized for intent-based clien
   movies: {
     summary: 'Get movie playback progress',
     description: `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info
-Returns in-progress movie playback items for the authenticated user. Use \`start_at\` and \`end_at\` to filter progress updated within a UTC datetime range.`,
+Returns in-progress movie playback items for the authenticated user, most recently paused first. Use \`start_at\` and \`end_at\` to filter on \`paused_at\` within a UTC datetime range.
+
+${PLAYBACK_PAGINATION_NOTE}`,
     method: 'GET',
     path: '/playback/movies',
-    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(mediaFilterParamsSchema)
+    query: extendedQuerySchemaFactory<['full', 'images']>()
       .merge(pageQuerySchema)
       .merge(progressParamsSchema),
     responses: {
       200: movieProgressResponseSchema.array(),
     },
   },
-  playback: {
-    summary: 'Get playback progress',
+  episodes: {
+    summary: 'Get episode playback progress',
     description: `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info
-Returns playback progress for the requested media \`type\`. Use \`start_at\` and \`end_at\` to filter progress updated within a UTC datetime range.`,
+Returns in-progress episode playback items for the authenticated user, most recently paused first. Each item carries the parent \`show\`. Use \`start_at\` and \`end_at\` to filter on \`paused_at\` within a UTC datetime range.
+
+${PLAYBACK_PAGINATION_NOTE}`,
     method: 'GET',
-    path: '/playback/:type',
-    pathParams: syncTypeParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(mediaFilterParamsSchema)
+    path: '/playback/episodes',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
       .merge(pageQuerySchema)
       .merge(progressParamsSchema),
     responses: {
-      200: movieProgressResponseSchema.array(),
+      200: episodeProgressResponseSchema.array(),
+    },
+  },
+  playback: {
+    summary: 'Get playback progress',
+    description: `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info
+Returns in-progress movie and episode playback items for the authenticated user, most recently paused first. Use \`start_at\` and \`end_at\` to filter on \`paused_at\` within a UTC datetime range.
+
+Discriminate on \`type\`: movie items carry \`movie\`, episode items carry \`episode\` and the parent \`show\`.
+
+${PLAYBACK_PAGINATION_NOTE}`,
+    method: 'GET',
+    path: '/playback',
+    query: extendedQuerySchemaFactory<['full', 'images']>()
+      .merge(pageQuerySchema)
+      .merge(progressParamsSchema),
+    responses: {
+      200: playbackResponseSchema.array(),
     },
   },
   drop: {
@@ -695,6 +718,7 @@ export {
   collectionMinimalShowResponseSchema,
   collectionParamSchema,
   collectionResponseSchema,
+  episodeProgressResponseSchema,
   favoriteParamSchema,
   favoritesRemoveResponseSchema,
   favoritesResponseSchema,
@@ -703,6 +727,7 @@ export {
   lastActivitiesResponseSchema,
   minimalParamSchema,
   movieProgressResponseSchema,
+  playbackResponseSchema,
   ratingsParamSchema,
   ratingsSyncResponseSchema,
   removeRatingsParamSchema,
@@ -712,8 +737,14 @@ export {
 
 /** The up next response payload. */
 export type UpNextResponse = z.infer<typeof upNextResponseSchema>;
+/** The episode progress response payload. */
+export type EpisodeProgressResponse = z.infer<
+  typeof episodeProgressResponseSchema
+>;
 /** The movie progress response payload. */
 export type MovieProgressResponse = z.infer<typeof movieProgressResponseSchema>;
+/** The playback progress response payload. */
+export type PlaybackResponse = z.infer<typeof playbackResponseSchema>;
 /** The up next intent request payload. */
 export type UpNextIntentRequest = z.infer<typeof upNextIntentQuerySchema>;
 
