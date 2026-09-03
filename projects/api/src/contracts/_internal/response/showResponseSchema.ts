@@ -34,6 +34,13 @@ export const showResponseSchema = z.object({
   first_aired: z.string().nullish(),
   /**
    * Available if requesting extended `full`.
+   *
+   * The air date of the most recently aired episode. `null` until the show
+   * has aired an episode.
+   */
+  last_aired: z.string().nullish(),
+  /**
+   * Available if requesting extended `full`.
    */
   airs: z.object({
     day: z.string().nullish(),
