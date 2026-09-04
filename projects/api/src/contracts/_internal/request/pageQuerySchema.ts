@@ -7,6 +7,6 @@ export const pageQuerySchema = z.object({
   }),
   limit: z.number().int().nullish().openapi({
     description:
-      'The number of items per page. The default varies per endpoint, so send an explicit value rather than relying on it. The maximum is 250; a larger value is clamped to it rather than rejected.',
+      'The number of items per page. Defaults and maximums vary by endpoint. When pagination parameters are omitted, a low default limit is applied (often 10). When a limit is provided, it is capped at the endpoint maximum (often 250); higher values are clamped rather than rejected.',
   }),
 });
