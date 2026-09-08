@@ -20,7 +20,7 @@ const ratedSeasonResponseSchema = ratedResponseSchema.extend({
   season: z.object({
     number: z.number().int(),
     ids: episodeIdsResponseSchema,
-    aired_episodes: z.number().int(),
+    aired_episodes: z.number().int().nullish(),
   }).nullish(),
   show: showResponseSchema.nullish(),
 });
