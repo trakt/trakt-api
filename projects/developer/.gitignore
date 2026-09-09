@@ -1,0 +1,16 @@
+node_modules/
+.svelte-kit/
+.wrangler/
+build/
+dist/
+coverage/
+test-results/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+.DS_Store
+!static/openapi.json

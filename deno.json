@@ -12,7 +12,12 @@
     "openapi:dev": "cd projects/openapi && deno task dev",
     "openapi:generate": "cd projects/openapi && deno task generate",
     "openapi:validate": "cd projects/openapi && deno task validate",
-    "playground:dev": "cd projects/playground && deno task dev"
+    "playground:dev": "cd projects/playground && deno task dev",
+    "developer:install": "cd projects/developer && deno install --allow-scripts --frozen",
+    "developer:dev": "cd projects/developer && deno task dev:local",
+    "developer:check": "cd projects/developer && deno task check",
+    "developer:test": "cd projects/developer && deno task test",
+    "developer:build": "cd projects/developer && deno task build"
   },
   "fmt": {
     "singleQuote": true,

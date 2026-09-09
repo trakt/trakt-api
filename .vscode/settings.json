@@ -37,6 +37,9 @@
       "action.yml"
     ]
   },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },

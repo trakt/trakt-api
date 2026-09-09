@@ -2,6 +2,7 @@
   "recommendations": [
     "denoland.vscode-deno",
     "redhat.vscode-yaml",
+    "svelte.svelte-vscode",
     "deepsourcecorp.deepsource-vscode"
   ]
 }

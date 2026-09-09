@@ -1,0 +1,16 @@
+{
+  "name": "trakt-developer",
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2026-08-31",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".svelte-kit/cloudflare"
+  },
+  "observability": {
+    "enabled": false,
+    "head_sampling_rate": 0.1
+  }
+}

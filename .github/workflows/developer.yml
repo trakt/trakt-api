@@ -1,0 +1,39 @@
+name: Developer
+
+on:
+  pull_request:
+    paths:
+      - 'projects/developer/**'
+      - '.github/workflows/developer.yml'
+      - 'deno.json'
+  push:
+    branches: [master]
+    paths:
+      - 'projects/developer/**'
+      - '.github/workflows/developer.yml'
+      - 'deno.json'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/developer
+    steps:
+      - uses: actions/checkout@v5
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
+      - run: deno install --allow-scripts --frozen
+      - run: deno fmt --check --config deno.json
+      - run: deno task format:svelte:check
+      - run: deno task check
+      - run: deno task test
+      - run: deno task build
+        env:
+          TRAKT_CLIENT_ID: synthetic-ci-client-id-never-real
+          TRAKT_CLIENT_SECRET: synthetic-ci-client-secret-never-real
+          DEVELOPER_SESSION_SECRET: synthetic-ci-session-secret-at-least-32

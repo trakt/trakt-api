@@ -17,6 +17,11 @@ contains multiple projects:
   and `zod` for type-safe communication and validation.
 - **`playground`:** CLI project for testing and exploring the Trakt API
   functionality.
+- **`developer`:** Trakt's developer portal at `developer.trakt.tv`, with 28
+  Markdown guides in Getting Started and an interactive API Reference
+  playground. Lives in `projects/developer`. See
+  [local setup](projects/developer/README.md#run-locally) and
+  [editing guides and navigation](projects/developer/README.md#getting-started-guides).
 - **`openapi`:** Simple `hono` server that serves the API contract as an OpenAPI
   specification.
 
@@ -29,7 +34,10 @@ properly:
 
 - **`TRAKT_CLIENT_ID`:** The client ID for the Trakt API.
 - **`TRAKT_CLIENT_SECRET`:** The client secret for the Trakt API.
-  - Required for the `playground` project.
+  - Required for the `playground` and `developer` projects.
+
+The `developer` app also requires `DEVELOPER_SESSION_SECRET`. See its
+[environment setup](projects/developer/README.md#run-locally).
 
 ### External Contribution - Unleash Your Inner Code Wizard!
 
@@ -59,6 +67,8 @@ prevent abuse from automated scrapers and unauthorized access.
 This is a Deno project, so you need to have Deno installed on your machine
 please refer to the
 [Deno installation guide](https://docs.deno.com/runtime/getting_started/installation/).
+The `developer` app requires Deno 2.9.4 or later, with dependencies installed
+separately using the task below.
 
 1. **Clone the repository**
 1. **Install dependencies:** `deno task install`
@@ -69,6 +79,15 @@ please refer to the
 
 - Playground:
   - Development: `deno task playground:dev`
+
+- Developer:
+  - Install: `deno task developer:install`
+  - Development: `deno task developer:dev`
+  - Check: `deno task developer:check`
+  - Test: `deno task developer:test`
+  - Build: `deno task developer:build`
+  - Configure its private `projects/developer/.env` first, as documented in that
+    project's README. No other local application is required.
 
 - OpenAPI:
   - Serve: `deno task openapi`
