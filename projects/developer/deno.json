@@ -1,0 +1,25 @@
+{
+  "workspace": [],
+  "fmt": {
+    "singleQuote": true,
+    "indentWidth": 2,
+    "exclude": [
+      "src/lib/guides/**/*.md",
+      "static/openapi.json",
+      ".svelte-kit",
+      "node_modules",
+      ".wrangler"
+    ]
+  },
+  "lint": {
+    "exclude": [
+      ".svelte-kit",
+      "node_modules"
+    ]
+  },
+  "compilerOptions": {
+    "checkJs": true,
+    "strict": true
+  },
+  "nodeModulesDir": "manual"
+}

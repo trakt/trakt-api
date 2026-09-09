@@ -1,0 +1,24 @@
+:root {
+  --border-radius-xs: var(--ni-4);
+  --border-radius-s: var(--ni-8);
+  --border-radius-m: var(--ni-12);
+  --border-radius-l: var(--ni-16);
+  --border-radius-xl: var(--ni-20);
+  --border-radius-xxl: var(--ni-24);
+
+  --border-thickness-xxs: var(--ni-1);
+  --border-thickness-xs: var(--ni-2);
+  --border-thickness-s: var(--ni-4);
+  --border-thickness-m: var(--ni-8);
+  --border-thickness-l: var(--ni-12);
+  --border-thickness-xl: var(--ni-16);
+
+  --gap-xxl: var(--ni-44);
+  --gap-xl: var(--ni-32);
+  --gap-l: var(--ni-24);
+  --gap-m: var(--ni-16);
+  --gap-s: var(--ni-12);
+  --gap-xs: var(--ni-8);
+  --gap-xxs: var(--ni-4);
+  --gap-micro: var(--ni-2);
+}
