@@ -8,6 +8,7 @@ export const commentResponseSchema = z.object({
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
   comment: z.string(),
+  gif: z.string().nullish(),
   spoiler: z.boolean(),
   review: z.boolean(),
   replies: z.number().int(),
