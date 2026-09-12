@@ -35,6 +35,7 @@ module.exports = {
         'certifications',
         'checkin',
         'comment',
+        'developer',
         'episode',
         'favorite',
         'filter',
