@@ -1,12 +1,9 @@
 import { z } from 'zod';
-import { float, int64 } from '../../../_internal/z.ts';
 import { movieResponseSchema } from '../../../movies/index.ts';
+import { playbackItemResponseSchema } from './playbackItemResponseSchema.ts';
 
 /** Zod schema for the movie progress response. */
-export const movieProgressResponseSchema = z.object({
-  progress: float(z.number().min(0).max(100)),
-  paused_at: z.string().datetime(),
-  id: int64(z.number().int()),
+export const movieProgressResponseSchema = playbackItemResponseSchema.extend({
   type: z.literal('movie'),
   movie: movieResponseSchema,
 });
