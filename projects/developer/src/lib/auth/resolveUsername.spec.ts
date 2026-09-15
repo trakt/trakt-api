@@ -24,11 +24,11 @@ describe('resolve username', () => {
     await resolveUsername({ accessToken: 'token-value', slot: 0 });
 
     const [url, init] = vi.mocked(globalThis.fetch).mock.calls[0]!;
+    const headers = init?.headers as Headers;
     expect(url).toBe('https://api.trakt.tv/users/settings');
-    expect(init?.headers).toMatchObject({
-      authorization: 'Bearer token-value',
-      'trakt-api-version': '2',
-    });
+    expect(headers.get('authorization')).toBe('Bearer token-value');
+    expect(headers.get('trakt-api-version')).toBe('2');
+    expect(headers.get('trakt-api-key')).toBeTruthy();
   });
 
   it.each([

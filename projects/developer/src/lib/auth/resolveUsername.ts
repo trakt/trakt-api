@@ -1,4 +1,4 @@
-import { PUBLIC_TRAKT_CLIENT_ID } from '$env/static/public';
+import { traktHeaders } from '$lib/api/traktHeaders.ts';
 import { fallbackUsername } from './accountSlots.ts';
 
 type SettingsPayload = { user?: { username?: unknown } };
@@ -11,11 +11,7 @@ export async function resolveUsername({
   slot: number;
 }): Promise<string> {
   const response = await fetch('https://api.trakt.tv/users/settings', {
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-      'trakt-api-key': PUBLIC_TRAKT_CLIENT_ID,
-      'trakt-api-version': '2',
-    },
+    headers: traktHeaders({ accessToken }),
   }).catch(() => null);
 
   if (!response?.ok) return fallbackUsername(slot);
