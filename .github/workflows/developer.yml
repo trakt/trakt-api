@@ -25,6 +25,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    concurrency:
+      group: developer-verify-${{ github.ref }}
+      cancel-in-progress: true
     env:
       PUBLIC_TRAKT_CLIENT_ID: synthetic-ci-client-id-never-real
     defaults:
@@ -43,3 +46,40 @@ jobs:
       - run: deno task check
       - run: deno task test
       - run: deno task build
+        env:
+          PUBLIC_TRAKT_CLIENT_ID: synthetic-ci-client-id-never-real
+
+  deploy:
+    needs: verify
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: developer-pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: projects/developer
+    steps:
+      - uses: actions/checkout@v5
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
+      - run: deno install --allow-scripts --frozen
+        working-directory: ${{ github.workspace }}
+      - run: deno install --allow-scripts --frozen
+      - run: deno task build
+        env:
+          PUBLIC_TRAKT_CLIENT_ID: ${{ vars.PUBLIC_TRAKT_CLIENT_ID }}
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: projects/developer/build
+      - id: deploy
+        uses: actions/deploy-pages@v5
