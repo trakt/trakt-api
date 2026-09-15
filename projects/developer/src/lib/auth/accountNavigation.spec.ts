@@ -37,6 +37,16 @@ it('preserves only an allowlisted section after OAuth, never request parameters'
   expect(takeReturnPath()).toBe('/');
 });
 
+it('keeps the request state in the hash on the reference section', () => {
+  const hash = '#v=1&endpoint=getRecommendationsMoviesRecommend&tab=params';
+  vi.stubGlobal('location', {
+    href: `https://developer.trakt.tv/?section=reference${hash}`,
+  });
+  rememberSection();
+  expect(takeReturnPath()).toBe(`/?section=reference${hash}`);
+  expect(takeReturnPath()).toBe('/');
+});
+
 it.each(['/apps', '/apps/new', '/apps/42', '/apps/42/edit'])(
   'restores the app route %s after OAuth',
   (path) => {
@@ -47,6 +57,15 @@ it.each(['/apps', '/apps/new', '/apps/42', '/apps/42/edit'])(
     expect(takeReturnPath()).toBe(path);
   },
 );
+
+it.each([
+  '/?section=reference#<script>',
+  '/?section=reference#a b',
+  '//evil.example/?section=reference#x',
+])('rejects unsafe reference hash %s', (path) => {
+  globalThis.sessionStorage.setItem('trakt-developer-return-section', path);
+  expect(takeReturnPath()).toBe('/');
+});
 
 it.each(['/apps/../callback', '/apps/42/delete', '//evil.example/apps'])(
   'rejects unsupported return path %s',
