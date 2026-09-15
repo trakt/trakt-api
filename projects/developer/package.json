@@ -23,8 +23,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260702.1",
-    "@sveltejs/adapter-cloudflare": "7.2.9",
+    "@sveltejs/adapter-static": "3.0.10",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
     "prettier": "3.9.6",
     "prettier-plugin-svelte": "4.1.1",
@@ -32,7 +31,6 @@
     "typescript": "5.9.3",
     "vite": "8.2.2",
     "vitest": "4.1.11",
-    "sass": "1.102.0",
-    "wrangler": "4.103.0"
+    "sass": "1.102.0"
   }
 }

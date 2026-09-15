@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-cloudflare';
+import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -7,11 +7,16 @@ const config = {
   kit: {
     adapter: adapter(),
     csp: {
-      mode: 'nonce',
+      mode: 'hash',
       directives: {
         'default-src': ['self'],
         'base-uri': ['none'],
-        'connect-src': ['self'],
+        'connect-src': [
+          'self',
+          'https://api.trakt.tv',
+          'https://apiz.trakt.tv',
+          'https://auth.trakt.tv',
+        ],
         'font-src': ['self'],
         'form-action': ['self'],
         'frame-ancestors': ['none'],
