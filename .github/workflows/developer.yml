@@ -43,7 +43,3 @@ jobs:
       - run: deno task check
       - run: deno task test
       - run: deno task build
-        env:
-          TRAKT_CLIENT_ID: synthetic-ci-client-id-never-real
-          TRAKT_CLIENT_SECRET: synthetic-ci-client-secret-never-real
-          DEVELOPER_SESSION_SECRET: synthetic-ci-session-secret-at-least-32
