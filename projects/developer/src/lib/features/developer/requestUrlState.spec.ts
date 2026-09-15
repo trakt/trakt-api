@@ -24,6 +24,7 @@ describe('requestUrlState', () => {
         value: 'application/json',
         enabled: true,
       }],
+      authorizationEnabled: true,
       body: '{"note":"Déjà vu"}',
       activeTab: 'headers',
     });
@@ -76,6 +77,7 @@ describe('requestUrlState', () => {
           enabled: true,
         },
       ],
+      authorizationEnabled: true,
       body: '{"title":"Safe","clientSecret":"secret","access_token":"token"}',
       activeTab: 'body',
     });
@@ -106,6 +108,7 @@ describe('requestUrlState', () => {
         enabled: false,
         managed: true,
       }],
+      authorizationEnabled: false,
       body: '',
       activeTab: 'headers',
     });
@@ -113,6 +116,34 @@ describe('requestUrlState', () => {
     expect(fragment).toContain('authorization=0');
     expect(fragment).not.toContain('Bearer');
     expect(decodeRequestUrlState(fragment)?.authorizationEnabled).toBe(false);
+  });
+
+  it('should keep authorization on when no account is attached yet', () => {
+    const endpoint = seedCatalog.endpoints.at(0);
+    if (!endpoint) throw new Error('missing seed endpoint');
+
+    // The header is disabled because nothing is connected, not because the
+    // user turned it off. Encoding that as authorization=0 used to survive
+    // into the restored state and stay off after an account connected.
+    const fragment = encodeRequestUrlState({
+      endpoint,
+      mainServerUrl: 'https://api.trakt.tv',
+      serverUrl: 'https://api.trakt.tv',
+      values: {},
+      headers: [{
+        id: 'managed-authorization',
+        name: 'Authorization',
+        value: 'Not attached',
+        enabled: false,
+        managed: true,
+      }],
+      authorizationEnabled: true,
+      body: '',
+      activeTab: 'headers',
+    });
+
+    expect(fragment).toContain('authorization=1');
+    expect(decodeRequestUrlState(fragment)?.authorizationEnabled).toBe(true);
   });
 
   it('should ignore malformed fragments', () => {
