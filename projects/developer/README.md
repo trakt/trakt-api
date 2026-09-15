@@ -22,6 +22,10 @@ deno install --allow-scripts --frozen
 cp .env.example .env
 ```
 
+Install the root workspace too, with `deno task install` from the repository
+root. The OpenAPI document is generated from the contract before every `dev` and
+`build`, and generation runs there.
+
 Fill in `.env` using the configuration below. Generate a session secret with
 `openssl rand -hex 32`, then register `http://localhost:5174/auth/callback` as a
 redirect URI in your Trakt application.
@@ -105,10 +109,15 @@ the local API Reference.
 
 ## Maintain API Reference
 
-Update [`static/openapi.json`](static/openapi.json) to change the endpoint
-catalog, parameter definitions, descriptions, or response schemas. The app loads
-this file and parses it with the utilities in
-[`src/lib/openapi/`](src/lib/openapi/).
+`static/openapi.json` is generated, not edited. Change the endpoint catalog,
+parameter definitions, descriptions, or response schemas in the ts-rest contract
+under `projects/api/src/contracts/`. The app loads the generated document and
+parses it with the utilities in [`src/lib/openapi/`](src/lib/openapi/).
+
+`deno task dev` and `deno task build` regenerate it first, so it tracks the
+contract automatically. Run `deno task generate:openapi` to refresh it on its
+own. Generation runs the root `openapi:generate` task, so the root workspace
+must be installed.
 
 The playground offers request validation, method-and-URL and cURL copying,
 bookmarkable request configuration, and session response history. The response
@@ -142,8 +151,8 @@ request configuration. Response history remains in browser session storage. Keep
 | `src/routes/`                   | Portal page, OAuth routes, and API handlers.                       |
 | `src/style/`                    | Shared styles and design tokens.                                   |
 | `src/style/numeric-increments/` | Spacing scale copied from trakt-web; match tokens on value.        |
-| `static/`                       | OpenAPI document and public assets.                                |
-| `scripts/`                      | Browser-bundle credential checks.                                  |
+| `static/`                       | Generated OpenAPI document and public assets.                      |
+| `scripts/`                      | OpenAPI generation and browser-bundle credential checks.           |
 
 ## Validation
 

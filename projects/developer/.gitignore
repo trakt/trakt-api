@@ -13,4 +13,3 @@ test-results/
 *.pem
 *.key
 .DS_Store
-!static/openapi.json
