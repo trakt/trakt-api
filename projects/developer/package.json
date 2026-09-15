@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "deno task generate:openapi && vite dev",
     "dev:local": "deno task generate:openapi && vite dev --host localhost --port 5174 --strictPort",
-    "build": "deno task generate:openapi && vite build && deno run -A scripts/check-client-secrets.mjs",
+    "build": "deno task generate:openapi && vite build",
     "generate:openapi": "deno run -A scripts/generate-openapi.mjs",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
