@@ -131,6 +131,43 @@ bookmarkable request configuration, and session response history. The response
 inspector displays status, headers, JSON bodies, and minimum or full expected
 response samples. Connected accounts support refresh and logout.
 
+## Icons and share cards
+
+`static/` carries the icon set (`favicon.svg`, `favicon.ico`,
+`apple-touch-icon.png`) and five Open Graph cards in `static/og/`, all derived
+from the logomark and the reference's own method colours.
+
+Page metadata lives in [`src/app.html`](src/app.html), not in a `<svelte:head>`
+block. With `ssr = false` everything in `<svelte:head>` renders after hydration,
+and link unfurlers do not run JavaScript, so anything placed there is invisible
+to them. `app.html` is the prerendered shell that actually ships.
+
+Regenerate the cards after a design change:
+
+```sh
+deno task generate:share-cards
+```
+
+It renders each card through headless Chrome, then runs `pngquant` and `oxipng`
+to cut them from roughly 40 kB to 10 kB at 50 dB PSNR. It needs all three
+installed (`brew install oxipng pngquant`), and honours `CHROME_PATH` if Chrome
+is not at the default macOS location. The cards are committed, so this only runs
+when the design changes. Compare the output against the previous cards before
+committing; `magick compare -metric PSNR` quantifies it.
+
+`scripts/set-share-card.mjs` runs after every build and points `og:image` at one
+of the five, chosen from the commit SHA, with the revision appended as a `?v=`
+query. The card rotates per deploy rather than per share, because `og:image` is
+a static URL and there is no server to vary it per request.
+
+The query is doing real work. Unfurlers cache by image URL, and the filename
+alone only has five possible values, so cache keys would start repeating after
+the fifth deploy. Appending the revision makes every deploy a new key.
+
+The card copy deliberately carries no endpoint count. Cards are rasterized and
+committed, and the build never re-renders them, so any figure baked into the
+image would silently go stale the next time the contract changes.
+
 ## Authentication and credential handling
 
 The portal has no server. Sign-in is the OpenID Connect authorization code flow
@@ -172,8 +209,8 @@ session storage. Review copied requests or responses before sharing them.
 | `src/routes/`                   | Portal page and the OAuth callback.                                |
 | `src/style/`                    | Shared styles and design tokens.                                   |
 | `src/style/numeric-increments/` | Spacing scale copied from trakt-web; match tokens on value.        |
-| `static/`                       | Generated OpenAPI document and public assets.                      |
-| `scripts/`                      | OpenAPI generation from the contract.                              |
+| `static/`                       | Generated OpenAPI document, icons, and share cards.                |
+| `scripts/`                      | OpenAPI generation, share cards, and the per-deploy card pick.     |
 
 ## Validation
 
