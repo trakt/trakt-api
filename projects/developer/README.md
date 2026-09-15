@@ -26,17 +26,17 @@ Install the root workspace too, with `deno task install` from the repository
 root. The OpenAPI document is generated from the contract before every `dev` and
 `build`, and generation runs there.
 
-Fill in `.env` using the configuration below. Generate a session secret with
-`openssl rand -hex 32`, then register `http://localhost:5174/auth/callback` as a
-redirect URI in your Trakt application.
+Set `PUBLIC_TRAKT_CLIENT_ID` in `.env` to your Trakt application's client id,
+then register `http://localhost:5174/callback` as a redirect URI on that
+application.
 
 ```sh
 deno task dev:local
 ```
 
 Open [localhost:5174](http://localhost:5174). In API Reference, use
-**Environment** to connect a Trakt account and choose a server. The OAuth
-callback must match the registered URL exactly, including the hostname and port.
+**Environment** to connect a Trakt account and choose a server. The redirect URI
+must match the registered one exactly, including the hostname and port.
 
 This directory is a standalone Deno workspace with its own `deno.lock`.
 Dependencies are installed here. From the repository root, the equivalent setup
@@ -45,21 +45,28 @@ and development tasks are `deno task developer:install` and
 
 ## Configuration
 
-Copy the names from [`.env.example`](.env.example). Values are read on the
-server; do not prefix them with `PUBLIC_` or `VITE_`.
+There is one setting, listed in [`.env.example`](.env.example).
 
-| Variable                   | Purpose                                                                |
-| -------------------------- | ---------------------------------------------------------------------- |
-| `TRAKT_CLIENT_ID`          | Identifies the Trakt application for API requests and OAuth.           |
-| `TRAKT_CLIENT_SECRET`      | Authenticates the application during OAuth token exchange.             |
-| `DEVELOPER_SESSION_SECRET` | Encrypts account sessions; requires at least 32 characters.            |
-| `DEVELOPER_ORIGIN`         | Public HTTPS origin for deployment. Leave unset for local development. |
+| Variable                 | Purpose                                                      |
+| ------------------------ | ------------------------------------------------------------ |
+| `PUBLIC_TRAKT_CLIENT_ID` | Identifies the Trakt application for API requests and OAuth. |
 
-The application uses the Cloudflare adapter configured in
-[`svelte.config.js`](svelte.config.js) and [`wrangler.jsonc`](wrangler.jsonc).
-For deployment, supply the server configuration above, set
-`DEVELOPER_ORIGIN=https://developer.trakt.tv`, and register
-`https://developer.trakt.tv/auth/callback` in the Trakt application.
+It is read at build time through `$env/static/public` and ships in the browser
+bundle, which is why it carries the `PUBLIC_` prefix. There is no secret to
+configure: the portal is a public OAuth client.
+
+## Deployment
+
+The static build in `build/` is published to
+[developer.trakt.tv](https://developer.trakt.tv) from GitHub Pages by the
+[Developer workflow](../../.github/workflows/developer.yml) on pushes to master.
+`static/CNAME` carries the domain and `.nojekyll` stops Pages from processing
+the output.
+
+Deploying needs three things set up once: Pages enabled on the repository, a DNS
+record for the domain, and `https://developer.trakt.tv/callback` registered as a
+redirect URI on the Trakt application. The client id comes from the
+`PUBLIC_TRAKT_CLIENT_ID` repository variable.
 
 ## Maintain the guides
 
@@ -124,19 +131,33 @@ bookmarkable request configuration, and session response history. The response
 inspector displays status, headers, JSON bodies, and minimum or full expected
 response samples. Connected accounts support refresh and logout.
 
-## Server and credential handling
+## Authentication and credential handling
 
-Requests run through the server proxy in
-[`src/routes/api/execute/+server.ts`](src/routes/api/execute/+server.ts). It
-restricts destinations to approved HTTPS Trakt hosts and injects managed
-credentials. Client secrets, session keys, and account tokens stay on the
-server. The OAuth client ID is public and appears in authorization redirects.
+The portal has no server. Sign-in is the OpenID Connect authorization code flow
+with PKCE, run in the browser by `oidc-client-ts` against `auth.trakt.tv`, which
+accepts public clients. `src/lib/auth/` holds one user manager per account slot,
+and `/callback` completes the redirect. There is no client secret anywhere,
+because the flow does not need one.
 
-Account sessions use AES-GCM encryption in HttpOnly cookies, marked Secure over
-HTTPS. The browser receives account display metadata. Credential fields are
-redacted from proxy responses and sensitive fields are removed from shared
-request configuration. Response history remains in browser session storage. Keep
-`.env` private and review copied requests or responses before sharing them.
+Requests go straight from the browser to the Trakt API, which answers
+cross-origin. [`executeApiRequest`](src/lib/api/executeApiRequest.ts) restricts
+destinations to approved HTTPS Trakt hosts, sets the managed `trakt-api-key`,
+`trakt-api-version` and `authorization` headers so a caller cannot override
+them, and never attaches an account token to an OAuth endpoint.
+
+Because the browser can only read CORS-exposed response headers, the inspector
+shows the Trakt ones (pagination, rate limit, retry) but not `etag`, `date`,
+`server` or `content-length`.
+
+Tokens live in `localStorage`, which is readable by any script running on the
+page. The strict content security policy in
+[`svelte.config.js`](svelte.config.js) is what keeps foreign script off it.
+GitHub Pages cannot send response headers, so the policy is delivered as a
+`<meta>` tag, and `frame-ancestors` does not apply in that form.
+
+Credential fields are redacted from displayed responses and sensitive fields are
+removed from shared request configuration. Response history stays in browser
+session storage. Review copied requests or responses before sharing them.
 
 ## Project layout
 
@@ -146,13 +167,13 @@ request configuration. Response history remains in browser session storage. Keep
 | `src/lib/features/developer/`   | Portal layout, navigation, request editor, and response inspector. |
 | `src/lib/markdown/`             | Markdown rendering.                                                |
 | `src/lib/openapi/`              | Endpoint catalog parsing and URL construction.                     |
-| `src/lib/api/`                  | Browser-side account and request helpers.                          |
-| `src/lib/server/`               | OAuth, session encryption, and response redaction.                 |
-| `src/routes/`                   | Portal page, OAuth routes, and API handlers.                       |
+| `src/lib/api/`                  | Request execution, account helpers, and response redaction.        |
+| `src/lib/auth/`                 | OIDC sign-in, refresh, logout, and token storage.                  |
+| `src/routes/`                   | Portal page and the OAuth callback.                                |
 | `src/style/`                    | Shared styles and design tokens.                                   |
 | `src/style/numeric-increments/` | Spacing scale copied from trakt-web; match tokens on value.        |
 | `static/`                       | Generated OpenAPI document and public assets.                      |
-| `scripts/`                      | OpenAPI generation and browser-bundle credential checks.           |
+| `scripts/`                      | OpenAPI generation from the contract.                              |
 
 ## Validation
 
@@ -169,11 +190,11 @@ deno task build
 `deno fmt` does not read `.svelte` files, so Prettier with
 `prettier-plugin-svelte` formats them instead; run `deno task format:svelte` to
 apply it. `check` validates TypeScript and Svelte components. `test` runs
-Vitest, including guide coverage, Markdown rendering, request state, OAuth, and
-proxy tests. `build` produces the application and checks browser output for
-private credential bindings and configured secret values. Use
-`deno task preview` to inspect the built application locally.
+Vitest, including guide coverage, Markdown rendering, request state, account
+handling, and request execution. `build` regenerates the OpenAPI document and
+produces the static site in `build/`. Use `deno task preview` to inspect it
+locally.
 
 The [Developer workflow](../../.github/workflows/developer.yml) runs these
-checks with a frozen dependency install. Root aliases are `developer:check`,
-`developer:test`, and `developer:build`.
+checks with a frozen dependency install, then deploys from master. Root aliases
+are `developer:check`, `developer:test`, and `developer:build`.

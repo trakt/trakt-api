@@ -34,9 +34,10 @@ properly:
 
 - **`TRAKT_CLIENT_ID`:** The client ID for the Trakt API.
 - **`TRAKT_CLIENT_SECRET`:** The client secret for the Trakt API.
-  - Required for the `playground` and `developer` projects.
+  - Required for the `playground` project.
 
-The `developer` app also requires `DEVELOPER_SESSION_SECRET`. See its
+The `developer` app is a public OAuth client and needs no secret. It reads its
+client ID from `PUBLIC_TRAKT_CLIENT_ID`. See its
 [environment setup](projects/developer/README.md#run-locally).
 
 ### External Contribution - Unleash Your Inner Code Wizard!
@@ -86,8 +87,8 @@ separately using the task below.
   - Check: `deno task developer:check`
   - Test: `deno task developer:test`
   - Build: `deno task developer:build`
-  - Configure its private `projects/developer/.env` first, as documented in that
-    project's README. No other local application is required.
+  - Set `PUBLIC_TRAKT_CLIENT_ID` in `projects/developer/.env` first, as
+    documented in that project's README. No other local application is required.
 
 - OpenAPI:
   - Serve: `deno task openapi`
