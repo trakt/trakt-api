@@ -3,6 +3,7 @@
   import { formatTokenValidity } from "./formatTokenValidity.ts";
   import { onMount } from "svelte";
   import { mutateAccount } from "$lib/api/mutateAccount.ts";
+  import { signInAccount } from "$lib/auth/signInAccount.ts";
   import type { EnvironmentSelectorProps } from "./EnvironmentSelectorProps.ts";
 
   const {
@@ -21,6 +22,7 @@
   let isWorking = $state(false);
   let refreshingSlot = $state<number | null>(null);
   let errors = $state<Record<number, string>>({});
+  let connectError = $state("");
   let refreshFailures = $state<Record<number, boolean>>({});
   let now = $state(Date.now());
   onMount(() => {
@@ -54,6 +56,18 @@
   const connectedAccounts = $derived(
     accounts.filter((account) => account.source === "developer-oauth"),
   );
+
+  async function connectAccount(slot: number) {
+    if (isWorking) return;
+    isWorking = true;
+    connectError = "";
+    try {
+      await signInAccount(slot);
+    } catch {
+      connectError = "Could not start sign-in. Try again.";
+      isWorking = false;
+    }
+  }
 
   async function updateAccount(slot: number, method: "POST" | "DELETE") {
     if (isWorking) return;
@@ -225,15 +239,23 @@
       {/if}
 
       {#if nextSlot !== null}
-        <a href={`/auth/login?slot=${nextSlot}`} class="add-account">
+        <button
+          type="button"
+          class="add-account"
+          disabled={isWorking}
+          onclick={() => connectAccount(nextSlot)}
+        >
           <span>＋</span>
           <span
             >{accounts.length === 0
               ? "Connect Trakt account"
               : "Add another account"}</span
           >
-        </a>
+        </button>
       {/if}
+      {#if connectError}<p class="account-error" role="alert">
+          {connectError}
+        </p>{/if}
     </div>
   {/if}
 </div>
@@ -520,12 +542,21 @@
       align-items: center;
       gap: 9px;
 
+      width: 100%;
       padding: var(--ni-10);
+      border: 0;
       border-block-start: var(--ni-1) solid var(--color-border);
 
+      background: transparent;
       color: var(--color-info);
+      font-family: inherit;
       font-size: var(--ni-12);
+      text-align: start;
       text-decoration: none;
+    }
+
+    .add-account:disabled {
+      color: var(--color-muted);
     }
   }
 </style>

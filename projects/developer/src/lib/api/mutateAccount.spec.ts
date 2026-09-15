@@ -1,45 +1,43 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mutateAccount } from './mutateAccount.ts';
+import { refreshAccount } from '$lib/auth/refreshAccount.ts';
+import { signOutAccount } from '$lib/auth/signOutAccount.ts';
 
-afterEach(() => vi.unstubAllGlobals());
+vi.mock('$lib/auth/refreshAccount.ts', () => ({
+  refreshAccount: vi.fn(),
+}));
+vi.mock('$lib/auth/signOutAccount.ts', () => ({
+  signOutAccount: vi.fn(),
+}));
+
+beforeEach(() => vi.clearAllMocks());
 
 describe('account actions', () => {
-  it.each([['POST', '/refresh'], ['DELETE', '']] as const)(
-    'sends %s to the selected account',
-    async (method, suffix) => {
-      const fetch = vi.fn().mockResolvedValue(new Response('{}'));
-      vi.stubGlobal('fetch', fetch);
-      await mutateAccount(3, method);
-      expect(fetch).toHaveBeenCalledWith(`/api/accounts/3${suffix}`, {
-        method,
-      });
-    },
-  );
+  it('refreshes the selected account', async () => {
+    await mutateAccount(3, 'POST');
+    expect(refreshAccount).toHaveBeenCalledWith(3);
+    expect(signOutAccount).not.toHaveBeenCalled();
+  });
 
-  it('reports refresh failure without exposing the upstream body', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(new Response('private token', { status: 502 })),
+  it('logs out the selected account', async () => {
+    await mutateAccount(3, 'DELETE');
+    expect(signOutAccount).toHaveBeenCalledWith(3);
+    expect(refreshAccount).not.toHaveBeenCalled();
+  });
+
+  it('reports refresh failure without exposing the cause', async () => {
+    vi.mocked(refreshAccount).mockRejectedValue(
+      new Error('refresh_token=private'),
     );
     await expect(mutateAccount(0, 'POST')).rejects.toThrow(
-      'Could not refresh access token (502)',
+      'Could not refresh access token. Try again or reconnect your account.',
     );
   });
 
   it('reports failed logout instead of treating it as success', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(new Response('', { status: 403 })),
-    );
+    vi.mocked(signOutAccount).mockRejectedValue(new Error('denied'));
     await expect(mutateAccount(0, 'DELETE')).rejects.toThrow(
-      'Could not log out (403)',
-    );
-  });
-
-  it('reports network failures', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network')));
-    await expect(mutateAccount(0, 'POST')).rejects.toThrow(
-      'Check your connection',
+      'Could not log out. Try again.',
     );
   });
 });
