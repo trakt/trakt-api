@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "deno task generate:openapi && vite dev",
     "dev:local": "deno task generate:openapi && vite dev --host localhost --port 5174 --strictPort",
-    "build": "deno task generate:openapi && vite build",
+    "build": "deno task generate:openapi && vite build && deno run -A scripts/set-share-card.mjs",
     "generate:openapi": "deno run -A scripts/generate-openapi.mjs",
+    "generate:share-cards": "deno run -A scripts/generate-share-cards.mjs",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest --run",

@@ -12,3 +12,4 @@ test-results/
 *.pem
 *.key
 .DS_Store
+.share-cards/
