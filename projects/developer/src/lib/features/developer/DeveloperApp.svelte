@@ -132,6 +132,7 @@
       serverUrl,
       values,
       headers,
+      authorizationEnabled,
       body: requestBody,
       activeTab,
     });
@@ -195,13 +196,6 @@
         id: "managed-api-version",
         name: "trakt-api-version",
         value: "2",
-        enabled: true,
-        managed: true,
-      },
-      {
-        id: "managed-user-agent",
-        name: "User-Agent",
-        value: "TraktDeveloper/1.0.0",
         enabled: true,
         managed: true,
       },

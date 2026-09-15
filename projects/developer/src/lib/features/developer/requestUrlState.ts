@@ -1,5 +1,4 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
-import { MANAGED_AUTHORIZATION_HEADER_ID } from '$lib/api/headerIds.ts';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
 import type { RequestEditorTab } from './RequestEditorProps.ts';
 
@@ -108,6 +107,7 @@ export function encodeRequestUrlState({
   serverUrl,
   values,
   headers,
+  authorizationEnabled,
   body,
   activeTab,
 }: {
@@ -116,6 +116,7 @@ export function encodeRequestUrlState({
   serverUrl: string;
   values: Readonly<Record<string, string>>;
   headers: ReadonlyArray<ApiHeader>;
+  authorizationEnabled: boolean;
   body: string;
   activeTab: RequestEditorTab;
 }): string {
@@ -138,14 +139,7 @@ export function encodeRequestUrlState({
     ['server', serverUrl],
     ...parameterEntries,
     ...headerEntries,
-    [
-      'authorization',
-      headers.find(({ id }) => id === MANAGED_AUTHORIZATION_HEADER_ID)
-          ?.enabled ===
-          false
-        ? '0'
-        : '1',
-    ],
+    ['authorization', authorizationEnabled ? '1' : '0'],
     ['body', sanitizeBody(body)],
     ['tab', activeTab],
   ]);
