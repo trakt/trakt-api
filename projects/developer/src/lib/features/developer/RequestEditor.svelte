@@ -63,6 +63,16 @@
   const missingParameterIds = $derived(
     missingRequiredParameterIds({ endpoint, values, headers }),
   );
+  const authorizationHeader = $derived(
+    headers.find(({ id }) => id === MANAGED_AUTHORIZATION_HEADER_ID),
+  );
+  const authorizationState = $derived.by(() => {
+    if (endpoint.auth !== "required" || authorizationHeader === undefined) {
+      return "ready";
+    }
+    if (authorizationHeader.value === "Not attached") return "no-account";
+    return authorizationHeader.enabled ? "ready" : "off";
+  });
   const invalidValueParameterIds = $derived(
     invalidParameterIds({ endpoint, values, headers }),
   );
@@ -252,6 +262,28 @@
 
   {#if errorMessage}
     <div class="request-error" role="alert">{errorMessage}</div>
+  {/if}
+
+  {#if authorizationState === "no-account"}
+    <div class="request-notice" role="status">
+      <span
+        >This endpoint requires OAuth. Connect a Trakt account in
+        <strong>Environment</strong> to run it, or send it as-is to see the 401.</span
+      >
+    </div>
+  {:else if authorizationState === "off"}
+    <div class="request-notice" role="status">
+      <span
+        >This endpoint requires OAuth and the <code>Authorization</code> header is
+        turned off, so it will return 401.</span
+      >
+      <button
+        type="button"
+        onclick={() =>
+          onHeader(MANAGED_AUTHORIZATION_HEADER_ID, "enabled", true)}
+        >Turn it on</button
+      >
+    </div>
   {/if}
 
   <div class="request-tabs" role="tablist" aria-label="Request editor">
@@ -780,6 +812,48 @@
       color: var(--color-delete);
 
       font-size: var(--ni-12);
+    }
+
+    .request-notice {
+      display: flex;
+      gap: var(--ni-10);
+      align-items: center;
+      justify-content: space-between;
+
+      margin: var(--ni-10) 26px 0;
+      padding: 9px var(--ni-11);
+      border: var(--ni-1) solid
+        color-mix(in srgb, var(--color-warning) 40%, transparent);
+      border-radius: var(--radius-medium);
+
+      background: color-mix(in srgb, var(--color-warning) 8%, transparent);
+      color: var(--color-warning);
+
+      font-size: var(--ni-12);
+    }
+
+    .request-notice code {
+      font-size: inherit;
+    }
+
+    .request-notice button {
+      flex: none;
+      padding: var(--ni-4) var(--ni-10);
+      border: var(--ni-1) solid
+        color-mix(in srgb, var(--color-warning) 45%, transparent);
+      border-radius: var(--radius-small);
+
+      background: transparent;
+      color: var(--color-warning);
+
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .request-notice button:hover {
+      background: color-mix(in srgb, var(--color-warning) 16%, transparent);
     }
 
     .request-tabs {
