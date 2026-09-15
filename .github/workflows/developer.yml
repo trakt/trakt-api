@@ -4,14 +4,20 @@ on:
   pull_request:
     paths:
       - 'projects/developer/**'
+      - 'projects/api/**'
+      - 'projects/openapi/**'
       - '.github/workflows/developer.yml'
       - 'deno.json'
+      - 'deno.lock'
   push:
     branches: [master]
     paths:
       - 'projects/developer/**'
+      - 'projects/api/**'
+      - 'projects/openapi/**'
       - '.github/workflows/developer.yml'
       - 'deno.json'
+      - 'deno.lock'
 
 permissions:
   contents: read
@@ -27,6 +33,8 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.9.4
+      - run: deno install --allow-scripts --frozen
+        working-directory: ${{ github.workspace }}
       - run: deno install --allow-scripts --frozen
       - run: deno fmt --check --config deno.json
       - run: deno task format:svelte:check
