@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { assertSameOrigin } from '$lib/server/assertSameOrigin.ts';
 import { readAccountSession } from '$lib/server/readAccountSession.ts';
-import { redactResponse } from '$lib/server/redactResponse.ts';
+import { redactResponse } from '$lib/api/redactResponse.ts';
 import { privateJson } from '$lib/server/privateJson.ts';
 import { error, type RequestHandler } from '@sveltejs/kit';
 import { z } from 'zod';
