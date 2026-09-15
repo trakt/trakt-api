@@ -25,6 +25,8 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_TRAKT_CLIENT_ID: synthetic-ci-client-id-never-real
     defaults:
       run:
         working-directory: projects/developer
