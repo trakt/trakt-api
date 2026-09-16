@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { avatarUrl } from "$lib/auth/avatarUrl.ts";
   import {
     MANAGED_AUTHORIZATION_HEADER_ID,
     parameterHeaderId,
@@ -6,6 +7,10 @@
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";
+  import { rememberSlot, selectedSlot } from "$lib/auth/accountNavigation.ts";
+  import { setPortalSession } from "$lib/auth/portalSession.ts";
+  import type { Snippet } from "svelte";
+  import { accountRequest } from "$lib/api/accountRequest.ts";
   import GuideReader from "./GuideReader.svelte";
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
@@ -18,7 +23,7 @@
   import { parseOpenApiDocument } from "$lib/openapi/parseOpenApiDocument.ts";
   import { seedCatalog } from "$lib/openapi/seedCatalog.ts";
   import EndpointSidebar from "./EndpointSidebar.svelte";
-  import EnvironmentSelector from "./EnvironmentSelector.svelte";
+  import AccountMenu from "./AccountMenu.svelte";
   import { hasInvalidJsonBody } from "./hasInvalidJsonBody.ts";
   import { hasInvalidParameterValues } from "./invalidParameterIds.ts";
   import { hasMissingExpectedJsonBody } from "./hasMissingExpectedJsonBody.ts";
@@ -38,6 +43,10 @@
   } from "./requestUrlState.ts";
   import ResponseInspector from "./ResponseInspector.svelte";
 
+  const { children }: { children: Snippet } = $props();
+  const isApps = $derived(
+    page.url.pathname === "/apps" || page.url.pathname.startsWith("/apps/"),
+  );
   const isReference = $derived(
     page.url.searchParams.get("section") === "reference" ||
       (!page.url.searchParams.has("section") &&
@@ -85,6 +94,47 @@
   let isLoadingCatalog = $state(true);
   let requestError = $state("");
   let accounts = $state<ReadonlyArray<DeveloperAccount>>([]);
+  let accountsLoading = $state(true);
+  setPortalSession({
+    get account() {
+      return activeAccount;
+    },
+    get loading() {
+      return accountsLoading;
+    },
+    get vip() {
+      return vip;
+    },
+  });
+  let avatar = $state<string | null>(null);
+  let avatarSlot: number | null = null;
+  let vip = $state<boolean | null>(null);
+  let profileRevision = $state(0);
+  const activeAccount = $derived(
+    accounts.find((account) => account.slot === selectedAccountSlot),
+  );
+  $effect(() => {
+    const slot = selectedAccountSlot;
+    profileRevision;
+    if (avatarSlot !== slot) {
+      avatar = null;
+      avatarSlot = slot;
+    }
+    vip = null;
+    let current = true;
+    if (slot !== null)
+      void accountRequest(slot, "/users/settings")
+        .then((response) => response.json())
+        .then((settings) => {
+          if (!current) return;
+          vip = settings.user?.vip === true || settings.user?.vip_ep === true;
+          avatar = avatarUrl(settings.user?.images?.avatar?.full);
+        })
+        .catch(() => {});
+    return () => {
+      current = false;
+    };
+  });
   let sessionGeneration = 0;
   let selectedAccountSlot = $state<number | null>(null);
   let authorizationEnabled = $state(true);
@@ -332,7 +382,16 @@
   }
 
   function setSelectedAccount(slot: number | null) {
+    if (selectedAccountSlot !== slot) {
+      sessionGeneration += 1;
+      isSending = false;
+      requestError = "";
+      responseHistory = [];
+      globalThis.sessionStorage.removeItem("trakt-developer-response-history");
+      globalThis.sessionStorage.removeItem("trakt-playground-response-history");
+    }
     selectedAccountSlot = slot;
+    if (slot !== null) rememberSlot(slot);
     if (!selectedEndpoint) return;
 
     headers = [
@@ -370,10 +429,14 @@
     const accountState = await fetchAccounts();
     if (generation !== sessionGeneration) return;
     accounts = accountState.accounts;
+    accountsLoading = false;
+    profileRevision += 1;
     if (accounts.some((account) => account.slot === selectedAccountSlot))
       return;
 
-    const account = accounts.at(0);
+    const account =
+      accounts.find((account) => account.slot === selectedSlot()) ??
+      accounts.at(0);
     setSelectedAccount(account?.slot ?? null);
   }
 
@@ -563,10 +626,12 @@
 
     globalThis.addEventListener("keydown", focusSearch);
     globalThis.addEventListener("focus", refreshAccounts);
+    globalThis.addEventListener("storage", refreshAccounts);
     void Promise.all([loadCatalog(sharedState), refreshAccounts()]);
     return () => {
       globalThis.removeEventListener("keydown", focusSearch);
       globalThis.removeEventListener("focus", refreshAccounts);
+      globalThis.removeEventListener("storage", refreshAccounts);
     };
   });
 </script>
@@ -582,21 +647,37 @@
     <nav class="section-navigation" aria-label="Developer sections">
       <a
         href="/?section=guides"
-        aria-current={!isReference ? "page" : undefined}>Getting Started</a
+        aria-current={!isReference && !isApps ? "page" : undefined}
+        >Getting Started</a
       >
       <a
         href="/?section=reference"
         aria-current={isReference ? "page" : undefined}>API Reference</a
       >
+      {#if activeAccount}
+        <a href="/apps" aria-current={isApps ? "page" : undefined}>My Apps</a>
+      {/if}
       <a
         href="https://github.com/trakt/trakt-api"
         target="_blank"
         rel="noreferrer">Support</a
       >
     </nav>
+    <div class="header-account">
+      <AccountMenu
+        {accounts}
+        {avatar}
+        selectedSlot={selectedAccountSlot}
+        onAccount={setSelectedAccount}
+        onLogout={logOutAccount}
+        onAccountsChanged={refreshAccounts}
+      />
+    </div>
   </header>
 
-  {#if !isReference}
+  {#if isApps}
+    {@render children()}
+  {:else if !isReference}
     <GuideReader
       slug={page.url.searchParams.get("guide")}
       endpoints={catalog.endpoints}
@@ -616,16 +697,17 @@
           onSelect={selectEndpoint}
         />
         <div class="sidebar-environment">
-          <EnvironmentSelector
-            {accounts}
-            serverUrl={mainServerUrl}
-            servers={MAIN_SERVERS}
-            selectedSlot={selectedAccountSlot}
-            onAccount={setSelectedAccount}
-            onServer={setMainServer}
-            onLogout={logOutAccount}
-            onAccountsChanged={refreshAccounts}
-          />
+          <label class="server-selector"
+            >API server
+            <select
+              value={mainServerUrl}
+              onchange={(event) => setMainServer(event.currentTarget.value)}
+            >
+              {#each MAIN_SERVERS as server}<option value={server.url}
+                  >{server.label} · {server.host}</option
+                >{/each}
+            </select>
+          </label>
         </div>
       </div>
 
@@ -698,6 +780,17 @@
 </main>
 
 <style lang="scss">
+  .server-selector {
+    display: grid;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .server-selector select {
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
+  }
   .trakt-developer-app {
     display: grid;
     width: 100%;
@@ -706,7 +799,7 @@
     min-height: 0;
 
     overflow: hidden;
-    grid-template-rows: 58px minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
 
     .app-header {
       position: relative;
@@ -714,10 +807,11 @@
 
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: var(--ni-18);
 
-      padding-inline: 15px;
+      padding: 10px 15px;
+      flex-wrap: wrap;
       border-block-end: var(--ni-1) solid var(--color-border);
 
       background: color-mix(in srgb, var(--color-surface) 94%, transparent);
@@ -758,6 +852,10 @@
       font-size: var(--ni-12);
     }
 
+    .header-account {
+      margin-inline-start: auto;
+    }
+
     .section-navigation {
       display: flex;
       align-self: stretch;
@@ -792,6 +890,8 @@
       }
 
       .section-navigation {
+        order: 3;
+        width: 100%;
         margin-inline-start: 0;
         gap: var(--ni-12);
       }
