@@ -144,7 +144,9 @@ Returns lists the authenticated user has liked. Use \`extended\`, \`page\`, and 
   },
   avatar: {
     summary: 'Update avatar',
-    description: `#### 🔒 OAuth Required
+    description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
+
 Update the authenticated user avatar. Send the avatar request body; a successful update returns a \`204\` response, and invalid image data returns \`400\`.`,
     path: '/avatar',
     method: 'PUT',
@@ -156,7 +158,9 @@ Update the authenticated user avatar. Send the avatar request body; a successful
   },
   cover: {
     summary: 'Update cover image',
-    description: `#### 🔒 OAuth Required
+    description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
+
 Update the authenticated user cover image. Send the cover request body; a successful update returns a \`204\` response, and invalid image data returns \`400\`.`,
     path: '/set_cover',
     method: 'PUT',
