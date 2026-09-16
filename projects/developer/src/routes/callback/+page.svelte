@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { takeReturnPath } from "$lib/auth/accountNavigation.ts";
   import { completeSignIn } from "$lib/auth/completeSignIn.ts";
   import LoadingSpinner from "$lib/features/developer/LoadingSpinner.svelte";
   import { onMount } from "svelte";
@@ -8,7 +9,7 @@
   onMount(async () => {
     try {
       await completeSignIn();
-      globalThis.location.replace("/");
+      globalThis.location.replace(takeReturnPath());
     } catch (cause) {
       error =
         cause instanceof Error

@@ -34,9 +34,10 @@ application.
 deno task dev:local
 ```
 
-Open [localhost:5174](http://localhost:5174). In API Reference, use
-**Environment** to connect a Trakt account and choose a server. The redirect URI
-must match the registered one exactly, including the hostname and port.
+Open [localhost:5174](http://localhost:5174). Use the header account menu to
+sign in or switch accounts. API Reference has a separate API server selector.
+The redirect URI must match the registered one exactly, including the hostname
+and port.
 
 This directory is a standalone Deno workspace with its own `deno.lock`.
 Dependencies are installed here. From the repository root, the equivalent setup

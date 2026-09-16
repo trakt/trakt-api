@@ -1,23 +1,25 @@
 <script lang="ts">
+  import { DEFAULT_AVATAR } from "$lib/auth/avatarUrl.ts";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { formatTokenValidity } from "./formatTokenValidity.ts";
   import { onMount } from "svelte";
   import { mutateAccount } from "$lib/api/mutateAccount.ts";
   import { signInAccount } from "$lib/auth/signInAccount.ts";
-  import type { EnvironmentSelectorProps } from "./EnvironmentSelectorProps.ts";
+  import type { AccountMenuProps } from "./AccountMenuProps.ts";
 
   const {
+    avatar,
     accounts,
     selectedSlot,
-    serverUrl,
-    servers,
-    onServer,
     onAccount,
     onAccountsChanged,
     onLogout,
-  }: EnvironmentSelectorProps = $props();
+  }: AccountMenuProps = $props();
 
   let isOpen = $state(false);
+  let failedAvatar = $state<string | null>(null);
+  const avatarSource = $derived(avatar ?? DEFAULT_AVATAR);
+  const avatarKey = $derived(`${selectedSlot}:${avatarSource}`);
   let selectorElement: HTMLDivElement;
   let isWorking = $state(false);
   let refreshingSlot = $state<number | null>(null);
@@ -49,9 +51,6 @@
   );
   const selectedAccount = $derived(
     accounts.find((account) => account.slot === selectedSlot) ?? null,
-  );
-  const selectedServer = $derived(
-    servers.find((server) => server.url === serverUrl) ?? servers.at(0),
   );
   const connectedAccounts = $derived(
     accounts.filter((account) => account.source === "developer-oauth"),
@@ -124,52 +123,35 @@
     class="environment-trigger"
     aria-haspopup="dialog"
     aria-expanded={isOpen}
-    onclick={() => (isOpen = !isOpen)}
+    onclick={() => {
+      if (!accounts.length && nextSlot !== null) void connectAccount(nextSlot);
+      else isOpen = !isOpen;
+    }}
   >
-    <span class="trigger-copy">
-      <strong>Environment</strong>
-      <small>
-        {selectedServer?.label ?? "Public"} ·
-        {#if selectedAccount}{@render statusDot(
-            selectedAccount.slot,
-            selectedAccount.expiresAt,
-          )}{/if}
-        {selectedAccount ? `@${selectedAccount.username}` : "No user"}
-      </small>
-    </span>
+    {#if selectedAccount}{#key avatarKey}<img
+          class="avatar"
+          src={failedAvatar === avatarKey ? DEFAULT_AVATAR : avatarSource}
+          alt=""
+          referrerpolicy="no-referrer"
+          onerror={() => {
+            failedAvatar = avatarKey;
+          }}
+        />{/key}{/if}
+    <span class="trigger-copy"
+      ><strong
+        >{selectedAccount ? `@${selectedAccount.username}` : "Sign in"}</strong
+      ></span
+    >
   </button>
 
+  {#if connectError && !isOpen}<p class="account-error" role="alert">
+      {connectError}
+    </p>{/if}
   {#if isOpen}
-    <div
-      class="environment-menu"
-      role="dialog"
-      aria-label="Request environment"
-    >
+    <div class="environment-menu" role="dialog" aria-label="Trakt accounts">
       <div class="menu-heading">
-        <strong>Request environment</strong>
-        <span>Choose the API server and connected user.</span>
-      </div>
-
-      <div class="environment-fields">
-        <label class="environment-field">
-          <span class="field-copy">
-            <strong>Server base URL</strong>
-            <small>Public or premium Trakt API</small>
-          </span>
-          <span class="select-control">
-            <select
-              aria-label="Server base URL"
-              value={serverUrl}
-              onchange={(event) => onServer(event.currentTarget.value)}
-            >
-              {#each servers as server (server.url)}
-                <option value={server.url}
-                  >{server.label} — {server.host}</option
-                >
-              {/each}
-            </select>
-          </span>
-        </label>
+        <strong>Trakt accounts</strong>
+        <span>One account selection across the developer portal.</span>
       </div>
 
       {#if connectedAccounts.length > 0}
@@ -227,7 +209,7 @@
                   aria-label={`Log out @${account.username}`}
                   disabled={isWorking}
                   onclick={() => updateAccount(account.slot, "DELETE")}
-                  >×</button
+                  >Log out</button
                 >
               </div>
             </div>
@@ -261,6 +243,12 @@
 </div>
 
 <style lang="scss">
+  .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
   .trakt-environment-selector {
     position: relative;
 
@@ -298,28 +286,18 @@
     }
 
     .trigger-copy strong {
-      font-size: var(--ni-11);
-    }
-
-    .trigger-copy small {
-      display: flex;
-      align-items: center;
-      gap: var(--ni-6);
-
+      max-width: 150px;
       overflow: hidden;
-      max-width: 230px;
-
-      color: var(--color-muted);
-      font-size: 9px;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-size: var(--ni-11);
     }
 
     .environment-menu {
       position: absolute;
       z-index: 30;
-      inset-block-end: calc(100% + 8px);
-      inset-inline-start: 0;
+      inset-block-start: calc(100% + 8px);
+      inset-inline-end: 0;
 
       width: min(410px, calc(100vw - var(--ni-24)));
       max-height: calc(100dvh - 150px);
@@ -348,68 +326,6 @@
     .menu-heading span {
       color: var(--color-muted);
       font-size: var(--ni-11);
-    }
-
-    .environment-fields {
-      display: grid;
-      gap: var(--ni-2);
-      padding-block: 7px;
-    }
-
-    .environment-field {
-      display: grid;
-      grid-template-columns: 130px minmax(0, 1fr);
-      align-items: center;
-      gap: var(--ni-10);
-      padding: 8px 9px;
-    }
-
-    .field-copy {
-      display: grid;
-      gap: var(--ni-2);
-    }
-
-    .field-copy strong {
-      font-size: var(--ni-11);
-    }
-
-    .field-copy small {
-      color: var(--color-subtle);
-      font-size: 9px;
-      line-height: 1.35;
-    }
-
-    .select-control {
-      position: relative;
-      min-width: 0;
-    }
-
-    .select-control::after {
-      position: absolute;
-      inset-block-start: 50%;
-      inset-inline-end: var(--ni-10);
-
-      width: 7px;
-      height: var(--ni-4);
-
-      background: var(--color-muted);
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-      content: "";
-
-      pointer-events: none;
-      transform: translateY(-50%);
-    }
-
-    .select-control select {
-      width: 100%;
-      height: 35px;
-      padding-inline: 9px var(--ni-28);
-
-      border: var(--ni-1) solid var(--color-border);
-      border-radius: var(--radius-control);
-
-      background-color: var(--color-surface);
-      font-size: var(--ni-10);
     }
 
     .status-dot {
@@ -522,7 +438,7 @@
     }
 
     .account-actions button {
-      width: var(--ni-28);
+      min-width: var(--ni-28);
       height: var(--ni-28);
 
       border: 0;
@@ -557,6 +473,14 @@
 
     .add-account:disabled {
       color: var(--color-muted);
+    }
+  }
+  @media (max-width: 640px) {
+    .trakt-environment-selector .environment-menu {
+      position: fixed;
+      inset-inline: 12px;
+      inset-block-start: 56px;
+      width: auto;
     }
   }
 </style>

@@ -1,5 +1,4 @@
 export const prerender = true;
 
-// Every view is selected by query string (?section, ?guide, ?operation), which
-// a prerender cannot know, so the shell hydrates and renders on the client.
+// OAuth and user-owned app data are resolved in the browser.
 export const ssr = false;
