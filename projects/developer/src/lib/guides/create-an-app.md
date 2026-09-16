@@ -4,7 +4,7 @@ updatedAt: 2026-07-17T07:55:38.000Z
 
 # ✅ Create an App
 
-To use the Trakt API, you'll first need to [**create a new API app**](https://app.trakt.tv/settings/apps/api/new).
+To use the Trakt API, you'll first need to [**create a new API app**](/apps).
 
 Once done, you'll have everything you need to use the API (Client ID and Client Secret).
 

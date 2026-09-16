@@ -71,6 +71,6 @@ describe('guide snapshots', () => {
     const app = renderMarkdown(
       prepareGuideMarkdown(files['./create-an-app.md'], slugs),
     );
-    expect(app).toContain('href="https://app.trakt.tv/settings/apps/api/new"');
+    expect(app).toContain('href="/apps"');
   });
 });

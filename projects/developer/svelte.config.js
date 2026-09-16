@@ -5,7 +5,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
   preprocess: vitePreprocess(),
   kit: {
-    adapter: adapter(),
+    adapter: adapter({ fallback: '404.html' }),
     csp: {
       mode: 'hash',
       directives: {
@@ -20,7 +20,12 @@ const config = {
         'font-src': ['self'],
         'form-action': ['self'],
         'frame-ancestors': ['none'],
-        'img-src': ['self', 'data:'],
+        'img-src': [
+          'self',
+          'data:',
+          'https://walter.trakt.tv',
+          'https://media.trakt.tv',
+        ],
         'object-src': ['none'],
         'script-src': ['self'],
         'style-src': ['self', 'unsafe-inline'],

@@ -1,3 +1,4 @@
+import { rememberSlot } from './accountNavigation.ts';
 import { takePendingSlot } from './pendingSlot.ts';
 import { storeUsername } from './storeUsername.ts';
 import { userManager } from './userManager.ts';
@@ -11,4 +12,5 @@ export async function completeSignIn(): Promise<void> {
 
   const user = await userManager(slot).signinRedirectCallback();
   await storeUsername(slot, user.access_token);
+  rememberSlot(slot);
 }
