@@ -4,6 +4,7 @@
 
 - [Introduction](/?section=guides&guide=getting-started)
 - [Create an App](/?section=guides&guide=create-an-app)
+- [API Use Policy](/?section=guides&guide=api-use-policy)
 - [Authentication](/?section=guides&guide=authentication-oauth)
 
 ## Request basics

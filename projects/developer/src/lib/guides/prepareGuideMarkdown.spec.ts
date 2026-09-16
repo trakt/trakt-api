@@ -46,7 +46,7 @@ describe('guide snapshots', () => {
     expect(links.sort()).toEqual(
       [...slugs].filter((slug) => slug !== 'contents').sort(),
     );
-    expect(links).toHaveLength(28);
+    expect(links).toHaveLength(29);
     for (const slug of links) {
       expect(files[`./${slug}.md`]).toMatch(/^# /m);
     }
