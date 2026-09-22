@@ -208,7 +208,10 @@ Add a new reply to an existing comment. Make sure to allow and encourage *spoile
 | Key | Type | Default | Value |
 |---|---|---|---|
 | \`comment\` * | string |  | Text for the reply. |
-| \`spoiler\` | boolean | \`false\` | Is this a spoiler? |`,
+| \`spoiler\` | boolean | \`false\` | Is this a spoiler? |
+| \`gif\` | string |  | Klipy GIF url to attach. A GIF on its own is a valid comment. |
+| \`gif_width\` | integer |  | Intrinsic width of the GIF in pixels. |
+| \`gif_height\` | integer |  | Intrinsic height of the GIF in pixels. |`,
     path: '/replies',
     method: 'POST',
     pathParams: idParamsSchema,
@@ -226,7 +229,10 @@ Update a single comment. The OAuth user must match the author of the comment in 
 | Key | Type | Default | Value |
 |---|---|---|---|
 | \`comment\` | string |  | Text for the comment. |
-| \`spoiler\` | boolean | \`false\` | Is this a spoiler? |`,
+| \`spoiler\` | boolean | \`false\` | Is this a spoiler? |
+| \`gif\` | string |  | Klipy GIF url to attach. A GIF on its own is a valid comment. |
+| \`gif_width\` | integer |  | Intrinsic width of the GIF in pixels. |
+| \`gif_height\` | integer |  | Intrinsic height of the GIF in pixels. |`,
     path: '/',
     method: 'PUT',
     pathParams: idParamsSchema,
@@ -308,6 +314,9 @@ Add a new comment to a movie, show, season, episode, or list. Make sure to allow
 | item * | object | | \`movie\`, \`show\`, \`season\`, \`episode\`, or \`list\` object. (see examples ->) |
 | \`comment\` * | string |  | Text for the comment. |
 | \`spoiler\` | boolean | \`false\` | Is this a spoiler? |
+| \`gif\` | string |  | Klipy GIF url to attach. A GIF on its own is a valid comment. |
+| \`gif_width\` | integer |  | Intrinsic width of the GIF in pixels. |
+| \`gif_height\` | integer |  | Intrinsic height of the GIF in pixels. |
 | \`sharing\`  | object | | Control sharing to any connected social networks. (see below &#8595;) |
 
 #### Sharing
