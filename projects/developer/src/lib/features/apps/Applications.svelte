@@ -15,17 +15,18 @@
 
   const {
     slot,
-    vip,
     mode,
     appId,
     appName,
   }: ApplicationPageProps & {
     slot: number;
-    vip: boolean | null;
   } = $props();
   let loading = $state(true);
   let apps = $state<Application[]>([]);
   const selected = $derived(apps.find((app) => app.id === appId));
+  const linkedGithubUsername = $derived(
+    apps.find((app) => app.github_username)?.github_username ?? null,
+  );
   const displayName = $derived(
     selected?.name ?? appName ?? (loading ? "Loading…" : "App details"),
   );
@@ -89,8 +90,7 @@
     }
   }
   async function save(input: ApplicationInput) {
-    if (busy || (mode === "new" && !vip) || (mode === "edit" && !selected))
-      return;
+    if (busy || (mode === "edit" && !selected)) return;
     busy = true;
     error = "";
     try {
@@ -167,7 +167,7 @@
                 : "Manage credentials and settings for this app."}
         </p>
       </div>
-      {#if mode === "list" && vip}<a class="button primary" href="/apps/new"
+      {#if mode === "list"}<a class="button primary" href="/apps/new"
           >＋ Create app</a
         >
       {/if}
@@ -178,18 +178,8 @@
       </div>{/if}
     {#if notice}<p class="message" role="status">{notice}</p>{/if}
     {#if mode === "list"}
-      {#if vip === false}<aside>
-          <strong>Creating apps is a VIP feature</strong>
-          <p>You can still manage your existing apps.</p>
-          <a href="https://app.trakt.tv/vip" target="_blank" rel="noreferrer"
-            >Explore Trakt VIP ↗</a
-          >
-        </aside>{:else if vip === null}<p class="muted">
-          Account eligibility is unavailable. Refresh your account to check
-          whether you can create apps.
-        </p>{/if}
       {#if loading}<div class="empty" role="status">Loading your apps…</div>
-      {:else if vip && !error && apps.length === 0}<div class="empty">
+      {:else if !error && apps.length === 0}<div class="empty">
           <span class="symbol">&lt;/&gt;</span>
           <h2>Your next idea starts here</h2>
           <p>Register an app to get your Client ID and Client Secret.</p>
@@ -224,24 +214,11 @@
         <p>This app is unavailable for the selected account.</p>
         <a href="/apps">Back to My Apps</a>
       </section>
-    {:else if mode === "new" && !vip}
-      <section class="panel">
-        <h2>
-          {vip === null
-            ? "Checking account eligibility"
-            : "Creating apps is a VIP feature"}
-        </h2>
-        <p>
-          {vip === null
-            ? "Refresh your account if eligibility remains unavailable."
-            : "You can still manage your existing apps."}
-        </p>
-        <a href="/apps">Back to My Apps</a>
-      </section>
     {:else if mode === "new" || (mode === "edit" && selected)}
       <section class="panel">
         <ApplicationForm
           app={mode === "edit" ? selected : undefined}
+          {linkedGithubUsername}
           {busy}
           onSave={save}
           onCancel={() => {

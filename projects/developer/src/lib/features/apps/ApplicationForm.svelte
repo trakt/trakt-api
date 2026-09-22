@@ -1,13 +1,21 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import type { Application, ApplicationInput } from "./applications.ts";
   import { parseApplication } from "./validateApplication.ts";
+  import {
+    githubConnectUrl,
+    takeGithubCode,
+    takeGithubDraft,
+  } from "./githubConnect.ts";
   const {
     app,
+    linkedGithubUsername,
     busy,
     onSave,
     onCancel,
   }: {
     app?: Application;
+    linkedGithubUsername: string | null;
     busy: boolean;
     onSave: (input: ApplicationInput) => void;
     onCancel: () => void;
@@ -19,10 +27,45 @@
   let redirects = $state(initial?.redirect_uri ?? "");
   let origins = $state(initial?.origins.join("\n") ?? "");
   let error = $state("");
+  const githubUsername = $derived(
+    initial?.github_username ?? linkedGithubUsername ?? null,
+  );
+  let githubCode = $state<string | null>(null);
+  onMount(() => {
+    const code = takeGithubCode();
+    if (!code) return;
+    githubCode = code;
+    const draft = takeGithubDraft();
+    if (!draft) return;
+    name = draft.name;
+    description = draft.description;
+    redirects = draft.redirects;
+    origins = draft.origins;
+  });
+  function connectGithub() {
+    globalThis.location.assign(
+      githubConnectUrl(globalThis.location.pathname, {
+        name,
+        description,
+        redirects,
+        origins,
+      }),
+    );
+  }
   function submit(event: SubmitEvent) {
     event.preventDefault();
+    if (!app && !githubCode && !githubUsername) {
+      error = "Connect your GitHub account before creating an app.";
+      return;
+    }
     try {
-      const input = parseApplication(name, description, redirects, origins);
+      const input = parseApplication(
+        name,
+        description,
+        redirects,
+        origins,
+        githubCode ?? undefined,
+      );
       error = "";
       onSave(input);
     } catch (cause) {
@@ -67,6 +110,27 @@
         placeholder="https://example.com"
         spellcheck="false"></textarea></label
     >
+    <div class="github-connect">
+      <strong>GitHub account</strong>
+      {#if githubCode}
+        <span
+          >GitHub connected. Save to {app ? "update" : "attach"} your handle.</span
+        >
+      {:else if githubUsername}
+        <span>Connected as <strong>@{githubUsername}</strong></span>
+      {:else}
+        <span
+          >{app
+            ? "Connect a GitHub account to verify this app."
+            : "Connect a GitHub account once to verify who you are."}</span
+        >
+      {/if}
+      <button type="button" onclick={connectGithub}
+        >{githubUsername && !githubCode
+          ? "Re-verify"
+          : "Connect GitHub"}</button
+      >
+    </div>
     {#if !app}<p>
         By creating an app, you agree to the <a
           href="/?section=guides&guide=create-an-app">Trakt API requirements</a
@@ -102,6 +166,19 @@
     font-size: 12px;
     font-weight: 400;
     line-height: 1.6;
+  }
+  .github-connect {
+    display: grid;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    padding: 16px;
+  }
+  .github-connect button {
+    @include action.base;
+    justify-self: start;
   }
   input,
   textarea {
