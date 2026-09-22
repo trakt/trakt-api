@@ -54,6 +54,6 @@ describe('app management transport', () => {
         new Response('sensitive-server-output', { status: 403 }),
       ),
     );
-    await expect(saveApplication(0, input)).rejects.toThrow('VIP');
+    await expect(saveApplication(0, input)).rejects.toThrow('app limit');
   });
 });

@@ -20,13 +20,7 @@
 
 {#if session.account}
   {#key `${session.account.slot}:${mode}:${appId ?? ""}`}
-    <Applications
-      slot={session.account.slot}
-      vip={session.vip}
-      {mode}
-      {appId}
-      {appName}
-    />
+    <Applications slot={session.account.slot} {mode} {appId} {appName} />
   {/key}
 {:else}
   <section class="welcome">

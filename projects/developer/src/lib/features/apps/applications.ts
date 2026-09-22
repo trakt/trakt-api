@@ -13,6 +13,7 @@ export const applicationSchema = z.object({
   approved_at: z.string().nullish(),
   scopes: z.array(z.string()),
   created_at: z.string(),
+  github_username: z.string().nullish(),
   permissions: z.object({
     scrobble: z.boolean().nullish(),
     checkin: z.boolean().nullish(),
@@ -25,6 +26,7 @@ export type ApplicationInput = {
   description?: string;
   redirect_uri: string[];
   origins: string[];
+  github_code?: string;
 };
 
 export async function listApplications(slot: number): Promise<Application[]> {

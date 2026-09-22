@@ -10,7 +10,7 @@ export function selectedSlot(): number | null {
 export function rememberSlot(slot: number): void {
   globalThis.sessionStorage?.setItem(ACTIVE_SLOT, String(slot));
 }
-function safeReturnPath(value: string | null): string {
+export function safeReturnPath(value: string | null): string {
   if (value && /^\/apps(?:\/(?:new|[1-9]\d*(?:\/edit)?))?\/?$/.test(value)) {
     return value.replace(/\/$/, '');
   }

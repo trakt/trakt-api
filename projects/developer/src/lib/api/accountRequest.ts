@@ -19,9 +19,11 @@ export async function accountRequest(
   });
   if (!response.ok) {
     const messages: Record<number, string> = {
+      400:
+        'Your GitHub connection could not be verified. Reconnect and try again.',
       401: 'Your session has expired. Refresh your account or sign in again.',
       403:
-        'This account cannot perform this action. Creating an app requires VIP and access to app management.',
+        'This account cannot perform this action. Check your app limit and your GitHub account connection.',
       404: 'This app is no longer available. Reload your apps.',
       422: 'Check your app details. The server could not accept these values.',
       429: 'Too many requests. Please wait before trying again.',
