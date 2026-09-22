@@ -1,4 +1,5 @@
 import { z } from '../z.ts';
+import { commentGifResponseSchema } from './commentGifResponseSchema.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';
 
 /** Zod schema for the comment response. */
@@ -8,9 +9,7 @@ export const commentResponseSchema = z.object({
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
   comment: z.string(),
-  gif: z.string().nullish(),
-  gif_width: z.number().int(),
-  gif_height: z.number().int(),
+  gif: commentGifResponseSchema.nullish(),
   spoiler: z.boolean(),
   review: z.boolean(),
   replies: z.number().int(),
