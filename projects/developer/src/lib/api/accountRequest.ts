@@ -1,5 +1,13 @@
 import { accessToken } from '$lib/auth/accessToken.ts';
+import { developerErrorMessage } from './developerErrorMessage.ts';
 import { traktHeaders } from './traktHeaders.ts';
+
+async function errorCode(response: Response): Promise<unknown> {
+  const body = await response.json().catch(() => null) as
+    | { error?: unknown }
+    | null;
+  return body?.error;
+}
 
 // Account requests bypass playground history, response previews, and storage.
 export async function accountRequest(
@@ -18,9 +26,10 @@ export async function accountRequest(
     redirect: 'error',
   });
   if (!response.ok) {
+    const localized = developerErrorMessage(await errorCode(response));
     const messages: Record<number, string> = {
       400:
-        'Your GitHub connection could not be verified. Reconnect and try again.',
+        'The request could not be accepted. Check your details and try again.',
       401: 'Your session has expired. Refresh your account or sign in again.',
       403:
         'This account cannot perform this action. Check your app limit and your GitHub account connection.',
@@ -29,7 +38,8 @@ export async function accountRequest(
       429: 'Too many requests. Please wait before trying again.',
     };
     throw new Error(
-      messages[response.status] ??
+      localized ??
+        messages[response.status] ??
         `The request failed (${response.status}). Please try again.`,
     );
   }

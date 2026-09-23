@@ -6,7 +6,6 @@ export function parseApplication(
   description: string,
   redirects: string,
   originsText: string,
-  githubCode?: string,
 ): ApplicationInput {
   const redirect_uri = lines(redirects);
   const origins = lines(originsText);
@@ -67,6 +66,5 @@ export function parseApplication(
     description: description.trim() || undefined,
     redirect_uri,
     origins: canonical,
-    github_code: githubCode,
   };
 }

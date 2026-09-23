@@ -33,17 +33,6 @@ describe('V3 application validation parity', () => {
     expect(() => parseApplication('App', '', 'myapp://callback', origin))
       .toThrow();
   });
-  it('carries the github code through when present', () => {
-    expect(
-      parseApplication('App', '', 'myapp://callback', '', 'abc123'),
-    ).toEqual({
-      name: 'App',
-      description: undefined,
-      redirect_uri: ['myapp://callback'],
-      origins: [],
-      github_code: 'abc123',
-    });
-  });
   it('enforces required fields and combined limits', () => {
     expect(() => parseApplication(' ', '', 'myapp://callback', '')).toThrow();
     expect(() => parseApplication('App', '', '', '')).toThrow();
