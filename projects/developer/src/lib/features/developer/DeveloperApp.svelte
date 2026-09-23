@@ -280,10 +280,6 @@
     requestError = "";
   }
 
-  function isValidTab(tab: RequestEditorTab): boolean {
-    return ["params", "headers", "body"].includes(tab);
-  }
-
   function restoreRequestState({
     endpoint,
     state,
@@ -322,7 +318,7 @@
       ...state.headers,
     ];
     requestBody = state.body;
-    activeTab = isValidTab(state.activeTab) ? state.activeTab : activeTab;
+    activeTab = state.activeTab ?? activeTab;
     requestUrl = buildEndpointUrl({ endpoint, serverUrl, values });
   }
 

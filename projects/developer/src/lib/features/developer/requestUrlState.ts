@@ -10,7 +10,7 @@ export type RequestUrlState = {
   headers: ReadonlyArray<ApiHeader>;
   authorizationEnabled: boolean;
   body: string;
-  activeTab: RequestEditorTab;
+  activeTab: RequestEditorTab | null;
 };
 
 const FRAGMENT_VERSION = '1';
@@ -147,6 +147,16 @@ export function encodeRequestUrlState({
   return `#${parameters.toString()}`;
 }
 
+const REQUEST_EDITOR_TABS: ReadonlySet<string> = new Set<RequestEditorTab>([
+  'params',
+  'headers',
+  'body',
+]);
+
+function isRequestEditorTab(value: string): value is RequestEditorTab {
+  return REQUEST_EDITOR_TABS.has(value);
+}
+
 export function decodeRequestUrlState(
   fragment: string,
 ): RequestUrlState | null {
@@ -196,6 +206,6 @@ export function decodeRequestUrlState(
     headers: safeHeaders(headers),
     authorizationEnabled: parameters.get('authorization') !== '0',
     body: sanitizeBody(body),
-    activeTab: activeTab as RequestEditorTab,
+    activeTab: isRequestEditorTab(activeTab) ? activeTab : null,
   };
 }

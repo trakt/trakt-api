@@ -118,6 +118,27 @@ describe('requestUrlState', () => {
     expect(decodeRequestUrlState(fragment)?.authorizationEnabled).toBe(false);
   });
 
+  it('should drop a tab that is not an editor tab', () => {
+    const endpoint = seedCatalog.endpoints.at(0);
+    if (!endpoint) throw new Error('Missing seed endpoint.');
+
+    const fragment = encodeRequestUrlState({
+      endpoint,
+      mainServerUrl: 'https://api.trakt.tv',
+      serverUrl: 'https://api.trakt.tv',
+      values: {},
+      headers: [],
+      authorizationEnabled: true,
+      body: '',
+      activeTab: 'headers',
+    }).replace('tab=headers', 'tab=unknown');
+
+    const state = decodeRequestUrlState(fragment);
+
+    expect(state?.endpointId).toBe(endpoint.id);
+    expect(state?.activeTab).toBeNull();
+  });
+
   it('should keep authorization on when no account is attached yet', () => {
     const endpoint = seedCatalog.endpoints.at(0);
     if (!endpoint) throw new Error('missing seed endpoint');
