@@ -6,11 +6,13 @@
   const {
     profile,
     busy,
+    error = "",
     onConnect,
     onUnlink,
   }: {
     profile: DeveloperProfile | null;
     busy: boolean;
+    error?: string;
     onConnect: (intent: GithubConnectIntent) => void;
     onUnlink: () => void;
   } = $props();
@@ -39,6 +41,7 @@
   aria-label="Developer account"
 >
   <span class="eyebrow">Developer</span>
+  {#if error}<p class="rail-error" role="alert">{error}</p>{/if}
   {#if !profile}
     <p role="status">Loading your developer account…</p>
   {:else if github}
@@ -56,8 +59,9 @@
     {#if atLimit}<span class="pill attention">App limit reached</span>{/if}
     {#if switching}
       <p>
-        Sign in to GitHub with the account you want to use instead. Your apps
-        stay exactly as they are.
+        Sign in to GitHub with the account you want to use. Signing in with the
+        same account refreshes your username. Your apps stay exactly as they
+        are.
       </p>
       <div class="actions">
         <button
@@ -69,9 +73,6 @@
         >
       </div>
     {:else}
-      <button disabled={busy} onclick={() => onConnect("link")}
-        >Re-verify GitHub</button
-      >
       <button disabled={busy} onclick={() => (switching = true)}
         >Switch GitHub account</button
       >
@@ -144,6 +145,14 @@
       var(--color-warning) 40%,
       var(--color-border)
     );
+  }
+  .rail-error {
+    padding: 10px 12px;
+    border-radius: var(--radius-control);
+    border: 1px solid
+      color-mix(in srgb, var(--color-danger) 35%, var(--color-border));
+    background: color-mix(in srgb, var(--color-danger) 10%, transparent);
+    color: var(--color-danger);
   }
   .eyebrow {
     font-size: 11px;
