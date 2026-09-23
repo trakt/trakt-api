@@ -24,6 +24,8 @@
   import { seedCatalog } from "$lib/openapi/seedCatalog.ts";
   import EndpointSidebar from "./EndpointSidebar.svelte";
   import AccountMenu from "./AccountMenu.svelte";
+  import { clampPanelWidth } from "./clampPanelWidth.ts";
+  import type { ResizablePanel } from "./ResizablePanel.ts";
   import { hasInvalidJsonBody } from "./hasInvalidJsonBody.ts";
   import { hasInvalidParameterValues } from "./invalidParameterIds.ts";
   import { hasMissingExpectedJsonBody } from "./hasMissingExpectedJsonBody.ts";
@@ -64,13 +66,8 @@
   const MAIN_SERVER_URLS: ReadonlySet<string> = new Set(
     MAIN_SERVERS.map((server) => server.url),
   );
-  const SIDEBAR_MIN_WIDTH = 240;
-  const SIDEBAR_MAX_WIDTH = 560;
-  const REQUEST_MIN_WIDTH = 600;
-  const REQUEST_MAX_WIDTH = 1_200;
   const RESIZE_STEP = 24;
 
-  type ResizablePanel = "sidebar" | "request";
   type ActiveResize = {
     panel: ResizablePanel;
     pointerId: number;
@@ -507,14 +504,8 @@
     }
   }
 
-  function clampPanelWidth(panel: ResizablePanel, width: number): number {
-    const minimum = panel === "sidebar" ? SIDEBAR_MIN_WIDTH : REQUEST_MIN_WIDTH;
-    const maximum = panel === "sidebar" ? SIDEBAR_MAX_WIDTH : REQUEST_MAX_WIDTH;
-    return Math.min(maximum, Math.max(minimum, width));
-  }
-
   function setPanelWidth(panel: ResizablePanel, width: number) {
-    const nextWidth = clampPanelWidth(panel, width);
+    const nextWidth = clampPanelWidth({ panel, width });
     if (panel === "sidebar") {
       sidebarWidth = nextWidth;
       return;
