@@ -1,5 +1,6 @@
 <script lang="ts">
   import { operationLink } from "./operationLink.ts";
+  import JsonHighlight from "./JsonHighlight.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { tick } from "svelte";
   import type {
@@ -471,9 +472,7 @@
           <pre
             class="body-highlight"
             bind:this={highlightedBody}
-            aria-hidden="true">{#each bodyJsonTokens as token}{#if token.type === "plain"}{token.value}{:else}<span
-                  data-json-token={token.type}>{token.value}</span
-                >{/if}{/each}</pre>
+            aria-hidden="true"><JsonHighlight tokens={bodyJsonTokens} /></pre>
           <textarea
             id="request-body"
             bind:this={bodyInput}
@@ -1188,26 +1187,6 @@
 
     .body-highlight::-webkit-scrollbar {
       display: none;
-    }
-
-    .body-highlight [data-json-token="key"] {
-      color: var(--purple-400);
-    }
-
-    .body-highlight [data-json-token="string"] {
-      color: var(--color-get);
-    }
-
-    .body-highlight [data-json-token="number"] {
-      color: var(--yellow-400);
-    }
-
-    .body-highlight [data-json-token="boolean"] {
-      color: var(--color-post);
-    }
-
-    .body-highlight [data-json-token="null"] {
-      color: var(--color-delete);
     }
 
     .body-editor textarea {
