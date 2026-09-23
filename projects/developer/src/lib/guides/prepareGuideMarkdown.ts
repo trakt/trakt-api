@@ -1,4 +1,4 @@
-import { operationLink } from '../features/developer/operationLink.ts';
+import { operationLink } from '$lib/features/developer/operationLink.ts';
 
 export function prepareGuideMarkdown(
   source: string,
