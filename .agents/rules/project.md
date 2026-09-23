@@ -29,6 +29,7 @@ projects/
     scripts/        # build tooling (build-types.ts)
   openapi/          # generates OpenAPI from the contract (runtime consumer)
   playground/       # local scratch client
+  developer/        # SvelteKit developer portal (own deno.json, not in the workspace)
 ```
 
 ## Tooling
@@ -41,11 +42,51 @@ projects/
 - Never hand-edit `deno.lock` for build-only deps; `build:types` runs with
   `--no-lock` so it never dirties it.
 
+## Restrictions
+
+Hard limits for every contributor, human or agent. Ask before crossing one.
+
+- **Never edit generated output.** `projects/api/types/` (built by
+  `build:types`), `projects/developer/static/openapi.json` (built by
+  `generate:openapi`), and `.svelte-kit/` are regenerated from source. Change
+  the source and rerun the generator.
+- **Never hand-edit `deno.lock`.** Change dependencies through `deno add` /
+  `deno install` so the lockfile stays consistent with `--frozen` installs in
+  CI.
+- **No new dependencies without asking.** Every dependency of `@trakt/api` ships
+  to consumers; every dependency of the portal ships to the browser.
+- **Do not touch the publish flow** (`.github/workflows/publish.yml`, version
+  fields, provenance settings) unless the task is about publishing. See
+  `jsr.md`.
+- **No secrets in the repo.** The portal is a public OAuth client; only
+  `PUBLIC_*` build-time values exist, and they ship in the bundle.
+- **Public repo.** Do not reference private repositories, internal services, or
+  internal tickets in code, commits, or PR text.
+- **Do not weaken checks to go green.** No skipped tests, lint suppressions for
+  rules that catch real bugs, `any`, or loosened compiler options. Fix the code.
+
+## Rule Files
+
+Rules live in `.agents/rules/` and are shared by every agent: Claude Code
+(`CLAUDE.md` / `AGENTS.md`), Codex (`AGENTS.md`), Copilot
+(`.github/instructions/*.instructions.md` symlinks), and the review bot
+(`.gemini/styleguide.md`).
+
+- Frontmatter values (`globs`, `applyTo`, `description`) use **single quotes**,
+  never double. Every file keeps both `globs` and `applyTo` (Copilot reads
+  `applyTo`).
+- A new rule file needs a routing line in `CLAUDE.md` and `AGENTS.md`, a symlink
+  in `.github/instructions/`, and its reviewable rules summarized in
+  `.gemini/styleguide.md`.
+- When you establish a pattern that diverges from or extends these rules, update
+  the matching rule file in the same PR.
+
 ## Commit Standards
 
 - **Conventional Commits** (enforced by commitlint on PRs): `feat:`, `fix:`,
   `chore:`, `docs:`, `refactor:`, `test:`, `perf:`. Scope with `(api)` when the
-  change is in the package, e.g. `feat(api): add smart lists endpoints`.
+  change is in the package, e.g. `feat(api): add smart lists endpoints`, and
+  with `(developer)` when it is in the portal.
 - **Version bumps are their own `chore(api): bump ...` commit.** JSR versions
   are immutable - every publish needs a new version.
 - **No `Co-Authored-By` trailers**, no "generated with" footers.
