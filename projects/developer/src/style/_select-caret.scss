@@ -1,0 +1,9 @@
+@mixin base {
+  width: 7px;
+  height: var(--ni-4);
+
+  background: var(--color-muted);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+
+  content: "";
+}
