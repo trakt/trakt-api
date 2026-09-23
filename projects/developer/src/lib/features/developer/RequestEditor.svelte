@@ -158,6 +158,7 @@
       <div class="markdown endpoint-description">
         {@html formattedDescription}
       </div>
+
       {#if showServerOverride && availableServers.length > 1}
         <label class="server-selector">
           <span>Request server</span>
@@ -173,6 +174,7 @@
         </label>
       {/if}
     </div>
+
     <div class="auth-status">
       {endpoint.auth === "required"
         ? "🔒 OAuth Required"
@@ -215,6 +217,7 @@
           <circle cx="16" cy="2" r="2"></circle>
         </svg>
       </button>
+
       {#if isRequestActionsOpen}
         <div id="request-actions-menu" class="request-actions-menu" role="menu">
           <button
@@ -254,6 +257,7 @@
           >
         </div>
       {/if}
+
       {#if copyFeedback}
         <span class="copy-feedback" role="status">{copyFeedback}</span>
       {/if}
@@ -440,6 +444,7 @@
             {/if}
           </div>
         {/each}
+
         <button type="button" class="add-header" onclick={onAddHeader}
           >＋ Add header</button
         >
@@ -460,6 +465,7 @@
             <span>{body.length.toLocaleString()} characters</span>
           </div>
         </div>
+
         <label for="request-body">Request body</label>
         <div class="body-editor-surface">
           <pre
@@ -483,6 +489,7 @@
             oninput={(event) => onBody(event.currentTarget.value)}
             onscroll={syncBodyScroll}></textarea>
         </div>
+
         {#if isPostJsonBodyInvalid}
           <p id="request-body-validation" class="body-validation" role="alert">
             Invalid JSON. Fix the syntax before sending this request.

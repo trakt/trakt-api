@@ -5,6 +5,7 @@ import {
   selectedSlot,
   takeReturnPath,
 } from './accountNavigation.ts';
+
 beforeEach(() => {
   const values = new Map<string, string>();
   vi.stubGlobal('sessionStorage', {
@@ -13,7 +14,9 @@ beforeEach(() => {
     removeItem: (key: string) => values.delete(key),
   });
 });
+
 afterEach(() => vi.unstubAllGlobals());
+
 it('restores account selection without storing tokens', () => {
   expect(selectedSlot()).toBeNull();
   rememberSlot(3);
@@ -21,6 +24,7 @@ it('restores account selection without storing tokens', () => {
   rememberSlot(8);
   expect(selectedSlot()).toBeNull();
 });
+
 it('preserves only an allowlisted section after OAuth, never request parameters', () => {
   vi.stubGlobal('location', {
     href: 'https://developer.trakt.tv/?section=apps&secret=private#private',
@@ -45,6 +49,7 @@ it.each(['/apps', '/apps/new', '/apps/42', '/apps/42/edit'])(
     expect(takeReturnPath()).toBe(path);
   },
 );
+
 it.each(['/apps/../callback', '/apps/42/delete', '//evil.example/apps'])(
   'rejects unsupported return path %s',
   (path) => {

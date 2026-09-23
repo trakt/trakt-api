@@ -1,6 +1,8 @@
 import type { ApplicationInput } from './applications.ts';
+
 const lines = (value: string) =>
   value.split('\n').map((line) => line.trim()).filter(Boolean);
+
 export function parseApplication(
   name: string,
   description: string,
@@ -9,6 +11,7 @@ export function parseApplication(
 ): ApplicationInput {
   const redirect_uri = lines(redirects);
   const origins = lines(originsText);
+
   if (!name.trim() || name.trim().length > 255) {
     throw new Error('Enter an app name of 1-255 characters.');
   }
@@ -23,6 +26,7 @@ export function parseApplication(
       'Enter 1-25 redirect URIs, within 2,048 characters in total.',
     );
   }
+
   for (const uri of redirect_uri) {
     if (uri === 'urn:ietf:wg:oauth:2.0:oob') continue;
     let url;
@@ -40,6 +44,7 @@ export function parseApplication(
       );
     }
   }
+
   const canonical = origins.map((origin) => {
     let url;
     try {
@@ -61,6 +66,7 @@ export function parseApplication(
   if (canonical.length > 25 || canonical.join(' ').length > 255) {
     throw new Error('Enter up to 25 origins, within 255 characters in total.');
   }
+
   return {
     name: name.trim(),
     description: description.trim() || undefined,

@@ -1,4 +1,5 @@
 const REDACTED = '[REDACTED]';
+
 const SENSITIVE_NAME =
   /^(?:authorization|proxyauthorization|cookie|setcookie|apikey|traktapikey|clientid|clientsecret|accesstoken|refreshtoken|idtoken|token|secret|password|devicecode|code)$/i;
 

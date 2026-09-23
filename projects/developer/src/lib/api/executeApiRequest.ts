@@ -12,11 +12,13 @@ const ALLOWED_HOSTS = new Set([
   'apiz.trakt.tv',
   'auth.trakt.tv',
 ]);
+
 const MANAGED_REQUEST_HEADERS = new Set([
   'authorization',
   'trakt-api-key',
   'trakt-api-version',
 ]);
+
 const MAX_RESPONSE_BYTES = 2_000_000;
 const REQUEST_TIMEOUT_MS = 30_000;
 

@@ -38,12 +38,14 @@
   let apps = $state<Application[]>([]);
   let profile = $state<DeveloperProfile | null>(null);
   const selected = $derived(apps.find((app) => app.id === appId));
+
   function canCreateWith(developer: DeveloperProfile | null): boolean {
     return (
       !!developer?.github &&
       developer.applications.count < developer.applications.limit
     );
   }
+
   const canCreate = $derived(canCreateWith(profile));
   const readOnly = $derived(!!profile && !profile.github);
   const createLock = $derived(
@@ -95,12 +97,14 @@
   let confirming = $state(false);
   let confirmation = $state("");
   let alive = true;
+
   onMount(() => {
     void start();
     return () => {
       alive = false;
     };
   });
+
   async function start() {
     if (mode === "new") return guardCreate();
     const connectError = mode === "list" ? await finishGithubConnect() : null;
@@ -113,6 +117,7 @@
       });
     }
   }
+
   async function guardCreate() {
     try {
       const developer = await getDeveloperProfile(slot);
@@ -132,6 +137,7 @@
       if (alive) loading = false;
     }
   }
+
   async function finishGithubConnect(): Promise<string | null> {
     const params = new URL(globalThis.location.href).searchParams;
     if (!isGithubCallback(params)) return null;
@@ -156,9 +162,11 @@
         : "Could not connect GitHub.";
     }
   }
+
   function connect(intent: GithubConnectIntent) {
     globalThis.location.assign(githubConnectUrl(intent));
   }
+
   async function unlink() {
     if (busy) return;
     busy = true;
@@ -182,6 +190,7 @@
       if (alive) busy = false;
     }
   }
+
   async function load() {
     loading = true;
     error = "";
@@ -202,6 +211,7 @@
           : "Could not load your apps.";
     loading = false;
   }
+
   async function save(input: ApplicationInput) {
     if (busy || (mode === "edit" && !selected)) return;
     busy = true;
@@ -225,6 +235,7 @@
       if (alive) busy = false;
     }
   }
+
   async function remove() {
     if (!selected || busy || confirmation !== selected.name) return;
     busy = true;
@@ -241,6 +252,7 @@
       if (alive) busy = false;
     }
   }
+
   async function copy(value: string, label: string) {
     try {
       await navigator.clipboard.writeText(value);
@@ -281,11 +293,13 @@
         </p>
       </div>
     </header>
+
     {#if error}<div class="message error" role="alert">
         {error}{#if mode !== "new"}
           <button onclick={load}>Retry</button>{/if}
       </div>{/if}
     {#if notice}<p class="message" role="status">{notice}</p>{/if}
+
     {#if mode === "list"}
       <div class="workspace">
         <DeveloperRail
@@ -295,6 +309,7 @@
           onConnect={connect}
           onUnlink={unlink}
         />
+
         {#if loading}<div class="empty" role="status">Loading your apps…</div>
         {:else}<div class="app-grid">
             {#if canCreate}<a class="create-tile" href="/apps/new"
@@ -392,6 +407,7 @@
               </div>
             </div>
           {/each}
+
           {#each credentials as field}
             <div class="credential">
               <strong>{field.label}</strong>
@@ -416,6 +432,7 @@
               </div>
             </div>
           {/each}
+
           <p class="muted">
             Keep your Client Secret private. Never include it in public code or
             client-side apps.
@@ -453,6 +470,7 @@
           </dl>
         </aside>
       </div>
+
       {#if readOnly}<section class="panel">
           <h2>Read-only</h2>
           <p>
@@ -496,14 +514,17 @@
 
 <style lang="scss">
   @use "../../../style/action-button" as action;
+
   .apps-page {
     overflow: auto;
     padding: 48px 32px;
   }
+
   .content {
     max-width: 1120px;
     margin: auto;
   }
+
   header,
   .card-heading,
   footer,
@@ -513,30 +534,37 @@
     justify-content: space-between;
     gap: 12px;
   }
+
   header {
     margin: 0 0 28px;
   }
+
   header p {
     margin: 6px 0 0;
   }
+
   h1 {
     font-size: 32px;
     letter-spacing: -0.04em;
     margin: 0;
   }
+
   h2 {
     font-size: 17px;
     margin: 0 0 12px;
   }
+
   p {
     color: var(--color-muted);
     line-height: 1.65;
     font-size: 14px;
   }
+
   button,
   .button {
     @include action.base;
   }
+
   .breadcrumbs {
     display: flex;
     flex-wrap: wrap;
@@ -546,15 +574,18 @@
     color: var(--color-muted);
     font-size: 12px;
   }
+
   .breadcrumbs a {
     text-decoration: none;
   }
+
   .workspace {
     display: grid;
     grid-template-columns: 300px minmax(0, 1fr);
     gap: 24px;
     align-items: start;
   }
+
   .create-tile {
     display: grid;
     justify-items: center;
@@ -569,29 +600,35 @@
     text-align: center;
     text-decoration: none;
   }
+
   .create-tile strong {
     font-size: 15px;
   }
+
   .create-tile small {
     color: var(--color-muted);
     font-size: 12px;
     line-height: 1.5;
   }
+
   .tile-mark {
     font-size: 24px;
     line-height: 1;
   }
+
   .create-tile.locked {
     border-color: var(--color-border-strong);
     background: transparent;
     color: var(--color-muted);
   }
+
   .app-grid {
     display: grid;
     grid-auto-rows: 1fr;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 18px;
   }
+
   .app-card {
     display: flex;
     flex-direction: column;
@@ -603,14 +640,17 @@
     padding: 24px;
     background: var(--color-surface);
   }
+
   .app-card:hover {
     border-color: var(--color-border-strong);
     background: var(--color-surface-raised);
   }
+
   .app-card h2 {
     margin-top: 24px;
     overflow-wrap: anywhere;
   }
+
   .app-card p {
     min-height: 46px;
     overflow-wrap: anywhere;
@@ -620,14 +660,17 @@
     line-clamp: 3;
     overflow: hidden;
   }
+
   .app-card footer {
     margin-top: auto;
   }
+
   .app-icon {
     font-family: var(--font-mono);
     color: var(--color-accent);
     font-size: 24px;
   }
+
   .badge {
     font-size: 10px;
     color: var(--color-muted);
@@ -635,16 +678,19 @@
     padding: 6px 9px;
     border-radius: 20px;
   }
+
   footer {
     border-top: 1px solid var(--color-border);
     padding-top: 18px;
     color: var(--color-muted);
     font-size: 11px;
   }
+
   footer span:last-child,
   a {
     color: var(--color-info);
   }
+
   .empty {
     display: grid;
     justify-items: center;
@@ -654,14 +700,17 @@
     border: 1px dashed var(--color-border);
     border-radius: var(--radius-large);
   }
+
   .empty p,
   .empty h2 {
     margin: 0;
   }
+
   .empty a {
     font-size: 12px;
     margin-top: 12px;
   }
+
   .panel,
   aside {
     padding: 28px;
@@ -670,11 +719,13 @@
     background: var(--color-surface);
     margin-bottom: 24px;
   }
+
   .detail-grid {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
     gap: 24px;
   }
+
   .credential {
     display: grid;
     gap: 12px;
@@ -682,9 +733,11 @@
     border-bottom: 1px solid var(--color-border);
     font-size: 12px;
   }
+
   .credential:first-child {
     padding-top: 0;
   }
+
   .field-value {
     flex: 1;
     min-width: 0;
@@ -692,14 +745,17 @@
     overflow-wrap: anywhere;
     line-height: 1.8;
   }
+
   .credential-value .actions {
     flex-shrink: 0;
   }
+
   .credential-value {
     display: flex;
     align-items: center;
     gap: 12px;
   }
+
   code {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -708,19 +764,23 @@
     font-size: 12px;
     line-height: 1.8;
   }
+
   dt {
     color: var(--color-muted);
     font-size: 12px;
     margin-top: 24px;
   }
+
   dd {
     margin: 8px 0;
     font-size: 13px;
     overflow-wrap: anywhere;
   }
+
   .muted {
     color: var(--color-muted);
   }
+
   .danger {
     border-color: color-mix(
       in srgb,
@@ -728,42 +788,50 @@
       var(--color-border)
     );
   }
+
   .danger .actions {
     justify-content: start;
     margin-top: 16px;
   }
+
   .danger label {
     display: grid;
     gap: 8px;
     font-size: 13px;
   }
+
   input {
     padding: 10px;
     border: 1px solid var(--color-border);
     background: var(--color-canvas);
     max-width: 400px;
   }
+
   .destructive,
   .error {
     color: var(--color-danger);
   }
+
   .message.error {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
   }
+
   .message {
     margin: 0 0 24px;
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
   }
+
   @media (max-width: 900px) {
     .workspace {
       grid-template-columns: 1fr;
     }
   }
+
   @media (max-width: 700px) {
     .apps-page {
       padding: 28px 16px;

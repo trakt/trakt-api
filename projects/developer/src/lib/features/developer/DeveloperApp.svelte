@@ -44,6 +44,7 @@
   import ResponseInspector from "./ResponseInspector.svelte";
 
   const { children }: { children: Snippet } = $props();
+
   const isApps = $derived(
     page.url.pathname === "/apps" || page.url.pathname.startsWith("/apps/"),
   );
@@ -644,6 +645,7 @@
         ><strong>Trakt</strong><span>Developer</span></span
       >
     </a>
+
     <nav class="section-navigation" aria-label="Developer sections">
       <a
         href="/?section=guides"
@@ -663,6 +665,7 @@
         rel="noreferrer">Support</a
       >
     </nav>
+
     <div class="header-account">
       <AccountMenu
         {accounts}
@@ -696,6 +699,7 @@
           onQuery={(value) => (query = value)}
           onSelect={selectEndpoint}
         />
+
         <div class="sidebar-environment">
           <label class="server-selector"
             >API server
@@ -786,11 +790,13 @@
     font-size: 12px;
     color: var(--color-muted);
   }
+
   .server-selector select {
     padding: 10px;
     border: 1px solid var(--color-border);
     background: var(--color-surface-raised);
   }
+
   .trakt-developer-app {
     display: grid;
     width: 100%;

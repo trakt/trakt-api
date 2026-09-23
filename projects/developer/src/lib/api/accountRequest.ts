@@ -19,6 +19,7 @@ export async function accountRequest(
   if (!token) throw new Error('Sign in to manage your apps.');
   const headers = traktHeaders({ accessToken: token });
   if (init.body) headers.set('content-type', 'application/json');
+
   const response = await fetch(`https://api.trakt.tv${path}`, {
     ...init,
     headers,
@@ -43,5 +44,6 @@ export async function accountRequest(
         `The request failed (${response.status}). Please try again.`,
     );
   }
+
   return response;
 }

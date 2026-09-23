@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { avatarUrl } from './avatarUrl.ts';
+
 it.each([
   'https://media.trakt.tv/images/avatar.png',
   'media.trakt.tv/images/avatar.png',
@@ -8,6 +9,7 @@ it.each([
 ])('accepts settings avatar %s', (value) => {
   expect(avatarUrl(value)).toBe('https://media.trakt.tv/images/avatar.png');
 });
+
 it.each([
   null,
   '',

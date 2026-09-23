@@ -30,6 +30,7 @@ export async function getDeveloperProfile(
   }
   return parsed.data;
 }
+
 export async function linkGithub(
   slot: number,
   code: string,
@@ -40,6 +41,7 @@ export async function linkGithub(
     body: JSON.stringify({ code, switch: allowSwitch }),
   });
 }
+
 export async function unlinkGithub(slot: number): Promise<void> {
   await accountRequest(slot, GITHUB_PATH, { method: 'DELETE' });
 }

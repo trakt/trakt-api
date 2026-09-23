@@ -1,7 +1,9 @@
 <script lang="ts">
   import { dismissOnOutsideInteraction } from "./dismissOnOutsideInteraction.ts";
+
   const { markdown, slug }: { markdown: string; slug: string | undefined } =
     $props();
+
   let actions = $state<HTMLDivElement>();
   let trigger = $state<HTMLButtonElement>();
   let isOpen = $state(false);
@@ -52,6 +54,7 @@
       ><path d="m3 4.5 3 3 3-3" /></svg
     ></button
   >
+
   {#if isOpen}
     <div id="guide-copy-options" class="copy-options">
       <button type="button" onclick={() => copy("url")}>Copy URL</button>
@@ -60,6 +63,7 @@
       >
     </div>
   {/if}
+
   <span class="copy-feedback" class:visible={!!feedback} role="status"
     >{feedback}</span
   >

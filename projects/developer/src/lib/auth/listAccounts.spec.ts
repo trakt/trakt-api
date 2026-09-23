@@ -25,6 +25,7 @@ beforeEach(() => {
   vi.setSystemTime(NOW_SECONDS * 1000);
   globalThis.localStorage?.clear?.();
 });
+
 afterEach(() => vi.useRealTimers());
 
 describe('list accounts', () => {

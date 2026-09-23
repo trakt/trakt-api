@@ -15,6 +15,7 @@
     slug: string | null;
     endpoints: ReadonlyArray<Endpoint>;
   } = $props();
+
   const files = import.meta.glob<string>("/src/lib/guides/*.md", {
     query: "?raw",
     import: "default",
@@ -60,6 +61,7 @@
       </div>
     {/each}
   </nav>
+
   {#key selectedSlug}
     <div class="guide-content">
       <article>
@@ -67,7 +69,9 @@
           <div class="guide-markdown">{@html titleHtml}</div>
           <GuideCopyButton {markdown} slug={selectedSlug} />
         </header>
+
         <div class="guide-markdown">{@html bodyHtml}</div>
+
         {#if updated}
           <footer class="article-updated">
             <svg

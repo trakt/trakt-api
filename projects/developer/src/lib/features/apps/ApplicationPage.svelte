@@ -49,17 +49,21 @@
     padding: 48px 32px;
     overflow: auto;
   }
+
   h1 {
     margin: 8px 0 0;
   }
+
   p {
     margin: 6px 0 0;
   }
+
   nav,
   p {
     color: var(--color-muted);
     font-size: 14px;
   }
+
   a {
     color: var(--color-info);
   }
