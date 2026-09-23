@@ -122,6 +122,11 @@
       line-height: 1.4;
     }
 
+    .search-field input:focus-visible {
+      outline: var(--ni-2) solid var(--color-info);
+      outline-offset: -2px;
+    }
+
     .search-field kbd {
       padding: 0;
       border: 0;
