@@ -355,6 +355,8 @@
 </section>
 
 <style lang="scss">
+  @use "../../../style/method-colors" as method;
+
   .trakt-response-inspector {
     display: grid;
     min-width: 0;
@@ -696,26 +698,8 @@
     .response-info code {
       color: var(--color-muted);
       font: inherit;
-    }
 
-    .response-info code[data-method="GET"] {
-      color: var(--color-get);
-    }
-
-    .response-info code[data-method="POST"] {
-      color: var(--color-post);
-    }
-
-    .response-info code[data-method="PUT"] {
-      color: var(--color-put);
-    }
-
-    .response-info code[data-method="PATCH"] {
-      color: var(--color-patch);
-    }
-
-    .response-info code[data-method="DELETE"] {
-      color: var(--color-delete);
+      @include method.base;
     }
 
     .empty-response {

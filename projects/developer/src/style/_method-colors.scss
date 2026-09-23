@@ -1,0 +1,21 @@
+@mixin base {
+  &[data-method="GET"] {
+    color: var(--color-get);
+  }
+
+  &[data-method="POST"] {
+    color: var(--color-post);
+  }
+
+  &[data-method="PUT"] {
+    color: var(--color-put);
+  }
+
+  &[data-method="PATCH"] {
+    color: var(--color-patch);
+  }
+
+  &[data-method="DELETE"] {
+    color: var(--color-delete);
+  }
+}

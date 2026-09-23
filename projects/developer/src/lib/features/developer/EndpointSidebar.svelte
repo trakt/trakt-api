@@ -74,6 +74,8 @@
 </aside>
 
 <style lang="scss">
+  @use "../../../style/method-colors" as method;
+
   .trakt-endpoint-sidebar {
     display: flex;
     min-width: 0;
@@ -206,26 +208,8 @@
     .method {
       margin-block-start: var(--ni-2);
       font: 700 var(--ni-10) var(--font-mono);
-    }
 
-    .method[data-method="GET"] {
-      color: var(--color-get);
-    }
-
-    .method[data-method="POST"] {
-      color: var(--color-post);
-    }
-
-    .method[data-method="PUT"] {
-      color: var(--color-put);
-    }
-
-    .method[data-method="PATCH"] {
-      color: var(--color-patch);
-    }
-
-    .method[data-method="DELETE"] {
-      color: var(--color-delete);
+      @include method.base;
     }
 
     .endpoint-copy {
