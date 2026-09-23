@@ -472,42 +472,44 @@
       </div>
 
       {#if readOnly}<section class="panel">
-          <h2>Read-only</h2>
+          <h2>Editing is locked</h2>
           <p>
-            Connect GitHub on <a href="/apps">My Apps</a> to edit or delete this app.
-            It keeps working for its users in the meantime.
+            Connect GitHub on <a href="/apps">My Apps</a> to edit this app. It keeps
+            working for its users in the meantime, and you can still delete it below.
           </p>
-        </section>{:else}<section class="panel danger">
-          <h2>Delete app</h2>
-          <p>
-            Deleting this app permanently removes its credentials and
-            disconnects integrations using them. This cannot be undone.
-          </p>
-          {#if confirming}<label
-              >Type <strong>{selected.name}</strong> to confirm<input
-                bind:value={confirmation}
-                disabled={busy}
-                autocomplete="off"
-              /></label
-            >
-            <div class="actions">
-              <button
-                class="destructive"
-                disabled={busy || confirmation !== selected.name}
-                onclick={remove}
-                >{busy ? "Deleting…" : "Permanently delete app"}</button
-              ><button
-                disabled={busy}
-                onclick={() => {
-                  confirming = false;
-                  confirmation = "";
-                }}>Cancel</button
-              >
-            </div>{:else}<button
-              class="destructive"
-              onclick={() => (confirming = true)}>Delete app</button
-            >{/if}
         </section>{/if}
+
+      <section class="panel danger">
+        <h2>Delete app</h2>
+        <p>
+          Deleting this app permanently removes its credentials and disconnects
+          integrations using them. This cannot be undone.
+        </p>
+        {#if confirming}<label
+            >Type <strong>{selected.name}</strong> to confirm<input
+              bind:value={confirmation}
+              disabled={busy}
+              autocomplete="off"
+            /></label
+          >
+          <div class="actions">
+            <button
+              class="destructive"
+              disabled={busy || confirmation !== selected.name}
+              onclick={remove}
+              >{busy ? "Deleting…" : "Permanently delete app"}</button
+            ><button
+              disabled={busy}
+              onclick={() => {
+                confirming = false;
+                confirmation = "";
+              }}>Cancel</button
+            >
+          </div>{:else}<button
+            class="destructive"
+            onclick={() => (confirming = true)}>Delete app</button
+          >{/if}
+      </section>
     {/if}
   </div>
 </div>
