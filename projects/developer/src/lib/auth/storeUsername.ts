@@ -1,4 +1,4 @@
-import { writeUsername } from './accountUsername.ts';
+import { writeUsername } from './writeUsername.ts';
 import { resolveUsername } from './resolveUsername.ts';
 
 export async function storeUsername(

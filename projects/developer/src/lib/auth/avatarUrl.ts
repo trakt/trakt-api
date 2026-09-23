@@ -1,6 +1,3 @@
-export const DEFAULT_AVATAR =
-  'https://media.trakt.tv/hotlink-ok/placeholders/medium/zoidberg.png';
-
 export function avatarUrl(value: unknown): string | null {
   if (typeof value !== 'string' || !value.trim()) return null;
   const trimmed = value.trim();

@@ -1,5 +1,6 @@
-import { getContext, setContext } from 'svelte';
+import { getContext } from 'svelte';
 import type { DeveloperAccount } from '$lib/api/DeveloperAccount.ts';
+import { PORTAL_SESSION_KEY } from './PORTAL_SESSION_KEY.ts';
 
 export type PortalSession = {
   readonly account: DeveloperAccount | undefined;
@@ -7,12 +8,6 @@ export type PortalSession = {
   readonly vip: boolean | null;
 };
 
-const SESSION = Symbol('portal-session');
-
-export function setPortalSession(session: PortalSession): void {
-  setContext(SESSION, session);
-}
-
 export function portalSession(): PortalSession {
-  return getContext<PortalSession>(SESSION);
+  return getContext<PortalSession>(PORTAL_SESSION_KEY);
 }

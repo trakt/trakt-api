@@ -1,6 +1,6 @@
 import type { DeveloperAccount } from '$lib/api/DeveloperAccount.ts';
-import { ACCOUNT_LIMIT } from './accountSlots.ts';
-import { readUsername } from './accountUsername.ts';
+import { ACCOUNT_LIMIT } from './ACCOUNT_LIMIT.ts';
+import { readUsername } from './readUsername.ts';
 import { userManager } from './userManager.ts';
 
 export async function listAccounts(): Promise<
