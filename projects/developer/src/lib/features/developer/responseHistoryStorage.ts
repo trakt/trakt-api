@@ -1,4 +1,4 @@
-import type { ApiExecutionResponse } from '$lib/api/ApiExecution.ts';
+import type { ApiExecutionResponse } from '$lib/api/ApiExecutionResponse.ts';
 import type { ResponseHistoryEntry } from './ResponseHistoryEntry.ts';
 
 const MAX_STORED_RESPONSES = 20;

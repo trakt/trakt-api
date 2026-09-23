@@ -1,9 +1,7 @@
 import { PUBLIC_TRAKT_CLIENT_ID } from '$env/static/public';
 import { accessToken } from '$lib/auth/accessToken.ts';
-import type {
-  ApiExecutionRequest,
-  ApiExecutionResponse,
-} from './ApiExecution.ts';
+import type { ApiExecutionRequest } from './ApiExecutionRequest.ts';
+import type { ApiExecutionResponse } from './ApiExecutionResponse.ts';
 import { redactResponse } from './redactResponse.ts';
 import { traktHeaders } from './traktHeaders.ts';
 

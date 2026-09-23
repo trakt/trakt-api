@@ -1,5 +1,5 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
-import { parameterHeaderId } from '$lib/api/headerIds.ts';
+import { parameterHeaderId } from '$lib/api/parameterHeaderId.ts';
 import type { EndpointParameter } from '$lib/openapi/EndpointParameter.ts';
 
 export function findParameterHeader({

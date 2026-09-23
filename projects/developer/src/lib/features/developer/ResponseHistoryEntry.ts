@@ -1,4 +1,4 @@
-import type { ApiExecutionResponse } from '$lib/api/ApiExecution.ts';
+import type { ApiExecutionResponse } from '$lib/api/ApiExecutionResponse.ts';
 import type { HttpMethod } from '$lib/openapi/HttpMethod.ts';
 
 export type ResponseHistoryEntry = {
