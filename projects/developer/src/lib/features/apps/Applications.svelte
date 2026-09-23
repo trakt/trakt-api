@@ -1,5 +1,6 @@
 <script lang="ts">
   import { applicationCrumb, applicationTitle } from "./applicationTitle.ts";
+  import { applicationPermissionLabels } from "./applicationPermissionLabels.ts";
   import { applicationUrl } from "./applicationUrl.ts";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
@@ -460,17 +461,7 @@
               </dd>{/if}
             <dt>Permissions</dt>
             <dd>
-              {Object.entries(selected.permissions)
-                .filter(([, enabled]) => enabled)
-                .map(
-                  ([key]) =>
-                    ({
-                      scrobble: "Scrobble",
-                      checkin: "Check in",
-                      account_create: "Create accounts",
-                    })[key as "scrobble" | "checkin" | "account_create"],
-                )
-                .join(", ") || "No additional permissions"}
+              {applicationPermissionLabels(selected.permissions)}
             </dd>
             <dt>Scopes</dt>
             <dd>{selected.scopes.join(", ") || "None"}</dd>
