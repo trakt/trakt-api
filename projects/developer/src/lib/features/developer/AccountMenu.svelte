@@ -245,6 +245,8 @@
 </div>
 
 <style lang="scss">
+  @use "../../../style/select-caret" as caret;
+
   .avatar {
     width: var(--ni-24);
     height: var(--ni-24);
@@ -273,13 +275,9 @@
     }
 
     .environment-trigger::after {
-      width: 7px;
-      height: var(--ni-4);
       flex: 0 0 auto;
 
-      background: var(--color-muted);
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-      content: "";
+      @include caret.base;
     }
 
     .trigger-copy {

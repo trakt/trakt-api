@@ -501,6 +501,7 @@
 
 <style lang="scss">
   @use "../../../style/method-colors" as method;
+  @use "../../../style/select-caret" as caret;
 
   .trakt-request-editor {
     overflow: auto;
@@ -571,13 +572,8 @@
       inset-block-end: 15px;
       inset-inline-end: var(--ni-10);
 
-      width: 7px;
-      height: var(--ni-4);
+      @include caret.base;
 
-      background: var(--color-muted);
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-
-      content: "";
       pointer-events: none;
     }
 
@@ -1005,13 +1001,8 @@
       inset-block-start: 50%;
       inset-inline-end: var(--ni-10);
 
-      width: 7px;
-      height: var(--ni-4);
+      @include caret.base;
 
-      background: var(--color-muted);
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-
-      content: "";
       pointer-events: none;
       transform: translateY(-50%);
     }
