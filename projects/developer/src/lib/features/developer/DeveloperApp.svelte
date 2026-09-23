@@ -28,6 +28,7 @@
   import { hasInvalidParameterValues } from "./invalidParameterIds.ts";
   import { hasMissingExpectedJsonBody } from "./hasMissingExpectedJsonBody.ts";
   import { hasMissingRequiredParameters } from "./hasMissingRequiredParameters.ts";
+  import { managedHeaders } from "./managedHeaders.ts";
   import RequestEditor from "./RequestEditor.svelte";
   import type { RequestEditorTab } from "./RequestEditorProps.ts";
   import type { ResponseHistoryEntry } from "./ResponseHistoryEntry.ts";
@@ -204,63 +205,6 @@
     );
   }
 
-  function managedHeaders(endpoint: Endpoint): Array<ApiHeader> {
-    const documented = endpoint.parameters
-      .filter(
-        (parameter) =>
-          parameter.location === "header" &&
-          (endpoint.auth !== "endpoint" ||
-            parameter.name.toLocaleLowerCase() !== "authorization"),
-      )
-      .map((parameter) => ({
-        id: parameterHeaderId(parameter.id),
-        name: parameter.name,
-        value: parameter.defaultValue,
-        enabled: Boolean(parameter.defaultValue),
-      }));
-
-    const authorizationHeader: Array<ApiHeader> =
-      endpoint.auth === "endpoint"
-        ? []
-        : [
-            {
-              id: MANAGED_AUTHORIZATION_HEADER_ID,
-              name: "Authorization",
-              value:
-                selectedAccountSlot === null
-                  ? "Not attached"
-                  : "Bearer ••••••••",
-              enabled: selectedAccountSlot !== null && authorizationEnabled,
-              managed: true,
-            },
-          ];
-
-    return [
-      {
-        id: "managed-api-key",
-        name: "trakt-api-key",
-        value: "••••••••",
-        enabled: true,
-        managed: true,
-      },
-      {
-        id: "managed-api-version",
-        name: "trakt-api-version",
-        value: "2",
-        enabled: true,
-        managed: true,
-      },
-      ...authorizationHeader,
-      {
-        id: "accept",
-        name: "Accept",
-        value: "application/json",
-        enabled: true,
-      },
-      ...documented,
-    ];
-  }
-
   function selectEndpoint(endpoint: Endpoint) {
     const nextValues = initialValues(endpoint);
     const preferredServer = resolveEndpointServer({ endpoint, mainServerUrl });
@@ -268,7 +212,11 @@
     selectedId = endpoint.id;
     serverUrl = preferredServer;
     values = nextValues;
-    headers = managedHeaders(endpoint);
+    headers = managedHeaders({
+      endpoint,
+      selectedAccountSlot,
+      authorizationEnabled,
+    });
     requestBody = "";
     requestUrl = buildEndpointUrl({ endpoint, serverUrl, values: nextValues });
     activeTab =
@@ -302,7 +250,11 @@
       ),
     );
     const restoredHeaderIds = new Set(state.headers.map((header) => header.id));
-    const defaultHeaders = managedHeaders(endpoint);
+    const defaultHeaders = managedHeaders({
+      endpoint,
+      selectedAccountSlot,
+      authorizationEnabled,
+    });
 
     serverUrl = resolveEndpointServer({
       endpoint,
@@ -392,9 +344,11 @@
     if (!selectedEndpoint) return;
 
     headers = [
-      ...managedHeaders(selectedEndpoint).filter(
-        (header) => header.managed === true,
-      ),
+      ...managedHeaders({
+        endpoint: selectedEndpoint,
+        selectedAccountSlot,
+        authorizationEnabled,
+      }).filter((header) => header.managed === true),
       ...headers.filter((header) => header.managed !== true),
     ];
   }
