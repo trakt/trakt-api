@@ -29,7 +29,9 @@
         >My Apps</a
       >
       {#if mode === "edit"}
-        / <a href={applicationUrl(appId, appName)}>{displayName}</a>
+        / <a href={applicationUrl({ id: appId, name: appName })}
+          >{displayName}</a
+        >
       {/if}
       {#if mode !== "list"}
         / <span aria-current="page">{applicationCrumb(mode, displayName)}</span>

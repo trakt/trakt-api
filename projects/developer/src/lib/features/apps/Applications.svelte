@@ -112,9 +112,10 @@
     if (!alive) return;
     if (connectError) railError = connectError;
     if (mode === "edit" && readOnly) {
-      await goto(applicationUrl(appId, selected?.name ?? appName), {
-        replaceState: true,
-      });
+      await goto(
+        applicationUrl({ id: appId, name: selected?.name ?? appName }),
+        { replaceState: true },
+      );
     }
   }
 
@@ -224,7 +225,7 @@
       );
       if (!alive) return;
       const id = saved?.id ?? (mode === "edit" ? selected?.id : undefined);
-      await goto(applicationUrl(id, saved?.name ?? input.name), {
+      await goto(applicationUrl({ id, name: saved?.name ?? input.name }), {
         replaceState: true,
       });
     } catch (cause) {
@@ -273,8 +274,10 @@
           {#if mode === "list"}<span aria-current="page">My Apps</span>
           {:else}<a href="/apps">My Apps</a><span aria-hidden="true">/</span>
             {#if mode === "edit"}<a
-                href={applicationUrl(appId, selected?.name ?? appName)}
-                >{displayName}</a
+                href={applicationUrl({
+                  id: appId,
+                  name: selected?.name ?? appName,
+                })}>{displayName}</a
               ><span aria-hidden="true">/</span>{/if}
             <span aria-current="page"
               >{applicationCrumb(mode, displayName)}</span
@@ -339,7 +342,7 @@
               </div>{/if}
             {#each apps as app (app.id)}<a
                 class="app-card"
-                href={applicationUrl(app.id, app.name)}
+                href={applicationUrl({ id: app.id, name: app.name })}
                 ><div class="card-heading">
                   <span class="app-icon">&lt;/&gt;</span><span class="badge"
                     >{app.approved ? "Approved" : "Pending approval"}</span
@@ -375,7 +378,7 @@
           onCancel={() => {
             void goto(
               mode === "edit"
-                ? applicationUrl(appId, selected?.name ?? appName)
+                ? applicationUrl({ id: appId, name: selected?.name ?? appName })
                 : "/apps",
             );
           }}
@@ -394,7 +397,11 @@
                 <div class="actions">
                   {#if !readOnly}<a
                       class="button"
-                      href={applicationUrl(selected.id, selected.name, true)}
+                      href={applicationUrl({
+                        id: selected.id,
+                        name: selected.name,
+                        edit: true,
+                      })}
                       aria-label={`Edit ${field.label}`}>Edit</a
                     >{/if}
                   {#if field.label === "Redirect URIs"}<button

@@ -1,11 +1,15 @@
 const NAME_HINT_LIMIT = 255;
 
 /** The name is a display hint; the API remains authoritative for app data. */
-export function applicationUrl(
-  id: number | undefined,
-  name?: string,
+export function applicationUrl({
+  id,
+  name,
   edit = false,
-): string {
+}: {
+  id: number | undefined;
+  name?: string;
+  edit?: boolean;
+}): string {
   if (id === undefined) return '/apps';
   const path = `/apps/${id}${edit ? '/edit' : ''}`;
   const label = name?.trim().slice(0, NAME_HINT_LIMIT);
