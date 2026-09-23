@@ -644,8 +644,8 @@
               value={mainServerUrl}
               onchange={(event) => setMainServer(event.currentTarget.value)}
             >
-              {#each MAIN_SERVERS as server}<option value={server.url}
-                  >{server.label} · {server.host}</option
+              {#each MAIN_SERVERS as server (server.url)}<option
+                  value={server.url}>{server.label} · {server.host}</option
                 >{/each}
             </select>
           </label>
