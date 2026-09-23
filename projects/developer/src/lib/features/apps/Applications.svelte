@@ -45,6 +45,7 @@
     );
   }
   const canCreate = $derived(canCreateWith(profile));
+  const readOnly = $derived(!!profile && !profile.github);
   const createLock = $derived(
     !profile
       ? "Loading…"
@@ -88,6 +89,7 @@
   );
   let busy = $state(false);
   let error = $state("");
+  let railError = $state("");
   let notice = $state("");
   let reveal = $state(false);
   let confirming = $state(false);
@@ -103,7 +105,13 @@
     if (mode === "new") return guardCreate();
     const connectError = mode === "list" ? await finishGithubConnect() : null;
     await load();
-    if (connectError && alive) error = connectError;
+    if (!alive) return;
+    if (connectError) railError = connectError;
+    if (mode === "edit" && readOnly) {
+      await goto(applicationUrl(appId, selected?.name ?? appName), {
+        replaceState: true,
+      });
+    }
   }
   async function guardCreate() {
     try {
@@ -139,7 +147,7 @@
       await linkGithub(slot, outcome.code, outcome.allowSwitch);
       if (alive)
         notice = outcome.allowSwitch
-          ? "GitHub account switched."
+          ? "GitHub account updated."
           : "GitHub connected.";
       return null;
     } catch (cause) {
@@ -154,7 +162,7 @@
   async function unlink() {
     if (busy) return;
     busy = true;
-    error = "";
+    railError = "";
     notice = "";
     try {
       await unlinkGithub(slot);
@@ -168,7 +176,7 @@
       await load();
     } catch (cause) {
       if (alive)
-        error =
+        railError =
           cause instanceof Error ? cause.message : "Could not unlink GitHub.";
     } finally {
       if (alive) busy = false;
@@ -179,7 +187,7 @@
     error = "";
     const [result, developer] = await Promise.allSettled([
       listApplications(slot),
-      mode === "list" ? getDeveloperProfile(slot) : Promise.resolve(null),
+      getDeveloperProfile(slot),
     ]);
     if (!alive) return;
     if (result.status === "fulfilled") apps = result.value;
@@ -272,11 +280,6 @@
                 : "Manage credentials and settings for this app."}
         </p>
       </div>
-      {#if mode === "list" && canCreate}<a
-          class="button primary"
-          href="/apps/new">＋ Create app</a
-        >
-      {/if}
     </header>
     {#if error}<div class="message error" role="alert">
         {error}{#if mode !== "new"}
@@ -285,27 +288,15 @@
     {#if notice}<p class="message" role="status">{notice}</p>{/if}
     {#if mode === "list"}
       <div class="workspace">
-        <DeveloperRail {profile} {busy} onConnect={connect} onUnlink={unlink} />
+        <DeveloperRail
+          {profile}
+          {busy}
+          error={railError}
+          onConnect={connect}
+          onUnlink={unlink}
+        />
         {#if loading}<div class="empty" role="status">Loading your apps…</div>
         {:else}<div class="app-grid">
-            {#each apps as app (app.id)}<a
-                class="app-card"
-                href={applicationUrl(app.id, app.name)}
-                ><div class="card-heading">
-                  <span class="app-icon">&lt;/&gt;</span><span class="badge"
-                    >{app.approved ? "Approved" : "Pending approval"}</span
-                  >
-                </div>
-                <h2>{app.name}</h2>
-                <p>{app.description || "No description yet."}</p>
-                <footer>
-                  <span
-                    >Created {new Date(
-                      app.created_at,
-                    ).toLocaleDateString()}</span
-                  ><span>Manage →</span>
-                </footer></a
-              >{/each}
             {#if canCreate}<a class="create-tile" href="/apps/new"
                 ><span class="tile-mark" aria-hidden="true">＋</span><strong
                   >{apps.length === 0
@@ -331,6 +322,24 @@
                 >
                 <strong>Create app</strong><small>{createLock}</small>
               </div>{/if}
+            {#each apps as app (app.id)}<a
+                class="app-card"
+                href={applicationUrl(app.id, app.name)}
+                ><div class="card-heading">
+                  <span class="app-icon">&lt;/&gt;</span><span class="badge"
+                    >{app.approved ? "Approved" : "Pending approval"}</span
+                  >
+                </div>
+                <h2>{app.name}</h2>
+                <p>{app.description || "No description yet."}</p>
+                <footer>
+                  <span
+                    >Created {new Date(
+                      app.created_at,
+                    ).toLocaleDateString()}</span
+                  ><span>{readOnly ? "View →" : "Manage →"}</span>
+                </footer></a
+              >{/each}
           </div>{/if}
       </div>
     {:else if loading}
@@ -341,7 +350,7 @@
         <p>This app is unavailable for the selected account.</p>
         <a href="/apps">Back to My Apps</a>
       </section>
-    {:else if mode === "new" || (mode === "edit" && selected)}
+    {:else if mode === "new" || (mode === "edit" && selected && !readOnly)}
       <section class="panel">
         <ApplicationForm
           app={mode === "edit" ? selected : undefined}
@@ -368,11 +377,11 @@
                     class="field-value">{field.value}</span
                   >{/if}
                 <div class="actions">
-                  <a
-                    class="button"
-                    href={applicationUrl(selected.id, selected.name, true)}
-                    aria-label={`Edit ${field.label}`}>Edit</a
-                  >
+                  {#if !readOnly}<a
+                      class="button"
+                      href={applicationUrl(selected.id, selected.name, true)}
+                      aria-label={`Edit ${field.label}`}>Edit</a
+                    >{/if}
                   {#if field.label === "Redirect URIs"}<button
                       aria-label="Copy Redirect URIs"
                       onclick={() =>
@@ -444,37 +453,43 @@
           </dl>
         </aside>
       </div>
-      <section class="panel danger">
-        <h2>Delete app</h2>
-        <p>
-          Deleting this app permanently removes its credentials and disconnects
-          integrations using them. This cannot be undone.
-        </p>
-        {#if confirming}<label
-            >Type <strong>{selected.name}</strong> to confirm<input
-              bind:value={confirmation}
-              disabled={busy}
-              autocomplete="off"
-            /></label
-          >
-          <div class="actions">
-            <button
-              class="destructive"
-              disabled={busy || confirmation !== selected.name}
-              onclick={remove}
-              >{busy ? "Deleting…" : "Permanently delete app"}</button
-            ><button
-              disabled={busy}
-              onclick={() => {
-                confirming = false;
-                confirmation = "";
-              }}>Cancel</button
+      {#if readOnly}<section class="panel">
+          <h2>Read-only</h2>
+          <p>
+            Connect GitHub on <a href="/apps">My Apps</a> to edit or delete this app.
+            It keeps working for its users in the meantime.
+          </p>
+        </section>{:else}<section class="panel danger">
+          <h2>Delete app</h2>
+          <p>
+            Deleting this app permanently removes its credentials and
+            disconnects integrations using them. This cannot be undone.
+          </p>
+          {#if confirming}<label
+              >Type <strong>{selected.name}</strong> to confirm<input
+                bind:value={confirmation}
+                disabled={busy}
+                autocomplete="off"
+              /></label
             >
-          </div>{:else}<button
-            class="destructive"
-            onclick={() => (confirming = true)}>Delete app</button
-          >{/if}
-      </section>
+            <div class="actions">
+              <button
+                class="destructive"
+                disabled={busy || confirmation !== selected.name}
+                onclick={remove}
+                >{busy ? "Deleting…" : "Permanently delete app"}</button
+              ><button
+                disabled={busy}
+                onclick={() => {
+                  confirming = false;
+                  confirmation = "";
+                }}>Cancel</button
+              >
+            </div>{:else}<button
+              class="destructive"
+              onclick={() => (confirming = true)}>Delete app</button
+            >{/if}
+        </section>{/if}
     {/if}
   </div>
 </div>
@@ -521,9 +536,6 @@
   button,
   .button {
     @include action.base;
-  }
-  .primary {
-    @include action.primary;
   }
   .breadcrumbs {
     display: flex;
@@ -576,11 +588,13 @@
   }
   .app-grid {
     display: grid;
+    grid-auto-rows: 1fr;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 18px;
   }
   .app-card {
-    display: block;
+    display: flex;
+    flex-direction: column;
     color: var(--color-foreground);
     text-decoration: none;
     border: 1px solid var(--color-border);
@@ -600,6 +614,14 @@
   .app-card p {
     min-height: 46px;
     overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+  .app-card footer {
+    margin-top: auto;
   }
   .app-icon {
     font-family: var(--font-mono);
@@ -725,7 +747,14 @@
   .error {
     color: var(--color-danger);
   }
+  .message.error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
   .message {
+    margin: 0 0 24px;
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
