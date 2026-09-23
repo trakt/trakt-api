@@ -268,7 +268,7 @@
 
 <svelte:head><title>{title} | Trakt Developer</title></svelte:head>
 
-<div class="apps-page">
+<div class="trakt-applications">
   <div class="content">
     <header>
       <div>
@@ -514,7 +514,7 @@
 <style lang="scss">
   @use "../../../style/action-button" as action;
 
-  .apps-page {
+  .trakt-applications {
     overflow: auto;
     padding: 48px 32px;
   }
@@ -832,7 +832,7 @@
   }
 
   @media (max-width: 700px) {
-    .apps-page {
+    .trakt-applications {
       padding: 28px 16px;
     }
     header {

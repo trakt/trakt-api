@@ -41,7 +41,7 @@
   }
 </script>
 
-<form onsubmit={submit}>
+<form class="trakt-application-form" onsubmit={submit}>
   <fieldset disabled={busy}>
     {#if !app && githubUsername}<p class="creating-as">
         Creating as <strong>@{githubUsername}</strong>, your verified GitHub
@@ -104,71 +104,73 @@
 <style lang="scss">
   @use "../../../style/action-button" as action;
 
-  fieldset {
-    border: 0;
-    padding: 0;
-    display: grid;
-    gap: 24px;
-    min-width: 0;
-  }
+  .trakt-application-form {
+    fieldset {
+      border: 0;
+      padding: 0;
+      display: grid;
+      gap: 24px;
+      min-width: 0;
+    }
 
-  label {
-    display: grid;
-    gap: 9px;
-    font-size: 14px;
-    font-weight: 600;
-  }
+    label {
+      display: grid;
+      gap: 9px;
+      font-size: 14px;
+      font-weight: 600;
+    }
 
-  span,
-  p {
-    color: var(--color-muted);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.6;
-  }
+    span,
+    p {
+      color: var(--color-muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
 
-  .creating-as {
-    margin: 0;
-    padding: 12px 16px;
-    border-radius: var(--radius-control);
-    border: 1px solid
-      color-mix(in srgb, var(--color-success) 32%, var(--color-border));
-    background: color-mix(in srgb, var(--color-success) 9%, transparent);
-    color: var(--color-foreground);
-    font-size: 13px;
-  }
+    .creating-as {
+      margin: 0;
+      padding: 12px 16px;
+      border-radius: var(--radius-control);
+      border: 1px solid
+        color-mix(in srgb, var(--color-success) 32%, var(--color-border));
+      background: color-mix(in srgb, var(--color-success) 9%, transparent);
+      color: var(--color-foreground);
+      font-size: 13px;
+    }
 
-  input,
-  textarea {
-    width: 100%;
-    font-weight: 400;
-    border: 1px solid var(--color-border);
-    background: var(--color-canvas);
-    padding: 12px;
-  }
+    input,
+    textarea {
+      width: 100%;
+      font-weight: 400;
+      border: 1px solid var(--color-border);
+      background: var(--color-canvas);
+      padding: 12px;
+    }
 
-  textarea {
-    resize: vertical;
-  }
+    textarea {
+      resize: vertical;
+    }
 
-  a {
-    color: var(--color-info);
-  }
+    a {
+      color: var(--color-info);
+    }
 
-  .actions {
-    display: flex;
-    gap: 10px;
-  }
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
 
-  button {
-    @include action.base;
-  }
+    button {
+      @include action.base;
+    }
 
-  .primary {
-    @include action.primary;
-  }
+    .primary {
+      @include action.primary;
+    }
 
-  [role="alert"] {
-    color: var(--color-danger);
+    [role="alert"] {
+      color: var(--color-danger);
+    }
   }
 </style>

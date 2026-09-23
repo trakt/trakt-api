@@ -23,7 +23,7 @@
     <Applications slot={session.account.slot} {mode} {appId} {appName} />
   {/key}
 {:else}
-  <section class="welcome">
+  <section class="trakt-application-page">
     <nav aria-label="Breadcrumb">
       <a href="/apps" aria-current={mode === "list" ? "page" : undefined}
         >My Apps</a
@@ -47,7 +47,7 @@
 {/if}
 
 <style>
-  .welcome {
+  .trakt-application-page {
     padding: 48px 32px;
     overflow: auto;
   }

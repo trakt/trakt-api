@@ -47,7 +47,7 @@
   const bodyHtml = $derived(html.slice(titleHtml.length));
 </script>
 
-<section class="guides" aria-label="Getting Started">
+<section class="trakt-guide-reader" aria-label="Getting Started">
   <nav class="guide-navigation" aria-label="Guide contents">
     {#each groups as group}
       <div class="guide-group">
@@ -105,7 +105,7 @@
 </section>
 
 <style lang="scss">
-  .guides {
+  .trakt-guide-reader {
     display: grid;
     grid-template-columns: 280px minmax(0, 1fr);
 
@@ -179,7 +179,7 @@
   }
 
   @media (max-width: 700px) {
-    .guides {
+    .trakt-guide-reader {
       grid-template-columns: 180px minmax(0, 1fr);
     }
 

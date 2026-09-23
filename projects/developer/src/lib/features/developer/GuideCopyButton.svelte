@@ -42,7 +42,7 @@
   }
 </script>
 
-<div class="guide-copy" bind:this={actions}>
+<div class="trakt-guide-copy-button" bind:this={actions}>
   <button
     type="button"
     class="copy-button"
@@ -64,13 +64,13 @@
     </div>
   {/if}
 
-  <span class="copy-feedback" class:visible={!!feedback} role="status"
+  <span class="copy-feedback" class:is-visible={!!feedback} role="status"
     >{feedback}</span
   >
 </div>
 
 <style lang="scss">
-  .guide-copy {
+  .trakt-guide-copy-button {
     position: relative;
     flex: 0 0 auto;
   }
@@ -144,7 +144,7 @@
     white-space: nowrap;
   }
 
-  .copy-feedback.visible {
+  .copy-feedback.is-visible {
     padding: var(--ni-6) 8px;
     border: var(--ni-1) solid var(--color-border);
     border-radius: var(--radius-small);

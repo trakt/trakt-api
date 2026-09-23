@@ -23,7 +23,7 @@
   <title>Signing in | Trakt Developer</title>
 </svelte:head>
 
-<main>
+<main class="trakt-callback-page">
   {#if error}
     <h1>Sign-in failed</h1>
     <p>{error}</p>
@@ -35,7 +35,7 @@
 </main>
 
 <style lang="scss">
-  main {
+  .trakt-callback-page {
     display: flex;
     flex-direction: column;
     align-items: center;
