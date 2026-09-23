@@ -1,12 +1,6 @@
 import type { EndpointParameter } from './EndpointParameter.ts';
+import type { EndpointRequestBody } from './EndpointRequestBody.ts';
 import type { HttpMethod } from './HttpMethod.ts';
-
-export type EndpointRequestBody = {
-  required: boolean;
-  description: string;
-  contentType: string;
-  example: string;
-};
 
 type EndpointResponse = {
   status: string;
