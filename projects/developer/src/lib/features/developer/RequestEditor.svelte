@@ -672,6 +672,11 @@
       font: var(--ni-12) var(--font-mono);
     }
 
+    .request-line input:focus-visible {
+      outline: var(--ni-2) solid var(--color-info);
+      outline-offset: -2px;
+    }
+
     .request-line input[readonly] {
       cursor: default;
       color: var(--color-code);
@@ -1229,6 +1234,11 @@
       color: transparent;
       caret-color: var(--color-code);
       -webkit-text-fill-color: transparent;
+    }
+
+    .body-editor textarea:focus-visible {
+      outline: var(--ni-2) solid var(--color-info);
+      outline-offset: -2px;
     }
 
     .body-editor textarea::placeholder {
