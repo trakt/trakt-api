@@ -1,5 +1,5 @@
-import { rememberSection } from './accountNavigation.ts';
-import { writePendingSlot } from './pendingSlot.ts';
+import { rememberSection } from './rememberSection.ts';
+import { writePendingSlot } from './writePendingSlot.ts';
 import { userManager } from './userManager.ts';
 
 export async function signInAccount(slot: number): Promise<void> {

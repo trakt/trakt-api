@@ -1,5 +1,5 @@
-import { rememberSlot } from './accountNavigation.ts';
-import { takePendingSlot } from './pendingSlot.ts';
+import { rememberSlot } from './rememberSlot.ts';
+import { takePendingSlot } from './takePendingSlot.ts';
 import { storeUsername } from './storeUsername.ts';
 import { userManager } from './userManager.ts';
 

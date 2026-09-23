@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { takePendingSlot, writePendingSlot } from './pendingSlot.ts';
+import { takePendingSlot } from './takePendingSlot.ts';
+import { writePendingSlot } from './writePendingSlot.ts';
 
 function memoryStorage() {
   const values = new Map<string, string>();

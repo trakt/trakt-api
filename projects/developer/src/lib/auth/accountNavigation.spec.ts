@@ -1,10 +1,8 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import {
-  rememberSection,
-  rememberSlot,
-  selectedSlot,
-  takeReturnPath,
-} from './accountNavigation.ts';
+import { rememberSection } from './rememberSection.ts';
+import { rememberSlot } from './rememberSlot.ts';
+import { selectedSlot } from './selectedSlot.ts';
+import { takeReturnPath } from './takeReturnPath.ts';
 
 beforeEach(() => {
   const values = new Map<string, string>();

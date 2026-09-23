@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import {
-  ACCOUNT_LIMIT,
-  fallbackUsername,
-  isAccountSlot,
-} from './accountSlots.ts';
+import { ACCOUNT_LIMIT } from './ACCOUNT_LIMIT.ts';
+import { fallbackUsername } from './fallbackUsername.ts';
+import { isAccountSlot } from './isAccountSlot.ts';
 
 describe('account slots', () => {
   it.each([0, 1, ACCOUNT_LIMIT - 1])('accepts slot %i', (slot) => {

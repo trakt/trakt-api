@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DEFAULT_AVATAR } from "$lib/auth/avatarUrl.ts";
+  import { DEFAULT_AVATAR } from "$lib/auth/DEFAULT_AVATAR.ts";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { formatTokenValidity } from "./formatTokenValidity.ts";
   import { onMount } from "svelte";

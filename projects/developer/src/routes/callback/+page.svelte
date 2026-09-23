@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { takeReturnPath } from "$lib/auth/accountNavigation.ts";
+  import { takeReturnPath } from "$lib/auth/takeReturnPath.ts";
   import { completeSignIn } from "$lib/auth/completeSignIn.ts";
   import LoadingSpinner from "$lib/features/developer/LoadingSpinner.svelte";
   import { onMount } from "svelte";

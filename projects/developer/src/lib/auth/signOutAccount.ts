@@ -1,4 +1,4 @@
-import { clearUsername } from './accountUsername.ts';
+import { clearUsername } from './clearUsername.ts';
 import { userManager } from './userManager.ts';
 
 export async function signOutAccount(slot: number): Promise<void> {

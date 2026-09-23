@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { traktHeaders } from '$lib/api/traktHeaders.ts';
-import { fallbackUsername } from './accountSlots.ts';
+import { fallbackUsername } from './fallbackUsername.ts';
 
 const settingsPayloadSchema = z.object({
   user: z.object({ username: z.string().optional() }).optional(),

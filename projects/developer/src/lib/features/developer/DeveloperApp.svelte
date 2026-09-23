@@ -4,8 +4,9 @@
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";
-  import { rememberSlot, selectedSlot } from "$lib/auth/accountNavigation.ts";
-  import { setPortalSession } from "$lib/auth/portalSession.ts";
+  import { rememberSlot } from "$lib/auth/rememberSlot.ts";
+  import { selectedSlot } from "$lib/auth/selectedSlot.ts";
+  import { setPortalSession } from "$lib/auth/setPortalSession.ts";
   import type { Snippet } from "svelte";
   import { fetchAccountProfile } from "$lib/api/fetchAccountProfile.ts";
   import GuideReader from "./GuideReader.svelte";
