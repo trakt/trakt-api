@@ -12,6 +12,9 @@ rule files live at `.agents/rules/`):
   provenance publishing that keep the `@trakt/api` JSR score at 100.
 - `schemas.md` - authoring ts-rest + Zod contract schemas under
   `projects/api/src/contracts/` (schema shape is a generated public artifact).
+- `developer.md` - anything under `projects/developer/`: the SvelteKit
+  developer portal's structure, tooling, and code formatting/spacing
+  conventions.
 
 Read with the Read tool when the task enters the domain. Re-read after long gaps
 if context was compacted.

@@ -5,6 +5,8 @@ via AGENTS.md; domain rules load on demand):
 - Published package (`projects/api/**`): read `jsr.md` - keeps the `@trakt/api`
   JSR score at 100 (static types, symbol docs, provenance publishing).
 - Contract schemas (`projects/api/src/contracts/**`): also read `schemas.md`.
+- Developer portal (`projects/developer/**`): read `developer.md` - SvelteKit
+  structure, tooling, and the blank-line spacing convention for `.ts`/`.svelte`.
 - Everything else: `project.md` (always-on baseline, already loaded as core).
 
 @AGENTS.md
