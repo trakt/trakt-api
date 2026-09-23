@@ -1,4 +1,4 @@
-import type { Application } from './applications.ts';
+import type { Application } from './Application.ts';
 
 const PERMISSION_LABELS: ReadonlyArray<
   readonly [keyof Application['permissions'], string]

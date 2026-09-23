@@ -1,10 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { accessToken } from '$lib/auth/accessToken.ts';
-import {
-  getDeveloperProfile,
-  linkGithub,
-  unlinkGithub,
-} from './developerProfile.ts';
+import { getDeveloperProfile } from './getDeveloperProfile.ts';
+import { linkGithub } from './linkGithub.ts';
+import { unlinkGithub } from './unlinkGithub.ts';
 vi.mock('$lib/auth/accessToken.ts', () => ({ accessToken: vi.fn() }));
 vi.mock(
   '$env/static/public',

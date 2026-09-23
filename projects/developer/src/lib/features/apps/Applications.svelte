@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { applicationCrumb, applicationTitle } from "./applicationTitle.ts";
+  import { applicationCrumb } from "./applicationCrumb.ts";
+  import { applicationTitle } from "./applicationTitle.ts";
   import { applicationPermissionLabels } from "./applicationPermissionLabels.ts";
   import { applicationUrl } from "./applicationUrl.ts";
   import { formatDate } from "./formatDate.ts";
@@ -7,26 +8,20 @@
   import { onMount } from "svelte";
   import ApplicationForm from "./ApplicationForm.svelte";
   import DeveloperRail from "./DeveloperRail.svelte";
-  import {
-    listApplications,
-    saveApplication,
-    deleteApplication,
-    type Application,
-    type ApplicationInput,
-  } from "./applications.ts";
+  import { listApplications } from "./listApplications.ts";
+  import { saveApplication } from "./saveApplication.ts";
+  import { deleteApplication } from "./deleteApplication.ts";
+  import type { Application } from "./Application.ts";
+  import type { ApplicationInput } from "./ApplicationInput.ts";
   import type { ApplicationsProps } from "./ApplicationsProps.ts";
-  import {
-    getDeveloperProfile,
-    linkGithub,
-    unlinkGithub,
-    type DeveloperProfile,
-  } from "./developerProfile.ts";
-  import {
-    completeGithubConnect,
-    githubConnectUrl,
-    isGithubCallback,
-    type GithubConnectIntent,
-  } from "./githubConnect.ts";
+  import { getDeveloperProfile } from "./getDeveloperProfile.ts";
+  import { linkGithub } from "./linkGithub.ts";
+  import { unlinkGithub } from "./unlinkGithub.ts";
+  import type { DeveloperProfile } from "./DeveloperProfile.ts";
+  import { completeGithubConnect } from "./completeGithubConnect.ts";
+  import { githubConnectUrl } from "./githubConnectUrl.ts";
+  import { isGithubCallback } from "./isGithubCallback.ts";
+  import type { GithubConnectIntent } from "./GithubConnectIntent.ts";
 
   const { slot, mode, appId, appName }: ApplicationsProps = $props();
   let loading = $state(true);

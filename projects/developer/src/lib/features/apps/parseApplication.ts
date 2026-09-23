@@ -1,4 +1,4 @@
-import type { ApplicationInput } from './applications.ts';
+import type { ApplicationInput } from './ApplicationInput.ts';
 
 const lines = (value: string) =>
   value.split('\n').map((line) => line.trim()).filter(Boolean);

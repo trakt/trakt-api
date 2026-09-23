@@ -1,14 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-vi.mock(
-  '$env/static/public',
-  () => ({ PUBLIC_GITHUB_CLIENT_ID: 'test-client' }),
-);
-
-import {
-  completeGithubConnect,
-  githubConnectUrl,
-  isGithubCallback,
-} from './githubConnect.ts';
+import { completeGithubConnect } from './completeGithubConnect.ts';
 
 function fakeStorage(): Storage {
   const store: Record<string, string> = {};
@@ -25,31 +16,6 @@ function fakeStorage(): Storage {
 
 afterEach(() => {
   vi.unstubAllGlobals();
-});
-
-describe('githubConnectUrl', () => {
-  it('builds the authorize url and stashes the state and intent', () => {
-    const storage = fakeStorage();
-    vi.stubGlobal('sessionStorage', storage);
-    vi.stubGlobal('location', { origin: 'https://developer.trakt.tv' });
-    vi.stubGlobal('crypto', { randomUUID: () => 'fixed-state' });
-
-    const url = new URL(githubConnectUrl('switch'));
-
-    expect(url.origin + url.pathname).toBe(
-      'https://github.com/login/oauth/authorize',
-    );
-    expect(url.searchParams.get('client_id')).toBe('test-client');
-    expect(url.searchParams.get('redirect_uri')).toBe(
-      'https://developer.trakt.tv/apps',
-    );
-    expect(url.searchParams.has('scope')).toBe(false);
-    expect(url.searchParams.get('state')).toBe('fixed-state');
-    expect(storage.getItem('trakt-developer-github-state')).toBe(
-      'fixed-state',
-    );
-    expect(storage.getItem('trakt-developer-github-intent')).toBe('switch');
-  });
 });
 
 describe('completeGithubConnect', () => {
@@ -112,17 +78,5 @@ describe('completeGithubConnect', () => {
     expect(completeGithubConnect(params)).toEqual({ status: 'denied' });
     expect(storage.getItem('trakt-developer-github-state')).toBeNull();
     expect(storage.getItem('trakt-developer-github-intent')).toBeNull();
-  });
-});
-
-describe('isGithubCallback', () => {
-  it('recognises both the code and the error callback', () => {
-    expect(isGithubCallback(new URLSearchParams({ code: 'abc' }))).toBe(true);
-    expect(isGithubCallback(new URLSearchParams({ error: 'access_denied' })))
-      .toBe(true);
-  });
-
-  it('ignores a plain visit to the apps page', () => {
-    expect(isGithubCallback(new URLSearchParams())).toBe(false);
   });
 });

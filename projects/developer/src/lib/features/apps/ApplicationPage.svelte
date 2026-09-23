@@ -1,6 +1,7 @@
 <script lang="ts">
   import { portalSession } from "$lib/auth/portalSession.ts";
-  import { applicationCrumb, applicationTitle } from "./applicationTitle.ts";
+  import { applicationCrumb } from "./applicationCrumb.ts";
+  import { applicationTitle } from "./applicationTitle.ts";
   import { applicationUrl } from "./applicationUrl.ts";
   import Applications from "./Applications.svelte";
   import type { ApplicationPageProps } from "./ApplicationPageProps.ts";

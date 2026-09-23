@@ -1,4 +1,5 @@
-import type { Application, ApplicationInput } from './applications.ts';
+import type { Application } from './Application.ts';
+import type { ApplicationInput } from './ApplicationInput.ts';
 
 export type ApplicationFormProps = {
   app?: Application;
