@@ -169,7 +169,7 @@
 
   .guide-group a:focus-visible {
     outline: var(--ni-2) solid var(--color-info);
-    outline-offset: -2px;
+    outline-offset: var(--ni-neg-2);
   }
 
   .guide-content {

@@ -724,13 +724,13 @@
   .server-selector {
     display: grid;
     gap: 8px;
-    font-size: 12px;
+    font-size: var(--ni-12);
     color: var(--color-muted);
   }
 
   .server-selector select {
-    padding: 10px;
-    border: 1px solid var(--color-border);
+    padding: var(--ni-10);
+    border: var(--ni-1) solid var(--color-border);
     background: var(--color-surface-raised);
   }
 
@@ -753,7 +753,7 @@
       justify-content: flex-start;
       gap: var(--ni-18);
 
-      padding: 10px 15px;
+      padding: var(--ni-10) 15px;
       flex-wrap: wrap;
       border-block-end: var(--ni-1) solid var(--color-border);
 
@@ -888,7 +888,7 @@
     .panel-resizer::before {
       position: absolute;
       inset-block: 0;
-      inset-inline: -3px;
+      inset-inline: var(--ni-neg-3);
 
       content: "";
     }
