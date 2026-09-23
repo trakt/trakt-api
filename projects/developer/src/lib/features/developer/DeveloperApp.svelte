@@ -1,8 +1,6 @@
 <script lang="ts">
-  import {
-    MANAGED_AUTHORIZATION_HEADER_ID,
-    parameterHeaderId,
-  } from "$lib/api/headerIds.ts";
+  import { MANAGED_AUTHORIZATION_HEADER_ID } from "$lib/api/MANAGED_AUTHORIZATION_HEADER_ID.ts";
+  import { parameterHeaderId } from "$lib/api/parameterHeaderId.ts";
   import { onMount } from "svelte";
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";

@@ -12,7 +12,7 @@
     formatCurlRequest,
     formatRequestLine,
   } from "./formatCopiedRequest.ts";
-  import { MANAGED_AUTHORIZATION_HEADER_ID } from "$lib/api/headerIds.ts";
+  import { MANAGED_AUTHORIZATION_HEADER_ID } from "$lib/api/MANAGED_AUTHORIZATION_HEADER_ID.ts";
   import { dismissOnOutsideInteraction } from "./dismissOnOutsideInteraction.ts";
   import { hasInvalidJsonBody } from "./hasInvalidJsonBody.ts";
   import { invalidParameterIds } from "./invalidParameterIds.ts";

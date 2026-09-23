@@ -1,8 +1,6 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
-import {
-  MANAGED_AUTHORIZATION_HEADER_ID,
-  parameterHeaderId,
-} from '$lib/api/headerIds.ts';
+import { MANAGED_AUTHORIZATION_HEADER_ID } from '$lib/api/MANAGED_AUTHORIZATION_HEADER_ID.ts';
+import { parameterHeaderId } from '$lib/api/parameterHeaderId.ts';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
 
 export function managedHeaders({
