@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Application, ApplicationInput } from "./applications.ts";
+  import type { ApplicationFormProps } from "./ApplicationFormProps.ts";
   import { parseApplication } from "./parseApplication.ts";
 
   const {
@@ -8,13 +8,7 @@
     busy,
     onSave,
     onCancel,
-  }: {
-    app?: Application;
-    githubUsername?: string | null;
-    busy: boolean;
-    onSave: (input: ApplicationInput) => void;
-    onCancel: () => void;
-  } = $props();
+  }: ApplicationFormProps = $props();
 
   // svelte-ignore state_referenced_locally
   const initial = app;
