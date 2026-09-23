@@ -246,8 +246,8 @@
 
 <style lang="scss">
   .avatar {
-    width: 24px;
-    height: 24px;
+    width: var(--ni-24);
+    height: var(--ni-24);
     border-radius: 50%;
     object-fit: cover;
   }
@@ -482,7 +482,7 @@
   @media (max-width: 640px) {
     .trakt-account-menu .environment-menu {
       position: fixed;
-      inset-inline: 12px;
+      inset-inline: var(--ni-12);
       inset-block-start: 56px;
       width: auto;
     }

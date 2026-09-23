@@ -209,7 +209,7 @@
     font-size: 11px;
     font-weight: 600;
     padding: 4px 9px;
-    border-radius: 20px;
+    border-radius: var(--border-radius-xl);
     justify-self: start;
   }
 

@@ -635,7 +635,7 @@
     text-decoration: none;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
-    text-align: left;
+    text-align: start;
     padding: 24px;
     background: var(--color-surface);
   }
@@ -675,7 +675,7 @@
     color: var(--color-muted);
     background: var(--color-surface-raised);
     padding: 6px 9px;
-    border-radius: 20px;
+    border-radius: var(--border-radius-xl);
   }
 
   footer {

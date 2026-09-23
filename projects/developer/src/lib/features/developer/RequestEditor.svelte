@@ -674,7 +674,7 @@
 
     .request-line input:focus-visible {
       outline: var(--ni-2) solid var(--color-info);
-      outline-offset: -2px;
+      outline-offset: var(--ni-neg-2);
     }
 
     .request-line input[readonly] {
@@ -1238,7 +1238,7 @@
 
     .body-editor textarea:focus-visible {
       outline: var(--ni-2) solid var(--color-info);
-      outline-offset: -2px;
+      outline-offset: var(--ni-neg-2);
     }
 
     .body-editor textarea::placeholder {
