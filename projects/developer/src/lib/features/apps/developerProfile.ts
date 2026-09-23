@@ -21,7 +21,10 @@ const GITHUB_PATH = '/v3/users/me/developer/github';
 export async function getDeveloperProfile(
   slot: number,
 ): Promise<DeveloperProfile> {
-  const response = await accountRequest(slot, '/v3/users/me/developer');
+  const response = await accountRequest({
+    slot,
+    path: '/v3/users/me/developer',
+  });
   const parsed = developerProfileSchema.safeParse(await response.json());
   if (!parsed.success) {
     throw new Error(
@@ -36,12 +39,16 @@ export async function linkGithub(
   code: string,
   allowSwitch: boolean,
 ): Promise<void> {
-  await accountRequest(slot, GITHUB_PATH, {
-    method: 'PUT',
-    body: JSON.stringify({ code, switch: allowSwitch }),
+  await accountRequest({
+    slot,
+    path: GITHUB_PATH,
+    init: {
+      method: 'PUT',
+      body: JSON.stringify({ code, switch: allowSwitch }),
+    },
   });
 }
 
 export async function unlinkGithub(slot: number): Promise<void> {
-  await accountRequest(slot, GITHUB_PATH, { method: 'DELETE' });
+  await accountRequest({ slot, path: GITHUB_PATH, init: { method: 'DELETE' } });
 }

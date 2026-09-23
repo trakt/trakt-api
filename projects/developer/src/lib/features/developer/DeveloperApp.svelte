@@ -124,7 +124,7 @@
     vip = null;
     let current = true;
     if (slot !== null)
-      void accountRequest(slot, "/users/settings")
+      void accountRequest({ slot, path: "/users/settings" })
         .then((response) => response.json())
         .then((settings) => {
           if (!current) return;

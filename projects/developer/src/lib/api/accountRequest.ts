@@ -13,11 +13,15 @@ async function errorCode(response: Response): Promise<unknown> {
 }
 
 // Account requests bypass playground history, response previews, and storage.
-export async function accountRequest(
-  slot: number,
-  path: string,
-  init: RequestInit = {},
-): Promise<Response> {
+export async function accountRequest({
+  slot,
+  path,
+  init = {},
+}: {
+  slot: number;
+  path: string;
+  init?: RequestInit;
+}): Promise<Response> {
   const token = await accessToken(slot);
   if (!token) throw new Error('Sign in to manage your apps.');
   const headers = traktHeaders({ accessToken: token });

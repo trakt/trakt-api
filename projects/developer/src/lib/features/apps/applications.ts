@@ -30,7 +30,10 @@ export type ApplicationInput = {
 };
 
 export async function listApplications(slot: number): Promise<Application[]> {
-  const response = await accountRequest(slot, '/v3/users/me/applications');
+  const response = await accountRequest({
+    slot,
+    path: '/v3/users/me/applications',
+  });
   const parsed = applicationSchema.array().safeParse(await response.json());
   if (!parsed.success) {
     throw new Error('The app list could not be read. Please try again.');
@@ -43,14 +46,14 @@ export async function saveApplication(
   input: ApplicationInput,
   id?: number,
 ): Promise<Application | null> {
-  const response = await accountRequest(
+  const response = await accountRequest({
     slot,
-    `/v3/users/me/applications${id === undefined ? '' : `/${id}`}`,
-    {
+    path: `/v3/users/me/applications${id === undefined ? '' : `/${id}`}`,
+    init: {
       method: id === undefined ? 'POST' : 'PATCH',
       body: JSON.stringify(input),
     },
-  );
+  });
   const parsed = applicationSchema.safeParse(
     await response.json().catch(() => null),
   );
@@ -61,7 +64,9 @@ export async function deleteApplication(
   slot: number,
   id: number,
 ): Promise<void> {
-  await accountRequest(slot, `/v3/users/me/applications/${id}`, {
-    method: 'DELETE',
+  await accountRequest({
+    slot,
+    path: `/v3/users/me/applications/${id}`,
+    init: { method: 'DELETE' },
   });
 }
