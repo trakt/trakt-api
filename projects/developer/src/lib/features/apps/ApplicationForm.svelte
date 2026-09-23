@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Application, ApplicationInput } from "./applications.ts";
-  import { parseApplication } from "./validateApplication.ts";
+  import { parseApplication } from "./parseApplication.ts";
 
   const {
     app,
@@ -27,7 +27,12 @@
   function submit(event: SubmitEvent) {
     event.preventDefault();
     try {
-      const input = parseApplication(name, description, redirects, origins);
+      const input = parseApplication({
+        name,
+        description,
+        redirects,
+        originsText: origins,
+      });
       error = "";
       onSave(input);
     } catch (cause) {

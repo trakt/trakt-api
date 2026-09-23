@@ -3,12 +3,17 @@ import type { ApplicationInput } from './applications.ts';
 const lines = (value: string) =>
   value.split('\n').map((line) => line.trim()).filter(Boolean);
 
-export function parseApplication(
-  name: string,
-  description: string,
-  redirects: string,
-  originsText: string,
-): ApplicationInput {
+export function parseApplication({
+  name,
+  description,
+  redirects,
+  originsText,
+}: {
+  name: string;
+  description: string;
+  redirects: string;
+  originsText: string;
+}): ApplicationInput {
   const redirect_uri = lines(redirects);
   const origins = lines(originsText);
 
