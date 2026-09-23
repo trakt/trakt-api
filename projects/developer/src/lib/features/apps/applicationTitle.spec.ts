@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { applicationCrumb, applicationTitle } from './applicationTitle.ts';
+
 it.each(
   [
     ['list', 'My Apps', 'My Apps'],

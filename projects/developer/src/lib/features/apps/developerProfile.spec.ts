@@ -35,6 +35,7 @@ describe('developer profile transport', () => {
     );
     expect(accessToken).toHaveBeenCalledWith(2);
   });
+
   it('reads an unlinked profile', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
@@ -48,6 +49,7 @@ describe('developer profile transport', () => {
       applications: { count: 2, limit: 5 },
     });
   });
+
   it('rejects a malformed profile', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
@@ -58,6 +60,7 @@ describe('developer profile transport', () => {
       'could not be read',
     );
   });
+
   it('links with the code and the switch intent, and unlinks with DELETE', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     const fetcher = vi.fn().mockImplementation(() =>

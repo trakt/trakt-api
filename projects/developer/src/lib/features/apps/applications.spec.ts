@@ -10,11 +10,14 @@ vi.mock(
   '$env/static/public',
   () => ({ PUBLIC_TRAKT_CLIENT_ID: 'test-client' }),
 );
+
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.clearAllMocks();
 });
+
 const input = { name: 'Test', redirect_uri: ['test://callback'], origins: [] };
+
 describe('app management transport', () => {
   it('never sends an anonymous management request', async () => {
     vi.mocked(accessToken).mockResolvedValue(null);
@@ -23,6 +26,7 @@ describe('app management transport', () => {
     await expect(listApplications(2)).rejects.toThrow('Sign in');
     expect(fetcher).not.toHaveBeenCalled();
   });
+
   it('uses the selected account and the exact V3 methods and payload', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     const fetcher = vi.fn().mockImplementation(() =>
@@ -46,6 +50,7 @@ describe('app management transport', () => {
     expect(init.cache).toBe('no-store');
     expect(init.redirect).toBe('error');
   });
+
   it('does not echo error bodies or credentials', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
@@ -56,6 +61,7 @@ describe('app management transport', () => {
     );
     await expect(saveApplication(0, input)).rejects.toThrow('app limit');
   });
+
   it('maps a known error code to the portal copy', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
@@ -68,6 +74,7 @@ describe('app management transport', () => {
       'already connected to another Trakt account',
     );
   });
+
   it('never shows server text, even inside a JSON error', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
@@ -82,6 +89,7 @@ describe('app management transport', () => {
       'This account cannot perform this action',
     );
   });
+
   it('ignores an error that is not a string', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
@@ -94,6 +102,7 @@ describe('app management transport', () => {
       'Check your details',
     );
   });
+
   it('falls back to the status copy for an unknown code', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(

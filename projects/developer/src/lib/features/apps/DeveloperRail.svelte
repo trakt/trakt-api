@@ -57,6 +57,7 @@
         · Linked {new Date(github.linked_at).toLocaleDateString()}{/if}
     </p>
     {#if atLimit}<span class="pill attention">App limit reached</span>{/if}
+
     {#if switching}
       <p>
         Sign in to GitHub with the account you want to use. Signing in with the
@@ -77,7 +78,9 @@
         >Switch GitHub account</button
       >
     {/if}
+
     <hr />
+
     {#if unlinking}
       <p>
         This permanently deletes {appsLabel} and revokes {appCount === 1
@@ -118,9 +121,11 @@
         ? `Your ${appsLabel} keep working. Connect GitHub to create more.`
         : "Link GitHub once to create apps. Every app you make afterwards uses it."}
     </p>
+
     <button class="primary" disabled={busy} onclick={() => onConnect("link")}
       >Connect GitHub</button
     >
+
     <p class="fine">
       We only read your public GitHub username and id. No repository or email
       access.
@@ -139,6 +144,7 @@
     border-radius: var(--radius-large);
     background: var(--color-surface);
   }
+
   .rail.attention {
     border-color: color-mix(
       in srgb,
@@ -146,6 +152,7 @@
       var(--color-border)
     );
   }
+
   .rail-error {
     padding: 10px 12px;
     border-radius: var(--radius-control);
@@ -154,6 +161,7 @@
     background: color-mix(in srgb, var(--color-danger) 10%, transparent);
     color: var(--color-danger);
   }
+
   .eyebrow {
     font-size: 11px;
     font-weight: 700;
@@ -161,11 +169,13 @@
     text-transform: uppercase;
     color: var(--color-muted);
   }
+
   .identity {
     display: flex;
     align-items: center;
     gap: 14px;
   }
+
   .avatar {
     display: inline-flex;
     align-items: center;
@@ -177,19 +187,23 @@
     border: 1px solid var(--color-border);
     color: var(--color-foreground);
   }
+
   .handle {
     display: grid;
     gap: 6px;
     justify-items: start;
     min-width: 0;
   }
+
   .handle strong {
     font-size: 16px;
     overflow-wrap: anywhere;
   }
+
   .state {
     font-size: 16px;
   }
+
   .pill {
     font-size: 11px;
     font-weight: 600;
@@ -197,53 +211,65 @@
     border-radius: 20px;
     justify-self: start;
   }
+
   .verified {
     color: var(--color-success);
     background: color-mix(in srgb, var(--color-success) 12%, transparent);
   }
+
   .pill.attention {
     color: var(--color-warning);
     background: color-mix(in srgb, var(--color-warning) 12%, transparent);
   }
+
   p {
     margin: 0;
     color: var(--color-muted);
     font-size: 13px;
     line-height: 1.6;
   }
+
   .meta {
     font-size: 12px;
   }
+
   .fine {
     font-size: 12px;
   }
+
   hr {
     width: 100%;
     border: 0;
     border-top: 1px solid var(--color-border);
     margin: 0;
   }
+
   label {
     display: grid;
     gap: 8px;
     font-size: 13px;
   }
+
   input {
     padding: 10px;
     border: 1px solid var(--color-border);
     background: var(--color-canvas);
   }
+
   .actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
   }
+
   button {
     @include action.base;
   }
+
   .primary {
     @include action.primary;
   }
+
   .destructive {
     color: var(--color-danger);
   }

@@ -26,13 +26,16 @@ describe('developerErrorMessage', () => {
     expect(message).toBeTruthy();
     expect(message).not.toBe(code);
   });
+
   it('returns null for an unknown code', () => {
     expect(developerErrorMessage('something_new')).toBeNull();
   });
+
   it('returns null for anything that is not a string', () => {
     expect(developerErrorMessage(undefined)).toBeNull();
     expect(developerErrorMessage({ secret: 'x' })).toBeNull();
   });
+
   it('does not resolve inherited object keys', () => {
     expect(developerErrorMessage('toString')).toBeNull();
     expect(developerErrorMessage('__proto__')).toBeNull();

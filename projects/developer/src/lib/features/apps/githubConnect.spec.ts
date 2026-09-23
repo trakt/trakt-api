@@ -3,6 +3,7 @@ vi.mock(
   '$env/static/public',
   () => ({ PUBLIC_GITHUB_CLIENT_ID: 'test-client' }),
 );
+
 import {
   completeGithubConnect,
   githubConnectUrl,
@@ -75,6 +76,7 @@ describe('completeGithubConnect', () => {
     expect(storage.getItem('trakt-developer-github-state')).toBeNull();
     expect(storage.getItem('trakt-developer-github-intent')).toBeNull();
   });
+
   it('carries a switch intent through', () => {
     pending('switch');
     expect(
@@ -83,6 +85,7 @@ describe('completeGithubConnect', () => {
       ),
     ).toEqual({ status: 'connected', code: 'abc', allowSwitch: true });
   });
+
   it('rejects a mismatched state', () => {
     pending('link');
     expect(
@@ -91,12 +94,14 @@ describe('completeGithubConnect', () => {
       ),
     ).toEqual({ status: 'invalid' });
   });
+
   it('rejects a missing state', () => {
     vi.stubGlobal('sessionStorage', fakeStorage());
     expect(
       completeGithubConnect(new URLSearchParams({ code: 'abc' })),
     ).toEqual({ status: 'invalid' });
   });
+
   it('reports a denial callback and clears the pending state', () => {
     const storage = pending('switch');
     const params = new URLSearchParams({
@@ -116,6 +121,7 @@ describe('isGithubCallback', () => {
     expect(isGithubCallback(new URLSearchParams({ error: 'access_denied' })))
       .toBe(true);
   });
+
   it('ignores a plain visit to the apps page', () => {
     expect(isGithubCallback(new URLSearchParams())).toBe(false);
   });

@@ -147,6 +147,7 @@
   {#if connectError && !isOpen}<p class="account-error" role="alert">
       {connectError}
     </p>{/if}
+
   {#if isOpen}
     <div class="environment-menu" role="dialog" aria-label="Trakt accounts">
       <div class="menu-heading">
@@ -235,6 +236,7 @@
           >
         </button>
       {/if}
+
       {#if connectError}<p class="account-error" role="alert">
           {connectError}
         </p>{/if}
@@ -249,6 +251,7 @@
     border-radius: 50%;
     object-fit: cover;
   }
+
   .trakt-environment-selector {
     position: relative;
 
@@ -475,6 +478,7 @@
       color: var(--color-muted);
     }
   }
+
   @media (max-width: 640px) {
     .trakt-environment-selector .environment-menu {
       position: fixed;

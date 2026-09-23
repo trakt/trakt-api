@@ -19,7 +19,9 @@ export const applicationSchema = z.object({
     account_create: z.boolean().nullish(),
   }),
 });
+
 export type Application = z.infer<typeof applicationSchema>;
+
 export type ApplicationInput = {
   name: string;
   description?: string;
@@ -35,6 +37,7 @@ export async function listApplications(slot: number): Promise<Application[]> {
   }
   return parsed.data;
 }
+
 export async function saveApplication(
   slot: number,
   input: ApplicationInput,
@@ -53,6 +56,7 @@ export async function saveApplication(
   );
   return parsed.success ? parsed.data : null;
 }
+
 export async function deleteApplication(
   slot: number,
   id: number,

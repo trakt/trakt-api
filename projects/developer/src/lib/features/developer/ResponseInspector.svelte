@@ -12,6 +12,7 @@
     isSending,
     onDeleteResponse,
   }: ResponseInspectorProps = $props();
+
   let selectedKey = $state("");
   let activeTab = $state<DetailTab>("body");
   let expectedBodyMode = $state<ExpectedBodyMode>("required");
@@ -156,6 +157,7 @@
           <span class="tab-count">{expectedResponse.status}</span>
         </button>
       {/each}
+
       {#each endpointHistory as entry (entry.id)}
         {@const key = `live:${entry.id}`}
         <div
@@ -316,6 +318,7 @@
           </button>
         </div>
       {/if}
+
       {#if selectedBody}
         {#if selectedIsJson}
           <pre

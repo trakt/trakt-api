@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseApplication } from './validateApplication.ts';
+
 describe('V3 application validation parity', () => {
   it('accepts native callbacks and OOB, trims fields and canonicalizes origins', () => {
     expect(
@@ -16,6 +17,7 @@ describe('V3 application validation parity', () => {
       origins: ['https://example.com'],
     });
   });
+
   it.each([
     'javascript:alert(1)',
     'data:text/plain,hello',
@@ -24,6 +26,7 @@ describe('V3 application validation parity', () => {
   ])('rejects unsafe or unsupported callback %s', (uri) => {
     expect(() => parseApplication('App', '', uri, '')).toThrow();
   });
+
   it.each([
     'https://*.example.com',
     'https://example.com/path',
@@ -33,6 +36,7 @@ describe('V3 application validation parity', () => {
     expect(() => parseApplication('App', '', 'myapp://callback', origin))
       .toThrow();
   });
+
   it('enforces required fields and combined limits', () => {
     expect(() => parseApplication(' ', '', 'myapp://callback', '')).toThrow();
     expect(() => parseApplication('App', '', '', '')).toThrow();

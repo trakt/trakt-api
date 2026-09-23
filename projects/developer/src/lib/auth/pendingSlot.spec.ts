@@ -11,6 +11,7 @@ function memoryStorage() {
 }
 
 beforeEach(() => vi.stubGlobal('sessionStorage', memoryStorage()));
+
 afterEach(() => vi.unstubAllGlobals());
 
 describe('pending slot', () => {
