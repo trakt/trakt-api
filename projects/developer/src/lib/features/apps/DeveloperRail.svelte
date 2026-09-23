@@ -1,6 +1,7 @@
 <script lang="ts">
   import GithubMark from "./GithubMark.svelte";
   import type { DeveloperProfile } from "./developerProfile.ts";
+  import { formatDate } from "./formatDate.ts";
   import type { GithubConnectIntent } from "./githubConnect.ts";
 
   const {
@@ -54,7 +55,7 @@
     </div>
     <p class="meta">
       GitHub id {github.id}{#if github.linked_at}
-        · Linked {new Date(github.linked_at).toLocaleDateString()}{/if}
+        · Linked {formatDate(github.linked_at)}{/if}
     </p>
     {#if atLimit}<span class="pill attention">App limit reached</span>{/if}
 
