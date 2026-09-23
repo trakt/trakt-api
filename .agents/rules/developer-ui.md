@@ -79,8 +79,12 @@ Non-BEM, namespaced kebab-case, same as trakt-web.
   `src/style/sizing/`: `--gap-*` for spacing, `--border-radius-*` / `--radius-*`
   for corners, `--border-thickness-*` for borders, `--ni-*` for other lengths.
   Older styles still have raw `px`; do not add more.
-- Reuse the shared mixins in `src/style/` (`_action-button.scss`) instead of
-  restyling buttons per component.
+- Reuse the shared mixins in `src/style/` instead of repeating their rules:
+  `_action-button.scss` (buttons), `_method-colors.scss` (HTTP method
+  `[data-method]` colors), `_select-caret.scss` (the custom `<select>` caret).
+  Include a mixin under the selector that needs it, so specificity stays local.
+- Render tokenized JSON with `JsonHighlight.svelte`, not a hand-written
+  `{#each}` over `tokenizeJson` output.
 - The portal is dark only (`color-scheme: dark`). Do not add
   `prefers-color-scheme` or theme selectors.
 

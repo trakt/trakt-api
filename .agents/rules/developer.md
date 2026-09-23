@@ -11,9 +11,10 @@ Front-end practices here follow trakt-web, trimmed to what the portal actually
 uses. UI, styling, and accessibility rules are in `developer-ui.md`; perf rules
 are in `developer-performance.md`.
 
-These rules apply to new code and code you touch. Some older files predate them
-(for example, files with several exports). Do not sweep unrelated files to
-conform; fix what you touch.
+These rules apply to new code and code you touch. The portal was brought in line
+with them in one pass; the known leftovers are raw `px` values without an exact
+token and descendant element selectors (`.panel input`) in component styles. Do
+not sweep unrelated files to conform; fix what you touch.
 
 ## Tech Stack
 
@@ -63,7 +64,13 @@ projects/developer/
 - **One export per file, named like the file.** `applicationUrl.ts` exports
   `applicationUrl`; `Endpoint.ts` exports the `Endpoint` type. Unexported
   helpers inside the file are fine. Promote a helper to its own file only when a
-  second module needs it.
+  second module needs it, and give it a name that still makes sense outside its
+  old file (`usernameKey`, not `key`).
+- **Case collisions stay together.** A type and a function whose names differ
+  only by case (`PortalSession` / `portalSession`) share one file: macOS
+  filesystems are case-insensitive and the repo has `core.ignorecase=true`. For
+  a case-only rename, `git rm --cached` the old path and `git add` the new one,
+  or Linux CI will not see the change.
 - **No barrel files.** No `index.ts` that only re-exports. Import from the file
   that owns the symbol.
 - **Use `$lib/...` aliases**, never deep relative paths (`../../`). Sibling
@@ -76,9 +83,9 @@ projects/developer/
 
 ## Data and State
 
-- **Validate every API response with Zod** before use (see `applications.ts`).
-  Schema first, type from `z.infer`. On a failed parse, throw an error with a
-  user-facing message, not the Zod output.
+- **Validate every API response with Zod** before use (see `listApplications.ts`
+  / `applicationSchema.ts`). Schema first, type from `z.infer`. On a failed
+  parse, throw an error with a user-facing message, not the Zod output.
 - **UI state that should survive a reload or a shared link goes in the URL**
   (selected endpoint, tabs, filters). Update it with
   `goto(url, { replaceState: true })` so it does not flood history.
@@ -86,12 +93,29 @@ projects/developer/
   (`new URL(page.url)`), change it, then `goto` it.
 - **Storage keys, parsing, and validation live in a helper**, not in a
   component. Helpers take the `Storage` as a parameter
-  (`loadResponseHistory(storage)` in `responseHistoryStorage.ts`); the component
-  passes `globalThis.sessionStorage` in. Direct access in `lib/auth/` uses
+  (`loadResponseHistory(storage)`); the component passes
+  `globalThis.sessionStorage` in. Direct access in `lib/auth/` uses
   `globalThis.localStorage?.` so it cannot throw when storage is missing.
 - **Never persist tokens or client secrets** outside the OIDC user store in
   `userManager.ts`. Response history and copied requests are redacted
   (`redactResponse.ts`); keep new copy/share/history paths redacted too.
+- **One definition of "sensitive".** Every redaction path decides with
+  `$lib/api/isSensitiveName` (field and header names) and
+  `$lib/api/mentionsSensitiveName` (free text), and writes `REDACTED` from
+  `$lib/api/REDACTED.ts`. Never add a local list of sensitive names; extend
+  `SENSITIVE_FIELD_NAMES` instead.
+
+## Shared Helpers
+
+Reach for these before writing the idiom again:
+
+| Helper                                   | Use for                                           |
+| ---------------------------------------- | ------------------------------------------------- |
+| `$lib/api/accountRequest`                | Authenticated request as a signed-in account slot |
+| `$lib/auth/takeSessionValue`             | Read a sessionStorage value once and remove it    |
+| `$lib/auth/parseAccountSlot`             | Turn a stored string into a valid account slot    |
+| `features/apps/formatDate`               | Every date label in the apps feature              |
+| `features/developer/findParameterHeader` | The header row bound to an endpoint parameter     |
 
 ## Security
 

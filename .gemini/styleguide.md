@@ -81,6 +81,8 @@ Source: `.agents/rules/developer.md`.
   `goto(url, { replaceState: true })`. `page.url` is never mutated in place.
 - Tokens and client secrets are never persisted outside the OIDC user store;
   history and copy paths stay redacted.
+- Redaction decides with `$lib/api/isSensitiveName` / `mentionsSensitiveName`;
+  no local lists of sensitive names.
 - A new external origin comes with a matching CSP update in `svelte.config.js`.
   No inline scripts or `unsafe-eval`.
 - `{@html}` only renders `renderMarkdown` output.
