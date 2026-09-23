@@ -23,7 +23,7 @@
   });
   const guides = new Map(
     Object.entries(files).map(([path, markdown]) => [
-      path.split("/").at(-1)!.replace(/\.md$/, ""),
+      (path.split("/").at(-1) ?? path).replace(/\.md$/, ""),
       markdown,
     ]),
   );

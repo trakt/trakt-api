@@ -44,9 +44,15 @@ describe('hasInvalidJsonBody', () => {
   });
 
   it('should not parse non-JSON request bodies', () => {
+    const { requestBody } = postEndpoint;
+
+    if (!requestBody) {
+      throw new Error('Missing seed POST endpoint request body.');
+    }
+
     const endpoint: Endpoint = {
       ...postEndpoint,
-      requestBody: { ...postEndpoint.requestBody!, contentType: 'text/plain' },
+      requestBody: { ...requestBody, contentType: 'text/plain' },
     };
 
     expect(hasInvalidJsonBody({ endpoint, body: '{"id":}' }))

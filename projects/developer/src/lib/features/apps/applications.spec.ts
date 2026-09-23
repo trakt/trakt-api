@@ -44,7 +44,9 @@ describe('app management transport', () => {
         ['https://api.trakt.tv/v3/users/me/applications/42', 'DELETE'],
       ],
     );
-    const init = fetcher.mock.calls[0]![1];
+    const call = fetcher.mock.calls.at(0);
+    if (!call) throw new Error('fetch was not called');
+    const init = call[1];
     expect(JSON.parse(init.body)).toEqual(input);
     expect(init.headers.get('authorization')).toBe('Bearer test-token');
     expect(init.cache).toBe('no-store');

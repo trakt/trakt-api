@@ -23,7 +23,9 @@ describe('resolve username', () => {
     respondWith({ user: { username: 'sean' } });
     await resolveUsername({ accessToken: 'token-value', slot: 0 });
 
-    const [url, init] = vi.mocked(globalThis.fetch).mock.calls[0]!;
+    const call = vi.mocked(globalThis.fetch).mock.calls.at(0);
+    if (!call) throw new Error('fetch was not called');
+    const [url, init] = call;
     const headers = init?.headers as Headers;
     expect(url).toBe('https://api.trakt.tv/users/settings');
     expect(headers.get('authorization')).toBe('Bearer token-value');

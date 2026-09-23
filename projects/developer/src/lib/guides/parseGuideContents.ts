@@ -17,7 +17,10 @@ export function parseGuideContents(markdown: string): Array<GuideGroup> {
     );
     if (!link) continue;
     if (groups.length === 0) groups.push({ title: 'Guides', items: [] });
-    groups.at(-1)!.items.push({ title: link[1], slug: link[2] });
+
+    const lastGroup = groups.at(-1);
+    if (!lastGroup) continue;
+    lastGroup.items.push({ title: link[1], slug: link[2] });
   }
 
   return groups.filter((group) => group.items.length > 0);
