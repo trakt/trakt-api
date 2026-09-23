@@ -1,6 +1,6 @@
 <script lang="ts">
   import ApplicationPage from "$lib/features/apps/ApplicationPage.svelte";
-  import { applicationNameFrom } from "$lib/features/apps/applicationUrl.ts";
+  import { applicationNameFrom } from "$lib/features/apps/applicationNameFrom.ts";
   import { page } from "$app/state";
 </script>
 

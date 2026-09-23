@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
-import { applicationNameFrom, applicationUrl } from './applicationUrl.ts';
+import { applicationNameFrom } from './applicationNameFrom.ts';
+import { applicationUrl } from './applicationUrl.ts';
 
 it('carries app names through detail and edit links without adding query parameters', () => {
   const name = 'Movies & TV / 日本語 #1?secret=no';

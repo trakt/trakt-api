@@ -1,10 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { accessToken } from '$lib/auth/accessToken.ts';
-import {
-  deleteApplication,
-  listApplications,
-  saveApplication,
-} from './applications.ts';
+import { deleteApplication } from './deleteApplication.ts';
+import { listApplications } from './listApplications.ts';
+import { saveApplication } from './saveApplication.ts';
 vi.mock('$lib/auth/accessToken.ts', () => ({ accessToken: vi.fn() }));
 vi.mock(
   '$env/static/public',

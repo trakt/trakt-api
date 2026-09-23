@@ -1,6 +1,6 @@
 import type { ApplicationMode } from './ApplicationMode.ts';
 
-export function applicationTitle(
+export function applicationCrumb(
   mode: ApplicationMode,
   displayName: string,
 ): string {
@@ -8,9 +8,9 @@ export function applicationTitle(
     case 'list':
       return 'My Apps';
     case 'new':
-      return 'Create an app';
+      return 'Create app';
     case 'edit':
-      return `Edit ${displayName}`;
+      return 'Edit';
     case 'detail':
       return displayName;
   }

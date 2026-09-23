@@ -1,4 +1,4 @@
-const NAME_HINT_LIMIT = 255;
+import { NAME_HINT_LIMIT } from './NAME_HINT_LIMIT.ts';
 
 /** The name is a display hint; the API remains authoritative for app data. */
 export function applicationUrl({
@@ -14,8 +14,4 @@ export function applicationUrl({
   const path = `/apps/${id}${edit ? '/edit' : ''}`;
   const label = name?.trim().slice(0, NAME_HINT_LIMIT);
   return label ? `${path}?${new URLSearchParams({ name: label })}` : path;
-}
-
-export function applicationNameFrom(url: URL): string | undefined {
-  return url.searchParams.get('name')?.trim().slice(0, NAME_HINT_LIMIT);
 }

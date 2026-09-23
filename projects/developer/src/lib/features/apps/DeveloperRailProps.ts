@@ -1,5 +1,5 @@
-import type { DeveloperProfile } from './developerProfile.ts';
-import type { GithubConnectIntent } from './githubConnect.ts';
+import type { DeveloperProfile } from './DeveloperProfile.ts';
+import type { GithubConnectIntent } from './GithubConnectIntent.ts';
 
 export type DeveloperRailProps = {
   profile: DeveloperProfile | null;
