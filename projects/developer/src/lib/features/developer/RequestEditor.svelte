@@ -501,6 +501,8 @@
 </section>
 
 <style lang="scss">
+  @use "../../../style/method-colors" as method;
+
   .trakt-request-editor {
     overflow: auto;
     min-width: 0;
@@ -641,24 +643,8 @@
       font: 750 var(--ni-12) var(--font-mono);
     }
 
-    .method[data-method="GET"] {
-      color: var(--color-get);
-    }
-
-    .method[data-method="POST"] {
-      color: var(--color-post);
-    }
-
-    .method[data-method="PUT"] {
-      color: var(--color-put);
-    }
-
-    .method[data-method="PATCH"] {
-      color: var(--color-patch);
-    }
-
-    .method[data-method="DELETE"] {
-      color: var(--color-delete);
+    .method {
+      @include method.base;
     }
 
     .request-line input {
