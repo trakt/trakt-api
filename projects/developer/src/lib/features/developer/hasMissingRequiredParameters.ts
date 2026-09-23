@@ -1,6 +1,6 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
-import { parameterHeaderId } from '$lib/api/headerIds.ts';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
+import { findParameterHeader } from './findParameterHeader.ts';
 
 export function missingRequiredParameterIds({
   endpoint,
@@ -18,9 +18,7 @@ export function missingRequiredParameterIds({
       return !values[parameter.id]?.trim();
     }
 
-    const header = headers.find(
-      (candidate) => candidate.id === parameterHeaderId(parameter.id),
-    );
+    const header = findParameterHeader({ parameter, headers });
 
     return !header?.enabled ||
       header.name.trim().toLocaleLowerCase() !==

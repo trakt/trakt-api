@@ -1,7 +1,7 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
-import { parameterHeaderId } from '$lib/api/headerIds.ts';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
 import type { EndpointParameter } from '$lib/openapi/EndpointParameter.ts';
+import { findParameterHeader } from './findParameterHeader.ts';
 
 function currentParameterValue({
   parameter,
@@ -14,8 +14,7 @@ function currentParameterValue({
 }): string {
   if (parameter.location !== 'header') return values[parameter.id] ?? '';
 
-  return headers.find(({ id }) => id === parameterHeaderId(parameter.id))
-    ?.value ?? '';
+  return findParameterHeader({ parameter, headers })?.value ?? '';
 }
 
 export function invalidParameterIds({
