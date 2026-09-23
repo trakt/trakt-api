@@ -1,8 +1,7 @@
 <script lang="ts">
   import GithubMark from "./GithubMark.svelte";
-  import type { DeveloperProfile } from "./developerProfile.ts";
   import { formatDate } from "./formatDate.ts";
-  import type { GithubConnectIntent } from "./githubConnect.ts";
+  import type { DeveloperRailProps } from "./DeveloperRailProps.ts";
 
   const {
     profile,
@@ -10,13 +9,7 @@
     error = "",
     onConnect,
     onUnlink,
-  }: {
-    profile: DeveloperProfile | null;
-    busy: boolean;
-    error?: string;
-    onConnect: (intent: GithubConnectIntent) => void;
-    onUnlink: () => void;
-  } = $props();
+  }: DeveloperRailProps = $props();
 
   let switching = $state(false);
   let unlinking = $state(false);

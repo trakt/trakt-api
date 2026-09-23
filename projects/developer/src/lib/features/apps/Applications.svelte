@@ -14,7 +14,7 @@
     type Application,
     type ApplicationInput,
   } from "./applications.ts";
-  import type { ApplicationPageProps } from "./ApplicationPageProps.ts";
+  import type { ApplicationsProps } from "./ApplicationsProps.ts";
   import {
     getDeveloperProfile,
     linkGithub,
@@ -28,14 +28,7 @@
     type GithubConnectIntent,
   } from "./githubConnect.ts";
 
-  const {
-    slot,
-    mode,
-    appId,
-    appName,
-  }: ApplicationPageProps & {
-    slot: number;
-  } = $props();
+  const { slot, mode, appId, appName }: ApplicationsProps = $props();
   let loading = $state(true);
   let apps = $state<Application[]>([]);
   let profile = $state<DeveloperProfile | null>(null);
