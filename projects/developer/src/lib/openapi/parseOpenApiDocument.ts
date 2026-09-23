@@ -1,4 +1,5 @@
-import type { Endpoint, EndpointRequestBody } from './Endpoint.ts';
+import type { Endpoint } from './Endpoint.ts';
+import type { EndpointRequestBody } from './EndpointRequestBody.ts';
 import type { EndpointParameter } from './EndpointParameter.ts';
 import type { HttpMethod } from './HttpMethod.ts';
 import type { OpenApiCatalog } from './OpenApiCatalog.ts';
