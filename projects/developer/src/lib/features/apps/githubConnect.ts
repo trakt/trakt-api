@@ -1,4 +1,5 @@
 import { PUBLIC_GITHUB_CLIENT_ID } from '$env/static/public';
+import { takeSessionValue } from '$lib/auth/takeSessionValue.ts';
 
 const STATE_KEY = 'trakt-developer-github-state';
 const INTENT_KEY = 'trakt-developer-github-intent';
@@ -9,12 +10,6 @@ type GithubConnectOutcome =
   | { status: 'connected'; code: string; allowSwitch: boolean }
   | { status: 'denied' }
   | { status: 'invalid' };
-
-function take(key: string): string | null {
-  const value = globalThis.sessionStorage?.getItem(key) ?? null;
-  globalThis.sessionStorage?.removeItem(key);
-  return value;
-}
 
 export function isGithubCallback(searchParams: URLSearchParams): boolean {
   return searchParams.has('code') || searchParams.has('error');
@@ -36,8 +31,8 @@ export function completeGithubConnect(
 ): GithubConnectOutcome {
   const code = searchParams.get('code');
   const state = searchParams.get('state');
-  const expectedState = take(STATE_KEY);
-  const intent = take(INTENT_KEY);
+  const expectedState = takeSessionValue(STATE_KEY);
+  const intent = takeSessionValue(INTENT_KEY);
 
   if (!state || !expectedState || state !== expectedState) {
     return { status: 'invalid' };

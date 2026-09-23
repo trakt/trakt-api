@@ -1,4 +1,5 @@
 import { parseAccountSlot } from './parseAccountSlot.ts';
+import { takeSessionValue } from './takeSessionValue.ts';
 
 const ACTIVE_SLOT = 'trakt-developer-active-slot';
 const RETURN_SECTION = 'trakt-developer-return-section';
@@ -33,7 +34,5 @@ export function rememberSection(): void {
 }
 
 export function takeReturnPath(): string {
-  const stored = globalThis.sessionStorage?.getItem(RETURN_SECTION);
-  globalThis.sessionStorage?.removeItem(RETURN_SECTION);
-  return safeReturnPath(stored);
+  return safeReturnPath(takeSessionValue(RETURN_SECTION));
 }
