@@ -1,33 +1,11 @@
 import type { ApiExecutionResponse } from '$lib/api/ApiExecutionResponse.ts';
+import { isSensitiveName } from '$lib/api/isSensitiveName.ts';
+import { mentionsSensitiveName } from '$lib/api/mentionsSensitiveName.ts';
+import { REDACTED } from '$lib/api/REDACTED.ts';
 import type { ResponseHistoryEntry } from './ResponseHistoryEntry.ts';
 
 const MAX_STORED_RESPONSES = 20;
 const MAX_STORED_BODY_CHARACTERS = 250_000;
-const REDACTED_VALUE = '[redacted]';
-const SENSITIVE_NAMES = new Set([
-  'access_token',
-  'authorization',
-  'client_id',
-  'client_secret',
-  'code',
-  'device_code',
-  'password',
-  'refresh_token',
-  'secret',
-  'token',
-]);
-
-function normalizedName(value: string): string {
-  return value.trim().toLocaleLowerCase().replaceAll(/[^a-z0-9]+/g, '_')
-    .replaceAll(/^_+|_+$/g, '');
-}
-
-function isSensitiveName(value: string): boolean {
-  const name = normalizedName(value);
-  return name.replaceAll('_', '') === 'clientid' ||
-    SENSITIVE_NAMES.has(name) || name.endsWith('_secret') ||
-    name.endsWith('_token');
-}
 
 function sanitizeJson(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sanitizeJson);
@@ -36,7 +14,7 @@ function sanitizeJson(value: unknown): unknown {
   return Object.fromEntries(
     Object.entries(value).map(([key, entry]) => [
       key,
-      isSensitiveName(key) ? REDACTED_VALUE : sanitizeJson(entry),
+      isSensitiveName(key) ? REDACTED : sanitizeJson(entry),
     ]),
   );
 }
@@ -50,9 +28,7 @@ function sanitizeBody(response: ApiExecutionResponse): string {
     } catch {
       body = response.body;
     }
-  } else if (
-    [...SENSITIVE_NAMES].some((name) => normalizedName(body).includes(name))
-  ) {
+  } else if (mentionsSensitiveName(body)) {
     body = '[Sensitive response body omitted from session history]';
   }
 
@@ -66,7 +42,7 @@ function sanitizeUrl(value: string): string {
   try {
     const url = new URL(value);
     for (const name of [...url.searchParams.keys()]) {
-      if (isSensitiveName(name)) url.searchParams.set(name, REDACTED_VALUE);
+      if (isSensitiveName(name)) url.searchParams.set(name, REDACTED);
     }
 
     return url.toString();

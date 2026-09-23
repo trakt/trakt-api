@@ -1,5 +1,5 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
-import { isSensitiveFieldName } from './isSensitiveFieldName.ts';
+import { isSensitiveName } from '$lib/api/isSensitiveName.ts';
 
 export function safeHeaders(
   headers: ReadonlyArray<ApiHeader>,
@@ -7,7 +7,7 @@ export function safeHeaders(
   return headers
     .filter((header) =>
       header.managed !== true && !header.id.startsWith('managed-') &&
-      !isSensitiveFieldName(header.name) &&
+      !isSensitiveName(header.name) &&
       !/^(?:basic|bearer)\s+/i.test(header.value.trim())
     )
     .map(({ id, name, value, enabled }) => ({ id, name, value, enabled }));

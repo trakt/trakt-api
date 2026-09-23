@@ -1,5 +1,5 @@
-import { isSensitiveName } from './isSensitiveName.ts';
-import { REDACTED } from './REDACTED.ts';
+import { isSensitiveName } from '$lib/api/isSensitiveName.ts';
+import { REDACTED } from '$lib/api/REDACTED.ts';
 
 export function redactUrl(value: string): string {
   try {

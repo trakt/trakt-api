@@ -7,6 +7,7 @@ export const SENSITIVE_FIELD_NAMES = new Set([
   'code',
   'cookie',
   'device_code',
+  'id_token',
   'password',
   'proxy_authorization',
   'refresh_token',
