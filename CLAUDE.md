@@ -6,7 +6,13 @@ via AGENTS.md; domain rules load on demand):
   JSR score at 100 (static types, symbol docs, provenance publishing).
 - Contract schemas (`projects/api/src/contracts/**`): also read `schemas.md`.
 - Developer portal (`projects/developer/**`): read `developer.md` - SvelteKit
-  structure, tooling, and the blank-line spacing convention for `.ts`/`.svelte`.
-- Everything else: `project.md` (always-on baseline, already loaded as core).
+  structure, architecture, modules, state, security, testing, and the blank-line
+  spacing convention for `.ts`/`.svelte`.
+- Portal UI (`.svelte`, `.scss`, `.css` under `projects/developer/src/`): also
+  read `developer-ui.md` - runes, props, class naming, tokens, accessibility.
+- Portal perf work (animations, listeners, observers, large lists, bundle,
+  images): also read `developer-performance.md`.
+- Everything else: `project.md` and `code-principles.md` (always-on baseline,
+  already loaded as core).
 
 @AGENTS.md
