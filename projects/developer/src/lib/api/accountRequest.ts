@@ -1,12 +1,15 @@
+import { z } from 'zod';
 import { accessToken } from '$lib/auth/accessToken.ts';
 import { developerErrorMessage } from './developerErrorMessage.ts';
 import { traktHeaders } from './traktHeaders.ts';
 
+const errorBodySchema = z.object({ error: z.string().optional() });
+
 async function errorCode(response: Response): Promise<unknown> {
-  const body = await response.json().catch(() => null) as
-    | { error?: unknown }
-    | null;
-  return body?.error;
+  const parsed = errorBodySchema.safeParse(
+    await response.json().catch(() => null),
+  );
+  return parsed.success ? parsed.data.error : undefined;
 }
 
 // Account requests bypass playground history, response previews, and storage.

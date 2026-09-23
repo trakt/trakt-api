@@ -1,7 +1,10 @@
+import { z } from 'zod';
 import { traktHeaders } from '$lib/api/traktHeaders.ts';
 import { fallbackUsername } from './accountSlots.ts';
 
-type SettingsPayload = { user?: { username?: unknown } };
+const settingsPayloadSchema = z.object({
+  user: z.object({ username: z.string().optional() }).optional(),
+});
 
 export async function resolveUsername({
   accessToken,
@@ -16,11 +19,10 @@ export async function resolveUsername({
 
   if (!response?.ok) return fallbackUsername(slot);
 
-  const body = await response.json().catch(() => null) as
-    | SettingsPayload
-    | null;
+  const parsed = settingsPayloadSchema.safeParse(
+    await response.json().catch(() => null),
+  );
+  const username = parsed.success ? parsed.data.user?.username : undefined;
 
-  return typeof body?.user?.username === 'string' && body.user.username
-    ? body.user.username
-    : fallbackUsername(slot);
+  return username ? username : fallbackUsername(slot);
 }
