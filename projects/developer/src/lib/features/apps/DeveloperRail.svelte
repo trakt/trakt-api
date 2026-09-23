@@ -37,8 +37,8 @@
 </script>
 
 <aside
-  class="rail"
-  class:attention={hasLegacyApps}
+  class="trakt-developer-rail"
+  class:is-attention={hasLegacyApps}
   aria-label="Developer account"
 >
   <span class="eyebrow">Developer</span>
@@ -136,7 +136,7 @@
 
 <style lang="scss">
   @use "../../../style/action-button" as action;
-  .rail {
+  .trakt-developer-rail {
     display: grid;
     gap: 16px;
     align-content: start;
@@ -146,7 +146,7 @@
     background: var(--color-surface);
   }
 
-  .rail.attention {
+  .trakt-developer-rail.is-attention {
     border-color: color-mix(
       in srgb,
       var(--color-warning) 40%,

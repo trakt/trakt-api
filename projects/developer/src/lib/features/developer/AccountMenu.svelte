@@ -117,7 +117,7 @@
   }}
 />
 
-<div class="trakt-environment-selector" bind:this={selectorElement}>
+<div class="trakt-account-menu" bind:this={selectorElement}>
   <button
     type="button"
     class="environment-trigger"
@@ -252,7 +252,7 @@
     object-fit: cover;
   }
 
-  .trakt-environment-selector {
+  .trakt-account-menu {
     position: relative;
 
     .environment-trigger {
@@ -480,7 +480,7 @@
   }
 
   @media (max-width: 640px) {
-    .trakt-environment-selector .environment-menu {
+    .trakt-account-menu .environment-menu {
       position: fixed;
       inset-inline: 12px;
       inset-block-start: 56px;
