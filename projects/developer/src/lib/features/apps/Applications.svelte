@@ -4,6 +4,7 @@
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
   import ApplicationForm from "./ApplicationForm.svelte";
+  import DeveloperRail from "./DeveloperRail.svelte";
   import {
     listApplications,
     saveApplication,
@@ -12,6 +13,18 @@
     type ApplicationInput,
   } from "./applications.ts";
   import type { ApplicationPageProps } from "./ApplicationPageProps.ts";
+  import {
+    getDeveloperProfile,
+    linkGithub,
+    unlinkGithub,
+    type DeveloperProfile,
+  } from "./developerProfile.ts";
+  import {
+    completeGithubConnect,
+    githubConnectUrl,
+    isGithubCallback,
+    type GithubConnectIntent,
+  } from "./githubConnect.ts";
 
   const {
     slot,
@@ -23,9 +36,21 @@
   } = $props();
   let loading = $state(true);
   let apps = $state<Application[]>([]);
+  let profile = $state<DeveloperProfile | null>(null);
   const selected = $derived(apps.find((app) => app.id === appId));
-  const linkedGithubUsername = $derived(
-    apps.find((app) => app.github_username)?.github_username ?? null,
+  function canCreateWith(developer: DeveloperProfile | null): boolean {
+    return (
+      !!developer?.github &&
+      developer.applications.count < developer.applications.limit
+    );
+  }
+  const canCreate = $derived(canCreateWith(profile));
+  const createLock = $derived(
+    !profile
+      ? "Loading…"
+      : !profile.github
+        ? "Connect GitHub first"
+        : "App limit reached",
   );
   const displayName = $derived(
     selected?.name ?? appName ?? (loading ? "Loading…" : "App details"),
@@ -69,25 +94,105 @@
   let confirmation = $state("");
   let alive = true;
   onMount(() => {
-    if (mode === "new") loading = false;
-    else void load();
+    void start();
     return () => {
       alive = false;
     };
   });
-  async function load() {
-    loading = true;
-    error = "";
+  async function start() {
+    if (mode === "new") return guardCreate();
+    const connectError = mode === "list" ? await finishGithubConnect() : null;
+    await load();
+    if (connectError && alive) error = connectError;
+  }
+  async function guardCreate() {
     try {
-      const result = await listApplications(slot);
-      if (alive) apps = result;
+      const developer = await getDeveloperProfile(slot);
+      if (!alive) return;
+      if (!canCreateWith(developer)) {
+        await goto("/apps", { replaceState: true });
+        return;
+      }
+      profile = developer;
     } catch (cause) {
       if (alive)
         error =
-          cause instanceof Error ? cause.message : "Could not load your apps.";
+          cause instanceof Error
+            ? cause.message
+            : "Could not load your developer account.";
     } finally {
       if (alive) loading = false;
     }
+  }
+  async function finishGithubConnect(): Promise<string | null> {
+    const params = new URL(globalThis.location.href).searchParams;
+    if (!isGithubCallback(params)) return null;
+    const outcome = completeGithubConnect(params);
+    globalThis.history.replaceState(globalThis.history.state, "", "/apps");
+    if (outcome.status === "denied") {
+      return "You did not authorize the GitHub connection. Connect again when you are ready.";
+    }
+    if (outcome.status === "invalid") {
+      return "This GitHub connection could not be verified. Connect again.";
+    }
+    try {
+      await linkGithub(slot, outcome.code, outcome.allowSwitch);
+      if (alive)
+        notice = outcome.allowSwitch
+          ? "GitHub account switched."
+          : "GitHub connected.";
+      return null;
+    } catch (cause) {
+      return cause instanceof Error
+        ? cause.message
+        : "Could not connect GitHub.";
+    }
+  }
+  function connect(intent: GithubConnectIntent) {
+    globalThis.location.assign(githubConnectUrl(intent));
+  }
+  async function unlink() {
+    if (busy) return;
+    busy = true;
+    error = "";
+    notice = "";
+    try {
+      await unlinkGithub(slot);
+      if (!alive) return;
+      apps = [];
+      profile = profile && {
+        github: null,
+        applications: { ...profile.applications, count: 0 },
+      };
+      notice = "GitHub unlinked. Your apps were deleted.";
+      await load();
+    } catch (cause) {
+      if (alive)
+        error =
+          cause instanceof Error ? cause.message : "Could not unlink GitHub.";
+    } finally {
+      if (alive) busy = false;
+    }
+  }
+  async function load() {
+    loading = true;
+    error = "";
+    const [result, developer] = await Promise.allSettled([
+      listApplications(slot),
+      mode === "list" ? getDeveloperProfile(slot) : Promise.resolve(null),
+    ]);
+    if (!alive) return;
+    if (result.status === "fulfilled") apps = result.value;
+    if (developer.status === "fulfilled") profile = developer.value;
+    const failure = [result, developer].find(
+      (outcome) => outcome.status === "rejected",
+    );
+    if (failure)
+      error =
+        failure.reason instanceof Error
+          ? failure.reason.message
+          : "Could not load your apps.";
+    loading = false;
   }
   async function save(input: ApplicationInput) {
     if (busy || (mode === "edit" && !selected)) return;
@@ -167,8 +272,9 @@
                 : "Manage credentials and settings for this app."}
         </p>
       </div>
-      {#if mode === "list"}<a class="button primary" href="/apps/new"
-          >＋ Create app</a
+      {#if mode === "list" && canCreate}<a
+          class="button primary"
+          href="/apps/new">＋ Create app</a
         >
       {/if}
     </header>
@@ -178,34 +284,55 @@
       </div>{/if}
     {#if notice}<p class="message" role="status">{notice}</p>{/if}
     {#if mode === "list"}
-      {#if loading}<div class="empty" role="status">Loading your apps…</div>
-      {:else if !error && apps.length === 0}<div class="empty">
-          <span class="symbol">&lt;/&gt;</span>
-          <h2>Your next idea starts here</h2>
-          <p>Register an app to get your Client ID and Client Secret.</p>
-          <a class="button primary" href="/apps/new">Create your first app</a><a
-            href="/?section=guides&guide=create-an-app"
-            >Read the app requirements →</a
-          >
-        </div>
-      {:else if apps.length > 0}<div class="app-grid">
-          {#each apps as app (app.id)}<a
-              class="app-card"
-              href={applicationUrl(app.id, app.name)}
-              ><div class="card-heading">
-                <span class="app-icon">&lt;/&gt;</span><span class="badge"
-                  >{app.approved ? "Approved" : "Pending approval"}</span
+      <div class="workspace">
+        <DeveloperRail {profile} {busy} onConnect={connect} onUnlink={unlink} />
+        {#if loading}<div class="empty" role="status">Loading your apps…</div>
+        {:else}<div class="app-grid">
+            {#each apps as app (app.id)}<a
+                class="app-card"
+                href={applicationUrl(app.id, app.name)}
+                ><div class="card-heading">
+                  <span class="app-icon">&lt;/&gt;</span><span class="badge"
+                    >{app.approved ? "Approved" : "Pending approval"}</span
+                  >
+                </div>
+                <h2>{app.name}</h2>
+                <p>{app.description || "No description yet."}</p>
+                <footer>
+                  <span
+                    >Created {new Date(
+                      app.created_at,
+                    ).toLocaleDateString()}</span
+                  ><span>Manage →</span>
+                </footer></a
+              >{/each}
+            {#if canCreate}<a class="create-tile" href="/apps/new"
+                ><span class="tile-mark" aria-hidden="true">＋</span><strong
+                  >{apps.length === 0
+                    ? "Create your first app"
+                    : "Create app"}</strong
+                >{#if apps.length === 0}<small
+                    >Register an app to get your Client ID and Client Secret.</small
+                  >{/if}</a
+              >{:else}<div class="create-tile locked">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  ><rect x="5" y="11" width="14" height="9" rx="2"></rect><path
+                    d="M8 11V8a4 4 0 0 1 8 0v3"
+                  ></path></svg
                 >
-              </div>
-              <h2>{app.name}</h2>
-              <p>{app.description || "No description yet."}</p>
-              <footer>
-                <span
-                  >Created {new Date(app.created_at).toLocaleDateString()}</span
-                ><span>Manage →</span>
-              </footer></a
-            >{/each}
-        </div>{/if}
+                <strong>Create app</strong><small>{createLock}</small>
+              </div>{/if}
+          </div>{/if}
+      </div>
     {:else if loading}
       <div class="empty" role="status">Loading app…</div>
     {:else if mode !== "new" && !selected && !error}
@@ -218,7 +345,7 @@
       <section class="panel">
         <ApplicationForm
           app={mode === "edit" ? selected : undefined}
-          {linkedGithubUsername}
+          githubUsername={profile?.github?.username ?? null}
           {busy}
           onSave={save}
           onCancel={() => {
@@ -410,6 +537,43 @@
   .breadcrumbs a {
     text-decoration: none;
   }
+  .workspace {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .create-tile {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 10px;
+    min-height: 200px;
+    padding: 24px;
+    border: 1px dashed var(--color-accent);
+    border-radius: var(--radius-control);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    text-align: center;
+    text-decoration: none;
+  }
+  .create-tile strong {
+    font-size: 15px;
+  }
+  .create-tile small {
+    color: var(--color-muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .tile-mark {
+    font-size: 24px;
+    line-height: 1;
+  }
+  .create-tile.locked {
+    border-color: var(--color-border-strong);
+    background: transparent;
+    color: var(--color-muted);
+  }
   .app-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -437,8 +601,7 @@
     min-height: 46px;
     overflow-wrap: anywhere;
   }
-  .app-icon,
-  .symbol {
+  .app-icon {
     font-family: var(--font-mono);
     color: var(--color-accent);
     font-size: 24px;
@@ -566,6 +729,11 @@
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
+  }
+  @media (max-width: 900px) {
+    .workspace {
+      grid-template-columns: 1fr;
+    }
   }
   @media (max-width: 700px) {
     .apps-page {

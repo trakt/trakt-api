@@ -56,4 +56,54 @@ describe('app management transport', () => {
     );
     await expect(saveApplication(0, input)).rejects.toThrow('app limit');
   });
+  it('maps a known error code to the portal copy', async () => {
+    vi.mocked(accessToken).mockResolvedValue('test-token');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        Response.json({ error: 'github_account_taken' }, { status: 403 }),
+      ),
+    );
+    await expect(saveApplication(0, input)).rejects.toThrow(
+      'already connected to another Trakt account',
+    );
+  });
+  it('never shows server text, even inside a JSON error', async () => {
+    vi.mocked(accessToken).mockResolvedValue('test-token');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        Response.json({ error: 'Application limit reached (5)' }, {
+          status: 403,
+        }),
+      ),
+    );
+    await expect(saveApplication(0, input)).rejects.toThrow(
+      'This account cannot perform this action',
+    );
+  });
+  it('ignores an error that is not a string', async () => {
+    vi.mocked(accessToken).mockResolvedValue('test-token');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        Response.json({ error: { secret: 'x' } }, { status: 400 }),
+      ),
+    );
+    await expect(saveApplication(0, input)).rejects.toThrow(
+      'Check your details',
+    );
+  });
+  it('falls back to the status copy for an unknown code', async () => {
+    vi.mocked(accessToken).mockResolvedValue('test-token');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        Response.json({ error: 'something_new' }, { status: 429 }),
+      ),
+    );
+    await expect(saveApplication(0, input)).rejects.toThrow(
+      'Too many requests',
+    );
+  });
 });

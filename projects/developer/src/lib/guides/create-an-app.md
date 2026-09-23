@@ -1,5 +1,5 @@
 ---
-updatedAt: 2026-09-22T00:00:00.000Z
+updatedAt: 2026-09-23T00:00:00.000Z
 ---
 
 # ✅ Create an App
@@ -8,8 +8,8 @@ To use the Trakt API, you'll first need to [**create a new API app**](/apps).
 
 Once done, you'll have everything you need to use the API (Client ID and Client Secret).
 
-Creating an app requires a verified GitHub account. You'll be asked to connect
-one before your app can be created.
+Creating an app requires a verified GitHub account. Connect it once from the
+Developer panel on My Apps, and every app you create afterwards uses it.
 
 By creating an app, you agree to the following terms:
 
