@@ -2,6 +2,7 @@
   import { applicationCrumb, applicationTitle } from "./applicationTitle.ts";
   import { applicationPermissionLabels } from "./applicationPermissionLabels.ts";
   import { applicationUrl } from "./applicationUrl.ts";
+  import { formatDate } from "./formatDate.ts";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
   import ApplicationForm from "./ApplicationForm.svelte";
@@ -352,11 +353,9 @@
                 <h2>{app.name}</h2>
                 <p>{app.description || "No description yet."}</p>
                 <footer>
-                  <span
-                    >Created {new Date(
-                      app.created_at,
-                    ).toLocaleDateString()}</span
-                  ><span>{readOnly ? "View →" : "Manage →"}</span>
+                  <span>Created {formatDate(app.created_at)}</span><span
+                    >{readOnly ? "View →" : "Manage →"}</span
+                  >
                 </footer></a
               >{/each}
           </div>{/if}
@@ -454,10 +453,10 @@
             <dt>Status</dt>
             <dd>{selected.approved ? "Approved" : "Pending approval"}</dd>
             <dt>Created</dt>
-            <dd>{new Date(selected.created_at).toLocaleDateString()}</dd>
+            <dd>{formatDate(selected.created_at)}</dd>
             {#if selected.approved_at}<dt>Approved</dt>
               <dd>
-                {new Date(selected.approved_at).toLocaleDateString()}
+                {formatDate(selected.approved_at)}
               </dd>{/if}
             <dt>Permissions</dt>
             <dd>
