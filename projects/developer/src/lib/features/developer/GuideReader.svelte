@@ -33,11 +33,12 @@
   const source = $derived(selectedSlug ? guides.get(selectedSlug) : undefined);
   const updated = $derived(guideUpdatedAt(source ?? ""));
   const markdown = $derived(
-    prepareGuideMarkdown(
-      source ?? "# Guide not found\n\nChoose a guide from Getting Started.",
+    prepareGuideMarkdown({
+      source:
+        source ?? "# Guide not found\n\nChoose a guide from Getting Started.",
       slugs,
-      endpoints.map((endpoint) => endpoint.operationId),
-    ),
+      operationIds: endpoints.map((endpoint) => endpoint.operationId),
+    }),
   );
   const html = $derived(renderMarkdown(markdown));
   const titleHtml = $derived(

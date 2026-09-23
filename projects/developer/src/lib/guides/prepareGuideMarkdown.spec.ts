@@ -14,11 +14,11 @@ describe('guide snapshots', () => {
   it('resolves known ReadMe operations locally and preserves other links', () => {
     const source = '[Token](https://docs.trakt.tv/reference/postoauthtoken) ' +
       '[Search](/reference/getsearchquery) [Auth](https://docs.trakt.tv/reference/auth)';
-    const html = renderMarkdown(prepareGuideMarkdown(
+    const html = renderMarkdown(prepareGuideMarkdown({
       source,
       slugs,
-      ['postOauthToken', 'getSearchQuery'],
-    ));
+      operationIds: ['postOauthToken', 'getSearchQuery'],
+    }));
 
     expect(html).toContain(
       'href="/?section=reference&amp;operation=postOauthToken"',
@@ -54,13 +54,13 @@ describe('guide snapshots', () => {
 
   it('renders plain Markdown guides and local links without export metadata', () => {
     for (const source of Object.values(files)) {
-      const html = renderMarkdown(prepareGuideMarkdown(source, slugs));
+      const html = renderMarkdown(prepareGuideMarkdown({ source, slugs }));
       expect(html).not.toContain('updatedAt:');
       expect(html).not.toContain('Fetch the complete documentation index');
     }
 
     const table = renderMarkdown(
-      prepareGuideMarkdown(files['./extended-info.md'], slugs),
+      prepareGuideMarkdown({ source: files['./extended-info.md'], slugs }),
     );
     expect(table).toContain('<table>');
     expect(table).toContain('<code>metadata</code>');
@@ -69,7 +69,7 @@ describe('guide snapshots', () => {
     );
 
     const app = renderMarkdown(
-      prepareGuideMarkdown(files['./create-an-app.md'], slugs),
+      prepareGuideMarkdown({ source: files['./create-an-app.md'], slugs }),
     );
     expect(app).toContain('href="/apps"');
   });

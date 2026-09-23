@@ -1,10 +1,14 @@
 import { operationLink } from '$lib/features/developer/operationLink.ts';
 
-export function prepareGuideMarkdown(
-  source: string,
-  slugs: ReadonlySet<string>,
-  operationIds: ReadonlyArray<string> = [],
-): string {
+export function prepareGuideMarkdown({
+  source,
+  slugs,
+  operationIds = [],
+}: {
+  source: string;
+  slugs: ReadonlySet<string>;
+  operationIds?: ReadonlyArray<string>;
+}): string {
   const operations = new Map(operationIds.map((id) => [id.toLowerCase(), id]));
   return source
     .replace(/^---\n[\s\S]*?\n---\n\s*/, '')
