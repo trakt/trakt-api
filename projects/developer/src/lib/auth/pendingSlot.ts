@@ -1,4 +1,4 @@
-import { isAccountSlot } from './accountSlots.ts';
+import { parseAccountSlot } from './parseAccountSlot.ts';
 
 const PENDING_SLOT_KEY = 'trakt-developer-pending-slot';
 
@@ -10,8 +10,5 @@ export function takePendingSlot(): number | null {
   const stored = globalThis.sessionStorage?.getItem(PENDING_SLOT_KEY) ?? null;
   globalThis.sessionStorage?.removeItem(PENDING_SLOT_KEY);
 
-  if (stored === null) return null;
-
-  const slot = Number(stored);
-  return isAccountSlot(slot) ? slot : null;
+  return parseAccountSlot(stored);
 }
