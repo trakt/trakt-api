@@ -387,7 +387,7 @@
     {:else if selected}
       <div class="detail-grid">
         <section class="panel">
-          {#each details as field}
+          {#each details as field (field.label)}
             <div class="credential">
               <strong>{field.label}</strong>
               <div class="credential-value">
@@ -415,7 +415,7 @@
             </div>
           {/each}
 
-          {#each credentials as field}
+          {#each credentials as field (field.label)}
             <div class="credential">
               <strong>{field.label}</strong>
               <div class="credential-value">

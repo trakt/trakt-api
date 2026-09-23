@@ -52,7 +52,7 @@
     {#each groups as group}
       <div class="guide-group">
         <h2>{group.title}</h2>
-        {#each group.items as item}
+        {#each group.items as item (item.slug)}
           <a
             href={`/?section=guides&guide=${item.slug}`}
             aria-current={selectedSlug === item.slug ? "page" : undefined}
