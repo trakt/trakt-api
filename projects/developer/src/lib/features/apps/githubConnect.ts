@@ -5,7 +5,7 @@ const INTENT_KEY = 'trakt-developer-github-intent';
 
 export type GithubConnectIntent = 'link' | 'switch';
 
-export type GithubConnectOutcome =
+type GithubConnectOutcome =
   | { status: 'connected'; code: string; allowSwitch: boolean }
   | { status: 'denied' }
   | { status: 'invalid' };

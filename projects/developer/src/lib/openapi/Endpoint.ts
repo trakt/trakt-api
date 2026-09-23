@@ -8,7 +8,7 @@ export type EndpointRequestBody = {
   example: string;
 };
 
-export type EndpointResponse = {
+type EndpointResponse = {
   status: string;
   description: string;
   contentType: string;

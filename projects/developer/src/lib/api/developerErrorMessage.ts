@@ -24,7 +24,7 @@ const DEVELOPER_ERROR_MESSAGES = {
     'Your Trakt account is connected to a different GitHub account. Use Switch GitHub account to change it.',
 } as const;
 
-export type DeveloperErrorCode = keyof typeof DEVELOPER_ERROR_MESSAGES;
+type DeveloperErrorCode = keyof typeof DEVELOPER_ERROR_MESSAGES;
 
 export function developerErrorMessage(code: unknown): string | null {
   return typeof code === 'string' &&

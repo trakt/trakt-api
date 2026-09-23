@@ -1,4 +1,4 @@
-export type JsonToken = {
+type JsonToken = {
   type: 'key' | 'string' | 'number' | 'boolean' | 'null' | 'plain';
   value: string;
 };
