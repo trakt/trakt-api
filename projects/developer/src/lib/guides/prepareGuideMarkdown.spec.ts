@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderMarkdown } from '../markdown/renderMarkdown.ts';
+import { renderMarkdown } from '$lib/markdown/renderMarkdown.ts';
 import { prepareGuideMarkdown } from './prepareGuideMarkdown.ts';
 import { parseGuideContents } from './parseGuideContents.ts';
 
