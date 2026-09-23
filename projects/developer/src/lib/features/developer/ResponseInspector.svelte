@@ -2,6 +2,7 @@
   import type { ResponseInspectorProps } from "./ResponseInspectorProps.ts";
   import { getHttpStatusMeaning } from "./getHttpStatusMeaning.ts";
   import { tokenizeJson } from "./tokenizeJson.ts";
+  import JsonHighlight from "./JsonHighlight.svelte";
 
   type DetailTab = "body" | "headers";
   type ExpectedBodyMode = "all" | "required";
@@ -321,10 +322,9 @@
 
       {#if selectedBody}
         {#if selectedIsJson}
-          <pre
-            class="is-json">{#each selectedJsonTokens as token}{#if token.type === "plain"}{token.value}{:else}<span
-                  data-json-token={token.type}>{token.value}</span
-                >{/if}{/each}</pre>
+          <pre class="is-json"><JsonHighlight
+              tokens={selectedJsonTokens}
+            /></pre>
         {:else}
           <pre>{selectedBody}</pre>
         {/if}
@@ -605,26 +605,6 @@
 
     pre.is-json {
       color: var(--color-muted);
-    }
-
-    pre [data-json-token="key"] {
-      color: var(--purple-400);
-    }
-
-    pre [data-json-token="string"] {
-      color: var(--color-get);
-    }
-
-    pre [data-json-token="number"] {
-      color: var(--yellow-400);
-    }
-
-    pre [data-json-token="boolean"] {
-      color: var(--color-post);
-    }
-
-    pre [data-json-token="null"] {
-      color: var(--color-delete);
     }
 
     .response-headers {
