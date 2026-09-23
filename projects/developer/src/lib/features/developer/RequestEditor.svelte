@@ -3,20 +3,16 @@
   import JsonHighlight from "./JsonHighlight.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { tick } from "svelte";
-  import type {
-    RequestEditorProps,
-    RequestEditorTab,
-  } from "./RequestEditorProps.ts";
+  import type { RequestEditorProps } from "./RequestEditorProps.ts";
+  import type { RequestEditorTab } from "./RequestEditorTab.ts";
   import { renderMarkdown } from "$lib/markdown/renderMarkdown.ts";
-  import {
-    formatCurlRequest,
-    formatRequestLine,
-  } from "./formatCopiedRequest.ts";
+  import { formatCurlRequest } from "./formatCurlRequest.ts";
+  import { formatRequestLine } from "./formatRequestLine.ts";
   import { MANAGED_AUTHORIZATION_HEADER_ID } from "$lib/api/MANAGED_AUTHORIZATION_HEADER_ID.ts";
   import { dismissOnOutsideInteraction } from "./dismissOnOutsideInteraction.ts";
   import { hasInvalidJsonBody } from "./hasInvalidJsonBody.ts";
   import { invalidParameterIds } from "./invalidParameterIds.ts";
-  import { missingRequiredParameterIds } from "./hasMissingRequiredParameters.ts";
+  import { missingRequiredParameterIds } from "./missingRequiredParameterIds.ts";
   import { tokenizeJson } from "./tokenizeJson.ts";
 
   const {

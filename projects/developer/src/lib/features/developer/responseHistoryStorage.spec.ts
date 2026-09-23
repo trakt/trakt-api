@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ResponseHistoryEntry } from './ResponseHistoryEntry.ts';
-import {
-  loadResponseHistory,
-  saveResponseHistory,
-} from './responseHistoryStorage.ts';
+import { loadResponseHistory } from './loadResponseHistory.ts';
+import { saveResponseHistory } from './saveResponseHistory.ts';
 
 function memoryStorage(): Storage {
   const values = new Map<string, string>();

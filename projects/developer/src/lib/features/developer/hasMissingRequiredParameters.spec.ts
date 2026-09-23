@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { seedCatalog } from '$lib/openapi/seedCatalog.ts';
-import {
-  hasMissingRequiredParameters,
-  missingRequiredParameterIds,
-} from './hasMissingRequiredParameters.ts';
+import { hasMissingRequiredParameters } from './hasMissingRequiredParameters.ts';
+import { missingRequiredParameterIds } from './missingRequiredParameterIds.ts';
 
 describe('hasMissingRequiredParameters', () => {
   it('should report an empty required path parameter', () => {

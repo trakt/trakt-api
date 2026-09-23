@@ -1,0 +1,17 @@
+export const SENSITIVE_FIELD_NAMES = new Set([
+  'access_token',
+  'api_key',
+  'authorization',
+  'client_id',
+  'client_secret',
+  'code',
+  'cookie',
+  'device_code',
+  'password',
+  'proxy_authorization',
+  'refresh_token',
+  'secret',
+  'set_cookie',
+  'token',
+  'trakt_api_key',
+]);

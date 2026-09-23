@@ -1,7 +1,6 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
-
-export type RequestEditorTab = 'params' | 'headers' | 'body';
+import type { RequestEditorTab } from './RequestEditorTab.ts';
 
 export type RequestEditorProps = {
   endpoint: Endpoint;
