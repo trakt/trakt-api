@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { seedCatalog } from '$lib/openapi/seedCatalog.ts';
-import {
-  decodeRequestUrlState,
-  encodeRequestUrlState,
-} from './requestUrlState.ts';
+import { decodeRequestUrlState } from './decodeRequestUrlState.ts';
+import { encodeRequestUrlState } from './encodeRequestUrlState.ts';
 
 describe('requestUrlState', () => {
   it('should round-trip a shareable request configuration', () => {

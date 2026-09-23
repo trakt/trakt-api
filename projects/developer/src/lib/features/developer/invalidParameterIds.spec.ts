@@ -1,10 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
 import { seedCatalog } from '$lib/openapi/seedCatalog.ts';
-import {
-  hasInvalidParameterValues,
-  invalidParameterIds,
-} from './invalidParameterIds.ts';
+import { hasInvalidParameterValues } from './hasInvalidParameterValues.ts';
+import { invalidParameterIds } from './invalidParameterIds.ts';
 
 const baseEndpoint = seedCatalog.endpoints.at(0);
 if (!baseEndpoint) throw new Error('Missing seed endpoint.');
