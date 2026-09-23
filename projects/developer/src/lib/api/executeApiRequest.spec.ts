@@ -19,7 +19,9 @@ function respondWith(body: string, init?: ResponseInit) {
 }
 
 function sentHeaders(fetch: ReturnType<typeof vi.fn>): Headers {
-  return fetch.mock.calls[0]![1].headers as Headers;
+  const call = fetch.mock.calls.at(0);
+  if (!call) throw new Error('fetch was not called');
+  return call[1].headers as Headers;
 }
 
 beforeEach(() => vi.mocked(accessToken).mockResolvedValue('token-value'));

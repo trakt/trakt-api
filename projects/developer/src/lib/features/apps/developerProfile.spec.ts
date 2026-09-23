@@ -30,7 +30,9 @@ describe('developer profile transport', () => {
     vi.stubGlobal('fetch', fetcher);
 
     await expect(getDeveloperProfile(2)).resolves.toEqual(profile);
-    expect(fetcher.mock.calls[0]![0]).toBe(
+    const call = fetcher.mock.calls.at(0);
+    if (!call) throw new Error('fetch was not called');
+    expect(call[0]).toBe(
       'https://api.trakt.tv/v3/users/me/developer',
     );
     expect(accessToken).toHaveBeenCalledWith(2);
@@ -77,7 +79,9 @@ describe('developer profile transport', () => {
         ['https://api.trakt.tv/v3/users/me/developer/github', 'DELETE'],
       ],
     );
-    expect(JSON.parse(fetcher.mock.calls[0]![1].body)).toEqual({
+    const linkCall = fetcher.mock.calls.at(0);
+    if (!linkCall) throw new Error('fetch was not called');
+    expect(JSON.parse(linkCall[1].body)).toEqual({
       code: 'abc',
       switch: true,
     });
