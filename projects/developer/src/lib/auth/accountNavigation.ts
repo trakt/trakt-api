@@ -1,13 +1,12 @@
-import { isAccountSlot } from './accountSlots.ts';
+import { parseAccountSlot } from './parseAccountSlot.ts';
 
 const ACTIVE_SLOT = 'trakt-developer-active-slot';
 const RETURN_SECTION = 'trakt-developer-return-section';
 
 export function selectedSlot(): number | null {
-  const value = globalThis.sessionStorage?.getItem(ACTIVE_SLOT);
-  if (value == null) return null;
-  const slot = Number(value);
-  return isAccountSlot(slot) ? slot : null;
+  return parseAccountSlot(
+    globalThis.sessionStorage?.getItem(ACTIVE_SLOT) ?? null,
+  );
 }
 
 export function rememberSlot(slot: number): void {
