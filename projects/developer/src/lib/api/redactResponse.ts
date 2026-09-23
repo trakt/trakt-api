@@ -1,13 +1,5 @@
-const REDACTED = '[REDACTED]';
-
-const SENSITIVE_NAME =
-  /^(?:authorization|proxyauthorization|cookie|setcookie|apikey|traktapikey|clientid|clientsecret|accesstoken|refreshtoken|idtoken|token|secret|password|devicecode|code)$/i;
-
-function isSensitiveName(name: string): boolean {
-  const compact = name.replaceAll(/[^a-z0-9]/gi, '');
-  return SENSITIVE_NAME.test(compact) ||
-    /(?:token|secret|apikey|password)$/i.test(compact);
-}
+import { isSensitiveName } from './isSensitiveName.ts';
+import { REDACTED } from './REDACTED.ts';
 
 export function redactResponse({
   body,

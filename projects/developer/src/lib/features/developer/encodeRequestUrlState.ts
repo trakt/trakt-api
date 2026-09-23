@@ -2,7 +2,7 @@ import type { ApiHeader } from '$lib/api/ApiHeader.ts';
 import type { Endpoint } from '$lib/openapi/Endpoint.ts';
 import { FRAGMENT_VERSION } from './FRAGMENT_VERSION.ts';
 import { HEADER_PREFIX } from './HEADER_PREFIX.ts';
-import { isSensitiveFieldName } from './isSensitiveFieldName.ts';
+import { isSensitiveName } from '$lib/api/isSensitiveName.ts';
 import { PARAMETER_PREFIX } from './PARAMETER_PREFIX.ts';
 import type { RequestEditorTab } from './RequestEditorTab.ts';
 import { safeHeaders } from './safeHeaders.ts';
@@ -17,7 +17,7 @@ function safeValues({
 }): Readonly<Record<string, string>> {
   return Object.fromEntries(
     endpoint.parameters
-      .filter((parameter) => !isSensitiveFieldName(parameter.name))
+      .filter((parameter) => !isSensitiveName(parameter.name))
       .map((parameter) => [parameter.id, values[parameter.id] ?? '']),
   );
 }

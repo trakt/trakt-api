@@ -52,9 +52,45 @@ describe('responseHistoryStorage', () => {
 
     expect(restored?.request.url).not.toContain('temporary-code');
     expect(restored?.response.body).not.toContain('secret-token');
-    expect(restored?.response.body).toContain('[redacted]');
+    expect(restored?.response.body).toContain('[REDACTED]');
     expect(JSON.stringify(restored)).not.toMatch(
       /query-id|underscore-id|hyphen-id|camel-id/,
     );
+  });
+
+  it('should redact the same names as every other redaction site', () => {
+    const storage = memoryStorage();
+    const entry: ResponseHistoryEntry = {
+      id: 'response-2',
+      endpointId: 'usersSettings',
+      sequence: 2,
+      receivedAt: '2026-09-01T08:00:00.000Z',
+      request: {
+        method: 'GET',
+        url: 'https://api.trakt.tv/users/settings?api_key=query-key',
+      },
+      response: {
+        status: 200,
+        statusText: 'OK',
+        durationMs: 42,
+        size: 128,
+        headers: [],
+        body: JSON.stringify({
+          api_key: 'body-key',
+          cookie: 'body-cookie',
+          id_token: 'body-id-token',
+          title: 'TRON',
+        }),
+        isJson: true,
+      },
+    };
+
+    saveResponseHistory({ storage, entries: [entry] });
+    const restored = loadResponseHistory(storage).at(0);
+
+    expect(JSON.stringify(restored)).not.toMatch(
+      /query-key|body-key|body-cookie|body-id-token/,
+    );
+    expect(restored?.response.body).toContain('TRON');
   });
 });

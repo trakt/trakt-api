@@ -1,7 +1,7 @@
 import type { ApiHeader } from '$lib/api/ApiHeader.ts';
 import type { HttpMethod } from '$lib/openapi/HttpMethod.ts';
-import { isSensitiveName } from './isSensitiveName.ts';
-import { REDACTED } from './REDACTED.ts';
+import { isSensitiveName } from '$lib/api/isSensitiveName.ts';
+import { REDACTED } from '$lib/api/REDACTED.ts';
 import { redactUrl } from './redactUrl.ts';
 
 function redactHeaderValue(name: string, value: string): string {
