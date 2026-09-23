@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { avatarUrl } from "$lib/auth/avatarUrl.ts";
   import {
     MANAGED_AUTHORIZATION_HEADER_ID,
     parameterHeaderId,
@@ -10,7 +9,7 @@
   import { rememberSlot, selectedSlot } from "$lib/auth/accountNavigation.ts";
   import { setPortalSession } from "$lib/auth/portalSession.ts";
   import type { Snippet } from "svelte";
-  import { accountRequest } from "$lib/api/accountRequest.ts";
+  import { fetchAccountProfile } from "$lib/api/fetchAccountProfile.ts";
   import GuideReader from "./GuideReader.svelte";
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
@@ -122,14 +121,11 @@
     vip = null;
     let current = true;
     if (slot !== null)
-      void accountRequest({ slot, path: "/users/settings" })
-        .then((response) => response.json())
-        .then((settings) => {
-          if (!current) return;
-          vip = settings.user?.vip === true || settings.user?.vip_ep === true;
-          avatar = avatarUrl(settings.user?.images?.avatar?.full);
-        })
-        .catch(() => {});
+      void fetchAccountProfile(slot).then((profile) => {
+        if (!current || !profile) return;
+        vip = profile.vip;
+        avatar = profile.avatar;
+      });
     return () => {
       current = false;
     };
