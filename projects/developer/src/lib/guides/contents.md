@@ -38,6 +38,7 @@
 ## Access and accounts
 
 - [VIP Methods](/?section=guides&guide=vip-methods)
+- [User Account Limits](/?section=guides&guide=user-account-limits)
 - [Limited Access](/?section=guides&guide=limted-access)
 - [Locked User Account](/?section=guides&guide=locked-user-account)
 

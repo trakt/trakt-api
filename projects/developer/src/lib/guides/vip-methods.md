@@ -1,19 +1,15 @@
 ---
-updatedAt: 2026-07-17T07:57:30.000Z
+updatedAt: 2026-09-24T00:00:00.000Z
 ---
 
 # VIP Methods
 
-Some API methods are tagged 🔥 **VIP Only**. A `426` HTTP status code is returned when the user isn't a VIP, indicating they need to sign up for [**Trakt VIP**](https://app.trakt.tv/vip) in order to use this method. In your app, please open a browser to `X-Upgrade-URL` so the user can sign up for Trakt VIP.
+## 🔥 VIP Only
 
-| Header          | Value                  |
-| --------------- | ---------------------- |
-| `X-Upgrade-URL` | `https://trakt.tv/vip` |
+Methods tagged **🔥 VIP Only** return `426` when the user needs VIP. Offer an upgrade action using `X-Upgrade-URL`, or [Trakt VIP](https://app.trakt.tv/vip) if the header is absent. Refresh settings when the user returns.
 
-Some API methods are tagged 🔥 **VIP Enhanced**. A `420` HTTP status code is returned when the user has exceeded their account limit. Signing up for [**Trakt VIP**](https://app.trakt.tv/vip) will increase these limits. If the user isn't a VIP, please open a browser to `X-Upgrade-URL` so the user can sign up for Trakt VIP. If they are already VIP and still exceeded the limit, please display a message indicating this.
+## 🔥 VIP Enhanced
 
-| Header            | Value                  |
-| ----------------- | ---------------------- |
-| `X-Upgrade-URL`   | `https://trakt.tv/vip` |
-| `X-VIP-User`      | `true` or `false`      |
-| `X-Account-Limit` | Limit allowed.         |
+Methods tagged **🔥 VIP Enhanced** offer higher allowances or additional capabilities with VIP. Offer an upgrade when it raises the relevant allowance; otherwise, explain how to make room.
+
+See [User Account Limits](/?section=guides&guide=user-account-limits) for reading account allowances and handling `420` responses.
