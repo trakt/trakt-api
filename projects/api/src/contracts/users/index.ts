@@ -410,13 +410,16 @@ Returns recent activity for a user social graph. Use \`type\` to choose \`friend
   },
   stats: {
     summary: 'Get stats',
-    description: `#### 🔓 OAuth Optional
-Returns stats about the movies, shows, and episodes a user has watched, collected, and rated.`,
+    description: `#### 🔥 VIP Only 🔓 OAuth Optional
+Returns stats about the movies, shows, and episodes a user has watched, collected, and rated.
+
+Stats are precomputed for VIP users only. Returns \`204 No Content\` when no precomputed stats are available.`,
     path: '/stats',
     pathParams: profileParamsSchema,
     method: 'GET',
     responses: {
       200: userStatsResponseSchema,
+      204: z.undefined(),
     },
   },
   comments: {
