@@ -1,6 +1,11 @@
+import { accountSessionErrors } from './accountSessionErrors.ts';
+import { createAccessTokenProvider } from './createAccessTokenProvider.ts';
 import { userManager } from './userManager.ts';
+import { withAccountLock } from './withAccountLock.ts';
 
-export async function accessToken(slot: number): Promise<string | null> {
-  const user = await userManager(slot).getUser().catch(() => null);
-  return user?.access_token ?? null;
-}
+export const accessToken = createAccessTokenProvider({
+  manager: userManager,
+  onSessionError: accountSessionErrors.mark,
+  lock: withAccountLock,
+  storage: () => globalThis.localStorage,
+});

@@ -3,5 +3,6 @@ export type DeveloperAccount = {
   username: string;
   expiresAt: number;
   isExpired: boolean;
+  hasSessionError: boolean;
   source: 'developer-oauth';
 };

@@ -1,4 +1,5 @@
 import { PUBLIC_TRAKT_CLIENT_ID } from '$env/static/public';
+import { markRejectedSession } from '$lib/auth/markRejectedSession.ts';
 import { accessToken } from '$lib/auth/accessToken.ts';
 import type { ApiExecutionRequest } from './ApiExecutionRequest.ts';
 import type { ApiExecutionResponse } from './ApiExecutionResponse.ts';
@@ -102,6 +103,10 @@ export async function executeApiRequest(
 
   if (!response) {
     throw new Error('The Trakt API request could not be completed.');
+  }
+
+  if (response.status === 401 && slot !== null && token) {
+    await markRejectedSession({ slot, accessToken: token });
   }
 
   const text = await response.text();

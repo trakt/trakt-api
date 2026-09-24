@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { AUTH_REQUEST_TIMEOUT_SECONDS } from './AUTH_REQUEST_TIMEOUT_SECONDS.ts';
 import { traktHeaders } from '$lib/api/traktHeaders.ts';
 import { fallbackUsername } from './fallbackUsername.ts';
 
@@ -15,6 +16,7 @@ export async function resolveUsername({
 }): Promise<string> {
   const response = await fetch('https://api.trakt.tv/users/settings', {
     headers: traktHeaders({ accessToken }),
+    signal: AbortSignal.timeout(AUTH_REQUEST_TIMEOUT_SECONDS * 1000),
   }).catch(() => null);
 
   if (!response?.ok) return fallbackUsername(slot);

@@ -1,6 +1,6 @@
 const DEVELOPER_ERROR_MESSAGES = {
   authentication_required:
-    'Your session has expired. Refresh your account or sign in again.',
+    'Your session is no longer valid. Sign in again from the account menu.',
   invalid_request_body:
     'The request could not be accepted. Check your details and try again.',
   invalid_application_id: 'This app could not be found. Reload your apps.',

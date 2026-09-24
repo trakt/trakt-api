@@ -1,9 +1,7 @@
 <script lang="ts">
   import { DEFAULT_AVATAR } from "$lib/auth/DEFAULT_AVATAR.ts";
-  import LoadingSpinner from "./LoadingSpinner.svelte";
-  import { formatTokenValidity } from "./formatTokenValidity.ts";
   import { onMount } from "svelte";
-  import { mutateAccount } from "$lib/api/mutateAccount.ts";
+  import { signOutAccount } from "$lib/auth/signOutAccount.ts";
   import { signInAccount } from "$lib/auth/signInAccount.ts";
   import type { AccountMenuProps } from "./AccountMenuProps.ts";
 
@@ -12,7 +10,6 @@
     accounts,
     selectedSlot,
     onAccount,
-    onAccountsChanged,
     onLogout,
   }: AccountMenuProps = $props();
 
@@ -22,10 +19,8 @@
   const avatarKey = $derived(`${selectedSlot}:${avatarSource}`);
   let selectorElement: HTMLDivElement;
   let isWorking = $state(false);
-  let refreshingSlot = $state<number | null>(null);
   let errors = $state<Record<number, string>>({});
   let connectError = $state("");
-  let refreshFailures = $state<Record<number, boolean>>({});
   let now = $state(Date.now());
   onMount(() => {
     const timer = setInterval(() => {
@@ -34,15 +29,15 @@
     return () => clearInterval(timer);
   });
 
-  function tokenStatus(slot: number, expiresAt: number) {
-    if (refreshFailures[slot]) return "error";
+  function tokenStatus(expiresAt: number, hasSessionError = false) {
+    if (hasSessionError) return "error";
     return expiresAt * 1000 > now ? "valid" : "expired";
   }
 
   const statusLabels = {
-    valid: "Access token has not expired",
-    expired: "Access token expired; refresh required",
-    error: "Access token refresh failed",
+    error: "Sign in again to reconnect this account",
+    valid: "Session active",
+    expired: "Session expired; automatic reconnection required",
   };
   const nextSlot = $derived(
     Array.from({ length: 5 }, (_, slot) => slot).find(
@@ -68,36 +63,23 @@
     }
   }
 
-  async function updateAccount(slot: number, method: "POST" | "DELETE") {
+  async function logOut(slot: number) {
     if (isWorking) return;
     isWorking = true;
-    refreshingSlot = method === "POST" ? slot : null;
     errors[slot] = "";
     try {
-      await mutateAccount(slot, method);
-      if (method === "DELETE") {
-        onLogout(slot);
-        return;
-      }
-
-      refreshFailures[slot] = false;
-      await onAccountsChanged();
-      now = Date.now();
-    } catch (error) {
-      errors[slot] =
-        error instanceof Error
-          ? error.message
-          : "Could not update account. Try again.";
-      if (method === "POST") refreshFailures[slot] = true;
+      await signOutAccount(slot);
+      onLogout(slot);
+    } catch {
+      errors[slot] = "Could not log out. Try again.";
     } finally {
       isWorking = false;
-      refreshingSlot = null;
     }
   }
 </script>
 
-{#snippet statusDot(slot: number, expiresAt: number)}
-  {@const status = tokenStatus(slot, expiresAt)}
+{#snippet statusDot(expiresAt: number, hasSessionError = false)}
+  {@const status = tokenStatus(expiresAt, hasSessionError)}
   <span
     class="status-dot"
     data-status={status}
@@ -152,7 +134,10 @@
     <div class="environment-menu" role="dialog" aria-label="Trakt accounts">
       <div class="menu-heading">
         <strong>Trakt accounts</strong>
-        <span>One account selection across the developer portal.</span>
+        <span
+          >Connect your Trakt user account to test requests and manage your
+          apps.</span
+        >
       </div>
 
       {#if connectedAccounts.length > 0}
@@ -167,53 +152,32 @@
                 aria-pressed={account.slot === selectedSlot}
                 onclick={() => onAccount(account.slot)}
               >
-                {@render statusDot(account.slot, account.expiresAt)}
+                {@render statusDot(account.expiresAt, account.hasSessionError)}
                 <span>@{account.username}</span>
                 {#if account.slot === selectedSlot}<span aria-hidden="true"
                     >✓</span
                   >{/if}
               </button>
               <div class="account-actions">
-                <span class="token-info">
-                  <button
-                    type="button"
-                    class="info-button"
-                    aria-label={`Access token validity for @${account.username}`}
-                    aria-describedby={`token-validity-${account.slot}`}
-                    >i</button
-                  >
-                  <span
-                    class="token-tooltip"
-                    role="tooltip"
-                    id={`token-validity-${account.slot}`}
-                  >
-                    Access token: {formatTokenValidity(account.expiresAt, now)}
-                    {#if account.expiresAt * 1000 > now}
-                      remaining{/if}
-                  </span>
-                </span>
                 <button
                   type="button"
-                  aria-label={`${refreshingSlot === account.slot ? "Refreshing" : "Refresh"} @${account.username}`}
-                  aria-busy={refreshingSlot === account.slot}
+                  aria-label={`${account.hasSessionError ? "Sign in again as" : "Log out"} @${account.username}`}
                   disabled={isWorking}
-                  onclick={() => updateAccount(account.slot, "POST")}
-                >
-                  {#if refreshingSlot === account.slot}
-                    <LoadingSpinner />
-                  {:else}
-                    ↻
-                  {/if}
-                </button>
-                <button
-                  type="button"
-                  aria-label={`Log out @${account.username}`}
-                  disabled={isWorking}
-                  onclick={() => updateAccount(account.slot, "DELETE")}
-                  >Log out</button
+                  onclick={() =>
+                    account.hasSessionError
+                      ? connectAccount(account.slot)
+                      : logOut(account.slot)}
+                  >{account.hasSessionError
+                    ? "Sign in again"
+                    : "Log out"}</button
                 >
               </div>
             </div>
+            {#if account.hasSessionError}
+              <p class="session-notice">
+                We couldn’t reconnect this account. Sign in again to continue.
+              </p>
+            {/if}
             {#if errors[account.slot]}<p class="account-error" role="alert">
                 {errors[account.slot]}
               </p>{/if}
@@ -372,6 +336,13 @@
       border-color: var(--color-border-strong);
     }
 
+    .session-notice {
+      margin: 0;
+      padding-inline: var(--ni-8);
+      color: var(--color-muted);
+      font-size: var(--ni-11);
+    }
+
     .account-error {
       margin: 0 0 8px;
       color: var(--color-danger);
@@ -405,37 +376,6 @@
     .account-actions {
       display: flex;
       padding-inline-start: 8px;
-    }
-
-    .token-info {
-      position: relative;
-      display: inline-flex;
-    }
-
-    .token-tooltip {
-      position: absolute;
-      z-index: 1;
-      inset-block-end: calc(100% + var(--ni-8));
-      inset-inline-end: 0;
-
-      width: max-content;
-      max-width: 230px;
-      padding: 7px 9px;
-      border: var(--ni-1) solid var(--color-border-strong);
-      border-radius: var(--radius-control);
-
-      background: var(--color-surface);
-      color: var(--color-foreground);
-      box-shadow: var(--shadow-popover);
-      font-size: var(--ni-11);
-
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    .token-info:hover .token-tooltip,
-    .token-info:focus-within .token-tooltip {
-      visibility: visible;
     }
 
     .account-actions button {
