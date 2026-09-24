@@ -1,5 +1,5 @@
 ---
-updatedAt: 2026-05-19T09:15:22.000Z
+updatedAt: 2026-09-24T00:00:00.000Z
 ---
 
 # Status Codes
@@ -18,10 +18,10 @@ The API will respond with one of the following HTTP status codes.
 | `405` | Method Not Found - *method doesn't exist*                    |
 | `409` | Conflict - *resource already created*                        |
 | `412` | Precondition Failed - *use application/json content type*    |
-| `420` | Account Limit Exceeded - *list count, item count, etc*       |
+| `420` | [Account Limit Exceeded](/?section=guides&guide=user-account-limits) - *list count, item count, etc* |
 | `422` | Unprocessable Entity - *validation errors*                   |
 | `423` | Locked User Account - *have the user contact support*        |
-| `426` | VIP Only - *user must upgrade to VIP*                        |
+| `426` | [VIP Only](/?section=guides&guide=vip-methods) - *user must upgrade to VIP* |
 | `429` | Rate Limit Exceeded                                          |
 | `500` | Server Error - *please open a support ticket*                |
 | `502` | Service Unavailable - *server overloaded (try again in 30s)* |
