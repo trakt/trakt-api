@@ -28,6 +28,17 @@ beforeEach(() => vi.mocked(accessToken).mockResolvedValue('token-value'));
 afterEach(() => vi.unstubAllGlobals());
 
 describe('execute api request', () => {
+  it('does not send a request when token refresh fails', async () => {
+    const fetch = respondWith('[]');
+    vi.mocked(accessToken).mockRejectedValueOnce(
+      new Error('Refresh unavailable'),
+    );
+
+    await expect(executeApiRequest({ ...BASE, accountSlot: 1 }))
+      .rejects.toThrow('Refresh unavailable');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('sends the public client id and api version', async () => {
     const fetch = respondWith('[]');
     await executeApiRequest(BASE);
