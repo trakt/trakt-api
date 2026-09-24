@@ -6,5 +6,4 @@ export type AccountMenuProps = {
   selectedSlot: number | null;
   onAccount: (slot: number) => void;
   onLogout: (slot: number) => void;
-  onAccountsChanged: () => Promise<void>;
 };

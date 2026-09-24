@@ -12,6 +12,7 @@
   import GuideReader from "./GuideReader.svelte";
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
+  import { observeAccountChanges } from "$lib/auth/observeAccountChanges.ts";
   import { fetchAccounts } from "$lib/api/fetchAccounts.ts";
   import type { DeveloperAccount } from "$lib/api/DeveloperAccount.ts";
   import type { Endpoint } from "$lib/openapi/Endpoint.ts";
@@ -559,12 +560,14 @@
 
     globalThis.addEventListener("keydown", focusSearch);
     globalThis.addEventListener("focus", refreshAccounts);
-    globalThis.addEventListener("storage", refreshAccounts);
+    const stopObservingAccounts = observeAccountChanges(() => {
+      void refreshAccounts();
+    });
     void Promise.all([loadCatalog(sharedState), refreshAccounts()]);
     return () => {
       globalThis.removeEventListener("keydown", focusSearch);
       globalThis.removeEventListener("focus", refreshAccounts);
-      globalThis.removeEventListener("storage", refreshAccounts);
+      stopObservingAccounts();
     };
   });
 </script>
@@ -605,7 +608,6 @@
         selectedSlot={selectedAccountSlot}
         onAccount={setSelectedAccount}
         onLogout={logOutAccount}
-        onAccountsChanged={refreshAccounts}
       />
     </div>
   </header>

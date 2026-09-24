@@ -1,6 +1,7 @@
 import { rememberSlot } from './rememberSlot.ts';
 import { takePendingSlot } from './takePendingSlot.ts';
 import { storeUsername } from './storeUsername.ts';
+import { withAccountLock } from './withAccountLock.ts';
 import { userManager } from './userManager.ts';
 
 export async function completeSignIn(): Promise<void> {
@@ -10,7 +11,9 @@ export async function completeSignIn(): Promise<void> {
     throw new Error('This sign-in could not be matched to an account.');
   }
 
-  const user = await userManager(slot).signinRedirectCallback();
-  await storeUsername(slot, user.access_token);
+  await withAccountLock(slot, async () => {
+    const user = await userManager(slot).signinRedirectCallback();
+    await storeUsername(slot, user.access_token);
+  });
   rememberSlot(slot);
 }
