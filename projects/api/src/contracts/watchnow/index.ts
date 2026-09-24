@@ -3,6 +3,7 @@ import { z } from '../_internal/z.ts';
 import {
   watchNowSourceResponseSchema,
   watchNowSourcesResponseSchema,
+  watchNowSourceTypeSchema,
 } from './schema/response/watchNowSourcesResponseSchema.ts';
 
 /** ts-rest contract for the `watchnow` endpoints. */
@@ -36,7 +37,14 @@ export const watchnow = builder.router({
   pathPrefix: '/watchnow',
 });
 
-export { watchNowSourceResponseSchema, watchNowSourcesResponseSchema };
+export {
+  watchNowSourceResponseSchema,
+  watchNowSourcesResponseSchema,
+  watchNowSourceTypeSchema,
+};
+
+/** The primary offer type of a watch now source. */
+export type WatchNowSourceType = z.infer<typeof watchNowSourceTypeSchema>;
 
 /** The watch now sources response payload. */
 export type WatchNowSourcesResponse = z.infer<
