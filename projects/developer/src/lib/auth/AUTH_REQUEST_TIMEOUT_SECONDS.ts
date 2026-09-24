@@ -1,0 +1,1 @@
+export const AUTH_REQUEST_TIMEOUT_SECONDS = 15;

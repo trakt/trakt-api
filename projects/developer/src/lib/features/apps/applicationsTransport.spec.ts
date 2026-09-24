@@ -17,6 +17,39 @@ afterEach(() => {
 const input = { name: 'Test', redirect_uri: ['test://callback'], origins: [] };
 
 describe('app management transport', () => {
+  it('waits for a refreshed token before sending a mutation', async () => {
+    let finish: (token: string) => void = () => {};
+    vi.mocked(accessToken).mockReturnValueOnce(
+      new Promise<string>((resolve) => {
+        finish = resolve;
+      }),
+    );
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response(null, { status: 204 }),
+    );
+    vi.stubGlobal('fetch', fetcher);
+
+    const request = deleteApplication(2, 42);
+    expect(fetcher).not.toHaveBeenCalled();
+    finish('refreshed-token');
+    await request;
+    expect(fetcher.mock.calls.at(0)?.[1].headers.get('authorization'))
+      .toBe('Bearer refreshed-token');
+  });
+
+  it('does not send a mutation when token refresh fails', async () => {
+    vi.mocked(accessToken).mockRejectedValueOnce(
+      new Error('Refresh unavailable'),
+    );
+    const fetcher = vi.fn();
+    vi.stubGlobal('fetch', fetcher);
+
+    await expect(deleteApplication(2, 42)).rejects.toThrow(
+      'Refresh unavailable',
+    );
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
   it('never sends an anonymous management request', async () => {
     vi.mocked(accessToken).mockResolvedValue(null);
     const fetcher = vi.fn();

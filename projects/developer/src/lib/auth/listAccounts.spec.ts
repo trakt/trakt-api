@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { accountSessionErrors } from './accountSessionErrors.ts';
 import { listAccounts } from './listAccounts.ts';
 import { userManager } from './userManager.ts';
 
@@ -29,6 +30,17 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers());
 
 describe('list accounts', () => {
+  it('distinguishes failed sessions from tokens that can still refresh automatically', async () => {
+    storedUsers({ 0: NOW_SECONDS - 1, 1: NOW_SECONDS - 1 });
+    accountSessionErrors.mark(0);
+    const accounts = await listAccounts();
+    expect(accounts.map((account) => account.hasSessionError)).toEqual([
+      true,
+      false,
+    ]);
+    accountSessionErrors.clear(0);
+  });
+
   it('returns nothing when no slot holds a session', async () => {
     storedUsers({});
     await expect(listAccounts()).resolves.toEqual([]);
