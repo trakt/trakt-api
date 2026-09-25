@@ -1,5 +1,5 @@
 ---
-updatedAt: 2025-05-22T12:25:29.000Z
+updatedAt: 2026-09-25T23:16:29.000Z
 ---
 
 # Third Party Libraries
@@ -12,6 +12,7 @@ All of the libraries listed below are user contributed. If you find a bug or mis
 |                | `TraktSharp`     | <https://github.com/wwarby/TraktSharp>           |
 | `C++`          | `libtraqt`       | <https://github.com/RobertMe/libtraqt>           |
 | `Clojure`      | `clj-trakt`      | <https://github.com/niamu/clj-trakt>             |
+| `Go`           | `trakt-sync`     | <https://github.com/mfederowicz/trakt-sync>      |
 | `Java`         | `trakt-java`     | <https://github.com/UweTrottmann/trakt-java>     |
 | `Kotlin`       | `trakt-api`      | <https://github.com/MoviebaseApp/trakt-api>      |
 | `Node.js`      | `Trakt.tv`       | <https://github.com/vankasteelj/trakt.tv>        |
