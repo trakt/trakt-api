@@ -6,6 +6,7 @@ import { listRequestSchema } from '../../_internal/request/listRequestSchema.ts'
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
+import { termsQuerySchema } from '../../_internal/request/termsQuerySchema.ts';
 import { ignoreQuerySchema } from '../../_internal/request/ignoreQuerySchema.ts';
 import { commentResponseSchema } from '../../_internal/response/commentResponseSchema.ts';
 import { likeResponseSchema } from '../../_internal/response/likeResponseSchema.ts';
@@ -372,7 +373,8 @@ Returns all personal lists for a user. Use the [**/users/:id/lists/:list_id/item
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedProfileQuerySchema
-      .merge(pageQuerySchema),
+      .merge(pageQuerySchema)
+      .merge(termsQuerySchema),
     responses: {
       200: listResponseSchema.array(),
     },
