@@ -4,6 +4,6 @@ import { z } from '../z.ts';
 export const termsQuerySchema = z.object({
   terms: z.string().nullish().openapi({
     description:
-      'Only return entries whose name contains this text (case-insensitive).',
+      'Only return entries whose name or title contains this text (case-insensitive).',
   }),
 });
