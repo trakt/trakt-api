@@ -122,7 +122,8 @@ Returns movie items on a personal list. Use \`list_id\` to identify the list and
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(limitlessQuerySchema)
+        .merge(termsQuerySchema),
       responses: {
         200: listedMovieResponseSchema.array(),
       },
@@ -140,7 +141,8 @@ Returns show items on a personal list. Use \`list_id\` to identify the list and 
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(limitlessQuerySchema)
+        .merge(termsQuerySchema),
       responses: {
         200: listedShowResponseSchema.array(),
       },
@@ -159,7 +161,8 @@ Returns movie and show items on a personal list. Use \`list_id\` to identify the
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(limitlessQuerySchema)
+        .merge(termsQuerySchema),
       responses: {
         200: listedMediaResponseSchema.array(),
       },
@@ -178,7 +181,8 @@ Returns movie, show, season, and episode items on a personal list. Use \`list_id
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(limitlessQuerySchema)
+        .merge(termsQuerySchema),
       responses: {
         200: listedAllResponseSchema.array(),
       },
@@ -195,7 +199,8 @@ Returns items on a personal list. Use \`type\`, \`sort_by\`, and \`sort_how\` to
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
         .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(limitlessQuerySchema)
+        .merge(termsQuerySchema),
       responses: {
         200: listedAllResponseSchema.array(),
       },
