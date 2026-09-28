@@ -372,6 +372,7 @@ Returns all personal lists for a user. Use the [**/users/:id/lists/:list_id/item
     method: 'GET',
     pathParams: profileParamsSchema,
     query: extendedProfileQuerySchema
+      .merge(sortQuerySchema)
       .merge(pageQuerySchema),
     responses: {
       200: listResponseSchema.array(),
