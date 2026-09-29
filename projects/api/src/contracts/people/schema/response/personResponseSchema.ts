@@ -1,6 +1,6 @@
 import { crewPositionResponseSchema } from '../../../_internal/response/crewPositionResponseSchema.ts';
 import { socialIdsResponseSchema } from '../../../_internal/response/socialIdsResponseSchema.ts';
-import { asString, z } from '../../../_internal/z.ts';
+import { asString, float, z } from '../../../_internal/z.ts';
 
 /** Zod schema for the person response. */
 export const personResponseSchema = z.object({
@@ -24,6 +24,10 @@ export const personResponseSchema = z.object({
    * Available if requesting extended `full`.
    */
   birthday: z.string().nullish(),
+  /***
+   * Available if requesting extended `full`.
+   */
+  height: float(z.number()).nullish(),
   /***
    * Available if requesting extended `full`.
    */
