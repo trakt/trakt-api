@@ -7,6 +7,7 @@ import { watchActionSchema } from './watchActionSchema.ts';
 /** Zod schema for the settings response. */
 export const settingsResponseSchema = z.object({
   user: z.object({
+    email: z.string(),
     username: z.string(),
     private: z.boolean(),
     name: z.string().nullish(),
