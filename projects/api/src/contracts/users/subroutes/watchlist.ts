@@ -1,6 +1,7 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../../_internal/request/extendedMediaQuerySchema.ts';
 import { hideFilterParamsSchema } from '../../_internal/request/hideFilterParamsSchema.ts';
+import { ignoreQuerySchema } from '../../_internal/request/ignoreQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../../_internal/request/sortQuerySchema.ts';
@@ -34,7 +35,8 @@ Returns movies on a user watchlist. Use the \`sort\` path parameter plus query s
       .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema),
+      .merge(hideFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: listedMovieResponseSchema.array(),
     },
@@ -52,7 +54,8 @@ Returns shows on a user watchlist. Use the \`sort\` path parameter plus query so
       .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema),
+      .merge(hideFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: listedShowResponseSchema.array(),
     },
@@ -70,7 +73,8 @@ Returns movies and shows on a user watchlist. Use the \`sort\` path parameter pl
       .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema),
+      .merge(hideFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: listedMediaResponseSchema.array(),
     },
@@ -87,7 +91,8 @@ Returns all items in a user's watchlist filtered by type.`,
       .merge(sortQuerySchema)
       .merge(pageQuerySchema)
       .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema),
+      .merge(hideFilterParamsSchema)
+      .merge(ignoreQuerySchema),
     responses: {
       200: listedMediaResponseSchema.array(),
     },
