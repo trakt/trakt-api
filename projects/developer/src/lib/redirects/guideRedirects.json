@@ -23,6 +23,8 @@
   "/docs/third-party-libraries": "third-party-libraries",
   "/docs/limted-access": "limted-access",
   "/docs/search": "search",
+  "/docs/api-use-policy": "api-use-policy",
+  "/docs/user-account-limits": "user-account-limits",
   "/docs/caching-and-fresh-metadata": "caching-and-fresh-data",
   "/docs/limited-access": "limted-access"
 }
