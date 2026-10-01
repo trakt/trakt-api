@@ -47,8 +47,8 @@ it('keeps the request state in the hash on the reference section', () => {
   expect(takeReturnPath()).toBe('/');
 });
 
-it.each(['/apps', '/apps/new', '/apps/42', '/apps/42/edit'])(
-  'restores the app route %s after OAuth',
+it.each(['/apps', '/apps/new', '/apps/42', '/apps/42/edit', '/docs/api-url'])(
+  'restores the route %s after OAuth',
   (path) => {
     vi.stubGlobal('location', {
       href: `https://developer.trakt.tv${path}?secret=private#private`,
@@ -67,7 +67,13 @@ it.each([
   expect(takeReturnPath()).toBe('/');
 });
 
-it.each(['/apps/../callback', '/apps/42/delete', '//evil.example/apps'])(
+it.each([
+  '/apps/../callback',
+  '/apps/42/delete',
+  '//evil.example/apps',
+  '/docs/../callback',
+  '/docs/api-url/extra',
+])(
   'rejects unsupported return path %s',
   (path) => {
     globalThis.sessionStorage.setItem('trakt-developer-return-section', path);

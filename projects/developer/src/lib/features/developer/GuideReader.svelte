@@ -1,6 +1,8 @@
 <script lang="ts">
   import GuideCopyButton from "./GuideCopyButton.svelte";
   import contents from "$lib/guides/contents.md?raw";
+  import { GUIDE_SOURCES } from "$lib/guides/GUIDE_SOURCES.ts";
+  import { guidePath } from "$lib/guides/guidePath.ts";
   import { prepareGuideMarkdown } from "$lib/guides/prepareGuideMarkdown.ts";
   import { parseGuideContents } from "$lib/guides/parseGuideContents.ts";
   import { guideUpdatedAt } from "$lib/guides/guideUpdatedAt.ts";
@@ -16,17 +18,7 @@
     endpoints: ReadonlyArray<Endpoint>;
   } = $props();
 
-  const files = import.meta.glob<string>("/src/lib/guides/*.md", {
-    query: "?raw",
-    import: "default",
-    eager: true,
-  });
-  const guides = new Map(
-    Object.entries(files).map(([path, markdown]) => [
-      (path.split("/").at(-1) ?? path).replace(/\.md$/, ""),
-      markdown,
-    ]),
-  );
+  const guides = GUIDE_SOURCES;
   const slugs = new Set(guides.keys());
   const groups = parseGuideContents(contents);
   const selectedSlug = $derived(slug ?? groups[0]?.items[0]?.slug);
@@ -54,7 +46,7 @@
         <h2>{group.title}</h2>
         {#each group.items as item (item.slug)}
           <a
-            href={`/?section=guides&guide=${item.slug}`}
+            href={guidePath(item.slug)}
             aria-current={selectedSlug === item.slug ? "page" : undefined}
             >{item.title}</a
           >

@@ -44,7 +44,8 @@ const sha = revision();
 const chosen = pick(cards, sha);
 const url = `${ORIGIN}/og/${chosen}?v=${sha.slice(0, 12)}`;
 
-const pages = (await readdir(BUILD)).filter((name) => name.endsWith('.html'));
+const pages = (await readdir(BUILD, { recursive: true }))
+  .filter((name) => name.endsWith('.html'));
 let replacements = 0;
 
 for (const page of pages) {

@@ -40,7 +40,9 @@ describe('guide snapshots', () => {
   });
 
   it('lists every downloaded guide exactly once with a working local link', () => {
-    const links = [...files['./contents.md'].matchAll(/guide=([\w-]+)/g)]
+    const links = [
+      ...files['./contents.md'].matchAll(/\]\(\/docs\/([\w-]+)\)/g),
+    ]
       .map((match) => match[1]);
 
     expect(links.sort()).toEqual(
@@ -64,7 +66,7 @@ describe('guide snapshots', () => {
     expect(table).toContain('<table>');
     expect(table).toContain('<code>metadata</code>');
     expect(table).toContain(
-      'href="/?section=guides&amp;guide=caching-and-fresh-data"',
+      'href="/docs/caching-and-fresh-data"',
     );
 
     const app = renderMarkdown(

@@ -12,4 +12,4 @@ Methods tagged **🔥 VIP Only** return `426` when the user needs VIP. Offer an 
 
 Methods tagged **🔥 VIP Enhanced** offer higher allowances or additional capabilities with VIP. Offer an upgrade when it raises the relevant allowance; otherwise, explain how to make room.
 
-See [User Account Limits](/?section=guides&guide=user-account-limits) for reading account allowances and handling `420` responses.
+See [User Account Limits](/docs/user-account-limits) for reading account allowances and handling `420` responses.

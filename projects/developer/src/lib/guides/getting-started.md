@@ -15,8 +15,8 @@ involve sending us data. These are still easy to use, you simply POST some JSON
 data to a specific URL.
 
 Make sure to check out the
-[Required Headers](/?section=guides&guide=required-headers) and
-[Authentication](/?section=guides&guide=authentication-oauth) sections for more
+[Required Headers](/docs/required-headers) and
+[Authentication](/docs/authentication-oauth) sections for more
 info on what needs to be sent with each API call.
 
 The API uses these terms to describe watching activity and how users organize

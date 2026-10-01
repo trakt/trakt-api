@@ -6,7 +6,7 @@ updatedAt: 2026-07-08T09:56:00.000Z
 
 All methods will accept or return standard media objects for `movie`, `show`, `season`, `episode`, `person`, and `user` items.
 
-Here are examples for all **minimal** objects. You can get more information using [Extended Info](/?section=guides&guide=extended-info). Some endpoints return media objects as embedded snapshots inside list, activity, sync, or user-specific responses. Use the `ids` object to match or hydrate the item from its summary endpoint when you need fresh metadata. See [Caching and Fresh Metadata](/?section=guides&guide=caching-and-fresh-data).
+Here are examples for all **minimal** objects. You can get more information using [Extended Info](/docs/extended-info). Some endpoints return media objects as embedded snapshots inside list, activity, sync, or user-specific responses. Use the `ids` object to match or hydrate the item from its summary endpoint when you need fresh metadata. See [Caching and Fresh Metadata](/docs/caching-and-fresh-data).
 
 #### Movie
 

@@ -79,8 +79,8 @@ list links for their entries:
 ```md
 ## Start here
 
-- [Introduction](/?section=guides&guide=getting-started)
-- [Authentication](/?section=guides&guide=authentication-oauth)
+- [Introduction](/docs/getting-started)
+- [Authentication](/docs/authentication-oauth)
 ```
 
 To add an article, create `<slug>.md` in that directory and add its link to
@@ -104,8 +104,10 @@ The reader supports headings, lists, code blocks, and horizontally scrollable
 tables. Frontmatter is hidden, raw HTML is escaped, and Markdown images display
 their alternative text. Write links and tables using standard Markdown syntax.
 
-Use `/?section=guides&guide=<slug>` for guide links. For API operations, use the
-`operationId` from the OpenAPI document:
+Each guide is a prerendered page at `/docs/<slug>`, with its own title,
+description, and canonical URL, and is listed in `sitemap.xml`. Use
+`/docs/<slug>` for guide links; old `/?section=guides&guide=<slug>` links still
+redirect. For API operations, use the `operationId` from the OpenAPI document:
 
 ```md
 [Exchange a token](/?section=reference&operation=postOauthToken)

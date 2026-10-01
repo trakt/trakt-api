@@ -10,6 +10,9 @@
   import type { Snippet } from "svelte";
   import { fetchAccountProfile } from "$lib/api/fetchAccountProfile.ts";
   import GuideReader from "./GuideReader.svelte";
+  import { guidePath } from "$lib/guides/guidePath.ts";
+  import { applyPageMeta } from "$lib/seo/applyPageMeta.ts";
+  import { pageMeta } from "$lib/seo/pageMeta.ts";
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
   import { observeAccountChanges } from "$lib/auth/observeAccountChanges.ts";
@@ -47,11 +50,19 @@
     page.url.pathname === "/apps" || page.url.pathname.startsWith("/apps/"),
   );
   const isReference = $derived(
-    page.url.searchParams.get("section") === "reference" ||
-      (!page.url.searchParams.has("section") &&
-        (page.url.searchParams.has("operation") ||
-          page.url.hash.startsWith("#v="))),
+    page.url.pathname === "/" &&
+      (page.url.searchParams.get("section") === "reference" ||
+        (!page.url.searchParams.has("section") &&
+          (page.url.searchParams.has("operation") ||
+            page.url.hash.startsWith("#v=")))),
   );
+
+  $effect(() => {
+    const meta = pageMeta(page.url.pathname);
+
+    applyPageMeta({ document, meta });
+    if (!isApps) document.title = meta.title;
+  });
 
   const DEFAULT_SERVER = "https://api.trakt.tv";
   const MAIN_SERVERS = [
@@ -583,7 +594,7 @@
 
     <nav class="section-navigation" aria-label="Developer sections">
       <a
-        href="/?section=guides"
+        href={guidePath("getting-started")}
         aria-current={!isReference && !isApps ? "page" : undefined}
         >Getting Started</a
       >
@@ -616,7 +627,7 @@
     {@render children()}
   {:else if !isReference}
     <GuideReader
-      slug={page.url.searchParams.get("guide")}
+      slug={page.params.slug ?? null}
       endpoints={catalog.endpoints}
     />
   {:else}

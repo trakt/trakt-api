@@ -81,8 +81,8 @@
     >
 
     {#if !app}<p>
-        By creating an app, you agree to the <a
-          href="/?section=guides&guide=create-an-app">Trakt API requirements</a
+        By creating an app, you agree to the <a href="/docs/create-an-app"
+          >Trakt API requirements</a
         >, including the branding and usage guidelines.
       </p>{/if}
     {#if error}<p role="alert">{error}</p>{/if}
