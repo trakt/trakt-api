@@ -14,7 +14,7 @@ describe('legacyDocsDestination', () => {
 
     for (const { slug } of guides) {
       expect(legacyDocsDestination(`/docs/${slug}`)).toBe(
-        `/?section=guides&guide=${slug}`,
+        `/docs/${slug}`,
       );
     }
   });
@@ -30,10 +30,10 @@ describe('legacyDocsDestination', () => {
   it.each([
     [
       '/docs/caching-and-fresh-metadata',
-      '/?section=guides&guide=caching-and-fresh-data',
+      '/docs/caching-and-fresh-data',
     ],
-    ['/docs/limited-access', '/?section=guides&guide=limted-access'],
-    ['/docs', '/?section=guides'],
+    ['/docs/limited-access', '/docs/limted-access'],
+    ['/docs', '/docs/getting-started'],
   ])('maps %s to its destination', (path, destination) => {
     for (const suffix of ['', '/', '.md', '.md/']) {
       expect(legacyDocsDestination(`${path}${suffix}`)).toBe(destination);

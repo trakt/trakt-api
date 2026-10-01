@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /apps
+Disallow: /callback
+
+Sitemap: https://developer.trakt.tv/sitemap.xml

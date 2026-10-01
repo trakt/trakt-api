@@ -1,4 +1,5 @@
 import { operationLink } from '$lib/features/developer/operationLink.ts';
+import { guidePath } from './guidePath.ts';
 
 export function prepareGuideMarkdown({
   source,
@@ -20,7 +21,7 @@ export function prepareGuideMarkdown({
           ? 'caching-and-fresh-data'
           : originalSlug;
         return slugs.has(slug)
-          ? `](/?section=guides&guide=${slug})`
+          ? `](${guidePath(slug)})`
           : `](https://docs.trakt.tv/docs/${originalSlug})`;
       },
     )

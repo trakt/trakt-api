@@ -14,7 +14,7 @@ However, you can request different extended levels of information by adding `?ex
 
 | Level | Description |
 | --- | --- |
-| `full` | Expands the object returned by an endpoint, but list, activity, sync, and user-specific endpoints may include cached embedded media objects. If your app needs the freshest metadata, use the IDs returned by those endpoints and hydrate the item from the summary endpoint. See [Caching and Fresh Metadata](/?section=guides&guide=caching-and-fresh-data). |
+| `full` | Expands the object returned by an endpoint, but list, activity, sync, and user-specific endpoints may include cached embedded media objects. If your app needs the freshest metadata, use the IDs returned by those endpoints and hydrate the item from the summary endpoint. See [Caching and Fresh Metadata](/docs/caching-and-fresh-data). |
 | `images` | Compatibility option for endpoints that still document or support image-only expansion. Going forward, this will have no difference from `full` for image inclusion. |
 | `full,images` | Compatibility option for older endpoint behavior. Prefer `full` unless an endpoint specifically documents otherwise. |
 | `min` | A lower-level of minimal info where supported. |

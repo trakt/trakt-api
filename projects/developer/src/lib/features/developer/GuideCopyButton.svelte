@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { guidePath } from "$lib/guides/guidePath.ts";
   import { dismissOnOutsideInteraction } from "./dismissOnOutsideInteraction.ts";
 
   const { markdown, slug }: { markdown: string; slug: string | undefined } =
@@ -25,9 +26,10 @@
   });
 
   async function copy(format: "url" | "markdown") {
-    const url = new URL("/", globalThis.location.origin);
-    url.searchParams.set("section", "guides");
-    if (slug) url.searchParams.set("guide", slug);
+    const url = new URL(
+      slug ? guidePath(slug) : "/",
+      globalThis.location.origin,
+    );
     try {
       await navigator.clipboard.writeText(
         format === "url" ? url.href : markdown,

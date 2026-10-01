@@ -12,7 +12,7 @@ export function parseGuideContents(markdown: string): Array<GuideGroup> {
       continue;
     }
 
-    const link = /^- \[([^\]]+)\]\(\/\?section=guides&guide=([\w-]+)\)/.exec(
+    const link = /^- \[([^\]]+)\]\(\/docs\/([\w-]+)\)/.exec(
       line,
     );
     if (!link) continue;
