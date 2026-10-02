@@ -1,4 +1,5 @@
 import { z } from '../../../_internal/z.ts';
+import { clientSecretSchema } from './clientSecretSchema.ts';
 
 /** Zod schema for the device token request. */
 export const deviceTokenRequestSchema = z.object({
@@ -10,8 +11,5 @@ export const deviceTokenRequestSchema = z.object({
     description: `The client ID of the application. 
             You can find it in the application details here: https://app.trakt.tv/settings/apps`,
   }),
-  client_secret: z.string({
-    description: `The client secret of the application. 
-            You can find it in the application details here: https://app.trakt.tv/settings/apps`,
-  }),
+  client_secret: clientSecretSchema,
 });
