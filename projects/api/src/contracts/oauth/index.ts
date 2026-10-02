@@ -1,5 +1,6 @@
 import { authMetadata, builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
+import { clientSecretSchema } from './schema/request/clientSecretSchema.ts';
 import { codeRequestSchema } from './schema/request/codeRequestSchema.ts';
 import {
   deviceTokenRequestSchema,
@@ -17,13 +18,18 @@ const authorizeQuerySchema = z.object({
   client_id: z.string().optional(),
   redirect_uri: z.string().optional(),
   state: z.string().optional(),
+  code_challenge: z.string().optional(),
+  code_challenge_method: z.literal('S256').optional(),
 });
 
 const revokeRequestSchema = z.object({
   token: z.string(),
   client_id: z.string(),
-  client_secret: z.string(),
+  client_secret: clientSecretSchema,
 });
+
+const CLIENT_SECRET_NOTE = `> ### Note
+> _\`client_secret\` is deprecated in favor of [PKCE](https://developer.trakt.tv/docs/pkce). It is optional, and should only be sent from your own server, never from a website, mobile app, or desktop app._`;
 
 const device = builder.router({
   code: {
@@ -38,7 +44,8 @@ You might consider generating a QR code for the user to easily scan on their mob
 #### JSON POST Data
 | Key | Type | Value |
 |---|---|---|
-| \`client_id\` * | string | Get this from your app settings. |`,
+| \`client_id\` * | string | Get this from your app settings. |
+`,
     method: 'POST',
     path: '/code',
     body: codeRequestSchema,
@@ -58,7 +65,6 @@ When you receive a \`200\` success response, save the \`access_token\` so your a
 |---|---|---|
 | \`code\` * | string | \`device_code\` from the initial method. |
 | \`client_id\` * | string | Get this from your app settings. |
-| \`client_secret\` * | string | Get this from your app settings. |
 
 #### Status Codes
 This method will send various HTTP status codes that you should handle accordingly.
@@ -126,7 +132,18 @@ When building the authorization URL, you can optionally include the following qu
 | Parameter | Value | Description |
 |---|---|---|
 | \`signup\` | \`true\` | Prefer the account sign up page to be the default. |
-| \`prompt\` | \`login\` | Force the user to sign in and authorize your app. |`,
+| \`prompt\` | \`login\` | Force the user to sign in and authorize your app. |
+
+#### PKCE
+
+[PKCE](https://developer.trakt.tv/docs/pkce) is the recommended way to sign users in. Send these parameters, then send the matching \`code_verifier\` instead of a \`client_secret\` when you exchange the code.
+
+| Parameter | Value | Description |
+|---|---|---|
+| \`code_challenge\` | string | The base64url-encoded SHA-256 hash of your \`code_verifier\`. |
+| \`code_challenge_method\` | \`S256\` | The only supported method. |
+
+${CLIENT_SECRET_NOTE}`,
       path: '/authorize',
       method: 'GET',
       query: authorizeQuerySchema,
@@ -139,6 +156,10 @@ When building the authorization URL, you can optionally include the following qu
       summary: 'Exchange a token',
       description:
         `Exchange an OAuth authorization code or refresh token for an access token.
+
+If you started the flow with [PKCE](https://developer.trakt.tv/docs/pkce), send the \`code_verifier\`.
+
+${CLIENT_SECRET_NOTE}
 
 #### Refreshing Tokens
 
@@ -166,7 +187,8 @@ If the exchange cannot be completed, this endpoint returns a \`400\` response wi
 |---|---|---|
 | \`token\` * | string | A valid OAuth \`access_token\`. |
 | \`client_id\` * | string | Get this from your app settings. |
-| \`client_secret\` * | string | Get this from your app settings. |`,
+
+${CLIENT_SECRET_NOTE}`,
       path: '/revoke',
       method: 'POST',
       body: revokeRequestSchema,
