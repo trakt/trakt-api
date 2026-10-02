@@ -7,6 +7,7 @@
     profile,
     busy,
     error = "",
+    canConnect = true,
     onConnect,
     onUnlink,
   }: DeveloperRailProps = $props();
@@ -35,6 +36,10 @@
   aria-label="Developer account"
 >
   <span class="eyebrow">Developer</span>
+  {#if !canConnect}<p class="fine" role="status">
+      GitHub sign-in is not configured for this site, so connecting GitHub is
+      turned off.
+    </p>{/if}
   {#if error}<p class="rail-error" role="alert">{error}</p>{/if}
   {#if !profile}
     <p role="status">Loading your developer account…</p>
@@ -61,7 +66,7 @@
       <div class="actions">
         <button
           class="primary"
-          disabled={busy}
+          disabled={busy || !canConnect}
           onclick={() => onConnect("switch")}>Continue to GitHub</button
         ><button disabled={busy} onclick={() => (switching = false)}
           >Cancel</button
@@ -116,8 +121,10 @@
         : "Link GitHub once to create apps. Every app you make afterwards uses it."}
     </p>
 
-    <button class="primary" disabled={busy} onclick={() => onConnect("link")}
-      >Connect GitHub</button
+    <button
+      class="primary"
+      disabled={busy || !canConnect}
+      onclick={() => onConnect("link")}>Connect GitHub</button
     >
 
     <p class="fine">

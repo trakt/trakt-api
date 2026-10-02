@@ -20,6 +20,7 @@
   import type { DeveloperProfile } from "./DeveloperProfile.ts";
   import { completeGithubConnect } from "./completeGithubConnect.ts";
   import { githubConnectUrl } from "./githubConnectUrl.ts";
+  import { GITHUB_CLIENT_ID } from "./GITHUB_CLIENT_ID.ts";
   import { isGithubCallback } from "./isGithubCallback.ts";
   import type { GithubConnectIntent } from "./GithubConnectIntent.ts";
   import PkceNotice from "./PkceNotice.svelte";
@@ -149,7 +150,11 @@
   }
 
   function connect(intent: GithubConnectIntent) {
-    globalThis.location.assign(githubConnectUrl(intent));
+    if (!GITHUB_CLIENT_ID) return;
+
+    globalThis.location.assign(
+      githubConnectUrl({ intent, clientId: GITHUB_CLIENT_ID }),
+    );
   }
 
   async function unlink() {
@@ -293,6 +298,7 @@
           {profile}
           {busy}
           error={railError}
+          canConnect={!!GITHUB_CLIENT_ID}
           onConnect={connect}
           onUnlink={unlink}
         />

@@ -1,9 +1,4 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-vi.mock(
-  '$env/static/public',
-  () => ({ PUBLIC_GITHUB_CLIENT_ID: 'test-client' }),
-);
-
 import { githubConnectUrl } from './githubConnectUrl.ts';
 
 function fakeStorage(): Storage {
@@ -30,7 +25,9 @@ describe('githubConnectUrl', () => {
     vi.stubGlobal('location', { origin: 'https://developer.trakt.tv' });
     vi.stubGlobal('crypto', { randomUUID: () => 'fixed-state' });
 
-    const url = new URL(githubConnectUrl('switch'));
+    const url = new URL(
+      githubConnectUrl({ intent: 'switch', clientId: 'test-client' }),
+    );
 
     expect(url.origin + url.pathname).toBe(
       'https://github.com/login/oauth/authorize',
