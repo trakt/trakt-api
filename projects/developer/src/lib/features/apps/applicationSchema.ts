@@ -5,7 +5,7 @@ export const applicationSchema = z.object({
   name: z.string(),
   description: z.string().nullish(),
   client_id: z.string(),
-  client_secret: z.string(),
+  client_secret: z.string().nullish(),
   redirect_uri: z.string(),
   origins: z.array(z.string()),
   approved: z.boolean(),

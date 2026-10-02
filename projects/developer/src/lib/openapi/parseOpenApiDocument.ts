@@ -126,15 +126,19 @@ function sampleFromSchema({
   switch (schemaType(schema)) {
     case 'object':
       return Object.fromEntries(
-        Object.entries(asObject(schema.properties)).map(([name, property]) => [
-          name,
-          sampleFromSchema({
-            root,
-            schemaValue: property,
-            depth: depth + 1,
-            references: nextReferences,
-          }),
-        ]),
+        Object.entries(asObject(schema.properties))
+          .filter(([, property]) =>
+            !asBoolean(resolveReference({ root, value: property }).deprecated)
+          )
+          .map(([name, property]) => [
+            name,
+            sampleFromSchema({
+              root,
+              schemaValue: property,
+              depth: depth + 1,
+              references: nextReferences,
+            }),
+          ]),
       );
     case 'array':
       return [

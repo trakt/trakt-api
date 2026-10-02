@@ -201,4 +201,39 @@ describe('parseOpenApiDocument', () => {
       '{\n  "rating": 9\n}',
     );
   });
+
+  it('should leave deprecated properties out of JSON body examples', () => {
+    const catalog = parseOpenApiDocument({
+      source: 'test',
+      document: {
+        openapi: '3.0.2',
+        info: { title: 'Trakt API', version: '2.0.0' },
+        paths: {
+          '/oauth/token': {
+            post: {
+              operationId: 'postOauthToken',
+              requestBody: {
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        client_id: { type: 'string' },
+                        client_secret: { type: 'string', deprecated: true },
+                      },
+                    },
+                  },
+                },
+              },
+              responses: { '200': { description: 'OK' } },
+            },
+          },
+        },
+      },
+    });
+
+    expect(catalog.endpoints.at(0)?.requestBody?.example).toBe(
+      '{\n  "client_id": ""\n}',
+    );
+  });
 });

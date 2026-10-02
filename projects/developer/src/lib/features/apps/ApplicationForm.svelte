@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { ApplicationFormProps } from "./ApplicationFormProps.ts";
   import { parseApplication } from "./parseApplication.ts";
+  import RedirectUriWarning from "./RedirectUriWarning.svelte";
+  import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
 
   const {
     app,
@@ -17,6 +19,7 @@
   let redirects = $state(initial?.redirect_uri ?? "");
   let origins = $state(initial?.origins.join("\n") ?? "");
   let error = $state("");
+  const unsafeRedirects = $derived(unsafeRedirectUris(redirects));
 
   function submit(event: SubmitEvent) {
     event.preventDefault();
@@ -60,8 +63,8 @@
 
     <label
       >Redirect URIs <span
-        >One per line. Custom schemes and the OAuth out-of-band URI are
-        supported.</span
+        >One per line. Use https:// only; on mobile, back it with Universal
+        Links or verified App Links.</span
       ><textarea
         bind:value={redirects}
         required
@@ -69,6 +72,7 @@
         placeholder="https://example.com/callback"
         spellcheck="false"></textarea></label
     >
+    <RedirectUriWarning uris={unsafeRedirects} />
 
     <label
       >Allowed origins <span
