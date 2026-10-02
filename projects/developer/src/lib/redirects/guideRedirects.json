@@ -3,6 +3,7 @@
   "/docs/stay-connected": "stay-connected",
   "/docs/create-an-app": "create-an-app",
   "/docs/authentication-oauth": "authentication-oauth",
+  "/docs/pkce": "pkce",
   "/docs/api-url": "api-url",
   "/docs/required-headers": "required-headers",
   "/docs/rate-limiting": "rate-limiting",

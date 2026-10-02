@@ -22,6 +22,9 @@
   import { githubConnectUrl } from "./githubConnectUrl.ts";
   import { isGithubCallback } from "./isGithubCallback.ts";
   import type { GithubConnectIntent } from "./GithubConnectIntent.ts";
+  import PkceNotice from "./PkceNotice.svelte";
+  import RedirectUriWarning from "./RedirectUriWarning.svelte";
+  import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
 
   const { slot, mode, appId, appName }: ApplicationsProps = $props();
   let loading = $state(true);
@@ -67,17 +70,8 @@
         ]
       : [],
   );
-  const credentials = $derived(
-    selected
-      ? [
-          { label: "Client ID", value: selected.client_id, secret: false },
-          {
-            label: "Client Secret",
-            value: selected.client_secret,
-            secret: true,
-          },
-        ]
-      : [],
+  const unsafeRedirects = $derived(
+    selected ? unsafeRedirectUris(selected.redirect_uri) : [],
   );
   let busy = $state(false);
   let error = $state("");
@@ -311,7 +305,7 @@
                     ? "Create your first app"
                     : "Create app"}</strong
                 >{#if apps.length === 0}<small
-                    >Register an app to get your Client ID and Client Secret.</small
+                    >Register an app to get your Client ID.</small
                   >{/if}</a
               >{:else}<div class="create-tile locked">
                 <svg
@@ -373,6 +367,8 @@
         />
       </section>
     {:else if selected}
+      <RedirectUriWarning uris={unsafeRedirects} />
+
       <div class="detail-grid">
         <section class="panel">
           {#each details as field (field.label)}
@@ -403,35 +399,61 @@
             </div>
           {/each}
 
-          {#each credentials as field (field.label)}
-            <div class="credential">
-              <strong>{field.label}</strong>
+          <div class="credential">
+            <strong>Client ID</strong>
+            <div class="credential-value">
+              <code>{selected.client_id}</code>
+              <div class="actions">
+                <button
+                  aria-label="Copy Client ID"
+                  onclick={() => copy(selected.client_id, "Client ID")}
+                  >Copy</button
+                >
+              </div>
+            </div>
+          </div>
+
+          <PkceNotice hasSecret={!!selected.client_secret} />
+
+          {#if selected.client_secret}<div class="credential">
+              <strong
+                >Client Secret <span class="badge" data-variant="deprecated"
+                  >Deprecated</span
+                ></strong
+              >
               <div class="credential-value">
                 <code
-                  >{field.secret && !reveal
-                    ? "••••••••••••••••••••••••"
-                    : field.value}</code
+                  >{reveal
+                    ? selected.client_secret
+                    : "••••••••••••••••••••••••"}</code
                 >
                 <div class="actions">
-                  {#if field.secret}<button
-                      aria-label={reveal
-                        ? "Hide Client Secret"
-                        : "Reveal Client Secret"}
-                      onclick={() => (reveal = !reveal)}
-                      >{reveal ? "Hide" : "Reveal"}</button
-                    >{/if}<button
-                    aria-label={`Copy ${field.label}`}
-                    onclick={() => copy(field.value, field.label)}>Copy</button
+                  <button
+                    aria-label={reveal
+                      ? "Hide Client Secret"
+                      : "Reveal Client Secret"}
+                    onclick={() => (reveal = !reveal)}
+                    >{reveal ? "Hide" : "Reveal"}</button
+                  ><button
+                    aria-label="Copy Client Secret"
+                    onclick={() =>
+                      copy(selected.client_secret ?? "", "Client Secret")}
+                    >Copy</button
                   >
                 </div>
               </div>
             </div>
-          {/each}
 
-          <p class="muted">
-            Keep your Client Secret private. Never include it in public code or
-            client-side apps.
-          </p>
+            <p class="muted">
+              Keep your Client Secret on your server. Never include it in public
+              code, websites, mobile apps, or desktop apps.
+            </p>{:else}<div class="credential is-empty">
+              <strong>Client Secret</strong>
+              <p class="secret-placeholder">
+                Not issued. This app signs users in with PKCE, so there is no
+                secret to keep safe.
+              </p>
+            </div>{/if}
         </section>
         <aside class="panel">
           <h2>App details</h2>
@@ -658,6 +680,12 @@
     font-size: 24px;
   }
 
+  .badge[data-variant="deprecated"] {
+    margin-inline-start: var(--gap-xs);
+    color: var(--color-warning);
+    background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+  }
+
   .badge {
     font-size: 10px;
     color: var(--color-muted);
@@ -723,6 +751,19 @@
 
   .credential:first-child {
     padding-top: 0;
+  }
+
+  .credential.is-empty {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .secret-placeholder {
+    margin: 0;
+    padding: var(--gap-s) var(--gap-m);
+    border: var(--border-thickness-xxs) dashed var(--color-border-strong);
+    border-radius: var(--radius-control);
+    font-size: 12px;
   }
 
   .field-value {

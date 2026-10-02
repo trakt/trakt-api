@@ -1,5 +1,5 @@
 ---
-updatedAt: 2026-09-09T02:34:16.068Z
+updatedAt: 2026-10-01T00:00:00.000Z
 ---
 
 # Authentication
@@ -22,6 +22,12 @@ Trakt supports two OAuth flows:
 
 Check each endpoint’s documentation to see whether OAuth is required, optional,
 or not needed.
+
+> ### 🔐 Use PKCE
+>
+> Add [PKCE](/docs/pkce) to the Authorization Code Flow. It is the recommended
+> way to sign users in and does not need a `client_secret`. The Client Secret is
+> deprecated for user sign-in and should only be used server to server.
 
 ## Register Your Application
 

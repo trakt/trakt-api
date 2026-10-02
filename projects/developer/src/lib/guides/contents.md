@@ -6,6 +6,7 @@
 - [Create an App](/docs/create-an-app)
 - [API Use Policy](/docs/api-use-policy)
 - [Authentication](/docs/authentication-oauth)
+- [PKCE](/docs/pkce)
 
 ## Request basics
 
