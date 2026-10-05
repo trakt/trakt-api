@@ -9,6 +9,37 @@ import { smartListItemResponseSchema } from '../_internal/response/smartListItem
 import { z } from '../_internal/z.ts';
 import { listParamsSchema } from '../users/schema/request/listParamsSchema.ts';
 
+const smartListItemsQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema.omit({
+    start_date: true,
+    end_date: true,
+  }))
+  .merge(ignoreQuerySchema.omit({ ignore_collected: true }))
+  .merge(pageQuerySchema)
+  .merge(limitlessQuerySchema)
+  .extend({
+    watchnow_country: z.string().optional().describe(
+      'Two-letter region for `watchnow`. Defaults to the list region, then the owner region, then `us`.',
+    ),
+  });
+
+const smartListItemsPathParamsSchema = listParamsSchema.extend({
+  type: z.string().describe(
+    '`all`, `movies` or `shows`. Narrows a list holding both media types.',
+  ),
+  sort_by: z.string().describe(
+    '`rank` (default, the source order), `random`, `title`, `released`, `runtime`, `percentage`, `votes`, `imdb_rating`, `imdb_votes`, `tmdb_rating`, `tmdb_votes`, `rt_tomatometer`, `rt_audience`, `metascore`. Watchlist lists also take `added`. Recommendation lists always use `rank`. Unknown values fall back to `rank`.',
+  ),
+  sort_how: z.string().describe(
+    '`asc` or `desc`. Defaults to `asc` for `rank` and `title`, `desc` otherwise.',
+  ),
+});
+
+const ITEMS_DESCRIPTION =
+  `Returns the dynamic items a smart list resolves to, worked out when you request them. A list can hold movies, shows, or both. Use query filters and pagination to refine the result set.
+
+Streaming (\`watchnow\`) filters resolve against the list owner, not the caller: the list region, else the owner's region, else \`us\`, and \`favorites\` means the owner's services.`;
+
 /** ts-rest contract for the `smartLists` endpoints. */
 export const smartLists = builder.router({
   summary: {
@@ -30,18 +61,26 @@ Returns a single smart list definition by its globally-unique slug. Use the [**/
     summary: 'Get smart list items',
     description:
       `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
-Returns the dynamic items a smart list resolves to. Items always match the list's \`media_type\`, so a movie list only ever resolves to movies and a show list to shows. Use query filters and pagination to refine the result set.`,
+${ITEMS_DESCRIPTION}`,
     path: '/:list_id/items',
     method: 'GET',
     pathParams: listParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema.omit({
-        start_date: true,
-        end_date: true,
-      }))
-      .merge(ignoreQuerySchema.omit({ ignore_collected: true }))
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
+    query: smartListItemsQuerySchema,
+    responses: {
+      200: smartListItemResponseSchema.array(),
+    },
+  },
+  typedSorted: {
+    summary: 'Get smart list items by type and sort',
+    description:
+      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+${ITEMS_DESCRIPTION}
+
+Use \`type\` to narrow a list holding both media types, and \`sort_by\` / \`sort_how\` to reorder it. A sorted list holding both media types is merged into one order across pages.`,
+    path: '/:list_id/items/:type/:sort_by/:sort_how',
+    method: 'GET',
+    pathParams: smartListItemsPathParamsSchema,
+    query: smartListItemsQuerySchema,
     responses: {
       200: smartListItemResponseSchema.array(),
     },
