@@ -45,6 +45,7 @@ import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
 import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
+import { showCollectionProgressResponseSchema } from './schema/response/showCollectionProgressResponseSchema.ts';
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
 import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
@@ -336,15 +337,22 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
       description: `#### 🔒 OAuth Required
 Returns collection progress for a show including details on all aired seasons and episodes. The \`next_episode\` will be the next episode the user should collect, if there are no upcoming episodes it will be set to \`null\`.
 
-By default, any hidden seasons will be removed from the response and stats. To include these and adjust the completion stats, set the \`hidden\` flag to \`true\`.`,
+By default, any hidden seasons will be removed from the response and stats. To include these and adjust the completion stats, set the \`hidden\` flag to \`true\`.
+
+By default, the \`last_episode\` and \`next_episode\` are calculated using the last \`aired\` episode the user has collected, even if they've collected older episodes more recently. To use their last collected episode for these calculations, set the \`last_activity\` flag to \`collected\`.`,
       path: '/progress/collection',
       method: 'GET',
       pathParams: idParamsSchema,
       query: extendedMediaQuerySchema
         .merge(showQueryParamsSchema)
-        .merge(statsQuerySchema),
+        .merge(z.object({
+          last_activity: z.enum(['aired', 'collected']).nullish().openapi({
+            description:
+              'Which episode `last_episode` and `next_episode` are calculated from.',
+          }),
+        })),
       responses: {
-        200: showProgressResponseSchema,
+        200: showCollectionProgressResponseSchema,
       },
     },
     watched: {
@@ -1021,6 +1029,12 @@ export type ShowResponse = z.infer<typeof showResponseSchema>;
 export { showProgressResponseSchema };
 /** The show progress response payload. */
 export type ShowProgressResponse = z.infer<typeof showProgressResponseSchema>;
+
+export { showCollectionProgressResponseSchema };
+/** The show collection progress response payload. */
+export type ShowCollectionProgressResponse = z.infer<
+  typeof showCollectionProgressResponseSchema
+>;
 
 export { showQueryParamsSchema };
 /** The show query parameters. */
