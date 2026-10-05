@@ -21,6 +21,7 @@ export const smartListFiltersSchema = z.object({
   keywords: list.optional(),
   keywords_operator: operator.optional(),
   watchnow: list.optional(),
+  watchnow_country: z.string().regex(/^[a-z]{2}$/).optional(),
   years: intRange.optional(),
   ratings: intRange.optional(),
   runtimes: intRange.optional(),
