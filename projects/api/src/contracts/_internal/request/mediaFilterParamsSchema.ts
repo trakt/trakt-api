@@ -28,5 +28,6 @@ export const mediaFilterParamsSchema = z.object({
   end_date: z.string().nullish(),
   runtimes: z.string().nullish(),
   countries: z.string().nullish(),
+  statuses: z.string().nullish(),
   certifications: z.string().nullish(),
 });
