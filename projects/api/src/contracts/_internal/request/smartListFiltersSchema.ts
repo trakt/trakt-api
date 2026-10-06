@@ -8,6 +8,8 @@ const floatRange = z.array(float(z.number())).max(2);
 // any of them. Exclusion is always "carries none of".
 const operator = z.enum(['and', 'or']);
 
+const severityRange = z.array(z.number().int().min(0).max(3)).max(2);
+
 /** Zod schema for smart list filters. */
 export const smartListFiltersSchema = z.object({
   genres: list.optional(),
@@ -30,6 +32,12 @@ export const smartListFiltersSchema = z.object({
   rt_user_meters: intRange.optional(),
   letterboxd_ratings: floatRange.optional(),
   mal_ratings: floatRange.optional(),
+  parental_nudity: severityRange.optional(),
+  parental_violence: severityRange.optional(),
+  parental_profanity: severityRange.optional(),
+  parental_alcohol: severityRange.optional(),
+  parental_frightening: severityRange.optional(),
+  parental_include_unrated: z.boolean().optional(),
   ignore_watched: z.boolean().optional(),
   ignore_watchlisted: z.boolean().optional(),
   ignore_watching: z.boolean().optional(),
