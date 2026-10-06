@@ -9,6 +9,9 @@ import { smartListItemResponseSchema } from '../_internal/response/smartListItem
 import { z } from '../_internal/z.ts';
 import { listParamsSchema } from '../users/schema/request/listParamsSchema.ts';
 
+const SEVERITY_RANGE =
+  'Parental guide severity range `min-max`, from 0 (none) to 3 (severe).';
+
 const smartListItemsQuerySchema = extendedMediaQuerySchema
   .merge(mediaFilterParamsSchema.omit({
     start_date: true,
@@ -20,6 +23,14 @@ const smartListItemsQuerySchema = extendedMediaQuerySchema
   .extend({
     watchnow_country: z.string().optional().describe(
       'Two-letter region for `watchnow`. Defaults to the list region, then the owner region, then `us`.',
+    ),
+    parental_nudity: z.string().optional().describe(SEVERITY_RANGE),
+    parental_violence: z.string().optional().describe(SEVERITY_RANGE),
+    parental_profanity: z.string().optional().describe(SEVERITY_RANGE),
+    parental_alcohol: z.string().optional().describe(SEVERITY_RANGE),
+    parental_frightening: z.string().optional().describe(SEVERITY_RANGE),
+    parental_include_unrated: z.boolean().optional().describe(
+      'Keep titles without a parental guide when a parental range is set. Defaults to `false`.',
     ),
   });
 
