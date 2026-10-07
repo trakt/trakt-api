@@ -145,6 +145,7 @@ export const settingsResponseSchema = z.object({
     time_24hr: z.boolean(),
     cover_image: z.string().nullish(),
     token: z.string().nullish(),
+    share_code: z.string().nullish(),
     display_ads: z.boolean().nullish(),
   }),
   connections: z.object({
