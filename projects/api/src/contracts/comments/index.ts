@@ -212,13 +212,12 @@ Add a new reply to an existing comment. Make sure to allow and encourage *spoile
 | \`gif\` | object |  | Klipy GIF to attach. A GIF on its own is a valid comment. (see below &#8595;) |
 
 #### GIF
-Send \`null\` to remove the GIF. The size is the GIF's intrinsic size in pixels; a reader uses it to reserve the GIF's box before it downloads.
+Send \`null\` to remove the GIF.
 
 | Key | Type | Value |
 |---|---|---|
 | \`url\` * | string | Klipy GIF url. |
-| \`width\` | integer | Intrinsic width in pixels. |
-| \`height\` | integer | Intrinsic height in pixels. |`,
+| \`slug\` | string | Klipy GIF slug, up to 255 characters. |`,
     path: '/replies',
     method: 'POST',
     pathParams: idParamsSchema,
@@ -240,13 +239,12 @@ Update a single comment. The OAuth user must match the author of the comment in 
 | \`gif\` | object |  | Klipy GIF to attach. A GIF on its own is a valid comment. (see below &#8595;) |
 
 #### GIF
-Send \`null\` to remove the GIF. The size is the GIF's intrinsic size in pixels; a reader uses it to reserve the GIF's box before it downloads.
+Send \`null\` to remove the GIF.
 
 | Key | Type | Value |
 |---|---|---|
 | \`url\` * | string | Klipy GIF url. |
-| \`width\` | integer | Intrinsic width in pixels. |
-| \`height\` | integer | Intrinsic height in pixels. |`,
+| \`slug\` | string | Klipy GIF slug, up to 255 characters. |`,
     path: '/',
     method: 'PUT',
     pathParams: idParamsSchema,
@@ -332,13 +330,12 @@ Add a new comment to a movie, show, season, episode, or list. Make sure to allow
 | \`sharing\`  | object | | Control sharing to any connected social networks. (see below &#8595;) |
 
 #### GIF
-Send \`null\` to remove the GIF. The size is the GIF's intrinsic size in pixels; a reader uses it to reserve the GIF's box before it downloads.
+Send \`null\` to remove the GIF.
 
 | Key | Type | Value |
 |---|---|---|
 | \`url\` * | string | Klipy GIF url. |
-| \`width\` | integer | Intrinsic width in pixels. |
-| \`height\` | integer | Intrinsic height in pixels. |
+| \`slug\` | string | Klipy GIF slug, up to 255 characters. |
 
 #### Sharing
 The \`sharing\` object is optional and will apply the user's settings if not sent. If \`sharing\` is sent, each key will override the user's setting for that social network. Send \`true\` to post or \`false\` to not post on the indicated social network. You can see which social networks a user has connected with the [**/users/settings**](/reference/users/settings) method.
