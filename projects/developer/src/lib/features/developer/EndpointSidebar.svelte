@@ -26,7 +26,9 @@
 <aside class="trakt-endpoint-sidebar">
   <div class="sidebar-search">
     <div class="search-field">
-      <span aria-hidden="true">⌕</span>
+      <svg aria-hidden="true" viewBox="0 0 16 16"
+        ><circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" /></svg
+      >
       <input
         id="endpoint-search"
         type="search"
@@ -103,9 +105,21 @@
       background: var(--color-canvas);
     }
 
-    .search-field > span {
-      color: var(--color-muted);
-      font-size: var(--ni-20);
+    .search-field:has(input:focus-visible) {
+      border-color: var(--color-info);
+
+      // Invisible normally; forced-colors paints it so focus stays visible.
+      outline: var(--ni-2) solid transparent;
+    }
+
+    .search-field svg {
+      width: var(--ni-14);
+      height: var(--ni-14);
+
+      fill: none;
+      stroke: var(--color-muted);
+      stroke-linecap: round;
+      stroke-width: 1.5;
     }
 
     .search-field input {
@@ -122,11 +136,6 @@
 
       font-size: var(--ni-12);
       line-height: 1.4;
-    }
-
-    .search-field input:focus-visible {
-      outline: var(--ni-2) solid var(--color-info);
-      outline-offset: var(--ni-neg-2);
     }
 
     .search-field kbd {
