@@ -28,6 +28,7 @@ import { syncIdParamsSchema } from './schema/request/syncIdParamsSchema.ts';
 import { syncTypeParamsSchema } from './schema/request/syncTypeParamsSchema.ts';
 import { userReportRequestSchema } from './schema/request/userReportRequestSchema.ts';
 import { yearInReviewParamsSchema } from './schema/request/yearInReviewParamsSchema.ts';
+import { yearInReviewPersonaParamsSchema } from './schema/request/yearInReviewPersonaParamsSchema.ts';
 import { blockedUserResponseSchema } from './schema/response/blockedUserResponseSchema.ts';
 import { followerResponseSchema } from './schema/response/followerResponseSchema.ts';
 import { followResponseSchema } from './schema/response/followResponseSchema.ts';
@@ -58,6 +59,12 @@ import { userCommentResponseSchema } from './schema/response/userCommentResponse
 import { userStatsResponseSchema } from './schema/response/userStatsResponseSchema.ts';
 import { watchActionSchema } from './schema/response/watchActionSchema.ts';
 import { watchingResponseSchema } from './schema/response/watchingResponseSchema.ts';
+import {
+  yearInReviewPersonaBadRequestResponseSchema,
+  yearInReviewPersonaForbiddenResponseSchema,
+  yearInReviewPersonaNotFoundResponseSchema,
+  yearInReviewPersonaResponseSchema,
+} from './schema/response/yearInReviewPersonaResponseSchema.ts';
 import { yearInReviewResponseSchema } from './schema/response/yearInReviewResponseSchema.ts';
 import { favorites } from './subroutes/favorites.ts';
 import { filters } from './subroutes/filters.ts';
@@ -635,6 +642,24 @@ Returns a year-in-review summary for a user. Send the \`year\` path parameter to
       200: yearInReviewResponseSchema,
     },
   },
+  year_in_review_persona: {
+    summary: 'Get year in review persona',
+    description: `#### 🔥 VIP Only 🔓 OAuth Optional
+Returns the watching persona a user earned for a year in review, with its runner-up, traits, highlights, scores, longest streak and monthly personas. Send the \`year\` path parameter (2026 or later) to choose the review period.
+
+Returns \`400\` for an invalid year or user slug, \`403\` when a non-VIP user requests their own persona, and \`404\` when the profile is not visible or no persona has been computed.`,
+    path: '/yir/:year/persona',
+    pathParams: profileParamsSchema
+      .merge(yearInReviewPersonaParamsSchema),
+    method: 'GET',
+    responses: {
+      200: yearInReviewPersonaResponseSchema,
+      400: yearInReviewPersonaBadRequestResponseSchema,
+      401: z.undefined(),
+      403: yearInReviewPersonaForbiddenResponseSchema,
+      404: yearInReviewPersonaNotFoundResponseSchema,
+    },
+  },
 }, {
   pathPrefix: '/:id',
 });
@@ -739,6 +764,8 @@ export {
   userStatsResponseSchema,
   watchActionSchema,
   watchingResponseSchema,
+  yearInReviewPersonaParamsSchema,
+  yearInReviewPersonaResponseSchema,
 };
 
 /** The profile parameters. */
@@ -807,6 +834,15 @@ export type MonthInReviewResponse = z.infer<typeof monthInReviewResponseSchema>;
 export type YearInReviewParams = z.infer<typeof yearInReviewParamsSchema>;
 /** The year in review response payload. */
 export type YearInReviewResponse = z.infer<typeof yearInReviewResponseSchema>;
+
+/** The year in review persona parameters. */
+export type YearInReviewPersonaParams = z.infer<
+  typeof yearInReviewPersonaParamsSchema
+>;
+/** The year in review persona response payload. */
+export type YearInReviewPersonaResponse = z.infer<
+  typeof yearInReviewPersonaResponseSchema
+>;
 
 /** The reacted comment response payload. */
 export type ReactedCommentResponse = z.infer<
