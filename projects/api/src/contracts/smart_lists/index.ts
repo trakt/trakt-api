@@ -12,6 +12,9 @@ import { listParamsSchema } from '../users/schema/request/listParamsSchema.ts';
 const SEVERITY_RANGE =
   'Parental guide severity range `min-max`, from 0 (none) to 3 (severe).';
 
+const RANGE = (what: string, example: string): string =>
+  `${what} range \`min-max\`, either side optional, e.g. \`${example}\`.`;
+
 const smartListItemsQuerySchema = extendedMediaQuerySchema
   .merge(mediaFilterParamsSchema.omit({
     start_date: true,
@@ -21,6 +24,38 @@ const smartListItemsQuerySchema = extendedMediaQuerySchema
   .merge(pageQuerySchema)
   .merge(limitlessQuerySchema)
   .extend({
+    watchnow: z.string().nullish().describe(
+      'Streaming filter. `favorites` for services of the list owner, `any` for any service in the list region, `free` for free streaming, `subscriptions` for subscription services, or a service name such as `netflix`. Prefix a value with `-` to exclude it, e.g. `-netflix`.',
+    ),
+    released_within_days: z.number().int().min(1).max(3650).optional()
+      .describe(
+        'Only titles released within the last N days, from 1 to 3650. Movies use the release date, shows the first aired date.',
+      ),
+    tmdb_ratings: z.string().optional().describe(
+      RANGE('TMDB rating, 0 to 10,', '7.5-10'),
+    ),
+    metascores: z.string().optional().describe(
+      RANGE('Metascore, 0 to 100,', '70-100'),
+    ),
+    votes: z.string().optional().describe(
+      RANGE('Trakt vote count', '1000-'),
+    ),
+    imdb_votes: z.string().optional().describe(
+      RANGE('IMDb vote count', '5000-'),
+    ),
+    studios: z.string().optional().describe(
+      'Comma-separated production company slugs or names. Prefix with `-` to exclude, e.g. `pixar,-dreamworks-animation`.',
+    ),
+    people: z.string().optional().describe(
+      'Comma-separated person slugs. Prefix with `-` to exclude, e.g. `steven-spielberg`.',
+    ),
+    people_operator: z.enum(['and', 'or']).optional().describe(
+      'Whether titles must include every listed person (`and`) or any of them (`or`). Defaults to `or`.',
+    ),
+    people_role: z.enum(['any', 'cast', 'directing', 'writing', 'producing'])
+      .optional().describe(
+        'Restrict `people` matches to a role. Defaults to `any`.',
+      ),
     watchnow_country: z.string().optional().describe(
       'Two-letter region for `watchnow`. Defaults to the list region, then the owner region, then `us`.',
     ),
@@ -49,7 +84,9 @@ const smartListItemsPathParamsSchema = listParamsSchema.extend({
 const ITEMS_DESCRIPTION =
   `Returns the dynamic items a smart list resolves to, worked out when you request them. A list can hold movies, shows, or both. Use query filters and pagination to refine the result set.
 
-Streaming (\`watchnow\`) filters resolve against the list owner, not the caller: the list region, else the owner's region, else \`us\`, and \`favorites\` means the owner's services.`;
+Streaming (\`watchnow\`) filters resolve against the list owner, not the caller: the list region, else the owner's region, else \`us\`, and \`favorites\` means the owner's services.
+
+List filters (\`genres\`, \`studios\`, \`people\`, \`watchnow\`, and similar) accept a \`-\` prefix on a value to exclude it. New filters: \`released_within_days\`, \`tmdb_ratings\`, \`metascores\`, \`votes\`, \`imdb_votes\`, \`studios\`, \`people\`, \`people_operator\` and \`people_role\`.`;
 
 /** ts-rest contract for the `smartLists` endpoints. */
 export const smartLists = builder.router({
