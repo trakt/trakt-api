@@ -8,6 +8,8 @@ const floatRange = z.array(float(z.number())).max(2);
 // any of them. Exclusion is always "carries none of".
 const operator = z.enum(['and', 'or']);
 
+const peopleRole = z.enum(['any', 'cast', 'directing', 'writing', 'producing']);
+
 const severityRange = z.array(z.number().int().min(0).max(3)).max(2);
 
 /** Zod schema for smart list filters. */
@@ -22,12 +24,21 @@ export const smartListFiltersSchema = z.object({
   networks: list.optional(),
   keywords: list.optional(),
   keywords_operator: operator.optional(),
+  studios: list.optional(),
+  people: list.optional(),
+  people_operator: operator.optional(),
+  people_role: peopleRole.optional(),
   watchnow: list.optional(),
   watchnow_country: z.string().regex(/^[a-z]{2}$/).optional(),
   years: intRange.optional(),
+  released_within_days: z.number().int().min(1).max(3650).optional(),
   ratings: intRange.optional(),
   runtimes: intRange.optional(),
   imdb_ratings: floatRange.optional(),
+  tmdb_ratings: floatRange.optional(),
+  metascores: intRange.optional(),
+  votes: intRange.optional(),
+  imdb_votes: intRange.optional(),
   rt_meters: intRange.optional(),
   rt_user_meters: intRange.optional(),
   letterboxd_ratings: floatRange.optional(),
