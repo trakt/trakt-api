@@ -126,7 +126,7 @@ Returns movie, show, episode, and season items on a public list. Use \`id\` to i
       summary: 'Get items on a list',
       description:
         `#### 🔥 VIP Enhanced 📄 Pagination Optional ✨ Extended Info 😁 Emojis
-Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`, \`episode\`, or \`person\`. You can optionally specify the \`type\` parameter with a single value or comma delimited string for multiple item types.`,
+Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`, or \`episode\`. You can optionally specify the \`type\` parameter with a single value or comma delimited string for multiple item types.`,
       path: '/items/:type/:sort_by/:sort_how',
       method: 'GET',
       pathParams: listItemsPathParamsSchema,

@@ -203,7 +203,7 @@ Returns items on a personal list. Use \`type\`, \`sort_by\`, and \`sort_how\` to
   add: {
     summary: 'Add items to personal list',
     description: `#### 🔥 VIP Enhanced 🔒 OAuth Required 😁 Emojis
-Add one or more items to a personal list. Items can be movies, shows, seasons, episodes, or people.
+Add one or more items to a personal list. Items can be movies, shows, seasons, or episodes.
 
 #### Notes
 
@@ -219,8 +219,7 @@ If the user's list item limit is exceeded, a \`420\` HTTP error code is returned
 | \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
 | \`shows\` | array | Array of \`show\` objects. |
 | \`seasons\` | array | Array of \`season\` objects. |
-| \`episodes\` | array | Array of \`episode\` objects. |
-| \`people\` | array | Array of \`person\` objects. |`,
+| \`episodes\` | array | Array of \`episode\` objects. |`,
     path: '/items',
     method: 'POST',
     body: listRequestSchema,
@@ -240,8 +239,7 @@ Remove one or more items from a personal list.
 | \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
 | \`shows\` | array | Array of \`show\` objects. |
 | \`seasons\` | array | Array of \`season\` objects. |
-| \`episodes\` | array | Array of \`episode\` objects. |
-| \`people\` | array | Array of \`person\` objects. |`,
+| \`episodes\` | array | Array of \`episode\` objects. |`,
     path: '/items/remove',
     method: 'POST',
     body: listRequestSchema,
