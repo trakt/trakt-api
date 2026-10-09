@@ -46,7 +46,7 @@ export const movieIdsRequestSchema = z.union([
 /** Zod schema for the season ids request. */
 export const seasonIdsRequestSchema = z.union([
   seasonIdsSchema.extend({ trakt: z.number().int() }),
-  seasonIdsSchema.extend({ tmdb: z.string() }),
+  seasonIdsSchema.extend({ tmdb: z.number().int() }),
   seasonIdsSchema.extend({ tvdb: z.number().int() }),
 ]);
 
