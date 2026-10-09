@@ -44,8 +44,6 @@ const watchShowWithIdsSchema = z
 
 const addShowToHistorySchema = z
   .union([
-    watchShowWithIdsSchema,
-    watchWithTileAndYearSchema,
     watchShowWithIdsSchema.merge(watchWithSeasonsSchema),
     watchWithTileAndYearSchema.merge(watchWithSeasonsSchema),
   ]);
