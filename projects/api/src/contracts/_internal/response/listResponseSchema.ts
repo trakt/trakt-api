@@ -2,6 +2,7 @@ import { sortEnumSchema } from '../../users/schema/request/sortParamsSchema.ts';
 import { asString, z } from '../z.ts';
 import { listPrivacyEnumSchema } from './listPrivacyEnumSchema.ts';
 import { profileResponseSchema } from './profileResponseSchema.ts';
+import { smartListCreateResponseSchema } from './smartListCreateResponseSchema.ts';
 import { sortDirectionSchema } from './sortDirectionSchema.ts';
 
 /** Zod schema for the list response. */
@@ -39,6 +40,11 @@ export const listResponseSchema = z.object({
     name: z.string(),
     url: z.string().nullable(),
   }).nullish(),
+  /***
+   * Set once the owner turned this list into a smart list. Visible to
+   * everyone when that smart list is public, and always to the owner.
+   */
+  converted_to: smartListCreateResponseSchema.nullish(),
   /***
    * Available if requesting extended `images`.
    */

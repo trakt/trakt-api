@@ -18,6 +18,7 @@ import { listedMovieResponseSchema } from '../../_internal/response/listedMovieR
 import { listedShowResponseSchema } from '../../_internal/response/listedShowResponseSchema.ts';
 import { listRemoveResponseSchema } from '../../_internal/response/listRemoveResponseSchema.ts';
 import { listResponseSchema } from '../../_internal/response/listResponseSchema.ts';
+import { smartListCreateResponseSchema } from '../../_internal/response/smartListCreateResponseSchema.ts';
 import { z } from '../../_internal/z.ts';
 import { listReportRequestSchema } from '../../lists/schema/listReportRequestSchema.ts';
 import { createListRequestSchema } from '../schema/request/createListRequestSchema.ts';
@@ -29,6 +30,7 @@ import { reorderRequestSchema } from '../schema/request/reorderRequestSchema.ts'
 import { reorderListResponseSchema } from '../schema/response/reorderListResponseSchema.ts';
 import { reorderListsResponseSchema } from '../schema/response/reorderListsResponseSchema.ts';
 import { smartListDraftResponseSchema } from '../schema/response/smartListDraftResponseSchema.ts';
+import { smartListWriteSchema } from '../../_internal/request/smartListWriteSchema.ts';
 
 const listItemsPathParamsSchema = profileParamsSchema
   .merge(listParamsSchema)
@@ -356,6 +358,33 @@ Returns a ready-made smart list setup for a personal list that stopped updating 
       200: smartListDraftResponseSchema,
       401: z.undefined(),
       404: z.undefined(),
+    },
+  },
+  convertToSmartList: {
+    summary: 'Turn a list into a smart list',
+    description: `#### 🔒 OAuth Required
+Turns your personal list that stopped updating (see \`stale_origin\`) into a smart list. Send the same body as creating a smart list, usually the \`filters\`, \`source\` and \`media_type\` from [**smart-list-draft**](#reference/users/lists), edited as you like. Only the list owner can convert it.
+
+The list keeps its address: its items are then served from the smart list, and it carries \`converted_to\` pointing at the smart list.
+
+| Status | When |
+|---|---|
+| \`201\` | Converted; \`ids\` of the new smart list. |
+| \`200\` | Already converted; \`ids\` of the existing smart list. Safe to retry. |
+| \`404\` | \`list_not_convertible\` |
+| \`420\` | Smart list limit reached. |`,
+    path: '/smart-list-draft/convert',
+    method: 'POST',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    body: smartListWriteSchema,
+    responses: {
+      200: smartListCreateResponseSchema,
+      201: smartListCreateResponseSchema,
+      400: z.object({ error: z.string() }),
+      401: z.undefined(),
+      404: z.object({ error: z.string() }),
+      420: z.undefined(),
     },
   },
   report: {
