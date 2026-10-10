@@ -31,6 +31,7 @@ export const crewResponseSchema = z.object({
 /** Zod schema for the people response. */
 export const peopleResponseSchema = z.object({
   cast: z.array(castResponseSchema).nullish(),
+  guest_stars: z.array(castResponseSchema).nullish(),
   crew: z.record(
     crewPositionResponseSchema,
     z.array(crewResponseSchema),
