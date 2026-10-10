@@ -32,6 +32,14 @@ export const listResponseSchema = z.object({
   }),
   user: profileResponseSchema,
   /***
+   * Set for the list owner when the tool that kept this list updated stopped
+   * syncing it. `null` otherwise, and for every other viewer.
+   */
+  stale_origin: z.object({
+    name: z.string(),
+    url: z.string().nullable(),
+  }).nullish(),
+  /***
    * Available if requesting extended `images`.
    */
   images: z.object({

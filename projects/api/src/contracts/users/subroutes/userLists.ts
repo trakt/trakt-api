@@ -28,6 +28,7 @@ import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { reorderRequestSchema } from '../schema/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../schema/response/reorderListResponseSchema.ts';
 import { reorderListsResponseSchema } from '../schema/response/reorderListsResponseSchema.ts';
+import { smartListDraftResponseSchema } from '../schema/response/smartListDraftResponseSchema.ts';
 
 const listItemsPathParamsSchema = profileParamsSchema
   .merge(listParamsSchema)
@@ -339,6 +340,22 @@ Returns all top level comments for a list. By default, the comments are sorted b
     query: pageQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
+    },
+  },
+  smartListDraft: {
+    summary: 'Get a smart list draft for a list',
+    description: `#### 🔒 OAuth Required
+Returns a ready-made smart list setup for a personal list that stopped updating (see \`stale_origin\` on the list). Only the list owner can read it.
+
+\`filters\` use the same shape as smart list filters, so they can be sent as-is when creating a smart list. \`confidence\` is the share of the list's current titles the setup brings back, from 0 to 1. Lists without a good setup return \`404\`. \`converted\` is set once the owner has turned the list into a smart list.`,
+    path: '/smart-list-draft',
+    method: 'GET',
+    pathParams: profileParamsSchema
+      .merge(listParamsSchema),
+    responses: {
+      200: smartListDraftResponseSchema,
+      401: z.undefined(),
+      404: z.undefined(),
     },
   },
   report: {
