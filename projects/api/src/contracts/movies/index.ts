@@ -20,6 +20,7 @@ import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
 import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
+import { themeQuerySchema } from '../_internal/request/themeQuerySchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
@@ -351,6 +352,7 @@ Returns the most watched movies over the last 24 hours. Movies with the most \`w
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -462,6 +464,7 @@ Returns the most anticipated movies based on the number of lists a movie appears
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -491,6 +494,7 @@ Returns the most popular movies. Popularity is calculated using the rating perce
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {

@@ -3,6 +3,7 @@ import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuer
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { themeQuerySchema } from '../_internal/request/themeQuerySchema.ts';
 import type { z } from '../_internal/z.ts';
 import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipatedResponseSchema.ts';
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
@@ -18,6 +19,7 @@ Returns trending movies and shows. Results are ordered by current watcher activi
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -32,6 +34,7 @@ Returns anticipated movies and shows based on list activity. Results can be filt
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -46,6 +49,7 @@ Returns popular movies and shows. Results can be filtered by media fields or ign
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
