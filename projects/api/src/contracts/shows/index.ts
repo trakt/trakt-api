@@ -23,6 +23,7 @@ import { episodeResponseSchema } from '../_internal/response/episodeResponseSche
 import { episodeStatsResponseSchema } from '../_internal/response/episodeStatsResponseSchema.ts';
 import { episodeTranslationResponseSchema } from '../_internal/response/episodeTranslationResponseSchema.ts';
 import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
+import { themeQuerySchema } from '../_internal/request/themeQuerySchema.ts';
 import { justWatchLinkResponseSchema } from '../_internal/response/justWatchLinkResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
@@ -855,6 +856,7 @@ Returns the most watched shows over the last 24 hours. Shows with the most \`wat
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -959,6 +961,7 @@ Returns the most anticipated shows based on the number of lists a show appears o
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {
@@ -988,6 +991,7 @@ Returns the most popular shows. Popularity is calculated using the rating percen
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema)
       .merge(pageQuerySchema)
       .merge(ignoreQuerySchema),
     responses: {

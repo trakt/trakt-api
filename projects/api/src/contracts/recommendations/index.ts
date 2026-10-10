@@ -2,6 +2,7 @@ import { authMetadata, builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
+import { themeQuerySchema } from '../_internal/request/themeQuerySchema.ts';
 import { z } from '../_internal/z.ts';
 import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
@@ -18,7 +19,8 @@ The \`favorited_by\` array contains all users who favorited the item along with 
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(recommendationsQuerySchema)
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema),
     responses: {
       200: recommendedMovieResponse,
     },
@@ -47,7 +49,8 @@ The \`favorited_by\` array contains all users who favorited the item along with 
     method: 'GET',
     query: extendedMediaQuerySchema
       .merge(recommendationsQuerySchema)
-      .merge(mediaFilterParamsSchema),
+      .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema),
     responses: {
       200: recommendedShowResponse,
     },
