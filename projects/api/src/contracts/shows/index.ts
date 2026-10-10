@@ -181,7 +181,7 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images']>(),
+    query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
     pathParams: idParamsSchema
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema),
@@ -531,7 +531,7 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images']>(),
+    query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
     pathParams: idParamsSchema,
     responses: {
       200: peopleResponseSchema,
