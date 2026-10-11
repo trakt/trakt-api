@@ -72,6 +72,7 @@ import { hidden } from './subroutes/hidden.ts';
 import { history } from './subroutes/history.ts';
 import { ratings } from './subroutes/ratings.ts';
 import { requests } from './subroutes/requests.ts';
+import { smartListDrafts } from './subroutes/smartListDrafts.ts';
 import { smartLists } from './subroutes/smartLists.ts';
 import { userLists } from './subroutes/userLists.ts';
 import { watched } from './subroutes/watched.ts';
@@ -684,6 +685,7 @@ type UsersInput =
     favorites: typeof favorites;
     lists: typeof userLists;
     smartLists: typeof smartLists;
+    smartListDrafts: typeof smartListDrafts;
     hidden: typeof hidden;
     requests: typeof requests;
     filters: typeof filters;
@@ -705,6 +707,7 @@ export const users = builder.router({
   favorites,
   lists: userLists,
   smartLists,
+  smartListDrafts,
   hidden,
   requests,
   filters,
@@ -718,6 +721,7 @@ export type * from './subroutes/hidden.ts';
 export type * from './subroutes/history.ts';
 export type * from './subroutes/ratings.ts';
 export type * from './subroutes/requests.ts';
+export type * from './subroutes/smartListDrafts.ts';
 export type * from './subroutes/smartLists.ts';
 export type * from './subroutes/userLists.ts';
 export type * from './subroutes/watched.ts';
