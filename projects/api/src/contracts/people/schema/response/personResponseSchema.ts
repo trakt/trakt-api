@@ -21,6 +21,11 @@ export const personResponseSchema = z.object({
    */
   biography: z.string().nullish(),
   /***
+   * A short summary of the person, two to three sentences. Available if
+   * requesting extended `full`.
+   */
+  summary: z.string().nullish(),
+  /***
    * Available if requesting extended `full`.
    */
   birthday: z.string().nullish(),
