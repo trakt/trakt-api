@@ -4,7 +4,6 @@ import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQu
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
-import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
@@ -110,19 +109,6 @@ Report a person for moderator review. Send a \`reason\` and optional \`message\`
       201: z.undefined(),
       400: z.undefined(),
       409: z.undefined(),
-    },
-  },
-  refresh: {
-    summary: 'Refresh person metadata',
-    description: `#### 🔥 VIP Only 🔒 OAuth Required
-Queue a full metadata refresh for a person. Pass \`images=true\` to also refresh the person's images.`,
-    path: '/refresh',
-    method: 'POST',
-    query: refreshQuerySchema,
-    pathParams: idParamsSchema,
-    body: z.undefined(),
-    responses: {
-      201: z.undefined(),
     },
   },
 }, {

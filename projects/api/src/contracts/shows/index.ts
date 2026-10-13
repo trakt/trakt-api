@@ -16,7 +16,6 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
-import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
@@ -826,19 +825,6 @@ Report a show for moderator review. Send a \`reason\` and optional \`message\` w
       201: z.undefined(),
       400: z.undefined(),
       409: z.undefined(),
-    },
-  },
-  refresh: {
-    summary: 'Refresh show metadata',
-    description: `#### 🔥 VIP Only 🔒 OAuth Required
-Queue a full metadata refresh for a show. Pass \`images=true\` to also refresh the show's images.`,
-    path: '/refresh',
-    method: 'POST',
-    query: refreshQuerySchema,
-    pathParams: idParamsSchema,
-    body: z.undefined(),
-    responses: {
-      201: z.undefined(),
     },
   },
   episode: EPISODE_LEVEL,
