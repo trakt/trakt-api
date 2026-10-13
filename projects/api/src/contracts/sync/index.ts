@@ -471,17 +471,6 @@ Returns all items in the authenticated user's favorites filtered by type.`,
       200: syncListItemResponseSchema.array(),
     },
   },
-  update: {
-    summary: 'Update favorites',
-    description:
-      'Update favorite item metadata such as notes or rank for multiple items.',
-    method: 'PUT',
-    path: '',
-    body: favoriteParamSchema,
-    responses: {
-      200: favoritesResponseSchema,
-    },
-  },
   add: {
     summary: 'Add items to favorites',
     description: `#### 🔒 OAuth Required 😁 Emojis
