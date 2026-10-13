@@ -16,7 +16,6 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
-import { refreshQuerySchema } from '../_internal/request/refreshQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
 import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
@@ -323,19 +322,6 @@ Report a movie for moderator review. Send a \`reason\` and optional \`message\` 
       201: z.undefined(),
       400: z.undefined(),
       409: z.undefined(),
-    },
-  },
-  refresh: {
-    summary: 'Refresh movie metadata',
-    description: `#### 🔥 VIP Only 🔒 OAuth Required
-Queue a full metadata refresh for a movie. Pass \`images=true\` to also refresh the movie's images.`,
-    path: '/refresh',
-    method: 'POST',
-    query: refreshQuerySchema,
-    pathParams: idParamsSchema,
-    body: z.undefined(),
-    responses: {
-      201: z.undefined(),
     },
   },
 }, {
