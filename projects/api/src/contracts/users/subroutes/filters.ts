@@ -1,9 +1,7 @@
 import { builder } from '../../_internal/builder.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import type { z } from '../../_internal/z.ts';
-import { addFilterRequestSchema } from '../schema/request/addFilterRequestSchema.ts';
 import { sectionParamsSchema } from '../schema/request/sectionParamsSchema.ts';
-import { addFilterResponseSchema } from '../schema/response/addFilterResponseSchema.ts';
 import { filterResponseSchema } from '../schema/response/filterResponseSchema.ts';
 
 /** ts-rest contract for the `filters` endpoints. */
@@ -18,17 +16,6 @@ Get all saved filters a user has created. The \`path\` and \`query\` can be used
     query: pageQuerySchema,
     responses: {
       200: filterResponseSchema.array(),
-    },
-  },
-  add: {
-    summary: 'Add saved filters',
-    description: `#### 🔥 VIP Only 🔒 OAuth Required
-Create saved filters for the authenticated user. Send filter names and URLs in the request body; the response returns the created filter records.`,
-    path: '',
-    method: 'POST',
-    body: addFilterRequestSchema.array(),
-    responses: {
-      201: addFilterResponseSchema,
     },
   },
 }, {
