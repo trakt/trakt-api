@@ -20,7 +20,6 @@ import { search } from './search/index.ts';
 import { seasons } from './seasons/index.ts';
 import { shows } from './shows/index.ts';
 import { smartLists } from './smart_lists/index.ts';
-import { social_recommendations } from './social_recommendations/index.ts';
 import { sync } from './sync/index.ts';
 import { team } from './team/index.ts';
 import { users } from './users/index.ts';
@@ -37,7 +36,6 @@ type TraktContract = {
   users: typeof users;
   sync: typeof sync;
   recommendations: typeof recommendations;
-  social_recommendations: typeof social_recommendations;
   media: typeof media;
   movies: typeof movies;
   notes: typeof notes;
@@ -69,7 +67,6 @@ export const traktContract: TraktContract = builder
     users,
     sync,
     recommendations,
-    social_recommendations,
     media,
     movies,
     notes,
