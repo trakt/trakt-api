@@ -27,17 +27,6 @@ Add a recent search to the global search trends. This is not a user-specific rec
       201: z.undefined(),
     },
   },
-  remove: {
-    summary: 'Remove recent search',
-    description: `#### 🔒 OAuth Required
-Remove a recent search from the global search trends. This is not a user-specific recent search history. Send the search request body; a successful delete returns \`204\` with no response body.`,
-    path: '/remove',
-    method: 'POST',
-    body: recentSearchRequestSchema,
-    responses: {
-      204: z.undefined(),
-    },
-  },
 }, { pathPrefix: '/recent' });
 
 const idLookupParamsSchema = z.object({

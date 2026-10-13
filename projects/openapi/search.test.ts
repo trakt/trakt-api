@@ -92,9 +92,6 @@ Deno.test('search result docs expose one flat schema with episode support', () =
 
 Deno.test('recent search docs describe global trend tracking', () => {
   const addDescription = document.paths['/search/recent/']?.post?.description;
-  const removeDescription = document.paths['/search/recent/remove']?.post
-    ?.description;
 
   assertStringIncludes(addDescription ?? '', 'global search trends');
-  assertStringIncludes(removeDescription ?? '', 'global search trends');
 });
