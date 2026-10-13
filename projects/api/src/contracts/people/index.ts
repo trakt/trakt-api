@@ -1,6 +1,7 @@
 import { builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { extendedPeopleQuerySchema } from '../_internal/request/extendedPeopleQuerySchema.ts';
+import { extendedPersonQuerySchema } from '../_internal/request/extendedPersonQuerySchema.ts';
 import { extendedProfileQuerySchema } from '../_internal/request/extendedProfileQuerySchema.ts';
 import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
@@ -32,10 +33,13 @@ Returns a single person's details.
 If available, the \`gender\` property will be set to \`male\`, \`female\`, or \`non_binary\`.
 
 #### Known For Department
-If available, the \`known_for_department\` property will be set to \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, or \`editing\`. Many people have credits across departments, \`known_for\` allows you to select their default credits more accurately.`,
+If available, the \`known_for_department\` property will be set to \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, or \`editing\`. Many people have credits across departments, \`known_for\` allows you to select their default credits more accurately.
+
+#### Biography
+The \`biography\` is plain text. Request extended \`markdown\` to get markdown links to the movies and shows it mentions.`,
     path: '/',
     pathParams: idParamsSchema,
-    query: extendedPeopleQuerySchema,
+    query: extendedPersonQuerySchema,
     method: 'GET',
     responses: {
       200: personResponseSchema,
