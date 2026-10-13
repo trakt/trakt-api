@@ -1,8 +1,7 @@
 import { builder } from '../../_internal/builder.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
-import { z } from '../../_internal/z.ts';
+import type { z } from '../../_internal/z.ts';
 import { addFilterRequestSchema } from '../schema/request/addFilterRequestSchema.ts';
-import { filterIdParamsSchema } from '../schema/request/filterIdParamsSchema.ts';
 import { sectionParamsSchema } from '../schema/request/sectionParamsSchema.ts';
 import { addFilterResponseSchema } from '../schema/response/addFilterResponseSchema.ts';
 import { filterResponseSchema } from '../schema/response/filterResponseSchema.ts';
@@ -30,18 +29,6 @@ Create saved filters for the authenticated user. Send filter names and URLs in t
     body: addFilterRequestSchema.array(),
     responses: {
       201: addFilterResponseSchema,
-    },
-  },
-  delete: {
-    summary: 'Delete saved filter',
-    description: `#### 🔥 VIP Only 🔒 OAuth Required
-Delete a saved filter by \`id\`. A successful delete returns \`204\`; an unknown filter returns \`404\`.`,
-    path: '/:id',
-    method: 'DELETE',
-    pathParams: filterIdParamsSchema,
-    responses: {
-      204: z.undefined(),
-      404: z.undefined(),
     },
   },
 }, {
