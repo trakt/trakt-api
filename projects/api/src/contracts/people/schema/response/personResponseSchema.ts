@@ -17,7 +17,8 @@ export const personResponseSchema = z.object({
    */
   social_ids: socialIdsResponseSchema.nullish(),
   /***
-   * Available if requesting extended `full`.
+   * Available if requesting extended `full`. Includes markdown links to the
+   * movies and shows it mentions only when also requesting extended `markdown`.
    */
   biography: z.string().nullish(),
   /***
