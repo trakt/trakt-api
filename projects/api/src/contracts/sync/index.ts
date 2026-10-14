@@ -10,6 +10,8 @@ import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
 import { z } from '../_internal/z.ts';
+import { reorderRequestSchema } from '../users/schema/request/reorderRequestSchema.ts';
+import { reorderListResponseSchema } from '../users/schema/response/reorderListResponseSchema.ts';
 import { collectionParamSchema } from './schema/request/collectionParamSchema.ts';
 import { favoriteParamSchema } from './schema/request/favoritesParamSchema.ts';
 import { historyRemoveRequestSchema } from './schema/request/historyRemoveRequestSchema.ts';
@@ -370,9 +372,9 @@ Remove one or more items from a user's watchlist.
       'Reorder all items in a user watchlist by sending the ordered list item IDs.',
     method: 'POST',
     path: '/reorder',
-    body: syncReorderRequestSchema,
+    body: reorderRequestSchema,
     responses: {
-      200: syncReorderResponseSchema,
+      200: reorderListResponseSchema,
     },
   },
   updateItem: {
