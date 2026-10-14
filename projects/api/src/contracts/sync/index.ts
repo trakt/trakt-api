@@ -69,10 +69,6 @@ const syncListItemUpdateRequestSchema = z.object({
   rank: z.number().int().optional(),
 }).passthrough();
 
-const syncReorderRequestSchema = z.object({
-  rank: z.array(z.number().int()).optional(),
-}).passthrough();
-
 const syncListItemResponseSchema = z.object({
   rank: z.number().int().optional(),
   id: z.number().int().optional(),
@@ -97,11 +93,6 @@ const syncRatingItemResponseSchema = z.object({
   rated_at: z.string().datetime(),
   rating: z.number().int(),
   type: z.string(),
-}).passthrough();
-
-const syncReorderResponseSchema = z.object({
-  updated: z.number().int().optional(),
-  skipped_ids: z.array(z.number().int()).optional(),
 }).passthrough();
 
 const PLAYBACK_PAGINATION_NOTE =
@@ -521,9 +512,9 @@ Remove items from a user's favorites. Apps should encourage user's to add favori
       'Reorder all items in a user favorites list by sending the ordered list item IDs.',
     method: 'POST',
     path: '/reorder',
-    body: syncReorderRequestSchema,
+    body: reorderRequestSchema,
     responses: {
-      200: syncReorderResponseSchema,
+      200: reorderListResponseSchema,
     },
   },
   updateItem: {
