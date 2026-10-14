@@ -177,10 +177,13 @@ The \`crew\` object will be broken up by department into \`production\`, \`art\`
 If you add \`?extended=guest_stars\` to the URL, it will return all guest stars that appeared in the episode.
 
 > ### Note
-> _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
+> _This returns a lot of data, so please only use this extended parameter if you actually need it!_
+
+#### Markdown
+If you add \`?extended=markdown\` to the URL, person biographies include links to the movies and shows they mention. Without it the biography is plain text.`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
+    query: extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
     pathParams: idParamsSchema
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema),
@@ -527,10 +530,13 @@ The \`crew\` object will be broken up by department into \`production\`, \`art\`
 If you add \`?extended=guest_stars\` to the URL, it will return all guest stars that appeared in at least 1 episode of the show.
 
 > ### Note
-> _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
+> _This returns a lot of data, so please only use this extended parameter if you actually need it!_
+
+#### Markdown
+If you add \`?extended=markdown\` to the URL, person biographies include links to the movies and shows they mention. Without it the biography is plain text.`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images', 'guest_stars']>(),
+    query: extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
     pathParams: idParamsSchema,
     responses: {
       200: peopleResponseSchema,
@@ -638,10 +644,10 @@ Returns all lists that contain this season. By default, \`personal\` lists are r
     people: {
       summary: 'Get all people for a season',
       description:
-        'Returns all cast and crew for a season. Each cast member will have a characters array and a standard person object.',
+        'Returns all cast and crew for a season. Each cast member will have a characters array and a standard person object. Add `?extended=markdown` to include links to the movies and shows in person biographies; without it the biography is plain text.',
       path: '/people',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['images']>(),
+      query: extendedQuerySchemaFactory<['images', 'markdown']>(),
       pathParams: idParamsSchema
         .merge(seasonParamsSchema),
       responses: {
