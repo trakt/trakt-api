@@ -17,10 +17,17 @@ export const personResponseSchema = z.object({
    */
   social_ids: socialIdsResponseSchema.nullish(),
   /***
-   * Available if requesting extended `full`. Includes markdown links to the
-   * movies and shows it mentions only when also requesting extended `markdown`.
+   * Available if requesting extended `full`. A longer biography. Includes
+   * markdown links to the movies and shows it mentions only when also
+   * requesting extended `markdown`.
    */
   biography: z.string().nullish(),
+  /***
+   * Available if requesting extended `full`. A short summary of two or three
+   * sentences. Includes markdown links only when also requesting extended
+   * `markdown`.
+   */
+  summary: z.string().nullish(),
   /***
    * Available if requesting extended `full`.
    */
