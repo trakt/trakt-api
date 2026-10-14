@@ -231,10 +231,13 @@ Queue a refresh of a movie's JustWatch watch now links.`,
     description: `#### ✨ Extended Info
 Returns all \`cast\` and \`crew\` for a movie. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
 
-The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.`,
+The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.
+
+#### Markdown
+If you add \`?extended=markdown\` to the URL, person biographies include links to the movies and shows they mention. Without it the biography is plain text.`,
     path: '/people',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['images']>(),
+    query: extendedQuerySchemaFactory<['images', 'markdown']>(),
     pathParams: idParamsSchema,
     responses: {
       200: peopleResponseSchema,
