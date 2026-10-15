@@ -54,6 +54,10 @@ Our search engine gives the following characters special meaning when they appea
 
 To interpret any of these characters literally (and not as a special character), precede the character with a backslash \`\\\` character.
 
+#### Markdown
+
+If you add \`?extended=markdown\` to a \`person\` search, the \`biography\` includes links to the movies and shows it mentions. Without it the biography is plain text.
+
 #### Search Fields
 
 By default, certain text fields are used to search for the \`query\`. You can optionally specify the \`fields\` parameter with a single value or comma delimited string for multiple fields. Each \`type\` has specific \`fields\` that can be specified. This can be useful if you want to support more strict searches (i.e. title only).
@@ -92,7 +96,7 @@ By default, certain text fields are used to search for the \`query\`. You can op
     query: searchQuerySchema
       .merge(pageQuerySchema)
       .merge(
-        extendedQuerySchemaFactory<['full,images']>(),
+        extendedQuerySchemaFactory<['full,images', 'markdown']>(),
       ),
     responses: {
       200: searchResultResponseSchema.array(),
