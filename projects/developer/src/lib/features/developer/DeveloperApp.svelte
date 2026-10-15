@@ -49,6 +49,10 @@
   const isApps = $derived(
     page.url.pathname === "/apps" || page.url.pathname.startsWith("/apps/"),
   );
+  const isPremium = $derived(
+    page.url.pathname === "/premium" ||
+      page.url.pathname.startsWith("/premium/"),
+  );
   const isReference = $derived(
     page.url.pathname === "/" &&
       (page.url.searchParams.get("section") === "reference" ||
@@ -595,8 +599,9 @@
     <nav class="section-navigation" aria-label="Developer sections">
       <a
         href={guidePath("getting-started")}
-        aria-current={!isReference && !isApps ? "page" : undefined}
-        >Getting Started</a
+        aria-current={!isReference && !isApps && !isPremium
+          ? "page"
+          : undefined}>Getting Started</a
       >
       <a
         href="/?section=reference"
@@ -605,6 +610,9 @@
       {#if activeAccount}
         <a href="/apps" aria-current={isApps ? "page" : undefined}>My Apps</a>
       {/if}
+      <a href="/premium" aria-current={isPremium ? "page" : undefined}
+        >Premium</a
+      >
       <a
         href="https://github.com/trakt/trakt-api"
         target="_blank"
@@ -623,7 +631,7 @@
     </div>
   </header>
 
-  {#if isApps}
+  {#if isApps || isPremium}
     {@render children()}
   {:else if !isReference}
     <GuideReader
@@ -657,6 +665,12 @@
                 >{/each}
             </select>
           </label>
+          {#if mainServerUrl !== DEFAULT_SERVER}
+            <p class="server-hint">
+              Serves Premium apps only. Standard apps are rejected.
+              <a class="server-hint-link" href="/premium">See plans</a>
+            </p>
+          {/if}
         </div>
       </div>
 
@@ -740,6 +754,17 @@
     padding: var(--ni-10);
     border: var(--ni-1) solid var(--color-border);
     background: var(--color-surface-raised);
+  }
+
+  .server-hint {
+    margin: var(--gap-xs) 0 0;
+    color: var(--color-muted);
+    font-size: var(--ni-11);
+    line-height: 1.5;
+  }
+
+  .server-hint-link {
+    color: var(--color-info);
   }
 
   .trakt-developer-app {

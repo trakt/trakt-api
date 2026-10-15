@@ -1,5 +1,5 @@
 ---
-updatedAt: 2026-10-07T00:00:00.000Z
+updatedAt: 2026-10-13T00:00:00.000Z
 ---
 
 # Rate Limits
@@ -22,6 +22,8 @@ When `Retry-After` is present, wait at least the specified number of seconds bef
 | `Retry-After` | Number of seconds to wait before retrying the request.                                                                    | `10`                                                                                                       |
 
 ## Current limits
+
+The limits below apply to Standard apps on `api.trakt.tv`. [Premium](/docs/premium) apps on `apiz.trakt.tv` get higher limits; read the exact values from the `X-Ratelimit` header rather than hardcoding them.
 
 There are separate limits for authenticated (user level) and unauthenticated (client ID + public IP) calls. We'll continue to adjust these limits to optimize API performance for everyone. The goal is to prevent API abuse and poor coding, but allow users to use apps normally.
 

@@ -5,6 +5,7 @@
 
   const {
     profile,
+    tier,
     busy,
     error = "",
     canConnect = true,
@@ -21,7 +22,9 @@
   const hasLegacyApps = $derived(!github && appCount > 0);
   const appsLabel = $derived(appCount === 1 ? "1 app" : `${appCount} apps`);
   const atLimit = $derived(
-    !!profile && profile.applications.count >= profile.applications.limit,
+    tier === "standard" &&
+      !!profile &&
+      profile.applications.count >= profile.applications.limit,
   );
 
   function cancelUnlink() {

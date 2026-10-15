@@ -26,28 +26,35 @@
   import PkceNotice from "./PkceNotice.svelte";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
+  import { developerApiHost } from "$lib/features/premium/developerApiHost.ts";
+  import type { DeveloperTier } from "$lib/features/premium/DeveloperTier.ts";
+  import TierBadge from "$lib/features/premium/TierBadge.svelte";
+  import DeveloperPlanCard from "$lib/features/premium/DeveloperPlanCard.svelte";
 
   const { slot, mode, appId, appName }: ApplicationsProps = $props();
   let loading = $state(true);
   let apps = $state<Application[]>([]);
   let profile = $state<DeveloperProfile | null>(null);
   const selected = $derived(apps.find((app) => app.id === appId));
+  const tier = $derived<DeveloperTier | null>(
+    profile ? (profile.tier ?? "standard") : null,
+  );
 
-  function canCreateWith(developer: DeveloperProfile | null): boolean {
-    return (
-      !!developer?.github &&
-      developer.applications.count < developer.applications.limit
-    );
+  function canCreateWith(
+    developer: DeveloperProfile | null,
+    plan: DeveloperTier | null,
+  ): boolean {
+    if (!developer?.github || plan === null) return false;
+    if (plan !== "standard") return true;
+
+    return developer.applications.count < developer.applications.limit;
   }
 
-  const canCreate = $derived(canCreateWith(profile));
+  const canCreate = $derived(canCreateWith(profile, tier));
   const readOnly = $derived(!!profile && !profile.github);
+  const atLimit = $derived(!!profile?.github && !canCreate);
   const createLock = $derived(
-    !profile
-      ? "Loading…"
-      : !profile.github
-        ? "Connect GitHub first"
-        : "App limit reached",
+    !profile ? "Loading…" : !profile.github ? "Connect GitHub first" : "",
   );
   const displayName = $derived(
     selected?.name ?? appName ?? (loading ? "Loading…" : "App details"),
@@ -108,7 +115,7 @@
     try {
       const developer = await getDeveloperProfile(slot);
       if (!alive) return;
-      if (!canCreateWith(developer)) {
+      if (!canCreateWith(developer, developer.tier ?? "standard")) {
         await goto("/apps", { replaceState: true });
         return;
       }
@@ -167,6 +174,7 @@
       if (!alive) return;
       apps = [];
       profile = profile && {
+        ...profile,
         github: null,
         applications: { ...profile.applications, count: 0 },
       };
@@ -294,14 +302,24 @@
 
     {#if mode === "list"}
       <div class="workspace">
-        <DeveloperRail
-          {profile}
-          {busy}
-          error={railError}
-          canConnect={!!GITHUB_CLIENT_ID}
-          onConnect={connect}
-          onUnlink={unlink}
-        />
+        <div class="rail-column">
+          <DeveloperRail
+            {profile}
+            {tier}
+            {busy}
+            error={railError}
+            canConnect={!!GITHUB_CLIENT_ID}
+            onConnect={connect}
+            onUnlink={unlink}
+          />
+          {#if profile}
+            <DeveloperPlanCard
+              tier={profile.tier ?? "standard"}
+              count={profile.applications.count}
+              limit={profile.applications.limit}
+            />
+          {/if}
+        </div>
 
         {#if loading}<div class="empty" role="status">Loading your apps…</div>
         {:else}<div class="app-grid">
@@ -313,7 +331,25 @@
                 >{#if apps.length === 0}<small
                     >Register an app to get your Client ID.</small
                   >{/if}</a
-              >{:else}<div class="create-tile locked">
+              >{:else if atLimit}<a class="create-tile locked" href="/premium">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  ><rect x="5" y="11" width="14" height="9" rx="2"></rect><path
+                    d="M8 11V8a4 4 0 0 1 8 0v3"
+                  ></path></svg
+                >
+                <strong>App limit reached</strong><small
+                  >Premium apps stay outside the community limit. See plans →</small
+                >
+              </a>{:else}<div class="create-tile locked">
                 <svg
                   viewBox="0 0 24 24"
                   width="24"
@@ -474,6 +510,12 @@
               <dd>
                 {formatDate(selected.approved_at)}
               </dd>{/if}
+            {#if tier}
+              <dt>Plan</dt>
+              <dd><TierBadge {tier} /></dd>
+              <dt>API host</dt>
+              <dd><code class="host">{developerApiHost(tier)}</code></dd>
+            {/if}
             <dt>Permissions</dt>
             <dd>
               {applicationPermissionLabels(selected.permissions)}
@@ -601,6 +643,11 @@
     align-items: start;
   }
 
+  .rail-column {
+    display: grid;
+    gap: var(--gap-l);
+  }
+
   .create-tile {
     display: grid;
     justify-items: center;
@@ -635,6 +682,16 @@
     border-color: var(--color-border-strong);
     background: transparent;
     color: var(--color-muted);
+  }
+
+  a.create-tile.locked:hover {
+    border-color: var(--color-accent);
+    color: var(--color-foreground);
+  }
+
+  .host {
+    flex: none;
+    font-family: var(--font-mono);
   }
 
   .app-grid {

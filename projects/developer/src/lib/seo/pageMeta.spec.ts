@@ -20,6 +20,14 @@ describe('pageMeta', () => {
     });
   });
 
+  it('describes the premium page', () => {
+    expect(pageMeta('/premium')).toMatchObject({
+      title: 'Premium | Trakt Developer',
+      canonical: 'https://developer.trakt.tv/premium',
+      indexable: true,
+    });
+  });
+
   it.each(['/apps', '/apps/42/edit', '/callback', '/[fallback]', '/docs/x'])(
     'keeps %s out of search results',
     (path) => {

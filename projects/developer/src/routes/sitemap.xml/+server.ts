@@ -14,7 +14,11 @@ export function GET(): Response {
   }));
 
   return new Response(
-    renderSitemap([{ url: `${SITE_ORIGIN}/` }, ...guides]),
+    renderSitemap([
+      { url: `${SITE_ORIGIN}/` },
+      { url: `${SITE_ORIGIN}/premium` },
+      ...guides,
+    ]),
     { headers: { 'Content-Type': 'application/xml' } },
   );
 }
