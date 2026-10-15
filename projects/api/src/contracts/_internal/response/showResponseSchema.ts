@@ -3,6 +3,7 @@ import { genreEnumSchema } from './genreEnumSchema.ts';
 import { imagesResponseSchema } from './imagesResponseSchema.ts';
 import { mediaColorsResponseSchema } from './mediaColorsResponseSchema.ts';
 import { showCertificationResponseSchema } from './showCertificationResponseSchema.ts';
+import { showEndingResponseSchema } from './showEndingResponseSchema.ts';
 import { showIdsResponseSchema } from './showIdsResponseSchema.ts';
 import { socialIdsResponseSchema } from './socialIdsResponseSchema.ts';
 import { statusResponseSchema } from './statusResponseSchema.ts';
@@ -73,6 +74,12 @@ export const showResponseSchema = z.object({
    * Available if requesting extended `full`.
    */
   status: statusResponseSchema.nullish(),
+  /**
+   * How the story ended for canceled and ended shows: `concluded` when the
+   * creators finished it on purpose, `open` when it was cut off. Null when
+   * unknown or the show is still airing.
+   */
+  ending: showEndingResponseSchema.nullish(),
   /**
    * Available if requesting extended `full`.
    */
