@@ -35,11 +35,20 @@ function guideMeta(pathname: string): PageMeta | null {
   };
 }
 
+const PREMIUM: PageMeta = {
+  title: `Premium | ${SITE_NAME}`,
+  description:
+    'Compare the Standard and Premium tiers of the Trakt API: higher rate limits, more endpoints, apiz.trakt.tv, and apps that stay outside the community app limit.',
+  canonical: `${SITE_ORIGIN}/premium`,
+  indexable: true,
+};
+
 export function pageMeta(pathname: string): PageMeta {
   const guide = guideMeta(pathname);
   if (guide) return guide;
 
   if (pathname === '/') return HOME;
+  if (pathname === '/premium') return PREMIUM;
 
   return { ...HOME, indexable: false };
 }

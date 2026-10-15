@@ -39,6 +39,7 @@
 
 ## Access and accounts
 
+- [Premium](/docs/premium)
 - [VIP Methods](/docs/vip-methods)
 - [User Account Limits](/docs/user-account-limits)
 - [Limited Access](/docs/limted-access)
