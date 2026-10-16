@@ -21,6 +21,7 @@ export * from './contracts/people/index.ts';
 export * from './contracts/recommendations/index.ts';
 export * from './contracts/scrobble/index.ts';
 export * from './contracts/search/index.ts';
+export type { SmartListTemplateResponse } from './contracts/smart_lists/index.ts';
 export * from './contracts/shows/index.ts';
 export * from './contracts/sync/index.ts';
 export * from './contracts/team/index.ts';
