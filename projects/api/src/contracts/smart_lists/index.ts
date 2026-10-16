@@ -6,6 +6,7 @@ import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsS
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { smartListDefinitionResponseSchema } from '../_internal/response/smartListDefinitionResponseSchema.ts';
 import { smartListItemResponseSchema } from '../_internal/response/smartListItemResponseSchema.ts';
+import { smartListTemplateResponseSchema } from '../_internal/response/smartListTemplateResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { listParamsSchema } from '../users/schema/request/listParamsSchema.ts';
 
@@ -118,6 +119,19 @@ ${ITEMS_DESCRIPTION}`,
       200: smartListItemResponseSchema.array(),
     },
   },
+  templates: {
+    summary: 'Get smart list templates',
+    description: `#### 🔓 OAuth Optional ✨ Extended Info 😁 Emojis
+Returns the official smart list templates in display order. Each template has a stable \`id\`, a \`source\`, a \`media_type\` and the same \`filters\` a saved smart list returns, so a client can create a smart list from it as is.
+
+Templates whose results depend on the viewer have \`personal: true\`, \`total: null\` and no \`items\`. Load their items with \`/smart-lists/preview/items\` while signed in. The other templates return their \`total\` and up to 3 \`items\`. Use \`extended=images\` to include posters.`,
+    path: '/templates',
+    method: 'GET',
+    query: extendedMediaQuerySchema,
+    responses: {
+      200: smartListTemplateResponseSchema.array(),
+    },
+  },
   typedSorted: {
     summary: 'Get smart list items by type and sort',
     description:
@@ -136,6 +150,11 @@ Use \`type\` to narrow a list holding both media types, and \`sort_by\` / \`sort
 }, {
   pathPrefix: '/smart-lists',
 });
+
+/** The smart list template response payload. */
+export type SmartListTemplateResponse = z.infer<
+  typeof smartListTemplateResponseSchema
+>;
 
 /** The smart list item response payload. */
 export type SmartListItemResponse = z.infer<typeof smartListItemResponseSchema>;
