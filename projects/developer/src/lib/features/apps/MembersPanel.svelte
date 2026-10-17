@@ -3,6 +3,10 @@
   import { addMember } from "./addMember.ts";
   import type { AppMember } from "./AppMember.ts";
   import type { AppMemberRole } from "./AppMemberRole.ts";
+  import type { FollowedUser } from "./FollowedUser.ts";
+  import { listFollowing } from "./listFollowing.ts";
+  import { matchUsernames } from "./matchUsernames.ts";
+  import UsernameCombobox from "./UsernameCombobox.svelte";
   import { changeMemberRole } from "./changeMemberRole.ts";
   import { formatDate } from "./formatDate.ts";
   import { listMembers } from "./listMembers.ts";
@@ -28,7 +32,16 @@
   let newRole = $state<AppMemberRole>(dev ? "tester" : "manager");
   let alive = true;
 
+  let following = $state<FollowedUser[]>([]);
   const target = $derived({ slot, appId });
+  const memberSlugs = $derived(new Set(members.map((member) => member.slug)));
+  const suggestions = $derived(
+    matchUsernames(
+      following.filter((person) => person.username !== ownerUsername),
+      username,
+      memberSlugs,
+    ),
+  );
   const seatsUsed = $derived(1 + members.length);
   const full = $derived(dev && !loading && seatsUsed >= seatLimit);
   const roles = $derived<AppMemberRole[]>(
@@ -37,6 +50,13 @@
 
   onMount(() => {
     void load();
+    if (isOwner || dev) {
+      void listFollowing(slot)
+        .then((people) => {
+          if (alive) following = people;
+        })
+        .catch(() => {});
+    }
     return () => {
       alive = false;
     };
@@ -116,7 +136,9 @@
         ><strong class="username">{ownerUsername}</strong><small class="meta"
           >Always allowed</small
         ></span
-      ><span class="controls"><span class="role-fixed">Owner</span></span>
+      ><span class="controls"
+        ><span class="role-fixed">Owner</span><span></span></span
+      >
     </li>
     {#each members as member (member.slug)}
       <li class="person">
@@ -163,14 +185,14 @@
     {/each}
   </ul>
   {#if error}<p class="error" role="alert">{error}</p>{/if}
-  {#if isOwner || dev}<form class="add-row" onsubmit={add}>
-      <input
-        class="username-input"
+  {#if isOwner || dev}<form
+      class="add-row"
+      class:has-role={isOwner && roles.length > 1}
+      onsubmit={add}
+    >
+      <UsernameCombobox
         bind:value={username}
-        placeholder="Trakt username"
-        aria-label="Trakt username"
-        autocomplete="off"
-        spellcheck="false"
+        {suggestions}
         disabled={busy || full}
       />{#if isOwner && roles.length > 1}<span class="role-control"
           ><select
@@ -198,35 +220,38 @@
 
 <style lang="scss">
   @use "../../../style/member-panel" as panel;
+  @use "../../../style/action-button" as action;
   @use "../../../style/select-caret" as caret;
 
   .trakt-members-panel {
     @include panel.member-panel;
 
+    --role-column: var(--ni-136);
+    --action-column: var(--ni-96);
+
     .controls {
-      display: flex;
+      display: grid;
       flex: none;
+      grid-template-columns: var(--role-column) var(--action-column);
       align-items: center;
       gap: var(--gap-xs);
       margin-inline-start: auto;
     }
 
     .role-fixed {
-      flex: none;
-      min-inline-size: var(--ni-80);
+      padding-inline-start: var(--ni-12);
       color: var(--color-muted);
       font-size: var(--ni-14);
-      text-align: end;
     }
 
     .role-control {
       position: relative;
-      flex: none;
 
       &::after {
         position: absolute;
         inset-block-start: 50%;
         inset-inline-end: var(--ni-12);
+        transform: translateY(-50%);
 
         @include caret.base;
 
@@ -235,7 +260,8 @@
     }
 
     .role-select {
-      block-size: var(--ni-40);
+      inline-size: 100%;
+      block-size: var(--ni-44);
       padding-inline: var(--ni-12) var(--ni-30);
       border: var(--border-thickness-xxs) solid var(--color-border);
       border-radius: var(--radius-control);
@@ -246,6 +272,34 @@
       cursor: pointer;
     }
 
+    .remove {
+      inline-size: 100%;
+    }
+
+    .add-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--action-column);
+      align-items: center;
+      gap: var(--gap-xs);
+
+      &.has-role {
+        grid-template-columns:
+          minmax(0, 1fr) var(--role-column)
+          var(--action-column);
+      }
+    }
+
+    .add-row:not(.has-role) .add-button {
+      grid-column: -2;
+    }
+
+    .add-button {
+      @include action.base;
+
+      inline-size: 100%;
+      block-size: var(--ni-44);
+    }
+
     .owner-note {
       margin: 0;
       color: var(--color-muted);
@@ -253,17 +307,22 @@
     }
 
     @media (max-width: 700px) {
-      .person,
-      .add-row {
+      .person {
         flex-wrap: wrap;
       }
 
-      .person:has(.role-control) .who {
+      .who {
         flex-basis: calc(100% - var(--ni-32) - var(--gap-s));
       }
 
-      .username-input {
-        flex-basis: 100%;
+      .add-row,
+      .add-row.has-role {
+        grid-template-columns: var(--role-column) var(--action-column);
+        justify-content: end;
+      }
+
+      .add-row > :first-child {
+        grid-column: 1 / -1;
       }
     }
   }
