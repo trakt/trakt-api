@@ -28,7 +28,8 @@ const DEVELOPER_ERROR_MESSAGES = {
   user_not_found: 'No Trakt account has that username.',
   cannot_allow_owner: 'You own this app, so you can always sign in to it.',
   allowed_user_limit_reached:
-    'This app already has 50 people. Remove someone to add another.',
+    'This app already has 16 people who can sign in. Remove someone to add another.',
+  owner_only: 'Only the app owner can do this.',
 } as const;
 
 type DeveloperErrorCode = keyof typeof DEVELOPER_ERROR_MESSAGES;

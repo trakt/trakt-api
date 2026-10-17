@@ -7,7 +7,7 @@
   import { listAllowedUsers } from "./listAllowedUsers.ts";
   import { removeAllowedUser } from "./removeAllowedUser.ts";
 
-  const { slot, appId, ownerUsername }: DevAccessPanelProps = $props();
+  const { slot, appId, managerCount }: DevAccessPanelProps = $props();
 
   let users = $state<AllowedUser[]>([]);
   let limit = $state(0);
@@ -17,7 +17,8 @@
   let username = $state("");
   let alive = true;
 
-  const atLimit = $derived(!loading && users.length >= limit);
+  const seatsUsed = $derived(1 + managerCount + users.length);
+  const atLimit = $derived(!loading && seatsUsed >= limit);
 
   onMount(() => {
     void load();
@@ -92,21 +93,13 @@
 <section class="trakt-dev-access-panel" aria-labelledby="dev-access-title">
   <div class="panel-head">
     <h2 class="title" id="dev-access-title">Who can sign in</h2>
-    {#if !loading}<span class="count">{users.length} of {limit}</span>{/if}
+    {#if !loading}<span class="count">{seatsUsed} of {limit}</span>{/if}
   </div>
   <p class="muted">
-    Only these accounts can sign in to this app. Everyone else gets an error
-    after signing in.
+    Only these accounts can sign in to this app, plus its owner and managers.
+    {#if !loading}Up to {limit} people in total, owner and managers included.{/if}
   </p>
   <ul class="people" aria-busy={loading}>
-    <li class="person">
-      <span class="avatar" aria-hidden="true">{initialOf(ownerUsername)}</span
-      ><span class="who"
-        ><strong class="username">{ownerUsername}</strong><small class="meta"
-          >Owner · always allowed</small
-        ></span
-      >
-    </li>
     {#each users as entry (entry.user.ids.slug)}
       <li class="person">
         <span class="avatar" aria-hidden="true"
@@ -144,135 +137,9 @@
 </section>
 
 <style lang="scss">
-  @use "../../../style/action-button" as action;
+  @use "../../../style/member-panel" as panel;
 
   .trakt-dev-access-panel {
-    display: grid;
-    gap: var(--ni-14);
-    padding: var(--ni-28);
-    border: var(--border-thickness-xxs) solid var(--color-border);
-    border-radius: var(--radius-large);
-    background: var(--color-surface);
-    margin-block-end: var(--gap-l);
-    min-width: 0;
-
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: var(--ni-10);
-      flex-wrap: wrap;
-    }
-
-    .title {
-      font-size: var(--ni-18);
-      margin: 0;
-    }
-
-    .count {
-      color: var(--color-muted);
-      font-size: var(--ni-14);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .muted {
-      margin: 0;
-      color: var(--color-muted);
-      line-height: 1.55;
-    }
-
-    .people {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-    }
-
-    .person {
-      display: flex;
-      align-items: center;
-      gap: var(--gap-s);
-      min-block-size: var(--ni-52);
-      padding-block: var(--ni-10);
-      border-block-end: var(--border-thickness-xxs) solid var(--color-border);
-
-      &:last-child {
-        border-block-end: 0;
-      }
-    }
-
-    .avatar {
-      display: grid;
-      place-items: center;
-      flex: none;
-      inline-size: var(--ni-32);
-      block-size: var(--ni-32);
-      border-radius: 50%;
-      background: var(--color-surface-hover);
-      color: var(--color-muted);
-      font-size: var(--ni-14);
-      font-weight: 700;
-    }
-
-    .who {
-      display: grid;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .username {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .meta {
-      color: var(--color-muted);
-    }
-
-    .remove {
-      min-inline-size: var(--ni-44);
-      min-block-size: var(--ni-44);
-      padding-inline: var(--ni-12);
-      border: var(--border-thickness-xxs) solid transparent;
-      border-radius: var(--radius-control);
-      background: transparent;
-      color: var(--color-muted);
-      font: inherit;
-      font-size: var(--ni-14);
-      cursor: pointer;
-
-      &:hover:not(:disabled) {
-        color: var(--color-danger);
-      }
-    }
-
-    .error {
-      margin: 0;
-      color: var(--color-danger);
-      font-size: var(--ni-14);
-    }
-
-    .add-row {
-      display: flex;
-      gap: var(--ni-10);
-    }
-
-    .username-input {
-      flex: 1;
-      min-width: 0;
-      padding: var(--ni-12);
-      border: var(--border-thickness-xxs) solid var(--color-border);
-      background: var(--color-canvas);
-    }
-
-    .add-button {
-      @include action.base;
-    }
-
-    @media (max-width: 900px) {
-      padding: var(--ni-20);
-    }
+    @include panel.member-panel;
   }
 </style>
