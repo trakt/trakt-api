@@ -1,7 +1,6 @@
-import { z } from '../z.ts';
 import {
   extendedRatingsResponseExample,
-  externalRatingsResponseSchema,
+  externalVotedRatingsResponseSchema,
   ratingsResponseExample,
   ratingsResponseSchema,
 } from './ratingsResponseSchema.ts';
@@ -15,9 +14,7 @@ export const showRatingsResponseSchema = ratingsResponseSchema.extend({
    * MyAnimeList audience rating on a 0-10 scale. Anime only.
    * Available if requesting extended `all`.
    */
-  mal: externalRatingsResponseSchema.extend({
-    votes: z.number().int().nullish(),
-  }).nullish(),
+  mal: externalVotedRatingsResponseSchema.nullish(),
 }).openapi({
   mediaExamples: {
     default: {
