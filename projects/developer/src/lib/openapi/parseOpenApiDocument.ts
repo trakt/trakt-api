@@ -326,6 +326,18 @@ function parseParameters({
   ];
 }
 
+function preferredContentType(content: JsonObject): string | undefined {
+  return Object.keys(content).find((type) => type.includes('json')) ??
+    Object.keys(content).at(0);
+}
+
+function formatExample(value: unknown, contentType: string): string {
+  if (value === undefined) return '';
+  if (typeof value === 'string' && !contentType.includes('json')) return value;
+
+  return JSON.stringify(value, null, 2);
+}
+
 function parseRequestBody({
   root,
   operation,
@@ -335,9 +347,7 @@ function parseRequestBody({
 }): EndpointRequestBody | null {
   const body = resolveReference({ root, value: operation.requestBody });
   const content = asObject(body.content);
-  const contentType =
-    Object.keys(content).find((type) => type.includes('json')) ??
-      Object.keys(content).at(0);
+  const contentType = preferredContentType(content);
 
   if (!contentType) return null;
 
@@ -401,9 +411,7 @@ function parseResponses({
     ([status, value]) => {
       const response = resolveReference({ root, value });
       const content = asObject(response.content);
-      const contentType =
-        Object.keys(content).find((type) => type.includes('json')) ??
-          Object.keys(content).at(0) ?? '';
+      const contentType = preferredContentType(content) ?? '';
       const media = asObject(content[contentType]);
       const exampleEntry = asArray(Object.values(asObject(media.examples)))
         .at(0);
@@ -442,17 +450,8 @@ function parseResponses({
         description: asString(response.description, 'Response'),
         contentType,
         headers,
-        example: sample === undefined
-          ? ''
-          : typeof sample === 'string' && !contentType.includes('json')
-          ? sample
-          : JSON.stringify(sample, null, 2),
-        requiredExample: requiredSample === undefined
-          ? ''
-          : typeof requiredSample === 'string' &&
-              !contentType.includes('json')
-          ? requiredSample
-          : JSON.stringify(requiredSample, null, 2),
+        example: formatExample(sample, contentType),
+        requiredExample: formatExample(requiredSample, contentType),
       };
     },
   );
