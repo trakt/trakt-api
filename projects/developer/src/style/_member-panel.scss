@@ -1,5 +1,3 @@
-@use "action-button" as action;
-
 @mixin member-panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -107,23 +105,6 @@
     margin: 0;
     color: var(--color-danger);
     font-size: var(--ni-14);
-  }
-
-  .add-row {
-    display: flex;
-    gap: var(--ni-10);
-  }
-
-  .username-input {
-    flex: 1;
-    min-width: 0;
-    padding: var(--ni-12);
-    border: var(--border-thickness-xxs) solid var(--color-border);
-    background: var(--color-canvas);
-  }
-
-  .add-button {
-    @include action.base;
   }
 
   @media (max-width: 900px) {
