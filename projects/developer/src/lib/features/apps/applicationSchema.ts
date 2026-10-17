@@ -12,6 +12,8 @@ export const applicationSchema = z.object({
   approved_at: z.string().nullish(),
   scopes: z.array(z.string()),
   created_at: z.string(),
+  dev: z.boolean().default(false),
+  allowed_user_count: z.number().default(0),
   permissions: z.object({
     scrobble: z.boolean().nullish(),
     checkin: z.boolean().nullish(),

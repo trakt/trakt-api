@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ApplicationFormProps } from "./ApplicationFormProps.ts";
+  import { nonLocalRedirectUris } from "./nonLocalRedirectUris.ts";
   import { parseApplication } from "./parseApplication.ts";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
@@ -18,8 +19,12 @@
   let description = $state(initial?.description ?? "");
   let redirects = $state(initial?.redirect_uri ?? "");
   let origins = $state(initial?.origins.join("\n") ?? "");
+  let dev = $state(initial?.dev ?? false);
   let error = $state("");
-  const unsafeRedirects = $derived(unsafeRedirectUris(redirects));
+  const unsafeRedirects = $derived(dev ? [] : unsafeRedirectUris(redirects));
+  const nonLocalRedirects = $derived(
+    dev ? nonLocalRedirectUris(redirects) : [],
+  );
 
   function submit(event: SubmitEvent) {
     event.preventDefault();
@@ -29,6 +34,7 @@
         description,
         redirects,
         originsText: origins,
+        dev,
       });
       error = "";
       onSave(input);
@@ -61,16 +67,60 @@
         rows="3"></textarea></label
     >
 
+    {#if !app}<fieldset class="app-type">
+        <legend class="type-legend">App type</legend>
+        <label class="type-option" class:is-selected={!dev}
+          ><input
+            class="type-radio"
+            type="radio"
+            name="app-type"
+            value={false}
+            bind:group={dev}
+          />
+          <strong>Production</strong>
+          <small class="type-hint"
+            >Anyone with a Trakt account can sign in. Redirect URIs must use
+            https://.</small
+          ></label
+        ><label class="type-option" class:is-selected={dev}
+          ><input
+            class="type-radio"
+            type="radio"
+            name="app-type"
+            value={true}
+            bind:group={dev}
+          />
+          <strong>Development</strong>
+          <small class="type-hint"
+            >Only you and people you add can sign in. Redirect URIs must point
+            to localhost.</small
+          ></label
+        >
+      </fieldset>{/if}
     <label
       >Redirect URIs <span
-        >One per line. Use https:// only; on mobile, back it with Universal
-        Links or verified App Links.</span
+        >{dev
+          ? "One per line. Development apps accept localhost, 127.0.0.1 or [::1] only."
+          : "One per line. Use https:// only; on mobile, back it with Universal Links or verified App Links."}</span
       ><textarea
         bind:value={redirects}
         required
         rows="4"
-        placeholder="https://example.com/callback"
-        spellcheck="false"></textarea></label
+        placeholder={dev
+          ? "http://localhost:5173/callback"
+          : "https://example.com/callback"}
+        spellcheck="false"
+        class:is-invalid={nonLocalRedirects.length > 0}
+        aria-invalid={nonLocalRedirects.length > 0}
+        aria-describedby={nonLocalRedirects.length > 0
+          ? "redirect-error"
+          : undefined}></textarea>{#if nonLocalRedirects.length > 0}<span
+          class="field-error"
+          id="redirect-error"
+          >Development apps can only redirect to localhost. Remove {nonLocalRedirects.join(
+            ", ",
+          )}.</span
+        >{/if}</label
     >
     <RedirectUriWarning uris={unsafeRedirects} />
 
@@ -92,7 +142,10 @@
     {#if error}<p role="alert">{error}</p>{/if}
 
     <div class="actions">
-      <button class="primary" type="submit"
+      <button
+        class="primary"
+        type="submit"
+        disabled={nonLocalRedirects.length > 0}
         >{busy ? "Saving…" : app ? "Save changes" : "Create app"}</button
       ><button type="button" onclick={onCancel}>Cancel</button>
     </div>
@@ -167,8 +220,65 @@
       @include action.primary;
     }
 
-    [role="alert"] {
+    [role="alert"],
+    .field-error {
       color: var(--color-danger);
+    }
+
+    .is-invalid {
+      border-color: var(--color-danger);
+    }
+
+    .app-type {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--ni-10);
+
+      @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-legend {
+      grid-column: 1 / -1;
+      margin: 0;
+      margin-block-end: var(--ni-10);
+      padding: 0;
+      font-size: var(--ni-14);
+      font-weight: 600;
+    }
+
+    .type-option {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: var(--ni-4) var(--ni-10);
+      padding: var(--ni-14);
+      border: var(--border-thickness-xxs) solid var(--color-border-strong);
+      border-radius: var(--radius-control);
+      background: var(--color-canvas);
+      cursor: pointer;
+
+      &.is-selected {
+        border-color: var(--color-accent);
+        background: var(--color-accent-soft);
+      }
+
+      .type-radio {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        accent-color: var(--color-accent);
+      }
+
+      .type-hint {
+        grid-column: 2;
+        color: var(--color-muted);
+        font-size: var(--ni-14);
+        font-weight: 400;
+        line-height: 1.5;
+      }
     }
   }
 </style>

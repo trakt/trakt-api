@@ -21,7 +21,13 @@
 
 {#if session.account}
   {#key `${session.account.slot}:${mode}:${appId ?? ""}`}
-    <Applications slot={session.account.slot} {mode} {appId} {appName} />
+    <Applications
+      slot={session.account.slot}
+      username={session.account.username}
+      {mode}
+      {appId}
+      {appName}
+    />
   {/key}
 {:else}
   <section class="trakt-application-page">

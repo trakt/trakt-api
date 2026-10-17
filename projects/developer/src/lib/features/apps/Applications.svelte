@@ -23,6 +23,7 @@
   import { GITHUB_CLIENT_ID } from "./GITHUB_CLIENT_ID.ts";
   import { isGithubCallback } from "./isGithubCallback.ts";
   import type { GithubConnectIntent } from "./GithubConnectIntent.ts";
+  import DevAccessPanel from "./DevAccessPanel.svelte";
   import PkceNotice from "./PkceNotice.svelte";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
@@ -31,7 +32,7 @@
   import TierBadge from "$lib/features/premium/TierBadge.svelte";
   import DeveloperPlanCard from "$lib/features/premium/DeveloperPlanCard.svelte";
 
-  const { slot, mode, appId, appName }: ApplicationsProps = $props();
+  const { slot, username, mode, appId, appName }: ApplicationsProps = $props();
   let loading = $state(true);
   let apps = $state<Application[]>([]);
   let profile = $state<DeveloperProfile | null>(null);
@@ -79,7 +80,7 @@
       : [],
   );
   const unsafeRedirects = $derived(
-    selected ? unsafeRedirectUris(selected.redirect_uri) : [],
+    selected && !selected.dev ? unsafeRedirectUris(selected.redirect_uri) : [],
   );
   let busy = $state(false);
   let error = $state("");
@@ -281,7 +282,13 @@
             >
           {/if}
         </nav>
-        <h1>{title}</h1>
+        <div class="title-row">
+          <h1>{title}</h1>
+          {#if mode !== "list" && selected?.dev}<span
+              class="badge"
+              data-variant="dev">Development</span
+            >{/if}
+        </div>
         <p>
           {mode === "list"
             ? "Manage your apps and API credentials."
@@ -370,16 +377,22 @@
                 class="app-card"
                 href={applicationUrl({ id: app.id, name: app.name })}
                 ><div class="card-heading">
-                  <span class="app-icon">&lt;/&gt;</span><span class="badge"
-                    >{app.approved ? "Approved" : "Pending approval"}</span
+                  <span class="app-icon">&lt;/&gt;</span><span class="badges"
+                    >{#if app.dev}<span class="badge" data-variant="dev"
+                        >Development</span
+                      >{/if}<span class="badge"
+                      >{app.approved ? "Approved" : "Pending approval"}</span
+                    ></span
                   >
                 </div>
                 <h2>{app.name}</h2>
                 <p>{app.description || "No description yet."}</p>
                 <footer>
-                  <span>Created {formatDate(app.created_at)}</span><span
-                    >{readOnly ? "View →" : "Manage →"}</span
-                  >
+                  <span
+                    >{app.dev
+                      ? `${app.allowed_user_count + 1} ${app.allowed_user_count === 0 ? "person" : "people"} can sign in`
+                      : `Created ${formatDate(app.created_at)}`}</span
+                  ><span>{readOnly ? "View →" : "Manage →"}</span>
                 </footer></a
               >{/each}
           </div>{/if}
@@ -412,96 +425,105 @@
       <RedirectUriWarning uris={unsafeRedirects} />
 
       <div class="detail-grid">
-        <section class="panel">
-          {#each details as field (field.label)}
-            <div class="credential">
-              <strong>{field.label}</strong>
-              <div class="credential-value">
-                {#if field.code}<code>{field.value}</code>{:else}<span
-                    class="field-value">{field.value}</span
-                  >{/if}
-                <div class="actions">
-                  {#if !readOnly}<a
-                      class="button"
-                      href={applicationUrl({
-                        id: selected.id,
-                        name: selected.name,
-                        edit: true,
-                      })}
-                      aria-label={`Edit ${field.label}`}>Edit</a
+        <div class="detail-main">
+          {#if selected.dev}<DevAccessPanel
+              {slot}
+              appId={selected.id}
+              ownerUsername={username}
+            />{/if}
+          <section class="panel">
+            {#each details as field (field.label)}
+              <div class="credential">
+                <strong>{field.label}</strong>
+                <div class="credential-value">
+                  {#if field.code}<code>{field.value}</code>{:else}<span
+                      class="field-value">{field.value}</span
                     >{/if}
-                  {#if field.label === "Redirect URIs"}<button
-                      aria-label="Copy Redirect URIs"
-                      onclick={() =>
-                        copy(selected.redirect_uri, "Redirect URIs")}
-                      >Copy</button
-                    >{/if}
+                  <div class="actions">
+                    {#if !readOnly}<a
+                        class="button"
+                        href={applicationUrl({
+                          id: selected.id,
+                          name: selected.name,
+                          edit: true,
+                        })}
+                        aria-label={`Edit ${field.label}`}>Edit</a
+                      >{/if}
+                    {#if field.label === "Redirect URIs"}<button
+                        aria-label="Copy Redirect URIs"
+                        onclick={() =>
+                          copy(selected.redirect_uri, "Redirect URIs")}
+                        >Copy</button
+                      >{/if}
+                  </div>
                 </div>
               </div>
-            </div>
-          {/each}
+            {/each}
 
-          <div class="credential">
-            <strong>Client ID</strong>
-            <div class="credential-value">
-              <code>{selected.client_id}</code>
-              <div class="actions">
-                <button
-                  aria-label="Copy Client ID"
-                  onclick={() => copy(selected.client_id, "Client ID")}
-                  >Copy</button
-                >
-              </div>
-            </div>
-          </div>
-
-          <PkceNotice hasSecret={!!selected.client_secret} />
-
-          {#if selected.client_secret}<div class="credential">
-              <strong
-                >Client Secret <span class="badge" data-variant="deprecated"
-                  >Deprecated</span
-                ></strong
-              >
+            <div class="credential">
+              <strong>Client ID</strong>
               <div class="credential-value">
-                <code
-                  >{reveal
-                    ? selected.client_secret
-                    : "••••••••••••••••••••••••"}</code
-                >
+                <code>{selected.client_id}</code>
                 <div class="actions">
                   <button
-                    aria-label={reveal
-                      ? "Hide Client Secret"
-                      : "Reveal Client Secret"}
-                    onclick={() => (reveal = !reveal)}
-                    >{reveal ? "Hide" : "Reveal"}</button
-                  ><button
-                    aria-label="Copy Client Secret"
-                    onclick={() =>
-                      copy(selected.client_secret ?? "", "Client Secret")}
+                    aria-label="Copy Client ID"
+                    onclick={() => copy(selected.client_id, "Client ID")}
                     >Copy</button
                   >
                 </div>
               </div>
             </div>
 
-            <p class="muted">
-              Keep your Client Secret on your server. Never include it in public
-              code, websites, mobile apps, or desktop apps.
-            </p>{:else}<div class="credential is-empty">
-              <strong>Client Secret</strong>
-              <p class="secret-placeholder">
-                Not issued. This app signs users in with PKCE, so there is no
-                secret to keep safe.
-              </p>
-            </div>{/if}
-        </section>
+            <PkceNotice hasSecret={!!selected.client_secret} />
+
+            {#if selected.client_secret}<div class="credential">
+                <strong
+                  >Client Secret <span class="badge" data-variant="deprecated"
+                    >Deprecated</span
+                  ></strong
+                >
+                <div class="credential-value">
+                  <code
+                    >{reveal
+                      ? selected.client_secret
+                      : "••••••••••••••••••••••••"}</code
+                  >
+                  <div class="actions">
+                    <button
+                      aria-label={reveal
+                        ? "Hide Client Secret"
+                        : "Reveal Client Secret"}
+                      onclick={() => (reveal = !reveal)}
+                      >{reveal ? "Hide" : "Reveal"}</button
+                    ><button
+                      aria-label="Copy Client Secret"
+                      onclick={() =>
+                        copy(selected.client_secret ?? "", "Client Secret")}
+                      >Copy</button
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <p class="muted">
+                Keep your Client Secret on your server. Never include it in
+                public code, websites, mobile apps, or desktop apps.
+              </p>{:else}<div class="credential is-empty">
+                <strong>Client Secret</strong>
+                <p class="secret-placeholder">
+                  Not issued. This app signs users in with PKCE, so there is no
+                  secret to keep safe.
+                </p>
+              </div>{/if}
+          </section>
+        </div>
         <aside class="panel">
           <h2>App details</h2>
           <dl>
             <dt>App ID</dt>
             <dd>{selected.id}</dd>
+            <dt>Type</dt>
+            <dd>{selected.dev ? "Development" : "Production"}</dd>
             <dt>Status</dt>
             <dd>{selected.approved ? "Approved" : "Pending approval"}</dd>
             <dt>Created</dt>
@@ -741,6 +763,30 @@
     font-family: var(--font-mono);
     color: var(--color-accent);
     font-size: 24px;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-s);
+    flex-wrap: wrap;
+  }
+
+  .badges {
+    display: flex;
+    gap: var(--gap-xs);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .detail-main {
+    min-width: 0;
+  }
+
+  .badge[data-variant="dev"] {
+    color: var(--color-warning);
+    background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+    white-space: nowrap;
   }
 
   .badge[data-variant="deprecated"] {
