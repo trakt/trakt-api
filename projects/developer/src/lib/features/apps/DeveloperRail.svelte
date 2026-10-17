@@ -1,4 +1,5 @@
 <script lang="ts">
+  import GithubAvatar from "./GithubAvatar.svelte";
   import GithubMark from "./GithubMark.svelte";
   import { formatDate } from "./formatDate.ts";
   import type { DeveloperRailProps } from "./DeveloperRailProps.ts";
@@ -48,7 +49,7 @@
     <p role="status">Loading your developer account…</p>
   {:else if github}
     <div class="identity">
-      <span class="avatar"><GithubMark /></span>
+      {#key github.id}<GithubAvatar githubId={github.id} />{/key}
       <div class="handle">
         <strong>@{github.username}</strong>
         <span class="pill verified">Verified</span>

@@ -25,6 +25,7 @@ const config = {
           'data:',
           'https://walter.trakt.tv',
           'https://media.trakt.tv',
+          'https://avatars.githubusercontent.com',
         ],
         'object-src': ['none'],
         'script-src': ['self'],
