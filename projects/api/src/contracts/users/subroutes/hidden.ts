@@ -6,7 +6,7 @@ import { z } from '../../_internal/z.ts';
 import { hiddenParamsSchema } from '../schema/request/hiddenParamsSchema.ts';
 import { hiddenShowRequestSchema } from '../schema/request/hiddenShowRequestSchema.ts';
 import { hiddenAddResponseSchema } from '../schema/response/hiddenAddResponseSchema.ts';
-import { hiddenRemoveResponseSchema } from '../schema/response/hiddenRemoveResponseSchema.ts';
+import { historyRemoveResponseSchema } from '../../sync/schema/response/historyRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from '../schema/response/hiddenShowResponseSchema.ts';
 
 const hiddenTypeQuerySchema = z.object({
@@ -91,7 +91,7 @@ Remove shows or seasons from hidden watched progress. Send hideable media object
       method: 'POST',
       body: bulkMediaRequestSchema,
       responses: {
-        200: hiddenRemoveResponseSchema,
+        200: historyRemoveResponseSchema,
       },
     },
     calendar: {
@@ -102,7 +102,7 @@ Remove movies or shows from hidden calendar items. Send hideable media objects i
       method: 'POST',
       body: bulkMediaRequestSchema,
       responses: {
-        200: hiddenRemoveResponseSchema,
+        200: historyRemoveResponseSchema,
       },
     },
     section: {
@@ -114,7 +114,7 @@ Remove hidden items for a specific section. Send hideable media objects in the r
       pathParams: hiddenParamsSchema,
       body: bulkMediaRequestSchema,
       responses: {
-        200: hiddenRemoveResponseSchema,
+        200: historyRemoveResponseSchema,
       },
     },
   },
