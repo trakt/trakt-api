@@ -5,7 +5,7 @@ on:
     branches:
       - master
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [ opened, synchronize, reopened, ready_for_review ]
     branches:
       - master
 
@@ -83,31 +83,3 @@ jobs:
         uses: readmeio/rdme@v10
         with:
           rdme: openapi upload ./projects/openapi/openapi.json --key=${{ secrets.README_API_KEY }} --slug=openapi.json
-
-      - name: Summoning the GitHub App Token
-        if: github.ref == 'refs/heads/master'
-        uses: actions/create-github-app-token@v2
-        id: generate-token
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          repositories: trakt-android
-
-      - name: The Sacred Scroll's Journey aka Push OpenAPI to Android Repo
-        if: github.ref == 'refs/heads/master'
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          ANDROID_DIR: ${{ runner.temp }}/trakt-android
-        run: |
-          git clone --depth 1 --branch main "https://x-access-token:${GH_TOKEN}@github.com/trakt/trakt-android.git" "$ANDROID_DIR"
-          cp projects/openapi/openapi.json "$ANDROID_DIR/openapi/openapi.json"
-          cd "$ANDROID_DIR"
-          if git diff --quiet; then
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout -b feat/openapi_ci
-          git add openapi/openapi.json
-          git commit -m 'chore: openapi schema updates'
-          git push --force origin feat/openapi_ci
