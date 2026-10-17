@@ -327,6 +327,23 @@
   >
 {/snippet}
 
+{#snippet lockIcon()}
+  <svg
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    ><rect x="5" y="11" width="14" height="9" rx="2"></rect><path
+      d="M8 11V8a4 4 0 0 1 8 0v3"
+    ></path></svg
+  >
+{/snippet}
+
 <div class="trakt-applications">
   <div class="content">
     <header>
@@ -412,36 +429,12 @@
                   class="create-tile locked"
                   href="/premium"
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                    ><rect x="5" y="11" width="14" height="9" rx="2"
-                    ></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg
-                  >
+                  {@render lockIcon()}
                   <strong>App limit reached</strong><small
                     >Premium apps stay outside the community limit. See plans →</small
                   >
                 </a>{:else}<div class="create-tile locked">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                    ><rect x="5" y="11" width="14" height="9" rx="2"
-                    ></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg
-                  >
+                  {@render lockIcon()}
                   <strong>Create app</strong><small>{createLock}</small>
                 </div>{/if}
               {#each ownApps as app (app.id)}{@render appCard(app)}{/each}
