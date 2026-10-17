@@ -32,6 +32,11 @@ const includeRepliesQuerySchema = z.object({
   ),
 });
 
+const commentActivityQuerySchema = extendedProfileQuerySchema
+  .merge(pageQuerySchema)
+  .merge(limitlessQuerySchema)
+  .merge(includeRepliesQuerySchema);
+
 const commentItemResponseSchema = z.union([
   movieResponseSchema,
   showResponseSchema,
@@ -277,10 +282,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/trending/:comment_type/:type',
     method: 'GET',
     pathParams: commentActivityParamsSchema,
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema)
-      .merge(includeRepliesQuerySchema),
+    query: commentActivityQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -292,10 +294,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/recent/:comment_type/:type',
     method: 'GET',
     pathParams: commentActivityParamsSchema,
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema)
-      .merge(includeRepliesQuerySchema),
+    query: commentActivityQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -307,10 +306,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/updates/:comment_type/:type',
     method: 'GET',
     pathParams: commentActivityParamsSchema,
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema)
-      .merge(includeRepliesQuerySchema),
+    query: commentActivityQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
     },

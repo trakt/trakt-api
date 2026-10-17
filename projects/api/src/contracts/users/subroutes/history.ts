@@ -10,6 +10,18 @@ import { activityHistoryResponseSchema } from '../schema/response/activityHistor
 import { episodeActivityHistoryResponseSchema } from '../schema/response/episodeActivityHistoryResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from '../schema/response/movieActivityHistoryResponseSchema.ts';
 
+const historyQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(dateRangeParamsSchema)
+  .merge(pageQuerySchema);
+
+const historyItemPathParamsSchema = profileParamsSchema
+  .merge(historyItemIdParamsSchema);
+
+const historyItemQuerySchema = extendedMediaQuerySchema
+  .merge(dateRangeParamsSchema)
+  .merge(pageQuerySchema);
+
 const historyTypedItemParamsSchema = profileParamsSchema
   .merge(historyItemIdParamsSchema)
   .extend({
@@ -25,10 +37,7 @@ Returns watched history for a user across all supported media types. Use \`start
     path: '/',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    query: historyQuerySchema,
     responses: {
       200: activityHistoryResponseSchema.array(),
     },
@@ -40,10 +49,7 @@ Returns movie watched history for a user. Use \`start_at\` and \`end_at\` to lim
     path: '/movies',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    query: historyQuerySchema,
     responses: {
       200: movieActivityHistoryResponseSchema.array(),
     },
@@ -55,10 +61,7 @@ Returns show watched history for a user. Use \`start_at\` and \`end_at\` to limi
     path: '/shows',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    query: historyQuerySchema,
     responses: {
       200: episodeActivityHistoryResponseSchema.array(),
     },
@@ -70,10 +73,7 @@ Returns episode watched history for a user. Use \`start_at\` and \`end_at\` to l
     path: '/episodes',
     method: 'GET',
     pathParams: profileParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    query: historyQuerySchema,
     responses: {
       200: episodeActivityHistoryResponseSchema.array(),
     },
@@ -84,11 +84,8 @@ Returns episode watched history for a user. Use \`start_at\` and \`end_at\` to l
 Returns watched history entries for one movie. Use \`item_id\` to identify the movie and \`start_at\` or \`end_at\` to limit the date range.`,
     path: '/movies/:item_id',
     method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(historyItemIdParamsSchema),
-    query: extendedMediaQuerySchema
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    pathParams: historyItemPathParamsSchema,
+    query: historyItemQuerySchema,
     responses: {
       200: movieActivityHistoryResponseSchema.array(),
     },
@@ -99,11 +96,8 @@ Returns watched history entries for one movie. Use \`item_id\` to identify the m
 Returns watched history entries for one show. Use \`item_id\` to identify the show and \`start_at\` or \`end_at\` to limit the date range.`,
     path: '/shows/:item_id',
     method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(historyItemIdParamsSchema),
-    query: extendedMediaQuerySchema
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    pathParams: historyItemPathParamsSchema,
+    query: historyItemQuerySchema,
     responses: {
       200: episodeActivityHistoryResponseSchema.array(),
     },
@@ -114,11 +108,8 @@ Returns watched history entries for one show. Use \`item_id\` to identify the sh
 Returns watched history entries for one episode. Use \`item_id\` to identify the episode and \`start_at\` or \`end_at\` to limit the date range.`,
     path: '/episodes/:item_id',
     method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(historyItemIdParamsSchema),
-    query: extendedMediaQuerySchema
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    pathParams: historyItemPathParamsSchema,
+    query: historyItemQuerySchema,
     responses: {
       200: episodeActivityHistoryResponseSchema.array(),
     },
@@ -130,9 +121,7 @@ Returns watched history entries for one item. Use \`type\`, \`item_id\`, \`start
     path: '/:type/:item_id',
     method: 'GET',
     pathParams: historyTypedItemParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(dateRangeParamsSchema)
-      .merge(pageQuerySchema),
+    query: historyItemQuerySchema,
     responses: {
       200: activityHistoryResponseSchema.array(),
     },
