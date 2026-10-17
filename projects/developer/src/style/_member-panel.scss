@@ -2,6 +2,7 @@
 
 @mixin member-panel {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ni-14);
   padding: var(--ni-28);
   border: var(--border-thickness-xxs) solid var(--color-border);
