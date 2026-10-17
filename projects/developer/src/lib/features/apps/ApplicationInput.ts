@@ -3,4 +3,5 @@ export type ApplicationInput = {
   description?: string;
   redirect_uri: string[];
   origins: string[];
+  dev: boolean;
 };

@@ -1,4 +1,5 @@
 import type { ApplicationInput } from './ApplicationInput.ts';
+import { nonLocalRedirectUris } from './nonLocalRedirectUris.ts';
 
 const lines = (value: string) =>
   value.split('\n').map((line) => line.trim()).filter(Boolean);
@@ -8,11 +9,13 @@ export function parseApplication({
   description,
   redirects,
   originsText,
+  dev = false,
 }: {
   name: string;
   description: string;
   redirects: string;
   originsText: string;
+  dev?: boolean;
 }): ApplicationInput {
   const redirect_uri = lines(redirects);
   const origins = lines(originsText);
@@ -50,6 +53,15 @@ export function parseApplication({
     }
   }
 
+  const nonLocal = dev ? nonLocalRedirectUris(redirects) : [];
+  if (nonLocal.length > 0) {
+    throw new Error(
+      `Development apps can only redirect to localhost. Remove ${
+        nonLocal.join(', ')
+      }.`,
+    );
+  }
+
   const canonical = origins.map((origin) => {
     let url;
     try {
@@ -77,5 +89,6 @@ export function parseApplication({
     description: description.trim() || undefined,
     redirect_uri,
     origins: canonical,
+    dev,
   };
 }

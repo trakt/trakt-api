@@ -14,7 +14,12 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-const input = { name: 'Test', redirect_uri: ['test://callback'], origins: [] };
+const input = {
+  name: 'Test',
+  redirect_uri: ['test://callback'],
+  origins: [],
+  dev: false,
+};
 
 describe('app management transport', () => {
   it('waits for a refreshed token before sending a mutation', async () => {

@@ -22,6 +22,13 @@ const DEVELOPER_ERROR_MESSAGES = {
     'This GitHub account is already connected to another Trakt account.',
   github_account_mismatch:
     'Your Trakt account is connected to a different GitHub account. Use Switch GitHub account to change it.',
+  dev_redirect_not_local:
+    'Development apps can only redirect to localhost, 127.0.0.1 or [::1].',
+  application_not_dev: 'Only development apps have a sign-in list.',
+  user_not_found: 'No Trakt account has that username.',
+  cannot_allow_owner: 'You own this app, so you can always sign in to it.',
+  allowed_user_limit_reached:
+    'This app already has 50 people. Remove someone to add another.',
 } as const;
 
 type DeveloperErrorCode = keyof typeof DEVELOPER_ERROR_MESSAGES;

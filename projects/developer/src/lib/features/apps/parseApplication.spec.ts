@@ -15,6 +15,7 @@ describe('V3 application validation parity', () => {
       description: 'Description',
       redirect_uri: ['myapp://callback', 'urn:ietf:wg:oauth:2.0:oob'],
       origins: ['https://example.com'],
+      dev: false,
     });
   });
 
@@ -99,5 +100,26 @@ describe('V3 application validation parity', () => {
         originsText: Array(25).fill('https://example.com').join('\n'),
       })
     ).toThrow();
+  });
+
+  it('keeps a development app on localhost redirects', () => {
+    const base = { name: 'Dev App', description: '', originsText: '' };
+
+    expect(
+      parseApplication({
+        ...base,
+        redirects: 'http://localhost:5173/callback',
+        dev: true,
+      }).redirect_uri,
+    ).toEqual(['http://localhost:5173/callback']);
+    expect(() =>
+      parseApplication({
+        ...base,
+        redirects: 'http://localhost:5173/callback\nhttps://example.com/cb',
+        dev: true,
+      })
+    ).toThrow(
+      'Development apps can only redirect to localhost. Remove https://example.com/cb.',
+    );
   });
 });
