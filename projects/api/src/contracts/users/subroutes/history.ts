@@ -9,7 +9,6 @@ import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { activityHistoryResponseSchema } from '../schema/response/activityHistoryResponseSchema.ts';
 import { episodeActivityHistoryResponseSchema } from '../schema/response/episodeActivityHistoryResponseSchema.ts';
 import { movieActivityHistoryResponseSchema } from '../schema/response/movieActivityHistoryResponseSchema.ts';
-import { showActivityHistoryResponseSchema } from '../schema/response/showActivityHistoryResponseSchema.ts';
 
 const historyTypedItemParamsSchema = profileParamsSchema
   .merge(historyItemIdParamsSchema)
@@ -61,7 +60,7 @@ Returns show watched history for a user. Use \`start_at\` and \`end_at\` to limi
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
-      200: showActivityHistoryResponseSchema.array(),
+      200: episodeActivityHistoryResponseSchema.array(),
     },
   },
   episodes: {
@@ -106,7 +105,7 @@ Returns watched history entries for one show. Use \`item_id\` to identify the sh
       .merge(dateRangeParamsSchema)
       .merge(pageQuerySchema),
     responses: {
-      200: showActivityHistoryResponseSchema.array(),
+      200: episodeActivityHistoryResponseSchema.array(),
     },
   },
   episode: {
@@ -148,7 +147,7 @@ export type MovieActivityHistoryResponse = z.infer<
 >;
 /** The show activity history response payload. */
 export type ShowActivityHistoryResponse = z.infer<
-  typeof showActivityHistoryResponseSchema
+  typeof episodeActivityHistoryResponseSchema
 >;
 /** The activity history response payload. */
 export type ActivityHistoryResponse = z.infer<
