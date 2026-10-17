@@ -1,14 +1,16 @@
-import { addAllowedUser } from './addAllowedUser.ts';
-import { addManager } from './addManager.ts';
+import { accountRequest } from '$lib/api/accountRequest.ts';
 import type { AppMemberRole } from './AppMemberRole.ts';
+import { memberPath } from './memberPath.ts';
 import type { MemberTarget } from './MemberTarget.ts';
 
-export function addMember(
+export async function addMember(
   { slot, appId }: MemberTarget,
   username: string,
   role: AppMemberRole,
 ): Promise<void> {
-  return role === 'manager'
-    ? addManager(slot, appId, username)
-    : addAllowedUser(slot, appId, username);
+  await accountRequest({
+    slot,
+    path: memberPath({ appId, role, username }),
+    init: { method: 'POST' },
+  });
 }
