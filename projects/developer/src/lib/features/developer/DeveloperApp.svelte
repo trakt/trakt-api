@@ -16,7 +16,7 @@
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
   import { observeAccountChanges } from "$lib/auth/observeAccountChanges.ts";
-  import { fetchAccounts } from "$lib/api/fetchAccounts.ts";
+  import { listAccounts } from "$lib/auth/listAccounts.ts";
   import type { DeveloperAccount } from "$lib/api/DeveloperAccount.ts";
   import type { Endpoint } from "$lib/openapi/Endpoint.ts";
   import { buildEndpointUrl } from "$lib/openapi/buildEndpointUrl.ts";
@@ -373,9 +373,9 @@
 
   async function refreshAccounts() {
     const generation = sessionGeneration;
-    const accountState = await fetchAccounts();
+    const nextAccounts = await listAccounts().catch(() => []);
     if (generation !== sessionGeneration) return;
-    accounts = accountState.accounts;
+    accounts = nextAccounts;
     accountsLoading = false;
     profileRevision += 1;
     if (accounts.some((account) => account.slot === selectedAccountSlot))
