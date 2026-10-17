@@ -66,6 +66,12 @@ export const externalRatingsResponseSchema = z.object({
   link: z.string().nullish(),
 });
 
+/** Shared shape for an external rating source that also reports its vote count. */
+export const externalVotedRatingsResponseSchema = externalRatingsResponseSchema
+  .extend({
+    votes: z.number().int().nullish(),
+  });
+
 /** Zod schema for the ratings response. */
 export const ratingsResponseSchema = z.object({
   rating: float(z.number()).nullish(),
@@ -79,15 +85,11 @@ export const ratingsResponseSchema = z.object({
   /**
    * Available if requesting extended `all`.
    */
-  tmdb: externalRatingsResponseSchema.extend({
-    votes: z.number().int().nullish(),
-  }).nullish(),
+  tmdb: externalVotedRatingsResponseSchema.nullish(),
   /**
    * Available if requesting extended `all`.
    */
-  imdb: externalRatingsResponseSchema.extend({
-    votes: z.number().int().nullish(),
-  }).nullish(),
+  imdb: externalVotedRatingsResponseSchema.nullish(),
   /**
    * Available if requesting extended `all`.
    */

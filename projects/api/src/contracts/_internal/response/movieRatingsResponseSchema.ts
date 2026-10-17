@@ -1,7 +1,6 @@
-import { z } from '../z.ts';
 import {
   extendedRatingsResponseExample,
-  externalRatingsResponseSchema,
+  externalVotedRatingsResponseSchema,
   ratingsResponseExample,
   ratingsResponseSchema,
 } from './ratingsResponseSchema.ts';
@@ -15,16 +14,12 @@ export const movieRatingsResponseSchema = ratingsResponseSchema.extend({
    * Letterboxd audience rating on a 0-5 scale. Films only.
    * Available if requesting extended `all`.
    */
-  letterboxd: externalRatingsResponseSchema.extend({
-    votes: z.number().int().nullish(),
-  }).nullish(),
+  letterboxd: externalVotedRatingsResponseSchema.nullish(),
   /**
    * MyAnimeList audience rating on a 0-10 scale. Anime only.
    * Available if requesting extended `all`.
    */
-  mal: externalRatingsResponseSchema.extend({
-    votes: z.number().int().nullish(),
-  }).nullish(),
+  mal: externalVotedRatingsResponseSchema.nullish(),
 }).openapi({
   mediaExamples: {
     default: {
