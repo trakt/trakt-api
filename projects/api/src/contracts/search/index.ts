@@ -5,7 +5,6 @@ import { z } from '../_internal/z.ts';
 import { recentSearchRequestSchema } from './schema/request/recentSearchRequestSchema.ts';
 import { searchQuerySchema } from './schema/request/searchQuerySchema.ts';
 import { searchTypeParamFactory } from './schema/request/searchTypeParamFactory.ts';
-import { trendingSearchTypeParamFactory } from './schema/request/trendingSearchTypeParamFactory.ts';
 import type { searchMovieResponseSchema } from './schema/response/searchMovieResponseSchema.ts';
 import type { searchPersonResponseSchema } from './schema/response/searchPersonResponseSchema.ts';
 import { searchResultResponseSchema } from './schema/response/searchResultResponseSchema.ts';
@@ -140,9 +139,7 @@ Lookup items by external ID. Use \`id_type\` and \`id\` to identify the external
 Returns globally trending recent searches by \`type\`. Use \`query\` to narrow the search text and pagination to move through the result set.`,
     path: '/recent_by_id/global/:type',
     method: 'GET',
-    pathParams: trendingSearchTypeParamFactory<
-      ['movies', 'shows', 'people']
-    >(),
+    pathParams: searchTypeParamFactory(['movies', 'shows', 'people']),
     query: pageQuerySchema
       .merge(searchQuerySchema)
       .merge(

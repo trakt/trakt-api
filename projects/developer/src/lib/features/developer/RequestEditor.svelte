@@ -11,6 +11,7 @@
   import { MANAGED_AUTHORIZATION_HEADER_ID } from "$lib/api/MANAGED_AUTHORIZATION_HEADER_ID.ts";
   import { dismissOnOutsideInteraction } from "./dismissOnOutsideInteraction.ts";
   import { hasInvalidJsonBody } from "./hasInvalidJsonBody.ts";
+  import { hasMissingExpectedJsonBody } from "./hasMissingExpectedJsonBody.ts";
   import { invalidParameterIds } from "./invalidParameterIds.ts";
   import { missingRequiredParameterIds } from "./missingRequiredParameterIds.ts";
   import { tokenizeJson } from "./tokenizeJson.ts";
@@ -50,8 +51,7 @@
     endpoint.serverUrls.length > 0 ? endpoint.serverUrls : [serverUrl],
   );
   const isExpectedJsonBodyMissing = $derived(
-    endpoint.requestBody?.contentType.toLocaleLowerCase().includes("json") ===
-      true && !body.trim(),
+    hasMissingExpectedJsonBody({ endpoint, body }),
   );
   const bodyJsonTokens = $derived(tokenizeJson(body));
   const isPostJsonBodyInvalid = $derived(
@@ -616,7 +616,8 @@
       background: var(--color-surface);
     }
 
-    .request-line > label {
+    .request-line > label,
+    .body-editor label {
       position: absolute;
 
       width: var(--ni-1);
@@ -1126,16 +1127,6 @@
 
     .sample-body-button:hover {
       color: var(--color-foreground);
-    }
-
-    .body-editor label {
-      position: absolute;
-
-      width: var(--ni-1);
-      height: var(--ni-1);
-
-      overflow: hidden;
-      clip: rect(0 0 0 0);
     }
 
     .body-editor-surface {

@@ -15,6 +15,20 @@ const groupQuery = z.object({
   }),
 });
 
+const filteredCalendarQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(ignoreQuerySchema);
+
+const mediaFeedQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(z.object({
+    type: z.enum(['movie', 'show']).optional().openapi({
+      description:
+        'Narrow the feed to a single media type. Omit to return both.',
+    }),
+  }))
+  .merge(groupQuery);
+
 const globalCalendarCurationNotice =
   'When `target` is `all`, the global calendar uses automatic quality filters to reduce incorrect or low-quality entries. As a result, it may not include every matching item in the database, even when that item has complete information. An omitted item may appear later after it meets the filter requirements.';
 
@@ -45,9 +59,7 @@ Returns new shows airing their first season during the requested UTC date range.
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/new/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: filteredCalendarQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -61,9 +73,7 @@ Returns season premieres airing during the requested UTC date range. Use \`targe
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/premieres/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: filteredCalendarQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -77,9 +87,7 @@ Returns show finales airing during the requested UTC date range. Use \`target\` 
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/shows/finales/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: filteredCalendarQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarShowResponseSchema.array(),
@@ -93,9 +101,7 @@ Returns movies with a release date during the requested UTC date range. Use \`ta
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/movies/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: filteredCalendarQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
@@ -109,9 +115,7 @@ Returns all movies with a streaming release date during the requested UTC date r
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/streaming/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: filteredCalendarQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
@@ -125,9 +129,7 @@ Returns DVD and physical media releases during the requested UTC date range. Use
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/dvd/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: filteredCalendarQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: calendarMovieResponseSchema.array(),
@@ -141,15 +143,7 @@ Returns the merged feed of movies and episodes during the requested UTC date ran
 ${globalCalendarCurationNotice}`,
     method: 'GET',
     path: '/:target/media/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(z.object({
-        type: z.enum(['movie', 'show']).optional().openapi({
-          description:
-            'Narrow the feed to a single media type. Omit to return both.',
-        }),
-      }))
-      .merge(groupQuery),
+    query: mediaFeedQuerySchema,
     pathParams: calendarRequestParamsSchema,
     responses: {
       200: hotReleaseResponseSchema.array(),
@@ -161,15 +155,7 @@ ${globalCalendarCurationNotice}`,
 Returns the merged feed of upcoming movies and episodes during the requested UTC date range that are trending or highly anticipated, ordered by availability date. This is the global feed only; use \`type\` to narrow to a single media type.`,
     method: 'GET',
     path: '/releases/hot/:start_date/:days',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(z.object({
-        type: z.enum(['movie', 'show']).optional().openapi({
-          description:
-            'Narrow the feed to a single media type. Omit to return both.',
-        }),
-      }))
-      .merge(groupQuery),
+    query: mediaFeedQuerySchema,
     pathParams: calendarRequestParamsSchema.omit({ target: true }),
     responses: {
       200: hotReleaseResponseSchema.array(),

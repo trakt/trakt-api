@@ -53,6 +53,28 @@ import { showStreamingResponseSchema } from './schema/response/showStreamingResp
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
 
+const episodePathParamsSchema = idParamsSchema
+  .merge(seasonParamsSchema)
+  .merge(episodeParamsSchema);
+
+const seasonPathParamsSchema = idParamsSchema.merge(seasonParamsSchema);
+
+const filteredMediaQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(pageQuerySchema)
+  .merge(ignoreQuerySchema);
+
+const themedFilteredMediaQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(themeQuerySchema)
+  .merge(pageQuerySchema)
+  .merge(ignoreQuerySchema);
+
+const commentsPageQuerySchema = extendedProfileQuerySchema
+  .merge(pageQuerySchema)
+  .merge(limitlessQuerySchema)
+  .merge(languageQuerySchema);
+
 const startDateParamsSchema = z.object({
   start_date: z.string().describe('UTC date to start checking for updates.'),
 });
@@ -81,9 +103,7 @@ Returns a single episode's details. All date and times are in UTC and were calcu
     path: '',
     method: 'GET',
     query: extendedMediaQuerySchema,
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     responses: {
       200: episodeResponseSchema,
     },
@@ -94,9 +114,7 @@ Returns a single episode's details. All date and times are in UTC and were calcu
       'Returns all translations for an episode, including language, country, and translated values for title and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
     path: '/translations',
     method: 'GET',
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     query: translationsLanguageQuerySchema,
     responses: {
       200: episodeTranslationResponseSchema,
@@ -107,9 +125,7 @@ Returns a single episode's details. All date and times are in UTC and were calcu
     description: 'Returns lots of episode stats.',
     path: '/stats',
     method: 'GET',
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     responses: {
       200: episodeStatsResponseSchema,
     },
@@ -123,9 +139,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
     path: '/ratings',
     method: 'GET',
     query: extendedRatingsQuerySchema,
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     responses: {
       200: ratingsResponseSchema,
     },
@@ -136,9 +150,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
 Returns all users watching this episode right now.`,
     path: '/watching',
     method: 'GET',
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     query: extendedQuerySchemaFactory<['full']>(),
     responses: {
       200: profileResponseSchema.array(),
@@ -158,10 +170,7 @@ Returns all top level comments for an episode. By default, comments are sorted b
       .merge(seasonParamsSchema)
       .merge(episodeParamsSchema)
       .merge(commentsSortParamsSchema),
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema)
-      .merge(languageQuerySchema),
+    query: commentsPageQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -184,9 +193,7 @@ If you add \`?extended=markdown\` to the URL, person biographies include links t
     path: '/people',
     method: 'GET',
     query: extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     responses: {
       200: peopleResponseSchema,
     },
@@ -215,9 +222,7 @@ Returns all lists that contain this episode. By default, \`personal\` lists are 
 Returns all videos including trailers, teasers, clips, and featurettes.`,
     path: '/videos',
     method: 'GET',
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     responses: {
       200: videoResponseSchema.array(),
     },
@@ -258,9 +263,7 @@ Report an episode for moderator review. Send a \`reason\` and optional \`message
 | \`other\` | Anything else (add details in \`message\`) |`,
     path: '/report',
     method: 'POST',
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
+    pathParams: episodePathParamsSchema,
     body: mediaReportRequestSchema,
     responses: {
       201: z.undefined(),
@@ -568,8 +571,7 @@ If you add \`?extended=episodes\` to the URL, it will return all episodes for al
       path: '/info',
       method: 'GET',
       query: extendedMediaQuerySchema,
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       responses: {
         200: seasonResponseSchema,
       },
@@ -587,8 +589,7 @@ If you'd like to included translated episode titles and overviews in the respons
       path: '',
       method: 'GET',
       query: extendedMediaQuerySchema,
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       responses: {
         200: episodeResponseSchema.array(),
       },
@@ -599,8 +600,7 @@ If you'd like to included translated episode titles and overviews in the respons
         'Returns all translations for a season, including language, country, and translated title and overview values. Use the optional `language` query param to filter to a single language.',
       path: '/translations',
       method: 'GET',
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       query: translationsLanguageQuerySchema,
       responses: {
         200: translationResponseSchema,
@@ -616,10 +616,7 @@ Returns all top level comments for a season. By default, comments are sorted by 
       pathParams: idParamsSchema
         .merge(seasonParamsSchema)
         .merge(commentsSortParamsSchema),
-      query: extendedProfileQuerySchema
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema)
-        .merge(languageQuerySchema),
+      query: commentsPageQuerySchema,
       responses: {
         200: commentResponseSchema.array(),
       },
@@ -648,8 +645,7 @@ Returns all lists that contain this season. By default, \`personal\` lists are r
       path: '/people',
       method: 'GET',
       query: extendedQuerySchemaFactory<['images', 'markdown']>(),
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       responses: {
         200: peopleResponseSchema,
       },
@@ -663,8 +659,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
       path: '/ratings',
       method: 'GET',
       query: extendedRatingsQuerySchema,
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       responses: {
         200: ratingsResponseSchema,
       },
@@ -674,8 +669,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
       description: 'Returns lots of season stats.',
       path: '/stats',
       method: 'GET',
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       responses: {
         200: episodeStatsResponseSchema,
       },
@@ -686,8 +680,7 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten 
 Returns all users watching this season right now.`,
       path: '/watching',
       method: 'GET',
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       query: extendedQuerySchemaFactory<['full']>(),
       responses: {
         200: profileResponseSchema.array(),
@@ -699,8 +692,7 @@ Returns all users watching this season right now.`,
 Returns all videos including trailers, teasers, clips, and featurettes.`,
       path: '/videos',
       method: 'GET',
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       responses: {
         200: videoResponseSchema.array(),
       },
@@ -737,7 +729,7 @@ Report a season for moderator review. Send a \`reason\` and optional \`message\`
 | \`other\` | Anything else (add details in \`message\`) |`,
       path: '/report',
       method: 'POST',
-      pathParams: idParamsSchema.merge(seasonParamsSchema),
+      pathParams: seasonPathParamsSchema,
       body: mediaReportRequestSchema,
       responses: {
         201: z.undefined(),
@@ -787,10 +779,7 @@ Returns all top level comments for a show. By default, comments are sorted by mo
     method: 'GET',
     pathParams: idParamsSchema
       .merge(commentsSortParamsSchema),
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema)
-      .merge(languageQuerySchema),
+    query: commentsPageQuerySchema,
     responses: {
       200: commentResponseSchema.array(),
     },
@@ -846,11 +835,7 @@ const GLOBAL_LEVEL = builder.router({
 Returns the most watched shows over the last 24 hours. Shows with the most \`watchers\` are returned first.`,
     path: '/trending',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: themedFilteredMediaQuerySchema,
     responses: {
       200: showTrendingResponseSchema.array(),
     },
@@ -862,10 +847,7 @@ Returns the most watched shows over the last 24 hours. Shows with the most \`wat
 Returns the most watched (unique users) shows in the specified time \`period\`, defaulting to \`weekly\`. All stats are relative to the specific time \`period\`.`,
     path: '/watched/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: showWatchedResponseSchema.array(),
@@ -878,10 +860,7 @@ Returns the most watched (unique users) shows in the specified time \`period\`, 
 Returns the most favorited shows in the specified time \`period\`, defaulting to \`weekly\`.`,
     path: '/favorited/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: showFavoritedResponseSchema.array(),
@@ -894,10 +873,7 @@ Returns the most favorited shows in the specified time \`period\`, defaulting to
 Returns the most played shows in the specified time \`period\`, defaulting to \`weekly\`.`,
     path: '/played/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: showWatchedResponseSchema.array(),
@@ -910,10 +886,7 @@ Returns the most played shows in the specified time \`period\`, defaulting to \`
 Returns the most collected shows in the specified time \`period\`, defaulting to \`weekly\`.`,
     path: '/collected/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: showWatchedResponseSchema.array(),
@@ -951,11 +924,7 @@ Returns the most collected shows in the specified time \`period\`, defaulting to
 Returns the most anticipated shows based on the number of lists a show appears on.`,
     path: '/anticipated',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: themedFilteredMediaQuerySchema,
     responses: {
       200: showAnticipatedResponseSchema.array(),
     },
@@ -966,10 +935,7 @@ Returns the most anticipated shows based on the number of lists a show appears o
 Returns shows that are currently hot on Trakt. Results can be filtered by media fields or ignored user state.`,
     path: '/hot',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     responses: {
       200: showHotResponseSchema.array(),
     },
@@ -981,11 +947,7 @@ Returns shows that are currently hot on Trakt. Results can be filtered by media 
 Returns the most popular shows. Popularity is calculated using the rating percentage and the number of ratings.`,
     path: '/popular',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: themedFilteredMediaQuerySchema,
     responses: {
       200: showResponseSchema.array(),
     },
@@ -997,10 +959,7 @@ Returns shows recently available on streaming services for the requested \`perio
     path: '/streaming/:period',
     method: 'GET',
     pathParams: recentPeriodParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     responses: {
       200: showStreamingResponseSchema.array(),
     },

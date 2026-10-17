@@ -3,24 +3,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const calls: string[] = [];
 let failTesterAdd = false;
 
-vi.mock('./addManager.ts', () => ({
-  addManager: (_slot: number, _appId: number, slug: string) => {
-    calls.push(`addManager:${slug}`);
-    return Promise.resolve();
-  },
-}));
-vi.mock('./removeManager.ts', () => ({
-  removeManager: (_slot: number, _appId: number, slug: string) => {
-    calls.push(`removeManager:${slug}`);
-    return Promise.resolve();
-  },
-}));
-vi.mock('./addAllowedUser.ts', () => ({
-  addAllowedUser: (_slot: number, _appId: number, slug: string) => {
-    calls.push(`addAllowedUser:${slug}`);
-    return failTesterAdd
+vi.mock('./addMember.ts', () => ({
+  addMember: (_target: unknown, slug: string, role: string) => {
+    calls.push(`add:${role}:${slug}`);
+    return failTesterAdd && role === 'tester'
       ? Promise.reject(new Error('seats full'))
       : Promise.resolve();
+  },
+}));
+vi.mock('./removeMember.ts', () => ({
+  removeMember: (_target: unknown, member: { slug: string; role: string }) => {
+    calls.push(`remove:${member.role}:${member.slug}`);
+    return Promise.resolve();
   },
 }));
 
@@ -42,12 +36,12 @@ describe('changeMemberRole', () => {
 
   it('promotes a tester in one call', async () => {
     await changeMemberRole(target, { ...manager, role: 'tester' }, 'manager');
-    expect(calls).toEqual(['addManager:seftur']);
+    expect(calls).toEqual(['add:manager:seftur']);
   });
 
   it('demotes a manager by removing then adding as a tester', async () => {
     await changeMemberRole(target, manager, 'tester');
-    expect(calls).toEqual(['removeManager:seftur', 'addAllowedUser:seftur']);
+    expect(calls).toEqual(['remove:manager:seftur', 'add:tester:seftur']);
   });
 
   it('restores the manager when the tester add fails', async () => {
@@ -56,9 +50,9 @@ describe('changeMemberRole', () => {
       'seats full',
     );
     expect(calls).toEqual([
-      'removeManager:seftur',
-      'addAllowedUser:seftur',
-      'addManager:seftur',
+      'remove:manager:seftur',
+      'add:tester:seftur',
+      'add:manager:seftur',
     ]);
   });
 });

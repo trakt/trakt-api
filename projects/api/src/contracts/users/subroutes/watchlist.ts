@@ -14,6 +14,16 @@ import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSort
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
+const sortedWatchlistPathParamsSchema = profileParamsSchema
+  .merge(sortParamsSchema.partial());
+
+const watchlistQuerySchema = extendedMediaQuerySchema
+  .merge(sortQuerySchema)
+  .merge(pageQuerySchema)
+  .merge(mediaFilterParamsSchema)
+  .merge(hideFilterParamsSchema)
+  .merge(ignoreQuerySchema);
+
 const typedSortedWatchlistParamsSchema = profileParamsSchema.extend({
   type: z.string().describe('Watchlist media type filter.'),
   sort_by: z.string().describe('Sort by a specific property.'),
@@ -28,15 +38,9 @@ export const watchlist = builder.router({
       `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns movies on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
     path: '/movies/:sort',
-    pathParams: profileParamsSchema
-      .merge(sortParamsSchema.partial()),
+    pathParams: sortedWatchlistPathParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: watchlistQuerySchema,
     responses: {
       200: listedMovieResponseSchema.array(),
     },
@@ -47,15 +51,9 @@ Returns movies on a user watchlist. Use the \`sort\` path parameter plus query s
       `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns shows on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
     path: '/shows/:sort',
-    pathParams: profileParamsSchema
-      .merge(sortParamsSchema.partial()),
+    pathParams: sortedWatchlistPathParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: watchlistQuerySchema,
     responses: {
       200: listedShowResponseSchema.array(),
     },
@@ -66,15 +64,9 @@ Returns shows on a user watchlist. Use the \`sort\` path parameter plus query so
       `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns movies and shows on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
     path: '/movie,show/:sort',
-    pathParams: profileParamsSchema
-      .merge(sortParamsSchema.partial()),
+    pathParams: sortedWatchlistPathParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: watchlistQuerySchema,
     responses: {
       200: listedMediaResponseSchema.array(),
     },
@@ -87,12 +79,7 @@ Returns all items in a user's watchlist filtered by type.`,
     path: '/:type/:sort_by/:sort_how',
     pathParams: typedSortedWatchlistParamsSchema,
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema)
-      .merge(hideFilterParamsSchema)
-      .merge(ignoreQuerySchema),
+    query: watchlistQuerySchema,
     responses: {
       200: listedMediaResponseSchema.array(),
     },

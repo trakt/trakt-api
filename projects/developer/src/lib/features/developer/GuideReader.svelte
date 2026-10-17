@@ -1,6 +1,5 @@
 <script lang="ts">
   import GuideCopyButton from "./GuideCopyButton.svelte";
-  import contents from "$lib/guides/contents.md?raw";
   import { GUIDE_SOURCES } from "$lib/guides/GUIDE_SOURCES.ts";
   import { guidePath } from "$lib/guides/guidePath.ts";
   import { prepareGuideMarkdown } from "$lib/guides/prepareGuideMarkdown.ts";
@@ -18,11 +17,12 @@
     endpoints: ReadonlyArray<Endpoint>;
   } = $props();
 
-  const guides = GUIDE_SOURCES;
-  const slugs = new Set(guides.keys());
-  const groups = parseGuideContents(contents);
+  const slugs = new Set(GUIDE_SOURCES.keys());
+  const groups = parseGuideContents(GUIDE_SOURCES.get("contents") ?? "");
   const selectedSlug = $derived(slug ?? groups[0]?.items[0]?.slug);
-  const source = $derived(selectedSlug ? guides.get(selectedSlug) : undefined);
+  const source = $derived(
+    selectedSlug ? GUIDE_SOURCES.get(selectedSlug) : undefined,
+  );
   const updated = $derived(guideUpdatedAt(source ?? ""));
   const markdown = $derived(
     prepareGuideMarkdown({

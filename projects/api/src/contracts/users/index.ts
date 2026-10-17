@@ -78,6 +78,12 @@ import { userLists } from './subroutes/userLists.ts';
 import { watched } from './subroutes/watched.ts';
 import { watchlist } from './subroutes/watchlist.ts';
 
+const commentsLikesQuerySchema = extendedQuerySchemaFactory<
+  ['comments', 'min', 'full', 'images']
+>()
+  .merge(pageQuerySchema)
+  .merge(limitlessQuerySchema);
+
 const userTypeParamsSchema = profileParamsSchema.extend({
   type: z.string().describe('User media type filter.'),
 });
@@ -114,9 +120,7 @@ The \`permissions\` object is also useful to customize your user experience. In 
 Returns comments the authenticated user has reacted to. Use \`extended\`, \`page\`, and \`limit\` to control returned comment detail and pagination.`,
       path: '/reactions/comments',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: commentsLikesQuerySchema,
       responses: {
         200: reactedCommentResponseSchema.array(),
       },
@@ -129,9 +133,7 @@ Returns comments the authenticated user has reacted to. Use \`extended\`, \`page
 Returns comments the authenticated user has liked. Use \`extended\`, \`page\`, and \`limit\` to control returned comment detail and pagination.`,
       path: '/likes/comments',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: commentsLikesQuerySchema,
       responses: {
         200: likedCommentResponseSchema.array(),
       },
@@ -142,9 +144,7 @@ Returns comments the authenticated user has liked. Use \`extended\`, \`page\`, a
 Returns lists the authenticated user has liked. Use \`extended\`, \`page\`, and \`limit\` to control returned list detail and pagination.`,
       path: '/likes/lists',
       method: 'GET',
-      query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: commentsLikesQuerySchema,
       responses: {
         200: likedListResponseSchema.array(),
       },
@@ -455,9 +455,7 @@ Returns likes for a user filtered by type.`,
     path: '/likes/:type',
     method: 'GET',
     pathParams: userTypeParamsSchema,
-    query: extendedQuerySchemaFactory<['comments', 'min', 'full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
+    query: commentsLikesQuerySchema,
     responses: {
       200: z.union([
         likedCommentResponseSchema,

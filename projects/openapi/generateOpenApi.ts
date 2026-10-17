@@ -127,7 +127,7 @@ const getHeaderParameters = (zodObject?: unknown) => {
   });
 };
 
-const getQueryParametersFromZod = (zodObject: unknown, jsonQuery = false) => {
+const getQueryParametersFromZod = (zodObject: unknown) => {
   const isZodObj = isZodObject(zodObject);
 
   if (!isZodObj) {
@@ -139,7 +139,7 @@ const getQueryParametersFromZod = (zodObject: unknown, jsonQuery = false) => {
   return Object.entries(zodShape).map(([key, value]) => {
     const {
       description,
-      mediaExamples: examples,
+      mediaExamples: _mediaExamples,
       ...schema
     } = getOpenApiSchemaFromZod(value)!;
     const isObject = (obj: z.ZodTypeAny) => {
@@ -156,21 +156,10 @@ const getQueryParametersFromZod = (zodObject: unknown, jsonQuery = false) => {
       in: 'query' as const,
       ...(description && { description }),
       ...(isRequired && { required: true }),
-      ...(jsonQuery
-        ? {
-          content: {
-            'application/json': {
-              schema: schema,
-              ...(examples && { examples }),
-            },
-          },
-        }
-        : {
-          ...(isObject(value as z.ZodTypeAny) && {
-            style: 'deepObject' as const,
-          }),
-          schema: schema,
-        }),
+      ...(isObject(value as z.ZodTypeAny) && {
+        style: 'deepObject' as const,
+      }),
+      schema: schema,
     };
   });
 };
@@ -271,16 +260,10 @@ const extractReferenceSchemas = (
   }
   return schema;
 };
-/**
- * @param options.jsonQuery - Enable JSON query parameters, [see](/docs/open-api#json-query-params)
- * @returns
- */
 export const generateOpenApi = (
   router: AppRouter,
   apiDoc: Omit<OpenAPIObject, 'paths' | 'openapi'> & { info: InfoObject },
   options: {
-    setOperationId?: boolean | 'concatenated-path';
-    jsonQuery?: boolean;
     operationMapper?: (
       operation: OperationObject,
       appRoute: AppRoute,
@@ -298,28 +281,13 @@ export const generateOpenApi = (
     PATCH: 'patch',
   };
 
-  const operationIds = new Map<string, string[]>();
-
   const referenceSchemas: { [id: string]: SchemaObject } = {};
 
   const pathObject = paths.reduce((acc, path) => {
-    if (options.setOperationId === true) {
-      const existingOp = operationIds.get(path.id);
-      if (existingOp) {
-        throw new Error(
-          `Route '${path.id}' already defined under ${existingOp.join('.')}`,
-        );
-      }
-      operationIds.set(path.id, path.paths);
-    }
-
     const pathParams = getPathParameters(path.path, path.route.pathParams);
     const headerParams = getHeaderParameters(path.route.headers);
 
-    const querySchema = getQueryParametersFromZod(
-      path.route.query,
-      !!options.jsonQuery,
-    );
+    const querySchema = getQueryParametersFromZod(path.route.query);
 
     let bodySchema = path.route?.method !== 'GET' && 'body' in path.route
       ? getOpenApiSchemaFromZod(path.route.body)
@@ -373,13 +341,6 @@ export const generateOpenApi = (
       deprecated: path.route.deprecated,
       tags: path.paths,
       parameters: [...pathParams, ...headerParams, ...querySchema],
-      ...(options.setOperationId
-        ? {
-          operationId: options.setOperationId === 'concatenated-path'
-            ? [...path.paths, path.id].join('.')
-            : path.id,
-        }
-        : {}),
       ...(bodySchema
         ? {
           requestBody: {

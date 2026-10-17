@@ -16,7 +16,7 @@
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
   import { observeAccountChanges } from "$lib/auth/observeAccountChanges.ts";
-  import { fetchAccounts } from "$lib/api/fetchAccounts.ts";
+  import { listAccounts } from "$lib/auth/listAccounts.ts";
   import type { DeveloperAccount } from "$lib/api/DeveloperAccount.ts";
   import type { Endpoint } from "$lib/openapi/Endpoint.ts";
   import { buildEndpointUrl } from "$lib/openapi/buildEndpointUrl.ts";
@@ -275,17 +275,17 @@
     ];
     requestBody = state.body;
     activeTab = state.activeTab ?? activeTab;
+    refreshRequestUrl(endpoint);
+  }
+
+  function refreshRequestUrl(endpoint: Endpoint) {
     requestUrl = buildEndpointUrl({ endpoint, serverUrl, values });
   }
 
   function setValue(id: string, value: string) {
     if (!selectedEndpoint) return;
     values = { ...values, [id]: value };
-    requestUrl = buildEndpointUrl({
-      endpoint: selectedEndpoint,
-      serverUrl,
-      values,
-    });
+    refreshRequestUrl(selectedEndpoint);
 
     const headerId = parameterHeaderId(id);
     headers = headers.map((header) =>
@@ -313,11 +313,7 @@
     if (!selectedEndpoint) return;
     if (!selectedEndpoint.serverUrls.includes(value)) return;
     serverUrl = value;
-    requestUrl = buildEndpointUrl({
-      endpoint: selectedEndpoint,
-      serverUrl,
-      values,
-    });
+    refreshRequestUrl(selectedEndpoint);
   }
 
   function setMainServer(value: string) {
@@ -327,11 +323,7 @@
       return;
 
     serverUrl = value;
-    requestUrl = buildEndpointUrl({
-      endpoint: selectedEndpoint,
-      serverUrl,
-      values,
-    });
+    refreshRequestUrl(selectedEndpoint);
   }
 
   function setSelectedAccount(slot: number | null) {
@@ -381,9 +373,9 @@
 
   async function refreshAccounts() {
     const generation = sessionGeneration;
-    const accountState = await fetchAccounts();
+    const nextAccounts = await listAccounts().catch(() => []);
     if (generation !== sessionGeneration) return;
-    accounts = accountState.accounts;
+    accounts = nextAccounts;
     accountsLoading = false;
     profileRevision += 1;
     if (accounts.some((account) => account.slot === selectedAccountSlot))
