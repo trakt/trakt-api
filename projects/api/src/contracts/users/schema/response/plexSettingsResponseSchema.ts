@@ -6,6 +6,17 @@ export const plexLibrarySelectionSchema = z.object({
   uuid: z.string(),
 });
 
+const playTogglesSchema = z.object({
+  watching: z.boolean(),
+  watched: z.boolean(),
+  rated: z.boolean(),
+  collected: z.boolean(),
+});
+
+const ratedToggleSchema = z.object({
+  rated: z.boolean(),
+});
+
 /** Zod schema for sync movie toggles. */
 export const syncMovieTogglesSchema = z.object({
   watching: z.boolean(),
@@ -22,43 +33,22 @@ export const syncShowTogglesSchema = z.object({
 });
 
 /** Zod schema for sync season toggles. */
-export const syncSeasonTogglesSchema = z.object({
-  rated: z.boolean(),
-});
+export const syncSeasonTogglesSchema = ratedToggleSchema;
 
 /** Zod schema for sync episode toggles. */
-export const syncEpisodeTogglesSchema = z.object({
-  watching: z.boolean(),
-  watched: z.boolean(),
-  rated: z.boolean(),
-  collected: z.boolean(),
-});
+export const syncEpisodeTogglesSchema = playTogglesSchema;
 
 /** Zod schema for scrobbler movie toggles. */
-export const scrobblerMovieTogglesSchema = z.object({
-  watching: z.boolean(),
-  watched: z.boolean(),
-  rated: z.boolean(),
-  collected: z.boolean(),
-});
+export const scrobblerMovieTogglesSchema = playTogglesSchema;
 
 /** Zod schema for scrobbler show toggles. */
-export const scrobblerShowTogglesSchema = z.object({
-  rated: z.boolean(),
-});
+export const scrobblerShowTogglesSchema = ratedToggleSchema;
 
 /** Zod schema for scrobbler season toggles. */
-export const scrobblerSeasonTogglesSchema = z.object({
-  rated: z.boolean(),
-});
+export const scrobblerSeasonTogglesSchema = ratedToggleSchema;
 
 /** Zod schema for scrobbler episode toggles. */
-export const scrobblerEpisodeTogglesSchema = z.object({
-  watching: z.boolean(),
-  watched: z.boolean(),
-  rated: z.boolean(),
-  collected: z.boolean(),
-});
+export const scrobblerEpisodeTogglesSchema = playTogglesSchema;
 
 /** Zod schema for plex sync toggles. */
 export const plexSyncTogglesSchema = z.object({
