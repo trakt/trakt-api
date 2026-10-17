@@ -21,6 +21,17 @@ import { z } from '../_internal/z.ts';
 import { listReportRequestSchema } from './schema/listReportRequestSchema.ts';
 import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
 
+const listItemsQuerySchema = extendedMediaQuerySchema
+  .merge(sortQuerySchema)
+  .merge(mediaFilterParamsSchema)
+  .merge(ignoreQuerySchema)
+  .merge(pageQuerySchema)
+  .merge(limitlessQuerySchema);
+
+const filteredListsQuerySchema = extendedQuerySchemaFactory<['full']>()
+  .merge(pageQuerySchema)
+  .merge(mediaFilterParamsSchema);
+
 const listItemsPathParamsSchema = idParamsSchema.extend({
   type: z.string().describe('List item type filter.'),
   sort_by: z.string().describe('Sort by a specific property.'),
@@ -61,12 +72,7 @@ Returns movie items on a public list. Use \`id\` to identify the list and query 
       path: '/items/movie',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: listItemsQuerySchema,
       responses: {
         200: listedMovieResponseSchema.array(),
       },
@@ -78,12 +84,7 @@ Returns show items on a public list. Use \`id\` to identify the list and query s
       path: '/items/show',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: listItemsQuerySchema,
       responses: {
         200: listedShowResponseSchema.array(),
       },
@@ -95,12 +96,7 @@ Returns movie and show items on a public list. Use \`id\` to identify the list a
       path: '/items/movie,show',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: listItemsQuerySchema,
       responses: {
         200: listedMediaResponseSchema.array(),
       },
@@ -112,12 +108,7 @@ Returns movie, show, episode, and season items on a public list. Use \`id\` to i
       path: '/items/movie,show,episode,season',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      query: listItemsQuerySchema,
       responses: {
         200: listedAllResponseSchema.array(),
       },
@@ -229,9 +220,7 @@ const GLOBAL_LEVEL = builder.router({
 Returns trending lists ordered by current activity. Use pagination and filters to control the result set.`,
     path: '/trending',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+    query: filteredListsQuerySchema,
     responses: {
       200: prominentListResponseSchema.array(),
     },
@@ -243,9 +232,7 @@ Returns trending lists ordered by current activity. Use \`type\`, pagination, an
     path: '/trending/:type',
     method: 'GET',
     pathParams: listTypePathParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+    query: filteredListsQuerySchema,
     responses: {
       200: prominentListResponseSchema.array(),
     },
@@ -256,9 +243,7 @@ Returns trending lists ordered by current activity. Use \`type\`, pagination, an
 Returns popular lists ordered by long-term activity. Use pagination and filters to control the result set.`,
     path: '/popular',
     method: 'GET',
-    query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+    query: filteredListsQuerySchema,
     responses: {
       200: prominentListResponseSchema.array(),
     },
@@ -270,9 +255,7 @@ Returns popular lists ordered by long-term activity. Use \`type\`, pagination, a
     path: '/popular/:type',
     method: 'GET',
     pathParams: listTypePathParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema)
-      .merge(mediaFilterParamsSchema),
+    query: filteredListsQuerySchema,
     responses: {
       200: prominentListResponseSchema.array(),
     },

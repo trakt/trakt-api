@@ -5,6 +5,16 @@ import { movieScrobbleRequestSchema } from './schema/request/movieScrobbleReques
 import { episodeScrobbleResponseSchema } from './schema/response/episodeScrobbleResponseSchema.ts';
 import { movieScrobbleResponseSchema } from './schema/response/movieScrobbleResponseSchema.ts';
 
+const scrobbleRequestSchema = z.union([
+  movieScrobbleRequestSchema,
+  episodeScrobbleRequestSchema,
+]);
+
+const scrobbleResponseSchema = z.union([
+  movieScrobbleResponseSchema,
+  episodeScrobbleResponseSchema,
+]);
+
 /** ts-rest contract for the `scrobble` endpoints. */
 export const scrobble = builder.router({
   start: {
@@ -22,12 +32,9 @@ Use this method when the video initially starts playing or is unpaused. This wil
 | \`progress\` * | float | Progress percentage between 0 and 100. |`,
     path: '/start',
     method: 'POST',
-    body: z.union([movieScrobbleRequestSchema, episodeScrobbleRequestSchema]),
+    body: scrobbleRequestSchema,
     responses: {
-      201: z.union([
-        movieScrobbleResponseSchema,
-        episodeScrobbleResponseSchema,
-      ]),
+      201: scrobbleResponseSchema,
     },
   },
   pause: {
@@ -36,12 +43,9 @@ Use this method when the video initially starts playing or is unpaused. This wil
 Pause an active scrobble for a movie or episode. Send the media object and current progress in the request body; the response returns the updated scrobble state.`,
     path: '/pause',
     method: 'POST',
-    body: z.union([movieScrobbleRequestSchema, episodeScrobbleRequestSchema]),
+    body: scrobbleRequestSchema,
     responses: {
-      201: z.union([
-        movieScrobbleResponseSchema,
-        episodeScrobbleResponseSchema,
-      ]),
+      201: scrobbleResponseSchema,
     },
   },
   stop: {
@@ -64,12 +68,9 @@ If the progress is between 1% and 79%, it will be treated as a *pause* and the \
 > _If the same item was just scrobbled, a \`409\` HTTP status code will returned to avoid scrobbling a duplicate. The response will contain a \`watched_at\` timestamp when the item was last scrobbled and a \`expires_at\` timestamp when the item can be scrobbled again._`,
     path: '/stop',
     method: 'POST',
-    body: z.union([movieScrobbleRequestSchema, episodeScrobbleRequestSchema]),
+    body: scrobbleRequestSchema,
     responses: {
-      201: z.union([
-        movieScrobbleResponseSchema,
-        episodeScrobbleResponseSchema,
-      ]),
+      201: scrobbleResponseSchema,
     },
   },
 }, {

@@ -43,6 +43,19 @@ import { ratingsSyncResponseSchema } from './schema/response/ratingsResponseSche
 import { removeRatingsResponseSchema } from './schema/response/removeRatingsResponseSchema.ts';
 import { upNextResponseSchema } from './schema/response/upNextResponseSchema.ts';
 
+const playbackQuerySchema = extendedQuerySchemaFactory<['full', 'images']>()
+  .merge(pageQuerySchema)
+  .merge(progressParamsSchema);
+
+const pagedImagesQuerySchema = extendedQuerySchemaFactory<['full', 'images']>()
+  .merge(pageQuerySchema);
+
+const collectionQuerySchema = extendedQuerySchemaFactory<
+  ['full', 'images', 'available_on']
+>()
+  .merge(collectionParamSchema)
+  .merge(pageQuerySchema);
+
 const syncTypeParamsSchema = z.object({
   type: z.string().describe('Sync media type filter.'),
 });
@@ -138,9 +151,7 @@ Returns in-progress movie playback items for the authenticated user, most recent
 ${PLAYBACK_PAGINATION_NOTE}`,
     method: 'GET',
     path: '/playback/movies',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(progressParamsSchema),
+    query: playbackQuerySchema,
     responses: {
       200: movieProgressResponseSchema.array(),
     },
@@ -153,9 +164,7 @@ Returns in-progress episode playback items for the authenticated user, most rece
 ${PLAYBACK_PAGINATION_NOTE}`,
     method: 'GET',
     path: '/playback/episodes',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(progressParamsSchema),
+    query: playbackQuerySchema,
     responses: {
       200: episodeProgressResponseSchema.array(),
     },
@@ -170,9 +179,7 @@ Discriminate on \`type\`: movie items carry \`movie\`, episode items carry \`epi
 ${PLAYBACK_PAGINATION_NOTE}`,
     method: 'GET',
     path: '/playback',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(progressParamsSchema),
+    query: playbackQuerySchema,
     responses: {
       200: playbackResponseSchema.array(),
     },
@@ -222,9 +229,7 @@ Returns movies and episodes that a user has watched, sorted by most recent. Spec
     method: 'GET',
     path: '/:type/:id',
     pathParams: syncHistoryParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(progressParamsSchema),
+    query: playbackQuerySchema,
     responses: {
       200: syncHistoryItemResponseSchema.array(),
     },
@@ -294,8 +299,7 @@ Returns all items in the authenticated user's watchlist filtered by type.`,
     method: 'GET',
     path: '/:type/:sort_by/:sort_how',
     pathParams: syncSortedListParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+    query: pagedImagesQuerySchema,
     responses: {
       200: syncListItemResponseSchema.array(),
     },
@@ -392,8 +396,7 @@ const ratings = builder.router({
     method: 'GET',
     path: '/:type/:rating',
     pathParams: syncRatingsParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+    query: pagedImagesQuerySchema,
     responses: {
       200: syncRatingItemResponseSchema.array(),
     },
@@ -458,8 +461,7 @@ Returns all items in the authenticated user's favorites filtered by type.`,
     method: 'GET',
     path: '/:type/:sort_by/:sort_how',
     pathParams: syncSortedListParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema),
+    query: pagedImagesQuerySchema,
     responses: {
       200: syncListItemResponseSchema.array(),
     },
@@ -541,9 +543,7 @@ Returns all collected items for a media \`type\`.`,
     method: 'GET',
     path: '/:type',
     pathParams: syncTypeParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema)
-      .merge(pageQuerySchema),
+    query: collectionQuerySchema,
     responses: {
       200: collectionResponseSchema.array(),
     },
@@ -554,9 +554,7 @@ Returns all collected items for a media \`type\`.`,
 Returns movies in the authenticated user collection. Use \`available_on\` and pagination to filter and move through collected movies.`,
     method: 'GET',
     path: '/movies',
-    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema)
-      .merge(pageQuerySchema),
+    query: collectionQuerySchema,
     responses: {
       200: collectedMovieSchema.array(),
     },
@@ -579,9 +577,7 @@ Returns shows in the authenticated user collection, including collected seasons 
 Returns episodes in the authenticated user collection. Use \`available_on\` and pagination to filter and move through collected episodes.`,
     method: 'GET',
     path: '/episodes',
-    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema)
-      .merge(pageQuerySchema),
+    query: collectionQuerySchema,
     responses: {
       200: collectedEpisodeSchema.array(),
     },
@@ -592,9 +588,7 @@ Returns episodes in the authenticated user collection. Use \`available_on\` and 
 Returns movies, shows, and episodes in the authenticated user collection. Use \`available_on\` and pagination to filter and move through collected media.`,
     method: 'GET',
     path: '/media',
-    query: extendedQuerySchemaFactory<['full', 'images', 'available_on']>()
-      .merge(collectionParamSchema)
-      .merge(pageQuerySchema),
+    query: collectionQuerySchema,
     responses: {
       200: collectionResponseSchema.array(),
     },

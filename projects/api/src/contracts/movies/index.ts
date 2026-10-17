@@ -49,6 +49,21 @@ import { movieStreamingResponseSchema } from './schema/response/movieStreamingRe
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
 
+const themedFilteredMediaQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(themeQuerySchema)
+  .merge(pageQuerySchema)
+  .merge(ignoreQuerySchema);
+
+const pagedMediaQuerySchema = extendedMediaQuerySchema
+  .merge(pageQuerySchema)
+  .merge(ignoreQuerySchema);
+
+const filteredMediaQuerySchema = extendedMediaQuerySchema
+  .merge(mediaFilterParamsSchema)
+  .merge(pageQuerySchema)
+  .merge(ignoreQuerySchema);
+
 const startDateParamsSchema = z.object({
   start_date: z.string().describe('UTC date to start checking for updates.'),
 });
@@ -339,11 +354,7 @@ const GLOBAL_LEVEL = builder.router({
 Returns the most watched movies over the last 24 hours. Movies with the most \`watchers\` are returned first.`,
     path: '/trending',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: themedFilteredMediaQuerySchema,
     responses: {
       200: movieTrendingResponseSchema.array(),
     },
@@ -355,9 +366,7 @@ Returns the most watched movies over the last 24 hours. Movies with the most \`w
 Returns the most watched (unique users) movies in the specified time \`period\`, defaulting to \`weekly\`. All stats are relative to the specific time \`period\`.`,
     path: '/watched/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: pagedMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: movieWatchedResponseSchema.array(),
@@ -370,9 +379,7 @@ Returns the most watched (unique users) movies in the specified time \`period\`,
 Returns the most favorited movies in the specified time \`period\`, defaulting to \`weekly\`.`,
     path: '/favorited/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: pagedMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: movieFavoritedResponseSchema.array(),
@@ -385,9 +392,7 @@ Returns the most favorited movies in the specified time \`period\`, defaulting t
 Returns the most played movies in the specified time \`period\`, defaulting to \`weekly\`.`,
     path: '/played/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: pagedMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: movieWatchedResponseSchema.array(),
@@ -400,9 +405,7 @@ Returns the most played movies in the specified time \`period\`, defaulting to \
 Returns the most collected movies in the specified time \`period\`, defaulting to \`weekly\`.`,
     path: '/collected/:period',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: pagedMediaQuerySchema,
     pathParams: periodParamsSchema,
     responses: {
       200: movieWatchedResponseSchema.array(),
@@ -451,11 +454,7 @@ Returns the most collected movies in the specified time \`period\`, defaulting t
 Returns the most anticipated movies based on the number of lists a movie appears on.`,
     path: '/anticipated',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: themedFilteredMediaQuerySchema,
     responses: {
       200: movieAnticipatedResponseSchema.array(),
     },
@@ -466,10 +465,7 @@ Returns the most anticipated movies based on the number of lists a movie appears
 Returns movies that are currently hot on Trakt. Results can be filtered by media fields or ignored user state.`,
     path: '/hot',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     responses: {
       200: movieHotResponseSchema.array(),
     },
@@ -481,11 +477,7 @@ Returns movies that are currently hot on Trakt. Results can be filtered by media
 Returns the most popular movies. Popularity is calculated using the rating percentage and the number of ratings.`,
     path: '/popular',
     method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: themedFilteredMediaQuerySchema,
     responses: {
       200: movieResponseSchema.array(),
     },
@@ -497,10 +489,7 @@ Returns movies recently available on streaming services for the requested \`peri
     path: '/streaming/:period',
     method: 'GET',
     pathParams: recentPeriodParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
+    query: filteredMediaQuerySchema,
     responses: {
       200: movieStreamingResponseSchema.array(),
     },

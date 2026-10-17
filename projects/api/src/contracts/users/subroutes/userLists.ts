@@ -32,6 +32,15 @@ import { reorderListsResponseSchema } from '../schema/response/reorderListsRespo
 import { smartListDraftResponseSchema } from '../schema/response/smartListDraftResponseSchema.ts';
 import { smartListWriteSchema } from '../../_internal/request/smartListWriteSchema.ts';
 
+const listPathParamsSchema = profileParamsSchema.merge(listParamsSchema);
+
+const listItemsQuerySchema = extendedMediaQuerySchema
+  .merge(sortQuerySchema)
+  .merge(mediaFilterParamsSchema)
+  .merge(ignoreQuerySchema)
+  .merge(pageQuerySchema)
+  .merge(limitlessQuerySchema);
+
 const listItemsPathParamsSchema = profileParamsSchema
   .merge(listParamsSchema)
   .extend({
@@ -58,7 +67,7 @@ const list = builder.router({
 Returns a single personal list. Use the [**/users/:id/lists/:list_id/items**](#reference/users/list-items) method to get the actual items this list contains.`,
     path: '/',
     method: 'GET',
-    pathParams: profileParamsSchema.merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     query: extendedProfileQuerySchema,
     responses: {
       200: listResponseSchema,
@@ -92,7 +101,7 @@ Lists will be \`private\` by default. Here is what each value means.
 | \`sort_how\` | string | \`asc\`, \`desc\` |`,
     path: '/',
     method: 'PUT',
-    pathParams: profileParamsSchema.merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     body: listUpdateRequestSchema.merge(sortQuerySchema),
     responses: {
       200: listResponseSchema.array(),
@@ -104,7 +113,7 @@ Lists will be \`private\` by default. Here is what each value means.
 Remove a personal list and all items it contains.`,
     path: '/',
     method: 'DELETE',
-    pathParams: profileParamsSchema.merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     responses: {
       204: z.undefined(),
       403: z.undefined(),
@@ -118,13 +127,8 @@ Remove a personal list and all items it contains.`,
 Returns movie items on a personal list. Use \`list_id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
       path: '/items/movie',
       method: 'GET',
-      pathParams: profileParamsSchema.merge(listParamsSchema),
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      pathParams: listPathParamsSchema,
+      query: listItemsQuerySchema,
       responses: {
         200: listedMovieResponseSchema.array(),
       },
@@ -136,13 +140,8 @@ Returns movie items on a personal list. Use \`list_id\` to identify the list and
 Returns show items on a personal list. Use \`list_id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
       path: '/items/show',
       method: 'GET',
-      pathParams: profileParamsSchema.merge(listParamsSchema),
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      pathParams: listPathParamsSchema,
+      query: listItemsQuerySchema,
       responses: {
         200: listedShowResponseSchema.array(),
       },
@@ -154,14 +153,8 @@ Returns show items on a personal list. Use \`list_id\` to identify the list and 
 Returns movie and show items on a personal list. Use \`list_id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
       path: '/items/movie,show',
       method: 'GET',
-      pathParams: profileParamsSchema
-        .merge(listParamsSchema),
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      pathParams: listPathParamsSchema,
+      query: listItemsQuerySchema,
       responses: {
         200: listedMediaResponseSchema.array(),
       },
@@ -173,14 +166,8 @@ Returns movie and show items on a personal list. Use \`list_id\` to identify the
 Returns movie, show, season, and episode items on a personal list. Use \`list_id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
       path: '/items/movie,show,season,episode',
       method: 'GET',
-      pathParams: profileParamsSchema
-        .merge(listParamsSchema),
-      query: extendedMediaQuerySchema
-        .merge(sortQuerySchema)
-        .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+      pathParams: listPathParamsSchema,
+      query: listItemsQuerySchema,
       responses: {
         200: listedAllResponseSchema.array(),
       },
@@ -256,8 +243,7 @@ Remove one or more items from a personal list.
 Reorder items on a personal list. Send the ordered list item IDs in the request body; the response returns the updated item order.`,
     path: '/reorder',
     method: 'POST',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     body: reorderRequestSchema,
     responses: {
       200: reorderListResponseSchema,
@@ -269,8 +255,7 @@ Reorder items on a personal list. Send the ordered list item IDs in the request 
 Reorder items on a personal list. Send the ordered list item IDs in the request body; the response returns the updated item order.`,
     path: '/items/reorder',
     method: 'POST',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     body: reorderRequestSchema,
     responses: {
       200: reorderListResponseSchema,
@@ -294,8 +279,7 @@ Reorder items on a personal list. Send the ordered list item IDs in the request 
 Returns all users who liked a list.`,
     path: '/likes',
     method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     query: pageQuerySchema,
     responses: {
       200: likeResponseSchema.array(),
@@ -307,8 +291,7 @@ Returns all users who liked a list.`,
 Votes help determine popular lists. Only one like is allowed per list per user.`,
     path: '/like',
     method: 'POST',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     body: z.undefined(),
     responses: {
       204: z.undefined(),
@@ -320,8 +303,7 @@ Votes help determine popular lists. Only one like is allowed per list per user.`
 Remove a like on a list.`,
     path: '/like',
     method: 'DELETE',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     responses: {
       204: z.undefined(),
     },
@@ -352,8 +334,7 @@ Returns a ready-made smart list setup for a personal list that stopped updating 
 \`filters\` use the same shape as smart list filters, so they can be sent as-is when creating a smart list. \`confidence\` is the share of the list's current titles the setup brings back, from 0 to 1. Lists without a good setup return \`404\`. \`converted\` is set once the owner has turned the list into a smart list.`,
     path: '/smart-list-draft',
     method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     responses: {
       200: smartListDraftResponseSchema,
       401: z.undefined(),
@@ -375,8 +356,7 @@ The list keeps its address: its items are then served from the smart list, and i
 | \`420\` | Smart list limit reached. |`,
     path: '/smart-list-draft/convert',
     method: 'POST',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     body: smartListWriteSchema,
     responses: {
       200: smartListCreateResponseSchema,
@@ -393,8 +373,7 @@ The list keeps its address: its items are then served from the smart list, and i
 Report a list for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per list.`,
     path: '/report',
     method: 'POST',
-    pathParams: profileParamsSchema
-      .merge(listParamsSchema),
+    pathParams: listPathParamsSchema,
     body: listReportRequestSchema,
     responses: {
       201: z.undefined(),
