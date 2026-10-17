@@ -25,8 +25,7 @@
   import type { GithubConnectIntent } from "./GithubConnectIntent.ts";
   import AppSectionNav from "./AppSectionNav.svelte";
   import type { AppSection } from "./AppSection.ts";
-  import DevAccessPanel from "./DevAccessPanel.svelte";
-  import ManagersPanel from "./ManagersPanel.svelte";
+  import MembersPanel from "./MembersPanel.svelte";
   import PkceNotice from "./PkceNotice.svelte";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
@@ -99,10 +98,21 @@
     const seats = 1 + app.manager_count + app.allowed_user_count;
     return `${seats} ${seats === 1 ? "person" : "people"} can sign in`;
   }
-  let managerCountOverride = $state<number | undefined>(undefined);
-  const managerCount = $derived(
-    managerCountOverride ?? selected?.manager_count ?? 0,
+  let memberCountOverride = $state<number | undefined>(undefined);
+  const memberCount = $derived(
+    memberCountOverride ??
+      (selected
+        ? selected.manager_count +
+          (selected.dev ? selected.allowed_user_count : 0)
+        : 0),
   );
+  let hash = $state("");
+  $effect(() => {
+    const sync = () => (hash = globalThis.location.hash.slice(1));
+    sync();
+    globalThis.addEventListener("hashchange", sync);
+    return () => globalThis.removeEventListener("hashchange", sync);
+  });
   const isOwner = $derived(selected?.role === "owner");
   const sections = $derived<AppSection[]>(
     selected
@@ -110,13 +120,15 @@
           { id: "credentials", label: "Credentials" },
           { id: "settings", label: "Settings" },
           { id: "details", label: "Details" },
-          { id: "managers", label: `Managers · ${managerCount}` },
-          ...(selected.dev
-            ? [{ id: "sign-in", label: "Who can sign in" }]
-            : []),
+          { id: "members", label: `Members · ${memberCount}` },
           ...(isOwner ? [{ id: "delete", label: "Delete app" }] : []),
         ]
       : [],
+  );
+  const activeSection = $derived(
+    sections.some((section) => section.id === hash)
+      ? hash
+      : (sections[0]?.id ?? ""),
   );
   let confirming = $state(false);
   let confirmation = $state("");
@@ -470,9 +482,13 @@
       <RedirectUriWarning uris={unsafeRedirects} />
 
       <div class="app-layout">
-        <AppSectionNav {sections} />
+        <AppSectionNav {sections} active={activeSection} />
         <div class="app-sections">
-          <section class="panel" id="credentials">
+          <section
+            class="panel"
+            id="credentials"
+            class:is-active={activeSection === "credentials"}
+          >
             <h2>Credentials</h2>
             <div class="credential">
               <strong>Client ID</strong>
@@ -531,7 +547,11 @@
               </div>{/if}
           </section>
 
-          <section class="panel" id="settings">
+          <section
+            class="panel"
+            id="settings"
+            class:is-active={activeSection === "settings"}
+          >
             <h2>Settings</h2>
             {#if readOnly}<p class="muted">
                 Connect GitHub on <a href="/apps">My Apps</a> to edit this app. It
@@ -566,7 +586,11 @@
             {/each}
           </section>
 
-          <section class="panel" id="details">
+          <section
+            class="panel"
+            id="details"
+            class:is-active={activeSection === "details"}
+          >
             <h2>Details</h2>
             <dl>
               <dt>App ID</dt>
@@ -600,22 +624,23 @@
             </dl>
           </section>
 
-          <div id="managers">
-            <ManagersPanel
+          <div id="members" class:is-active={activeSection === "members"}>
+            <MembersPanel
               {slot}
               appId={selected.id}
-              ownerUsername={selected.owner.username}
+              dev={selected.dev}
               {isOwner}
-              onCountChange={(count) => (managerCountOverride = count)}
+              ownerUsername={selected.owner.username}
+              onCountChange={(count) => (memberCountOverride = count)}
             />
           </div>
 
-          {#if selected.dev}<div id="sign-in">
-              <DevAccessPanel {slot} appId={selected.id} {managerCount} />
-            </div>{/if}
-
           {#if isOwner}
-            <section class="panel danger" id="delete">
+            <section
+              class="panel danger"
+              id="delete"
+              class:is-active={activeSection === "delete"}
+            >
               <h2>Delete app</h2>
               <p>
                 Deleting this app permanently removes its credentials and
@@ -1063,6 +1088,10 @@
     }
     .app-layout {
       grid-template-columns: 1fr;
+    }
+
+    .app-sections > [id]:not(.is-active) {
+      display: none;
     }
     .credential-value {
       flex-wrap: wrap;

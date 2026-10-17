@@ -1,30 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { AppSection } from "./AppSection.ts";
+  import type { AppSectionNavProps } from "./AppSectionNavProps.ts";
 
-  const { sections }: { sections: ReadonlyArray<AppSection> } = $props();
-
-  let current = $state("");
+  const { sections, active }: AppSectionNavProps = $props();
 
   onMount(() => {
-    const sync = () => (current = globalThis.location.hash.slice(1));
-    sync();
-    if (current) {
+    if (!globalThis.location.hash) return;
+    requestAnimationFrame(() =>
       requestAnimationFrame(() =>
-        requestAnimationFrame(() =>
-          document.getElementById(current)?.scrollIntoView(),
-        ),
-      );
-    }
-    globalThis.addEventListener("hashchange", sync);
-    return () => globalThis.removeEventListener("hashchange", sync);
+        document.getElementById(active)?.scrollIntoView(),
+      ),
+    );
   });
-
-  const active = $derived(
-    sections.some((section) => section.id === current)
-      ? current
-      : (sections[0]?.id ?? ""),
-  );
 </script>
 
 <nav class="trakt-app-section-nav" aria-label="App sections">

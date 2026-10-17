@@ -1,7 +1,8 @@
-export type ManagersPanelProps = {
+export type MembersPanelProps = {
   slot: number;
   appId: number;
-  ownerUsername: string;
+  dev: boolean;
   isOwner: boolean;
+  ownerUsername: string;
   onCountChange: (count: number) => void;
 };
