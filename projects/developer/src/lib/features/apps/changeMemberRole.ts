@@ -1,22 +1,21 @@
-import { addAllowedUser } from './addAllowedUser.ts';
-import { addManager } from './addManager.ts';
+import { addMember } from './addMember.ts';
 import type { AppMember } from './AppMember.ts';
 import type { AppMemberRole } from './AppMemberRole.ts';
 import type { MemberTarget } from './MemberTarget.ts';
-import { removeManager } from './removeManager.ts';
+import { removeMember } from './removeMember.ts';
 
 export async function changeMemberRole(
-  { slot, appId }: MemberTarget,
+  target: MemberTarget,
   member: AppMember,
   role: AppMemberRole,
 ): Promise<void> {
   if (role === member.role) return;
-  if (role === 'manager') return addManager(slot, appId, member.slug);
-  await removeManager(slot, appId, member.slug);
+  if (role === 'manager') return addMember(target, member.slug, 'manager');
+  await removeMember(target, member);
   try {
-    await addAllowedUser(slot, appId, member.slug);
+    await addMember(target, member.slug, 'tester');
   } catch (cause) {
-    await addManager(slot, appId, member.slug);
+    await addMember(target, member.slug, 'manager');
     throw cause;
   }
 }
