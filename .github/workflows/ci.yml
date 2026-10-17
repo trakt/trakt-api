@@ -43,6 +43,9 @@ jobs:
     needs: files-changed
     name: The Scribe's Chamber (OpenAPI)
     runs-on: ubuntu-latest
+    concurrency:
+      group: openapi-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Summoning the Ancient Scrolls aka Checkout Code
         uses: actions/checkout@v5
@@ -92,14 +95,19 @@ jobs:
 
       - name: The Sacred Scroll's Journey aka Push OpenAPI to Android Repo
         if: github.ref == 'refs/heads/master'
-        uses: dmnemec/copy_file_to_another_repo_action@main
         env:
-          API_TOKEN_GITHUB: ${{ steps.generate-token.outputs.token }}
-        with:
-          source_file: 'projects/openapi/openapi.json'
-          destination_repo: 'trakt/trakt-android'
-          destination_folder: 'openapi'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          user_name: 'github-actions[bot]'
-          commit_message: 'chore: openapi schema updates'
-          destination_branch_create: 'feat/openapi_ci'
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          ANDROID_DIR: ${{ runner.temp }}/trakt-android
+        run: |
+          git clone --depth 1 --branch main "https://x-access-token:${GH_TOKEN}@github.com/trakt/trakt-android.git" "$ANDROID_DIR"
+          cp projects/openapi/openapi.json "$ANDROID_DIR/openapi/openapi.json"
+          cd "$ANDROID_DIR"
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b feat/openapi_ci
+          git add openapi/openapi.json
+          git commit -m 'chore: openapi schema updates'
+          git push --force origin feat/openapi_ci
