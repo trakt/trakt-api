@@ -616,7 +616,8 @@
       background: var(--color-surface);
     }
 
-    .request-line > label {
+    .request-line > label,
+    .body-editor label {
       position: absolute;
 
       width: var(--ni-1);
@@ -1126,16 +1127,6 @@
 
     .sample-body-button:hover {
       color: var(--color-foreground);
-    }
-
-    .body-editor label {
-      position: absolute;
-
-      width: var(--ni-1);
-      height: var(--ni-1);
-
-      overflow: hidden;
-      clip: rect(0 0 0 0);
     }
 
     .body-editor-surface {
