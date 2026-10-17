@@ -892,6 +892,10 @@
     > [id] {
       scroll-margin-block-start: var(--gap-l);
     }
+
+    > [id]:not(.is-active) {
+      display: none;
+    }
   }
 
   .badge[data-variant="managed"] {
@@ -1090,9 +1094,6 @@
       grid-template-columns: 1fr;
     }
 
-    .app-sections > [id]:not(.is-active) {
-      display: none;
-    }
     .credential-value {
       flex-wrap: wrap;
     }
