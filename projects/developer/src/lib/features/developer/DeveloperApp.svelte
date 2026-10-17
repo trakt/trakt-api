@@ -275,17 +275,17 @@
     ];
     requestBody = state.body;
     activeTab = state.activeTab ?? activeTab;
+    refreshRequestUrl(endpoint);
+  }
+
+  function refreshRequestUrl(endpoint: Endpoint) {
     requestUrl = buildEndpointUrl({ endpoint, serverUrl, values });
   }
 
   function setValue(id: string, value: string) {
     if (!selectedEndpoint) return;
     values = { ...values, [id]: value };
-    requestUrl = buildEndpointUrl({
-      endpoint: selectedEndpoint,
-      serverUrl,
-      values,
-    });
+    refreshRequestUrl(selectedEndpoint);
 
     const headerId = parameterHeaderId(id);
     headers = headers.map((header) =>
@@ -313,11 +313,7 @@
     if (!selectedEndpoint) return;
     if (!selectedEndpoint.serverUrls.includes(value)) return;
     serverUrl = value;
-    requestUrl = buildEndpointUrl({
-      endpoint: selectedEndpoint,
-      serverUrl,
-      values,
-    });
+    refreshRequestUrl(selectedEndpoint);
   }
 
   function setMainServer(value: string) {
@@ -327,11 +323,7 @@
       return;
 
     serverUrl = value;
-    requestUrl = buildEndpointUrl({
-      endpoint: selectedEndpoint,
-      serverUrl,
-      values,
-    });
+    refreshRequestUrl(selectedEndpoint);
   }
 
   function setSelectedAccount(slot: number | null) {
