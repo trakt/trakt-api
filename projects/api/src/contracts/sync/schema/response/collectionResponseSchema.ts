@@ -4,14 +4,14 @@ import {
   showResponseSchema,
 } from '../../../_internal/response/showResponseSchema.ts';
 import { z } from '../../../_internal/z.ts';
-import { availableOnEnumSchema } from '../request/availableOnEnumSchema.ts';
+import { availableOnNameResponseSchema } from './availableOnNameResponseSchema.ts';
 
 const availableOnSchema = z.object({
   /***
    * Available if requesting extended `available_on`.
    */
   available_on: z.array(z.object({
-    name: availableOnEnumSchema,
+    name: availableOnNameResponseSchema,
   })).nullish(),
 });
 

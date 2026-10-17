@@ -1,10 +1,10 @@
 import { asString, z } from '../../../_internal/z.ts';
 
 /**
- * Zod schema for available on enum. `digital` filters to items synced from a
- * connected media server; `plex` is the older name for the same filter.
+ * Zod schema for the `available_on` collection filter. `digital` keeps items
+ * synced from a connected media server; `other` keeps everything else.
  */
 export const availableOnEnumSchema = asString(z.enum([
   'digital',
-  'plex',
+  'other',
 ]));
