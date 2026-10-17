@@ -23,7 +23,10 @@
   import { GITHUB_CLIENT_ID } from "./GITHUB_CLIENT_ID.ts";
   import { isGithubCallback } from "./isGithubCallback.ts";
   import type { GithubConnectIntent } from "./GithubConnectIntent.ts";
+  import AppSectionNav from "./AppSectionNav.svelte";
+  import type { AppSection } from "./AppSection.ts";
   import DevAccessPanel from "./DevAccessPanel.svelte";
+  import ManagersPanel from "./ManagersPanel.svelte";
   import PkceNotice from "./PkceNotice.svelte";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
@@ -32,7 +35,7 @@
   import TierBadge from "$lib/features/premium/TierBadge.svelte";
   import DeveloperPlanCard from "$lib/features/premium/DeveloperPlanCard.svelte";
 
-  const { slot, username, mode, appId, appName }: ApplicationsProps = $props();
+  const { slot, mode, appId, appName }: ApplicationsProps = $props();
   let loading = $state(true);
   let apps = $state<Application[]>([]);
   let profile = $state<DeveloperProfile | null>(null);
@@ -87,6 +90,34 @@
   let railError = $state("");
   let notice = $state("");
   let reveal = $state(false);
+  const ownApps = $derived(apps.filter((app) => app.role === "owner"));
+  const managedApps = $derived(apps.filter((app) => app.role === "manager"));
+
+  function cardFooter(app: Application): string {
+    if (app.role === "manager") return `Owned by @${app.owner.username}`;
+    if (!app.dev) return `Created ${formatDate(app.created_at)}`;
+    const seats = 1 + app.manager_count + app.allowed_user_count;
+    return `${seats} ${seats === 1 ? "person" : "people"} can sign in`;
+  }
+  let managerCountOverride = $state<number | undefined>(undefined);
+  const managerCount = $derived(
+    managerCountOverride ?? selected?.manager_count ?? 0,
+  );
+  const isOwner = $derived(selected?.role === "owner");
+  const sections = $derived<AppSection[]>(
+    selected
+      ? [
+          { id: "credentials", label: "Credentials" },
+          { id: "settings", label: "Settings" },
+          { id: "details", label: "Details" },
+          { id: "managers", label: `Managers · ${managerCount}` },
+          ...(selected.dev
+            ? [{ id: "sign-in", label: "Who can sign in" }]
+            : []),
+          ...(isOwner ? [{ id: "delete", label: "Delete app" }] : []),
+        ]
+      : [],
+  );
   let confirming = $state(false);
   let confirmation = $state("");
   let alive = true;
@@ -264,6 +295,26 @@
 
 <svelte:head><title>{title} | Trakt Developer</title></svelte:head>
 
+{#snippet appCard(app: Application)}
+  <a class="app-card" href={applicationUrl({ id: app.id, name: app.name })}
+    ><div class="card-heading">
+      <span class="app-icon">&lt;/&gt;</span><span class="badges"
+        >{#if app.dev}<span class="badge" data-variant="dev">Development</span
+          >{/if}<span class="badge"
+          >{app.approved ? "Approved" : "Pending approval"}</span
+        ></span
+      >
+    </div>
+    <h2>{app.name}</h2>
+    <p>{app.description || "No description yet."}</p>
+    <footer>
+      <span>{cardFooter(app)}</span><span
+        >{readOnly ? "View →" : "Manage →"}</span
+      >
+    </footer></a
+  >
+{/snippet}
+
 <div class="trakt-applications">
   <div class="content">
     <header>
@@ -288,6 +339,10 @@
               class="badge"
               data-variant="dev">Development</span
             >{/if}
+          {#if mode !== "list" && selected?.role === "manager"}<span
+              class="badge"
+              data-variant="managed">Managed</span
+            >{/if}
         </div>
         <p>
           {mode === "list"
@@ -296,7 +351,9 @@
               ? "Register your app to start building with Trakt."
               : mode === "edit"
                 ? "Update your app details, callbacks, and allowed origins."
-                : "Manage credentials and settings for this app."}
+                : selected?.role === "manager"
+                  ? `Owned by @${selected.owner.username}. You can edit it as a manager.`
+                  : "Manage credentials and settings for this app."}
         </p>
       </div>
     </header>
@@ -329,72 +386,60 @@
         </div>
 
         {#if loading}<div class="empty" role="status">Loading your apps…</div>
-        {:else}<div class="app-grid">
-            {#if canCreate}<a class="create-tile" href="/apps/new"
-                ><span class="tile-mark" aria-hidden="true">＋</span><strong
-                  >{apps.length === 0
-                    ? "Create your first app"
-                    : "Create app"}</strong
-                >{#if apps.length === 0}<small
-                    >Register an app to get your Client ID.</small
-                  >{/if}</a
-              >{:else if atLimit}<a class="create-tile locked" href="/premium">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                  ><rect x="5" y="11" width="14" height="9" rx="2"></rect><path
-                    d="M8 11V8a4 4 0 0 1 8 0v3"
-                  ></path></svg
+        {:else}<div class="app-columns">
+            <div class="app-grid">
+              {#if canCreate}<a class="create-tile" href="/apps/new"
+                  ><span class="tile-mark" aria-hidden="true">＋</span><strong
+                    >{apps.length === 0
+                      ? "Create your first app"
+                      : "Create app"}</strong
+                  >{#if apps.length === 0}<small
+                      >Register an app to get your Client ID.</small
+                    >{/if}</a
+                >{:else if atLimit}<a
+                  class="create-tile locked"
+                  href="/premium"
                 >
-                <strong>App limit reached</strong><small
-                  >Premium apps stay outside the community limit. See plans →</small
-                >
-              </a>{:else}<div class="create-tile locked">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                  ><rect x="5" y="11" width="14" height="9" rx="2"></rect><path
-                    d="M8 11V8a4 4 0 0 1 8 0v3"
-                  ></path></svg
-                >
-                <strong>Create app</strong><small>{createLock}</small>
-              </div>{/if}
-            {#each apps as app (app.id)}<a
-                class="app-card"
-                href={applicationUrl({ id: app.id, name: app.name })}
-                ><div class="card-heading">
-                  <span class="app-icon">&lt;/&gt;</span><span class="badges"
-                    >{#if app.dev}<span class="badge" data-variant="dev"
-                        >Development</span
-                      >{/if}<span class="badge"
-                      >{app.approved ? "Approved" : "Pending approval"}</span
-                    ></span
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    ><rect x="5" y="11" width="14" height="9" rx="2"
+                    ></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg
                   >
-                </div>
-                <h2>{app.name}</h2>
-                <p>{app.description || "No description yet."}</p>
-                <footer>
-                  <span
-                    >{app.dev
-                      ? `${app.allowed_user_count + 1} ${app.allowed_user_count === 0 ? "person" : "people"} can sign in`
-                      : `Created ${formatDate(app.created_at)}`}</span
-                  ><span>{readOnly ? "View →" : "Manage →"}</span>
-                </footer></a
-              >{/each}
+                  <strong>App limit reached</strong><small
+                    >Premium apps stay outside the community limit. See plans →</small
+                  >
+                </a>{:else}<div class="create-tile locked">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    ><rect x="5" y="11" width="14" height="9" rx="2"
+                    ></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg
+                  >
+                  <strong>Create app</strong><small>{createLock}</small>
+                </div>{/if}
+              {#each ownApps as app (app.id)}{@render appCard(app)}{/each}
+            </div>
+            {#if managedApps.length > 0}<h2 class="managed-heading">
+                Managed by you
+              </h2>
+              <div class="app-grid">
+                {#each managedApps as app (app.id)}{@render appCard(app)}{/each}
+              </div>{/if}
           </div>{/if}
       </div>
     {:else if loading}
@@ -424,42 +469,11 @@
     {:else if selected}
       <RedirectUriWarning uris={unsafeRedirects} />
 
-      <div class="detail-grid">
-        <div class="detail-main">
-          {#if selected.dev}<DevAccessPanel
-              {slot}
-              appId={selected.id}
-              ownerUsername={username}
-            />{/if}
-          <section class="panel">
-            {#each details as field (field.label)}
-              <div class="credential">
-                <strong>{field.label}</strong>
-                <div class="credential-value">
-                  {#if field.code}<code>{field.value}</code>{:else}<span
-                      class="field-value">{field.value}</span
-                    >{/if}
-                  <div class="actions">
-                    {#if !readOnly}<a
-                        class="button"
-                        href={applicationUrl({
-                          id: selected.id,
-                          name: selected.name,
-                          edit: true,
-                        })}
-                        aria-label={`Edit ${field.label}`}>Edit</a
-                      >{/if}
-                    {#if field.label === "Redirect URIs"}<button
-                        aria-label="Copy Redirect URIs"
-                        onclick={() =>
-                          copy(selected.redirect_uri, "Redirect URIs")}
-                        >Copy</button
-                      >{/if}
-                  </div>
-                </div>
-              </div>
-            {/each}
-
+      <div class="app-layout">
+        <AppSectionNav {sections} />
+        <div class="app-sections">
+          <section class="panel" id="credentials">
+            <h2>Credentials</h2>
             <div class="credential">
               <strong>Client ID</strong>
               <div class="credential-value">
@@ -516,77 +530,124 @@
                 </p>
               </div>{/if}
           </section>
-        </div>
-        <aside class="panel">
-          <h2>App details</h2>
-          <dl>
-            <dt>App ID</dt>
-            <dd>{selected.id}</dd>
-            <dt>Type</dt>
-            <dd>{selected.dev ? "Development" : "Production"}</dd>
-            <dt>Status</dt>
-            <dd>{selected.approved ? "Approved" : "Pending approval"}</dd>
-            <dt>Created</dt>
-            <dd>{formatDate(selected.created_at)}</dd>
-            {#if selected.approved_at}<dt>Approved</dt>
+
+          <section class="panel" id="settings">
+            <h2>Settings</h2>
+            {#if readOnly}<p class="muted">
+                Connect GitHub on <a href="/apps">My Apps</a> to edit this app. It
+                keeps working for its users in the meantime.
+              </p>{/if}
+            {#each details as field (field.label)}
+              <div class="credential">
+                <strong>{field.label}</strong>
+                <div class="credential-value">
+                  {#if field.code}<code>{field.value}</code>{:else}<span
+                      class="field-value">{field.value}</span
+                    >{/if}
+                  <div class="actions">
+                    {#if !readOnly}<a
+                        class="button"
+                        href={applicationUrl({
+                          id: selected.id,
+                          name: selected.name,
+                          edit: true,
+                        })}
+                        aria-label={`Edit ${field.label}`}>Edit</a
+                      >{/if}
+                    {#if field.label === "Redirect URIs"}<button
+                        aria-label="Copy Redirect URIs"
+                        onclick={() =>
+                          copy(selected.redirect_uri, "Redirect URIs")}
+                        >Copy</button
+                      >{/if}
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </section>
+
+          <section class="panel" id="details">
+            <h2>Details</h2>
+            <dl>
+              <dt>App ID</dt>
+              <dd>{selected.id}</dd>
+              <dt>Owner</dt>
+              <dd>{selected.owner.username}{isOwner ? " (you)" : ""}</dd>
+              {#if !isOwner}<dt>Your role</dt>
+                <dd>Manager</dd>{/if}
+              <dt>Type</dt>
+              <dd>{selected.dev ? "Development" : "Production"}</dd>
+              <dt>Status</dt>
+              <dd>{selected.approved ? "Approved" : "Pending approval"}</dd>
+              <dt>Created</dt>
+              <dd>{formatDate(selected.created_at)}</dd>
+              {#if selected.approved_at}<dt>Approved</dt>
+                <dd>
+                  {formatDate(selected.approved_at)}
+                </dd>{/if}
+              {#if tier && isOwner}
+                <dt>Plan</dt>
+                <dd><TierBadge {tier} /></dd>
+                <dt>API host</dt>
+                <dd><code class="host">{developerApiHost(tier)}</code></dd>
+              {/if}
+              <dt>Permissions</dt>
               <dd>
-                {formatDate(selected.approved_at)}
-              </dd>{/if}
-            {#if tier}
-              <dt>Plan</dt>
-              <dd><TierBadge {tier} /></dd>
-              <dt>API host</dt>
-              <dd><code class="host">{developerApiHost(tier)}</code></dd>
-            {/if}
-            <dt>Permissions</dt>
-            <dd>
-              {applicationPermissionLabels(selected.permissions)}
-            </dd>
-            <dt>Scopes</dt>
-            <dd>{selected.scopes.join(", ") || "None"}</dd>
-          </dl>
-        </aside>
+                {applicationPermissionLabels(selected.permissions)}
+              </dd>
+              <dt>Scopes</dt>
+              <dd>{selected.scopes.join(", ") || "None"}</dd>
+            </dl>
+          </section>
+
+          <div id="managers">
+            <ManagersPanel
+              {slot}
+              appId={selected.id}
+              ownerUsername={selected.owner.username}
+              {isOwner}
+              onCountChange={(count) => (managerCountOverride = count)}
+            />
+          </div>
+
+          {#if selected.dev}<div id="sign-in">
+              <DevAccessPanel {slot} appId={selected.id} {managerCount} />
+            </div>{/if}
+
+          {#if isOwner}
+            <section class="panel danger" id="delete">
+              <h2>Delete app</h2>
+              <p>
+                Deleting this app permanently removes its credentials and
+                disconnects integrations using them. This cannot be undone.
+              </p>
+              {#if confirming}<label
+                  >Type <strong>{selected.name}</strong> to confirm<input
+                    bind:value={confirmation}
+                    disabled={busy}
+                    autocomplete="off"
+                  /></label
+                >
+                <div class="actions">
+                  <button
+                    class="destructive"
+                    disabled={busy || confirmation !== selected.name}
+                    onclick={remove}
+                    >{busy ? "Deleting…" : "Permanently delete app"}</button
+                  ><button
+                    disabled={busy}
+                    onclick={() => {
+                      confirming = false;
+                      confirmation = "";
+                    }}>Cancel</button
+                  >
+                </div>{:else}<button
+                  class="destructive"
+                  onclick={() => (confirming = true)}>Delete app</button
+                >{/if}
+            </section>{/if}
+        </div>
       </div>
-
-      {#if readOnly}<section class="panel">
-          <h2>Editing is locked</h2>
-          <p>
-            Connect GitHub on <a href="/apps">My Apps</a> to edit this app. It keeps
-            working for its users in the meantime, and you can still delete it below.
-          </p>
-        </section>{/if}
-
-      <section class="panel danger">
-        <h2>Delete app</h2>
-        <p>
-          Deleting this app permanently removes its credentials and disconnects
-          integrations using them. This cannot be undone.
-        </p>
-        {#if confirming}<label
-            >Type <strong>{selected.name}</strong> to confirm<input
-              bind:value={confirmation}
-              disabled={busy}
-              autocomplete="off"
-            /></label
-          >
-          <div class="actions">
-            <button
-              class="destructive"
-              disabled={busy || confirmation !== selected.name}
-              onclick={remove}
-              >{busy ? "Deleting…" : "Permanently delete app"}</button
-            ><button
-              disabled={busy}
-              onclick={() => {
-                confirming = false;
-                confirmation = "";
-              }}>Cancel</button
-            >
-          </div>{:else}<button
-            class="destructive"
-            onclick={() => (confirming = true)}>Delete app</button
-          >{/if}
-      </section>
     {/if}
   </div>
 </div>
@@ -779,8 +840,39 @@
     justify-content: flex-end;
   }
 
-  .detail-main {
+  .app-columns {
+    display: grid;
+    gap: var(--gap-l);
     min-width: 0;
+  }
+
+  .managed-heading {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--ni-12);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .app-layout {
+    display: grid;
+    grid-template-columns: var(--ni-200) minmax(0, 1fr);
+    gap: var(--gap-l);
+    align-items: start;
+  }
+
+  .app-sections {
+    min-width: 0;
+
+    > [id] {
+      scroll-margin-block-start: var(--gap-l);
+    }
+  }
+
+  .badge[data-variant="managed"] {
+    color: var(--color-info);
+    background: color-mix(in srgb, var(--color-info) 14%, transparent);
+    white-space: nowrap;
   }
 
   .badge[data-variant="dev"] {
@@ -835,19 +927,12 @@
     margin-top: 12px;
   }
 
-  .panel,
-  aside {
+  .panel {
     padding: 28px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-large);
     background: var(--color-surface);
     margin-bottom: 24px;
-  }
-
-  .detail-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
-    gap: 24px;
   }
 
   .credential {
@@ -976,9 +1061,8 @@
     header {
       flex-wrap: wrap;
     }
-    .detail-grid {
+    .app-layout {
       grid-template-columns: 1fr;
-      gap: 0;
     }
     .credential-value {
       flex-wrap: wrap;

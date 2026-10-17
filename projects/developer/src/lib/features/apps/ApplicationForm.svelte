@@ -19,7 +19,7 @@
   let description = $state(initial?.description ?? "");
   let redirects = $state(initial?.redirect_uri ?? "");
   let origins = $state(initial?.origins.join("\n") ?? "");
-  let dev = $state(initial?.dev ?? false);
+  let dev = $state(initial?.dev ?? true);
   let error = $state("");
   const unsafeRedirects = $derived(dev ? [] : unsafeRedirectUris(redirects));
   const nonLocalRedirects = $derived(
@@ -69,20 +69,7 @@
 
     {#if !app}<fieldset class="app-type">
         <legend class="type-legend">App type</legend>
-        <label class="type-option" class:is-selected={!dev}
-          ><input
-            class="type-radio"
-            type="radio"
-            name="app-type"
-            value={false}
-            bind:group={dev}
-          />
-          <strong>Production</strong>
-          <small class="type-hint"
-            >Anyone with a Trakt account can sign in. Redirect URIs must use
-            https://.</small
-          ></label
-        ><label class="type-option" class:is-selected={dev}
+        <label class="type-option" class:is-selected={dev}
           ><input
             class="type-radio"
             type="radio"
@@ -94,6 +81,19 @@
           <small class="type-hint"
             >Only you and people you add can sign in. Redirect URIs must point
             to localhost.</small
+          ></label
+        ><label class="type-option" class:is-selected={!dev}
+          ><input
+            class="type-radio"
+            type="radio"
+            name="app-type"
+            value={false}
+            bind:group={dev}
+          />
+          <strong>Production</strong>
+          <small class="type-hint"
+            >Anyone with a Trakt account can sign in. Redirect URIs must use
+            https://.</small
           ></label
         >
       </fieldset>{/if}
