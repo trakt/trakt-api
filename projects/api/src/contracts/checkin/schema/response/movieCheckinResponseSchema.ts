@@ -10,9 +10,11 @@ export const movieCheckinResponseSchema = z.object({
     mastodon: z.boolean().nullish(),
     tumblr: z.boolean().nullish(),
   }),
-  movie: z.object({
-    title: z.string(),
-    year: z.number().int(),
-    ids: movieIdsResponseSchema,
-  }).nullish(),
+  movie: z
+    .object({
+      title: z.string(),
+      year: z.number().int(),
+      ids: movieIdsResponseSchema,
+    })
+    .nullish(),
 });

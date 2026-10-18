@@ -21,11 +21,11 @@ const ROBOTS_KEY = { name: 'name', value: 'robots' };
 export function pageMetaTags(meta: PageMeta): ReadonlyArray<PageMetaTag> {
   const indexing: PageMetaTag = meta.indexable
     ? {
-      element: 'link',
-      key: CANONICAL_KEY,
-      attribute: 'href',
-      value: meta.canonical,
-    }
+        element: 'link',
+        key: CANONICAL_KEY,
+        attribute: 'href',
+        value: meta.canonical,
+      }
     : metaTag('name', ROBOTS_KEY.value, 'noindex');
 
   return [

@@ -13,16 +13,17 @@ export async function listMembers(
     listManagers(slot, appId),
     dev ? listAllowedUsers(slot, appId) : { limit: 0, users: [] },
   ]);
-  const toMember = (role: AppMember['role']) =>
-  (entry: {
-    user: { username: string; ids: { slug: string } };
-    added_at: string;
-  }): AppMember => ({
-    username: entry.user.username,
-    slug: entry.user.ids.slug,
-    role,
-    addedAt: entry.added_at,
-  });
+  const toMember =
+    (role: AppMember['role']) =>
+    (entry: {
+      user: { username: string; ids: { slug: string } };
+      added_at: string;
+    }): AppMember => ({
+      username: entry.user.username,
+      slug: entry.user.ids.slug,
+      role,
+      addedAt: entry.added_at,
+    });
 
   return {
     members: [

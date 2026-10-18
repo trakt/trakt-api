@@ -54,25 +54,27 @@ const likedEpisodeCommentResponseSchema = z.object({
   episode: episodeResponseSchema.nullish(),
 });
 
-const likedExtendedCommentResponseSchema = z.union(
-  [
-    likedMovieCommentResponseSchema.partial(),
-    likedShowCommentResponseSchema.partial(),
-    likedEpisodeCommentResponseSchema.partial(),
-    likedSeasonCommentResponseSchema.partial(),
-  ],
-);
+const likedExtendedCommentResponseSchema = z.union([
+  likedMovieCommentResponseSchema.partial(),
+  likedShowCommentResponseSchema.partial(),
+  likedEpisodeCommentResponseSchema.partial(),
+  likedSeasonCommentResponseSchema.partial(),
+]);
 
 /** Zod schema for the liked comment response. */
-export const likedCommentResponseSchema = z.object({
-  liked_at: z.string().datetime(),
-  type: z.literal('comment'),
-  /***
-   * When using extended 'min', only the id is returned
-   */
-  comment: commentResponseSchema.partial()
-    .extend({ id: z.number().int() }).nullish(),
-}).and(likedExtendedCommentResponseSchema);
+export const likedCommentResponseSchema = z
+  .object({
+    liked_at: z.string().datetime(),
+    type: z.literal('comment'),
+    /***
+     * When using extended 'min', only the id is returned
+     */
+    comment: commentResponseSchema
+      .partial()
+      .extend({ id: z.number().int() })
+      .nullish(),
+  })
+  .and(likedExtendedCommentResponseSchema);
 
 /** Zod schema for the liked list response. */
 export const likedListResponseSchema = z.object({
@@ -81,8 +83,10 @@ export const likedListResponseSchema = z.object({
   /***
    * When using extended 'min', only the id is returned
    */
-  list: z.union([
-    listResponseSchema.partial(),
-    z.object({ id: z.number().int().nullish() }),
-  ]).nullish(),
+  list: z
+    .union([
+      listResponseSchema.partial(),
+      z.object({ id: z.number().int().nullish() }),
+    ])
+    .nullish(),
 });

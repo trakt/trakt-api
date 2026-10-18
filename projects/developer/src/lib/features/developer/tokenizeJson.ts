@@ -14,14 +14,14 @@ export function tokenizeJson(value: string): ReadonlyArray<JsonToken> {
     const type: JsonToken['type'] = match[1]
       ? 'key'
       : match[2]
-      ? 'string'
-      : match[3]
-      ? 'number'
-      : match[4]
-      ? 'boolean'
-      : match[5]
-      ? 'null'
-      : 'plain';
+        ? 'string'
+        : match[3]
+          ? 'number'
+          : match[4]
+            ? 'boolean'
+            : match[5]
+              ? 'null'
+              : 'plain';
     const previous = tokens.at(-1);
 
     if (previous?.type === type) previous.value += match[0];

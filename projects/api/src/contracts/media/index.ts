@@ -10,55 +10,58 @@ import { mediaPopularResponseSchema } from './schema/response/mediaPopularRespon
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
 
 /** ts-rest contract for the `media` endpoints. */
-export const media = builder.router({
-  trending: {
-    summary: 'Get trending media',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+export const media = builder.router(
+  {
+    trending: {
+      summary: 'Get trending media',
+      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns trending movies and shows. Results are ordered by current watcher activity and can be filtered by media fields or ignored user state.`,
-    path: '/trending',
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
-    responses: {
-      200: mediaTrendingResponseSchema.array(),
+      path: '/trending',
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(themeQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(ignoreQuerySchema),
+      responses: {
+        200: mediaTrendingResponseSchema.array(),
+      },
     },
-  },
-  anticipated: {
-    summary: 'Get anticipated media',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+    anticipated: {
+      summary: 'Get anticipated media',
+      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns anticipated movies and shows based on list activity. Results can be filtered by media fields or ignored user state.`,
-    path: '/anticipated',
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
-    responses: {
-      200: mediaAnticipatedResponseSchema.array(),
+      path: '/anticipated',
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(themeQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(ignoreQuerySchema),
+      responses: {
+        200: mediaAnticipatedResponseSchema.array(),
+      },
     },
-  },
-  popular: {
-    summary: 'Get popular media',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
+    popular: {
+      summary: 'Get popular media',
+      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns popular movies and shows. Results can be filtered by media fields or ignored user state.`,
-    path: '/popular',
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(themeQuerySchema)
-      .merge(pageQuerySchema)
-      .merge(ignoreQuerySchema),
-    responses: {
-      200: mediaPopularResponseSchema.array(),
+      path: '/popular',
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(mediaFilterParamsSchema)
+        .merge(themeQuerySchema)
+        .merge(pageQuerySchema)
+        .merge(ignoreQuerySchema),
+      responses: {
+        200: mediaPopularResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/media',
-});
+  {
+    pathPrefix: '/media',
+  },
+);
 
 /** The media popular response payload. */
 export type MediaPopularResponse = z.infer<typeof mediaPopularResponseSchema>;

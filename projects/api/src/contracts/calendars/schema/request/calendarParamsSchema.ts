@@ -3,8 +3,7 @@ import { z } from '../../../_internal/z.ts';
 /** Zod schema for the calendar request parameters. */
 export const calendarRequestParamsSchema = z.object({
   target: z.enum(['my', 'all']).openapi({
-    description:
-      `Use "my" for all items that have been watched, collected, or watchlisted plus individual episodes on the watchlist.
+    description: `Use "my" for all items that have been watched, collected, or watchlisted plus individual episodes on the watchlist.
       Use "all" for all items items airing during the specified period.`,
   }),
   start_date: z.string().openapi({

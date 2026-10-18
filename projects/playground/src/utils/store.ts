@@ -18,7 +18,7 @@ export const store = await (async () => {
   await mkdir(STORE_DIR, { recursive: true });
 
   const file = Bun.file(filePath);
-  const dbRaw = await file.exists() ? await file.text() : '';
+  const dbRaw = (await file.exists()) ? await file.text() : '';
   const db = dbRaw.length ? JSON.parse(dbRaw) : {};
 
   return {

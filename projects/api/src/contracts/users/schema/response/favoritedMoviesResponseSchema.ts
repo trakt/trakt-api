@@ -2,9 +2,11 @@ import { typedMovieResponseSchema } from '../../../_internal/response/movieRespo
 import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for the favorited movies response. */
-export const favoritedMoviesResponseSchema = z.object({
-  id: z.number().int(),
-  listed_at: z.string().datetime(),
-  notes: z.string().nullish(),
-  rank: z.number().int(),
-}).merge(typedMovieResponseSchema);
+export const favoritedMoviesResponseSchema = z
+  .object({
+    id: z.number().int(),
+    listed_at: z.string().datetime(),
+    notes: z.string().nullish(),
+    rank: z.number().int(),
+  })
+  .merge(typedMovieResponseSchema);

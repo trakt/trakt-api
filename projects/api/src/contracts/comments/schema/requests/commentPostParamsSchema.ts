@@ -1,11 +1,13 @@
 import { z } from '../../../_internal/z.ts';
 import { commentReplyParamsSchema } from './commentReplyParamsSchema.ts';
 
-const idOnlySchema = z.object({
-  ids: z.object({
-    trakt: z.number().int(),
-  }),
-}).nullish();
+const idOnlySchema = z
+  .object({
+    ids: z.object({
+      trakt: z.number().int(),
+    }),
+  })
+  .nullish();
 
 /** Zod schema for the comment post parameters. */
 export const commentPostParamsSchema = commentReplyParamsSchema.and(

@@ -10,43 +10,53 @@ const watchedAtSchema = z.object({
   watched_at: z.string().datetime().nullish(),
 });
 
-const watchWithTileAndYearSchema = z.object({
-  title: z.string(),
-  year: z.number().int(),
-}).merge(watchedAtSchema);
+const watchWithTileAndYearSchema = z
+  .object({
+    title: z.string(),
+    year: z.number().int(),
+  })
+  .merge(watchedAtSchema);
 
 const watchWithSeasonsSchema = z
   .object({
-    seasons: z.array(
-      z.object({
-        number: z.number().int(),
-        episodes: z.array(
-          z.object({
+    seasons: z
+      .array(
+        z
+          .object({
             number: z.number().int(),
-          }).merge(watchedAtSchema),
-        ),
-      }).merge(watchedAtSchema),
-    ).nullish(),
-  }).merge(watchedAtSchema);
+            episodes: z.array(
+              z
+                .object({
+                  number: z.number().int(),
+                })
+                .merge(watchedAtSchema),
+            ),
+          })
+          .merge(watchedAtSchema),
+      )
+      .nullish(),
+  })
+  .merge(watchedAtSchema);
 
-const addMovieToHistorySchema = z
-  .union([
-    z.object({
+const addMovieToHistorySchema = z.union([
+  z
+    .object({
       ids: movieIdsRequestSchema,
-    }).merge(watchedAtSchema),
-    watchWithTileAndYearSchema,
-  ]);
+    })
+    .merge(watchedAtSchema),
+  watchWithTileAndYearSchema,
+]);
 
 const watchShowWithIdsSchema = z
   .object({
     ids: showIdsRequestSchema,
-  }).merge(watchedAtSchema);
+  })
+  .merge(watchedAtSchema);
 
-const addShowToHistorySchema = z
-  .union([
-    watchShowWithIdsSchema.merge(watchWithSeasonsSchema),
-    watchWithTileAndYearSchema.merge(watchWithSeasonsSchema),
-  ]);
+const addShowToHistorySchema = z.union([
+  watchShowWithIdsSchema.merge(watchWithSeasonsSchema),
+  watchWithTileAndYearSchema.merge(watchWithSeasonsSchema),
+]);
 
 const addSeasonToHistorySchema = z
   .object({
@@ -58,7 +68,8 @@ const addSeasonToHistorySchema = z
 const addEpisodeToHistorySchema = z
   .object({
     ids: episodeIdsRequestSchema,
-  }).merge(watchedAtSchema);
+  })
+  .merge(watchedAtSchema);
 
 /** Zod schema for the bulk media request. */
 export const bulkMediaRequestSchema = z.object({

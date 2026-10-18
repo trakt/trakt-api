@@ -12,12 +12,14 @@ export function redactResponse({
   headers: ReadonlyArray<{ name: string; value: string }>;
   secrets: ReadonlyArray<string | undefined>;
 }): { body: string; headers: Array<{ name: string; value: string }> } {
-  const values = secrets.filter((value): value is string => Boolean(value))
+  const values = secrets
+    .filter((value): value is string => Boolean(value))
     .flatMap((value) => [value, encodeURIComponent(value)])
     .sort((a, b) => b.length - a.length);
 
   const redactText = (text: string): string =>
-    values.reduce((result, value) => result.replaceAll(value, REDACTED), text)
+    values
+      .reduce((result, value) => result.replaceAll(value, REDACTED), text)
       .replaceAll(/\bBearer\s+[^\s"'<>]+/gi, 'Bearer ' + REDACTED)
       .replaceAll(
         /([?&](?:access_token|refresh_token|client[_-]?(?:secret|id)|api_key|token|code)=)[^&#\s]*/gi,
@@ -47,8 +49,9 @@ export function redactResponse({
     }
 
     if (
-      /(?:bearer\s|access[_-]?token|refresh[_-]?token|client[_-]?(?:id|secret)|api[_-]?key|authorization|password)/i
-        .test(body)
+      /(?:bearer\s|access[_-]?token|refresh[_-]?token|client[_-]?(?:id|secret)|api[_-]?key|authorization|password)/i.test(
+        body,
+      )
     ) {
       return '[Sensitive non-JSON response omitted]';
     }

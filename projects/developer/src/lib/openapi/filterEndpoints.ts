@@ -1,11 +1,9 @@
 import type { Endpoint } from './Endpoint.ts';
 
 function searchableText(endpoint: Endpoint): string {
-  return [
-    endpoint.path,
-    endpoint.summary,
-    endpoint.operationId,
-  ].join(' ').toLocaleLowerCase();
+  return [endpoint.path, endpoint.summary, endpoint.operationId]
+    .join(' ')
+    .toLocaleLowerCase();
 }
 
 export function filterEndpoints({

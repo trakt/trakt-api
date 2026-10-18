@@ -10,12 +10,14 @@ function escapeAttribute(value: string): string {
 }
 
 export function renderPageMeta(meta: PageMeta): string {
-  const tags = pageMetaTags(meta).map(({ element, key, attribute, value }) =>
-    `<${element} ${key.name}="${key.value}" ${attribute}="${
-      escapeAttribute(value)
-    }" />`
+  const tags = pageMetaTags(meta).map(
+    ({ element, key, attribute, value }) =>
+      `<${element} ${key.name}="${key.value}" ${attribute}="${escapeAttribute(
+        value,
+      )}" />`,
   );
 
-  return [`<title>${escapeAttribute(meta.title)}</title>`, ...tags]
-    .join('\n    ');
+  return [`<title>${escapeAttribute(meta.title)}</title>`, ...tags].join(
+    '\n    ',
+  );
 }

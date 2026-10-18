@@ -10,10 +10,12 @@ const people = [
 
 describe('matchUsernames', () => {
   it('lists prefix matches before other matches, ignoring case', () => {
-    expect(matchUsernames(people, 'SEF', new Set()).map((p) => p.slug))
-      .toEqual(['seftur', 'sefertrakt']);
-    expect(matchUsernames(people, 'magnea', new Set()).map((p) => p.slug))
-      .toEqual(['andrei-l-magnea']);
+    expect(matchUsernames(people, 'SEF', new Set()).map((p) => p.slug)).toEqual(
+      ['seftur', 'sefertrakt'],
+    );
+    expect(
+      matchUsernames(people, 'magnea', new Set()).map((p) => p.slug),
+    ).toEqual(['andrei-l-magnea']);
   });
 
   it('leaves out people who are already members', () => {

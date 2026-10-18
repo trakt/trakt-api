@@ -14,7 +14,7 @@ export function memberPath({
   role: AppMemberRole;
   username: string;
 }): string {
-  return `/v3/users/me/applications/${appId}/${ROLE_SEGMENT[role]}/${
-    encodeURIComponent(username)
-  }`;
+  return `/v3/users/me/applications/${appId}/${ROLE_SEGMENT[role]}/${encodeURIComponent(
+    username,
+  )}`;
 }

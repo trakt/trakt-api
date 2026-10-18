@@ -10,10 +10,9 @@ const allMediaIdsSchema = z.object({
 
 const showMediaIdsSchema = allMediaIdsSchema;
 
-const movieMediaIdsSchema = allMediaIdsSchema
-  .omit({
-    tvdb: true,
-  });
+const movieMediaIdsSchema = allMediaIdsSchema.omit({
+  tvdb: true,
+});
 
 const seasonIdsSchema = allMediaIdsSchema.omit({
   imdb: true,

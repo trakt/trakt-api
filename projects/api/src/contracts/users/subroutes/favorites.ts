@@ -17,90 +17,89 @@ const typedSortedFavoritesParamsSchema = profileParamsSchema.extend({
 });
 
 /** ts-rest contract for the `favorites` endpoints. */
-export const favorites = builder.router({
-  media: {
-    summary: 'Get favorite media',
-    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+export const favorites = builder.router(
+  {
+    media: {
+      summary: 'Get favorite media',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
 Returns favorite movies and shows for a user. Use the \`sort\` path parameter plus query sorting and pagination to control the result order.`,
-    path: '/media/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema),
-    responses: {
-      200: z.union([
-        favoritedShowsResponseSchema,
-        favoritedMoviesResponseSchema,
-      ]).array(),
+      path: '/media/:sort',
+      pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: z
+          .union([favoritedShowsResponseSchema, favoritedMoviesResponseSchema])
+          .array(),
+      },
     },
-  },
-  movies: {
-    summary: 'Get favorite movies',
-    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+    movies: {
+      summary: 'Get favorite movies',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
 Returns favorite movies for a user. Use the \`sort\` path parameter plus query sorting and pagination to control the result order.`,
-    path: '/movies/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema),
-    responses: {
-      200: favoritedMoviesResponseSchema.array(),
+      path: '/movies/:sort',
+      pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: favoritedMoviesResponseSchema.array(),
+      },
     },
-  },
-  shows: {
-    summary: 'Get favorite shows',
-    description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
+    shows: {
+      summary: 'Get favorite shows',
+      description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
 Returns favorite shows for a user. Use the \`sort\` path parameter plus query sorting and pagination to control the result order.`,
-    path: '/shows/:sort',
-    pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema),
-    responses: {
-      200: favoritedShowsResponseSchema.array(),
+      path: '/shows/:sort',
+      pathParams: profileParamsSchema.merge(sortParamsSchema.partial()),
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: favoritedShowsResponseSchema.array(),
+      },
     },
-  },
-  typedSorted: {
-    summary: 'Get favorites',
-    description:
-      `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+    typedSorted: {
+      summary: 'Get favorites',
+      description: `#### 🔒 OAuth Required 📄 Pagination Optional ✨ Extended Info 😁 Emojis
 Returns the top 100 shows and movies a user has favorited.`,
-    path: '/:type/:sort_by/:sort_how',
-    pathParams: typedSortedFavoritesParamsSchema,
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(sortQuerySchema)
-      .merge(pageQuerySchema),
-    responses: {
-      200: z.union([
-        favoritedShowsResponseSchema,
-        favoritedMoviesResponseSchema,
-      ]).array(),
+      path: '/:type/:sort_by/:sort_how',
+      pathParams: typedSortedFavoritesParamsSchema,
+      method: 'GET',
+      query: extendedMediaQuerySchema
+        .merge(sortQuerySchema)
+        .merge(pageQuerySchema),
+      responses: {
+        200: z
+          .union([favoritedShowsResponseSchema, favoritedMoviesResponseSchema])
+          .array(),
+      },
     },
-  },
-  comments: {
-    summary: 'Get all favorites comments',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    comments: {
+      summary: 'Get all favorites comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for the favorites. By default, the comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
-    path: '/comments/:sort',
-    method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(listCommentsSortParamsSchema),
-    query: pageQuerySchema,
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/comments/:sort',
+      method: 'GET',
+      pathParams: profileParamsSchema.merge(listCommentsSortParamsSchema),
+      query: pageQuerySchema,
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/:id/favorites',
-});
+  {
+    pathPrefix: '/:id/favorites',
+  },
+);
 
 /** The favorite show response payload. */
 export type FavoriteShowResponse = z.infer<typeof favoritedShowsResponseSchema>;

@@ -6,10 +6,6 @@ import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for favorite param. */
 export const favoriteParamSchema = z.object({
-  movies: z.array(
-    z.object({ ids: movieIdsRequestSchema }),
-  ).nullish(),
-  shows: z.array(
-    z.object({ ids: showIdsRequestSchema }),
-  ).nullish(),
+  movies: z.array(z.object({ ids: movieIdsRequestSchema })).nullish(),
+  shows: z.array(z.object({ ids: showIdsRequestSchema })).nullish(),
 });

@@ -84,11 +84,13 @@ function createCancellationHandler(cancellable: boolean, id: string) {
 
   function abort() {
     if (controllers.has(id)) {
-      controllers.get(id)?.abort?.(
-        new AbortError(
-          `New request with id ${id} has been made, in-flight request aborted.`,
-        ),
-      );
+      controllers
+        .get(id)
+        ?.abort?.(
+          new AbortError(
+            `New request with id ${id} has been made, in-flight request aborted.`,
+          ),
+        );
     }
   }
 
@@ -157,7 +159,8 @@ export function traktApiFactory({
       const contentType = result.headers.get('content-type');
 
       if (
-        contentType?.includes('application/') && contentType?.includes('json')
+        contentType?.includes('application/') &&
+        contentType?.includes('json')
       ) {
         const responseText = await result.text();
 

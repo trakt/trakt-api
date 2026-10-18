@@ -4,16 +4,13 @@ import { ACCOUNT_LIMIT } from './ACCOUNT_LIMIT.ts';
 import { readUsername } from './readUsername.ts';
 import { userManager } from './userManager.ts';
 
-export async function listAccounts(): Promise<
-  ReadonlyArray<DeveloperAccount>
-> {
+export async function listAccounts(): Promise<ReadonlyArray<DeveloperAccount>> {
   const stored = await Promise.all(
-    Array.from(
-      { length: ACCOUNT_LIMIT },
-      (_, slot) =>
-        userManager(slot).getUser()
-          .catch(() => null)
-          .then((user) => ({ slot, user })),
+    Array.from({ length: ACCOUNT_LIMIT }, (_, slot) =>
+      userManager(slot)
+        .getUser()
+        .catch(() => null)
+        .then((user) => ({ slot, user })),
     ),
   );
 
@@ -23,13 +20,15 @@ export async function listAccounts(): Promise<
     if (!user) return [];
 
     const expiresAt = user.expires_at ?? 0;
-    return [{
-      slot,
-      username: readUsername(slot),
-      expiresAt,
-      isExpired: expiresAt <= now,
-      hasSessionError: accountSessionErrors.has(slot),
-      source: 'developer-oauth' as const,
-    }];
+    return [
+      {
+        slot,
+        username: readUsername(slot),
+        expiresAt,
+        isExpired: expiresAt <= now,
+        hasSessionError: accountSessionErrors.has(slot),
+        source: 'developer-oauth' as const,
+      },
+    ];
   });
 }

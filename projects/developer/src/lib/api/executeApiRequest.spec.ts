@@ -34,8 +34,9 @@ describe('execute api request', () => {
       new Error('Refresh unavailable'),
     );
 
-    await expect(executeApiRequest({ ...BASE, accountSlot: 1 }))
-      .rejects.toThrow('Refresh unavailable');
+    await expect(
+      executeApiRequest({ ...BASE, accountSlot: 1 }),
+    ).rejects.toThrow('Refresh unavailable');
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -79,8 +80,9 @@ describe('execute api request', () => {
     respondWith('[]');
     vi.mocked(accessToken).mockResolvedValue(null);
 
-    await expect(executeApiRequest({ ...BASE, accountSlot: 1 }))
-      .rejects.toThrow('The selected account is unavailable.');
+    await expect(
+      executeApiRequest({ ...BASE, accountSlot: 1 }),
+    ).rejects.toThrow('The selected account is unavailable.');
   });
 
   it.each([

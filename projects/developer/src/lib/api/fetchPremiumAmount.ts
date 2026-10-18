@@ -7,8 +7,9 @@ export async function fetchPremiumAmount(slot: number): Promise<number | null> {
     const parsed = premiumPlansSchema.safeParse(await response.json());
     if (!parsed.success) return null;
 
-    return parsed.data.find((plan) => plan.duration === 'monthly')?.amount ??
-      null;
+    return (
+      parsed.data.find((plan) => plan.duration === 'monthly')?.amount ?? null
+    );
   } catch {
     return null;
   }

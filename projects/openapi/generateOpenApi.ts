@@ -77,14 +77,15 @@ const getPathParameters = (path: string, zodObject?: unknown) => {
       return zodShape[param] === undefined;
     });
 
-  const params: ParameterObject[] = paramsFromPath?.map((param) => ({
-    name: param,
-    in: 'path' as const,
-    required: true,
-    schema: {
-      type: 'string',
-    },
-  })) || [];
+  const params: ParameterObject[] =
+    paramsFromPath?.map((param) => ({
+      name: param,
+      in: 'path' as const,
+      required: true,
+      schema: {
+        type: 'string',
+      },
+    })) || [];
 
   if (isZodObj) {
     const paramsFromZod = Object.entries(zodShape).map(([key, value]) => {
@@ -188,19 +189,19 @@ const extractReferenceSchemas = (
 ): SchemaObject => {
   if (schema.allOf) {
     schema.allOf = schema.allOf?.map((subSchema) =>
-      extractReferenceSchemas(subSchema, referenceSchemas)
+      extractReferenceSchemas(subSchema, referenceSchemas),
     );
   }
 
   if (schema.anyOf) {
     schema.anyOf = schema.anyOf?.map((subSchema) =>
-      extractReferenceSchemas(subSchema, referenceSchemas)
+      extractReferenceSchemas(subSchema, referenceSchemas),
     );
   }
 
   if (schema.oneOf) {
     schema.oneOf = schema.oneOf?.map((subSchema) =>
-      extractReferenceSchemas(subSchema, referenceSchemas)
+      extractReferenceSchemas(subSchema, referenceSchemas),
     );
   }
 
@@ -234,7 +235,7 @@ const extractReferenceSchemas = (
     if (schema.title in referenceSchemas) {
       if (
         JSON.stringify(referenceSchemas[schema.title]) !==
-          JSON.stringify(schema)
+        JSON.stringify(schema)
       ) {
         throw new Error(
           `Schema title '${schema.title}' already exists with a different schema`,
@@ -290,9 +291,10 @@ export const generateOpenApi = (
 
     const querySchema = getQueryParametersFromZod(path.route.query);
 
-    let bodySchema = path.route?.method !== 'GET' && 'body' in path.route
-      ? getOpenApiSchemaFromZod(path.route.body)
-      : null;
+    let bodySchema =
+      path.route?.method !== 'GET' && 'body' in path.route
+        ? getOpenApiSchemaFromZod(path.route.body)
+        : null;
 
     if (bodySchema?.title) {
       bodySchema = extractReferenceSchemas(bodySchema, referenceSchemas);
@@ -301,9 +303,10 @@ export const generateOpenApi = (
     const responses = Object.entries(path.route.responses).reduce(
       (acc, [statusCode, response]) => {
         let responseSchema = getOpenApiSchemaFromZod(response, true);
-        const description = isZodType(response) && response.description
-          ? response.description
-          : statusCode;
+        const description =
+          isZodType(response) && response.description
+            ? response.description
+            : statusCode;
 
         if (responseSchema) {
           responseSchema = extractReferenceSchemas(
@@ -318,12 +321,12 @@ export const generateOpenApi = (
             description,
             ...(responseSchema
               ? {
-                content: {
-                  'application/json': {
-                    ...convertSchemaObjectToMediaTypeObject(responseSchema),
+                  content: {
+                    'application/json': {
+                      ...convertSchemaObjectToMediaTypeObject(responseSchema),
+                    },
                   },
-                },
-              }
+                }
               : {}),
           },
         };
@@ -333,7 +336,7 @@ export const generateOpenApi = (
 
     const contentType =
       path.route?.method !== 'GET' && 'contentType' in path.route
-        ? path.route?.contentType ?? 'application/json'
+        ? (path.route?.contentType ?? 'application/json')
         : 'application/json';
 
     const pathOperation: OperationObject = {
@@ -344,15 +347,15 @@ export const generateOpenApi = (
       parameters: [...pathParams, ...headerParams, ...querySchema],
       ...(bodySchema
         ? {
-          requestBody: {
-            description: 'Body',
-            content: {
-              [contentType]: {
-                ...convertSchemaObjectToMediaTypeObject(bodySchema),
+            requestBody: {
+              description: 'Body',
+              content: {
+                [contentType]: {
+                  ...convertSchemaObjectToMediaTypeObject(bodySchema),
+                },
               },
             },
-          },
-        }
+          }
         : {}),
       responses,
     };

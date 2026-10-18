@@ -13,7 +13,9 @@ const SENSITIVE_SEGMENT =
 export function isSensitiveName(value: string): boolean {
   const compactName = normalizedFieldName(value).replaceAll('_', '');
 
-  return SENSITIVE_COMPACT_NAMES.has(compactName) ||
+  return (
+    SENSITIVE_COMPACT_NAMES.has(compactName) ||
     SENSITIVE_SUFFIX.test(compactName) ||
-    SENSITIVE_SEGMENT.test(value.trim());
+    SENSITIVE_SEGMENT.test(value.trim())
+  );
 }

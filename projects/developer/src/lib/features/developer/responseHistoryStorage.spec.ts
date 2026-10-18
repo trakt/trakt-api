@@ -27,8 +27,7 @@ describe('responseHistoryStorage', () => {
       receivedAt: '2026-09-01T08:00:00.000Z',
       request: {
         method: 'POST',
-        url:
-          'https://auth.trakt.tv/oauth/token?code=temporary-code&clientId=query-id',
+        url: 'https://auth.trakt.tv/oauth/token?code=temporary-code&clientId=query-id',
       },
       response: {
         status: 200,

@@ -39,13 +39,15 @@ export const seedCatalog: OpenApiCatalog = {
         },
       ],
       requestBody: null,
-      responses: [{
-        status: '200',
-        description: 'Movie information',
-        contentType: 'application/json',
-        example: '',
-        requiredExample: '',
-      }],
+      responses: [
+        {
+          status: '200',
+          description: 'Movie information',
+          contentType: 'application/json',
+          example: '',
+          requiredExample: '',
+        },
+      ],
       serverUrls: ['https://api.trakt.tv'],
     },
     {
@@ -81,13 +83,15 @@ export const seedCatalog: OpenApiCatalog = {
         },
       ],
       requestBody: null,
-      responses: [{
-        status: '200',
-        description: 'Search results',
-        contentType: 'application/json',
-        example: '',
-        requiredExample: '',
-      }],
+      responses: [
+        {
+          status: '200',
+          description: 'Search results',
+          contentType: 'application/json',
+          example: '',
+          requiredExample: '',
+        },
+      ],
       serverUrls: ['https://api.trakt.tv'],
     },
     {
@@ -108,13 +112,15 @@ export const seedCatalog: OpenApiCatalog = {
         example:
           '{\n  "movies": [\n    {\n      "ids": {\n        "trakt": 343\n      }\n    }\n  ]\n}',
       },
-      responses: [{
-        status: '201',
-        description: 'Items added',
-        contentType: 'application/json',
-        example: '',
-        requiredExample: '',
-      }],
+      responses: [
+        {
+          status: '201',
+          description: 'Items added',
+          contentType: 'application/json',
+          example: '',
+          requiredExample: '',
+        },
+      ],
       serverUrls: ['https://api.trakt.tv'],
     },
     {
@@ -135,13 +141,15 @@ export const seedCatalog: OpenApiCatalog = {
         example:
           '{\n  "movies": [\n    {\n      "rating": 9,\n      "ids": {\n        "trakt": 343\n      }\n    }\n  ]\n}',
       },
-      responses: [{
-        status: '201',
-        description: 'Ratings added',
-        contentType: 'application/json',
-        example: '',
-        requiredExample: '',
-      }],
+      responses: [
+        {
+          status: '201',
+          description: 'Ratings added',
+          contentType: 'application/json',
+          example: '',
+          requiredExample: '',
+        },
+      ],
       serverUrls: ['https://api.trakt.tv'],
     },
     {
@@ -163,13 +171,15 @@ export const seedCatalog: OpenApiCatalog = {
         example:
           '{\n  "movies": [\n    {\n      "ids": {\n        "trakt": 343\n      }\n    }\n  ]\n}',
       },
-      responses: [{
-        status: '200',
-        description: 'Items removed',
-        contentType: 'application/json',
-        example: '',
-        requiredExample: '',
-      }],
+      responses: [
+        {
+          status: '200',
+          description: 'Items removed',
+          contentType: 'application/json',
+          example: '',
+          requiredExample: '',
+        },
+      ],
       serverUrls: ['https://api.trakt.tv'],
     },
   ],

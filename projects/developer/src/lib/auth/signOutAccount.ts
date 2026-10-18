@@ -8,9 +8,9 @@ export async function signOutAccount(slot: number): Promise<void> {
 
     // Trakt's revocation endpoint may reject a public client, and the local
     // tokens must be cleared either way.
-    await manager.revokeTokens(['access_token', 'refresh_token']).catch(
-      () => {},
-    );
+    await manager
+      .revokeTokens(['access_token', 'refresh_token'])
+      .catch(() => {});
     await manager.removeUser();
     clearUsername(slot);
   });

@@ -7,11 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!projects/developer",
-      "!**/*.svg"
-    ]
+    "includes": ["**", "!projects/developer", "!**/*.svg"]
   },
   "formatter": {
     "indentStyle": "space",

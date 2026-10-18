@@ -11,18 +11,22 @@ export function missingRequiredParameterIds({
   values: Readonly<Record<string, string>>;
   headers: ReadonlyArray<ApiHeader>;
 }): ReadonlyArray<string> {
-  return endpoint.parameters.filter((parameter) => {
-    if (!parameter.required) return false;
+  return endpoint.parameters
+    .filter((parameter) => {
+      if (!parameter.required) return false;
 
-    if (parameter.location !== 'header') {
-      return !values[parameter.id]?.trim();
-    }
+      if (parameter.location !== 'header') {
+        return !values[parameter.id]?.trim();
+      }
 
-    const header = findParameterHeader({ parameter, headers });
+      const header = findParameterHeader({ parameter, headers });
 
-    return !header?.enabled ||
-      header.name.trim().toLocaleLowerCase() !==
-        parameter.name.toLocaleLowerCase() ||
-      !header.value.trim();
-  }).map(({ id }) => id);
+      return (
+        !header?.enabled ||
+        header.name.trim().toLocaleLowerCase() !==
+          parameter.name.toLocaleLowerCase() ||
+        !header.value.trim()
+      );
+    })
+    .map(({ id }) => id);
 }

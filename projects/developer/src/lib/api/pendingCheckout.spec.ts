@@ -44,8 +44,7 @@ describe('pending checkout storage', () => {
 
     expect(
       savePendingCheckout({ storage, pending: { slot: 2, sessionId: null } }),
-    )
-      .toBe(true);
+    ).toBe(true);
     expect(readPendingCheckout(storage)).toEqual({ slot: 2, sessionId: null });
 
     savePendingCheckout({ storage, pending: { slot: 2, sessionId: 'cs_1' } });

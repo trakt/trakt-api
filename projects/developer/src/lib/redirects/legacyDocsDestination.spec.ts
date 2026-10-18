@@ -13,9 +13,7 @@ describe('legacyDocsDestination', () => {
     expect(guides).not.toHaveLength(0);
 
     for (const { slug } of guides) {
-      expect(legacyDocsDestination(`/docs/${slug}`)).toBe(
-        `/docs/${slug}`,
-      );
+      expect(legacyDocsDestination(`/docs/${slug}`)).toBe(`/docs/${slug}`);
     }
   });
 
@@ -28,10 +26,7 @@ describe('legacyDocsDestination', () => {
   });
 
   it.each([
-    [
-      '/docs/caching-and-fresh-metadata',
-      '/docs/caching-and-fresh-data',
-    ],
+    ['/docs/caching-and-fresh-metadata', '/docs/caching-and-fresh-data'],
     ['/docs/limited-access', '/docs/limted-access'],
     ['/docs', '/docs/getting-started'],
   ])('maps %s to its destination', (path, destination) => {
@@ -50,10 +45,7 @@ describe('legacyDocsDestination', () => {
     '/reference/about-scrobble',
     '/reference/postoauthtoken',
     '/docs/constructor',
-  ])(
-    'sends unknown path %s to the homepage',
-    (path) => {
-      expect(legacyDocsDestination(path)).toBe('/');
-    },
-  );
+  ])('sends unknown path %s to the homepage', (path) => {
+    expect(legacyDocsDestination(path)).toBe('/');
+  });
 });

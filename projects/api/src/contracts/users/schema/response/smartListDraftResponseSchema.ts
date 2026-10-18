@@ -15,8 +15,10 @@ export const smartListDraftResponseSchema = z.object({
   filters: smartListFiltersSchema,
   unsupported: z.string().array(),
   confidence: z.number(),
-  converted: z.object({
-    smart_list_id: z.number().int(),
-    converted_at: z.string().datetime(),
-  }).nullable(),
+  converted: z
+    .object({
+      smart_list_id: z.number().int(),
+      converted_at: z.string().datetime(),
+    })
+    .nullable(),
 });

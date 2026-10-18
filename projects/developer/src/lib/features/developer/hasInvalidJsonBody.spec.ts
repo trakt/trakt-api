@@ -4,8 +4,9 @@ import { seedCatalog } from '$lib/openapi/seedCatalog.ts';
 import { hasInvalidJsonBody } from './hasInvalidJsonBody.ts';
 
 describe('hasInvalidJsonBody', () => {
-  const postEndpoint = seedCatalog.endpoints.find(({ method, requestBody }) =>
-    method === 'POST' && requestBody?.contentType === 'application/json'
+  const postEndpoint = seedCatalog.endpoints.find(
+    ({ method, requestBody }) =>
+      method === 'POST' && requestBody?.contentType === 'application/json',
   );
 
   if (!postEndpoint) {
@@ -13,18 +14,21 @@ describe('hasInvalidJsonBody', () => {
   }
 
   it('should reject malformed JSON for POST requests', () => {
-    expect(hasInvalidJsonBody({ endpoint: postEndpoint, body: '{"id":}' }))
-      .toBe(true);
+    expect(
+      hasInvalidJsonBody({ endpoint: postEndpoint, body: '{"id":}' }),
+    ).toBe(true);
   });
 
   it('should accept valid JSON for POST requests', () => {
-    expect(hasInvalidJsonBody({ endpoint: postEndpoint, body: '{"id":1}' }))
-      .toBe(false);
+    expect(
+      hasInvalidJsonBody({ endpoint: postEndpoint, body: '{"id":1}' }),
+    ).toBe(false);
   });
 
   it('should leave empty-body validation to the required-body rule', () => {
-    expect(hasInvalidJsonBody({ endpoint: postEndpoint, body: '  ' }))
-      .toBe(false);
+    expect(hasInvalidJsonBody({ endpoint: postEndpoint, body: '  ' })).toBe(
+      false,
+    );
   });
 
   it.each(['PUT', 'PATCH', 'DELETE'] as const)(
@@ -39,8 +43,7 @@ describe('hasInvalidJsonBody', () => {
 
   it('should not apply when no request body is documented', () => {
     const endpoint: Endpoint = { ...postEndpoint, requestBody: null };
-    expect(hasInvalidJsonBody({ endpoint, body: '{"id":}' }))
-      .toBe(false);
+    expect(hasInvalidJsonBody({ endpoint, body: '{"id":}' })).toBe(false);
   });
 
   it('should not parse non-JSON request bodies', () => {
@@ -55,7 +58,6 @@ describe('hasInvalidJsonBody', () => {
       requestBody: { ...requestBody, contentType: 'text/plain' },
     };
 
-    expect(hasInvalidJsonBody({ endpoint, body: '{"id":}' }))
-      .toBe(false);
+    expect(hasInvalidJsonBody({ endpoint, body: '{"id":}' })).toBe(false);
   });
 });

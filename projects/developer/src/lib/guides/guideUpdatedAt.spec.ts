@@ -14,15 +14,13 @@ describe('guideUpdatedAt', () => {
   });
 
   it('handles recent edits and older articles', () => {
-    for (
-      const [date, label] of [
-        ['2026-09-09', 'today'],
-        ['2026-09-08', 'yesterday'],
-        ['2026-09-04', '5 days ago'],
-        ['2026-07-08', 'about 2 months ago'],
-        ['2025-05-22', 'about 1 year ago'],
-      ]
-    ) {
+    for (const [date, label] of [
+      ['2026-09-09', 'today'],
+      ['2026-09-08', 'yesterday'],
+      ['2026-09-04', '5 days ago'],
+      ['2026-07-08', 'about 2 months ago'],
+      ['2025-05-22', 'about 1 year ago'],
+    ]) {
       expect(guideUpdatedAt(source(date), now)?.relative).toBe(label);
     }
   });

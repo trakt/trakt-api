@@ -55,8 +55,9 @@ describe('redactResponse', () => {
       nested: [{ clientSecret: '[REDACTED]', title: 'TRON' }],
       echo: 'Bearer [REDACTED]',
     });
-    expect(result.headers.every(({ value }) => value.includes('[REDACTED]')))
-      .toBe(true);
+    expect(
+      result.headers.every(({ value }) => value.includes('[REDACTED]')),
+    ).toBe(true);
   });
 
   it('should omit suspicious non-JSON bodies and redact known values anywhere', () => {

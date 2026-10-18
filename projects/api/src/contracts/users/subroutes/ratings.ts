@@ -11,75 +11,73 @@ const typedRatingParamsSchema = profileParamsSchema.extend({
 });
 
 /** ts-rest contract for the `ratings` endpoints. */
-export const ratings = builder.router({
-  movies: {
-    summary: 'Get movie ratings',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+export const ratings = builder.router(
+  {
+    movies: {
+      summary: 'Get movie ratings',
+      description: `#### 🔓 OAuth Optional ✨ Extended Info
 Returns movies rated by a user including each rating value and when it was rated.`,
-    path: '/movies',
-    pathParams: profileParamsSchema,
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: RatedItemResponseSchema.array(),
+      path: '/movies',
+      pathParams: profileParamsSchema,
+      method: 'GET',
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      responses: {
+        200: RatedItemResponseSchema.array(),
+      },
     },
-  },
-  shows: {
-    summary: 'Get show ratings',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+    shows: {
+      summary: 'Get show ratings',
+      description: `#### 🔓 OAuth Optional ✨ Extended Info
 Returns shows rated by a user including each rating value and when it was rated.`,
-    path: '/shows',
-    pathParams: profileParamsSchema,
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: RatedItemResponseSchema.array(),
+      path: '/shows',
+      pathParams: profileParamsSchema,
+      method: 'GET',
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      responses: {
+        200: RatedItemResponseSchema.array(),
+      },
     },
-  },
-  episodes: {
-    summary: 'Get episode ratings',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+    episodes: {
+      summary: 'Get episode ratings',
+      description: `#### 🔓 OAuth Optional ✨ Extended Info
 Returns episodes rated by a user including each rating value and when it was rated.`,
-    path: '/episodes',
-    pathParams: profileParamsSchema,
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: RatedItemResponseSchema.array(),
+      path: '/episodes',
+      pathParams: profileParamsSchema,
+      method: 'GET',
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      responses: {
+        200: RatedItemResponseSchema.array(),
+      },
     },
-  },
-  all: {
-    summary: 'Get all ratings',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
+    all: {
+      summary: 'Get all ratings',
+      description: `#### 🔓 OAuth Optional ✨ Extended Info
 Returns all ratings by a user including each rating value and when it was rated.`,
-    path: '/',
-    pathParams: profileParamsSchema,
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: RatedItemResponseSchema.array(),
+      path: '/',
+      pathParams: profileParamsSchema,
+      method: 'GET',
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      responses: {
+        200: RatedItemResponseSchema.array(),
+      },
+    },
+    typedRating: {
+      summary: 'Get ratings',
+      description:
+        'Returns ratings by a user for the requested media type and rating value.',
+      path: '/:type/:rating',
+      pathParams: typedRatingParamsSchema,
+      method: 'GET',
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      responses: {
+        200: RatedItemResponseSchema.array(),
+      },
     },
   },
-  typedRating: {
-    summary: 'Get ratings',
-    description:
-      'Returns ratings by a user for the requested media type and rating value.',
-    path: '/:type/:rating',
-    pathParams: typedRatingParamsSchema,
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: RatedItemResponseSchema.array(),
-    },
+  {
+    pathPrefix: '/:id/ratings',
   },
-}, {
-  pathPrefix: '/:id/ratings',
-});
+);
 
 /** The rated item response payload. */
 export type RatedItemResponse = z.infer<typeof RatedItemResponseSchema>;

@@ -1,7 +1,8 @@
 import { Marked } from 'marked';
 
 function escapeHtml(value: string): string {
-  return value.replaceAll('&', '&amp;')
+  return value
+    .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
@@ -10,8 +11,10 @@ function escapeHtml(value: string): string {
 
 function safeHref(value: string): string | null {
   if (
-    value.startsWith('#') || value.startsWith('/') ||
-    value.startsWith('./') || value.startsWith('../')
+    value.startsWith('#') ||
+    value.startsWith('/') ||
+    value.startsWith('./') ||
+    value.startsWith('../')
   ) {
     return value;
   }
@@ -43,9 +46,9 @@ const markdown = new Marked({
         ? ' target="_blank" rel="noreferrer"'
         : '';
 
-      return `<a href="${
-        escapeHtml(safeUrl)
-      }"${titleAttribute}${externalAttributes}>${label}</a>`;
+      return `<a href="${escapeHtml(
+        safeUrl,
+      )}"${titleAttribute}${externalAttributes}>${label}</a>`;
     },
   },
 });

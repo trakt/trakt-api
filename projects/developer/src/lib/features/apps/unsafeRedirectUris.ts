@@ -8,9 +8,13 @@ const PRIVATE_IPV4 =
 const PRIVATE_IPV6 = /^\[(::1|f[cd][0-9a-f]{0,2}:|fe[89ab][0-9a-f]?:)/;
 
 function isPrivateHost(hostname: string): boolean {
-  return LOCAL_HOSTS.has(hostname) || hostname.endsWith('.localhost') ||
-    hostname.endsWith('.local') || PRIVATE_IPV4.test(hostname) ||
-    PRIVATE_IPV6.test(hostname);
+  return (
+    LOCAL_HOSTS.has(hostname) ||
+    hostname.endsWith('.localhost') ||
+    hostname.endsWith('.local') ||
+    PRIVATE_IPV4.test(hostname) ||
+    PRIVATE_IPV6.test(hostname)
+  );
 }
 
 function parseUrl(uri: string): URL | null {

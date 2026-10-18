@@ -13,20 +13,16 @@ export const mediaRatingSchema = z.object({
 
 /** Zod schema for ratings param. */
 export const ratingsParamSchema = z.object({
-  movies: z.array(
-    mediaRatingSchema
-      .merge(z.object({ ids: movieIdsRequestSchema })),
-  ).nullish(),
-  shows: z.array(
-    mediaRatingSchema
-      .merge(z.object({ ids: showIdsRequestSchema })),
-  ).nullish(),
-  seasons: z.array(
-    mediaRatingSchema
-      .merge(z.object({ ids: seasonIdsRequestSchema })),
-  ).nullish(),
-  episodes: z.array(
-    mediaRatingSchema
-      .merge(z.object({ ids: episodeIdsRequestSchema })),
-  ).nullish(),
+  movies: z
+    .array(mediaRatingSchema.merge(z.object({ ids: movieIdsRequestSchema })))
+    .nullish(),
+  shows: z
+    .array(mediaRatingSchema.merge(z.object({ ids: showIdsRequestSchema })))
+    .nullish(),
+  seasons: z
+    .array(mediaRatingSchema.merge(z.object({ ids: seasonIdsRequestSchema })))
+    .nullish(),
+  episodes: z
+    .array(mediaRatingSchema.merge(z.object({ ids: episodeIdsRequestSchema })))
+    .nullish(),
 });

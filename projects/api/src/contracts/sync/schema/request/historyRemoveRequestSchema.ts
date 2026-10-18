@@ -2,5 +2,6 @@ import { bulkMediaRequestSchema } from '../../../_internal/request/bulkMediaRequ
 import { historyIdsRequestSchema } from './historyIdsRequestSchema.ts';
 
 /** Zod schema for the history remove request. */
-export const historyRemoveRequestSchema = bulkMediaRequestSchema
-  .merge(historyIdsRequestSchema);
+export const historyRemoveRequestSchema = bulkMediaRequestSchema.merge(
+  historyIdsRequestSchema,
+);

@@ -2,7 +2,10 @@ import type { ApplicationInput } from './ApplicationInput.ts';
 import { nonLocalRedirectUris } from './nonLocalRedirectUris.ts';
 
 const lines = (value: string) =>
-  value.split('\n').map((line) => line.trim()).filter(Boolean);
+  value
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
 
 export function parseApplication({
   name,
@@ -27,7 +30,8 @@ export function parseApplication({
     throw new Error('Keep the description within 255 characters.');
   }
   if (
-    !redirect_uri.length || redirect_uri.length > 25 ||
+    !redirect_uri.length ||
+    redirect_uri.length > 25 ||
     redirect_uri.join('\n').length > 2048
   ) {
     throw new Error(
@@ -44,7 +48,8 @@ export function parseApplication({
       throw new Error('Enter valid redirect URIs, one per line.');
     }
     if (
-      url.search || url.hash ||
+      url.search ||
+      url.hash ||
       !uri.toLowerCase().startsWith(`${url.protocol}//`)
     ) {
       throw new Error(
@@ -56,9 +61,9 @@ export function parseApplication({
   const nonLocal = dev ? nonLocalRedirectUris(redirects) : [];
   if (nonLocal.length > 0) {
     throw new Error(
-      `Development apps can only redirect to localhost. Remove ${
-        nonLocal.join(', ')
-      }.`,
+      `Development apps can only redirect to localhost. Remove ${nonLocal.join(
+        ', ',
+      )}.`,
     );
   }
 
@@ -70,8 +75,12 @@ export function parseApplication({
       throw new Error('Enter valid HTTP or HTTPS origins, one per line.');
     }
     if (
-      origin.includes('*') || !['http:', 'https:'].includes(url.protocol) ||
-      url.pathname !== '/' || url.search || url.hash || url.username ||
+      origin.includes('*') ||
+      !['http:', 'https:'].includes(url.protocol) ||
+      url.pathname !== '/' ||
+      url.search ||
+      url.hash ||
+      url.username ||
       url.password
     ) {
       throw new Error(

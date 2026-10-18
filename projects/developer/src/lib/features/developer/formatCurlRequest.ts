@@ -43,19 +43,20 @@ export function formatCurlRequest({
   headers: ReadonlyArray<ApiHeader>;
   body: string;
 }): string {
-  const enabledHeaders = headers.filter(({ enabled, name }) =>
-    enabled && Boolean(name.trim())
+  const enabledHeaders = headers.filter(
+    ({ enabled, name }) => enabled && Boolean(name.trim()),
   );
-  const hasContentType = enabledHeaders.some(({ name }) =>
-    name.trim().toLocaleLowerCase() === 'content-type'
+  const hasContentType = enabledHeaders.some(
+    ({ name }) => name.trim().toLocaleLowerCase() === 'content-type',
   );
   const parts = [
     `curl --request ${method}`,
     `  --url ${shellQuote(redactUrl(url))}`,
-    ...enabledHeaders.map(({ name, value }) =>
-      `  --header ${
-        shellQuote(`${name.trim()}: ${redactHeaderValue(name, value)}`)
-      }`
+    ...enabledHeaders.map(
+      ({ name, value }) =>
+        `  --header ${shellQuote(
+          `${name.trim()}: ${redactHeaderValue(name, value)}`,
+        )}`,
     ),
   ];
 

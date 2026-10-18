@@ -16,10 +16,11 @@ const scrobbleResponseSchema = z.union([
 ]);
 
 /** ts-rest contract for the `scrobble` endpoints. */
-export const scrobble = builder.router({
-  start: {
-    summary: 'Start watching in a media center',
-    description: `#### 🔒 OAuth Required
+export const scrobble = builder.router(
+  {
+    start: {
+      summary: 'Start watching in a media center',
+      description: `#### 🔒 OAuth Required
 Use this method when the video initially starts playing or is unpaused. This will remove any playback progress if it exists.
 
 > ### Note
@@ -30,27 +31,27 @@ Use this method when the video initially starts playing or is unpaused. This wil
 |---|---|---|
 | item * | object | \`movie\` or \`episode\` object. (see examples ->) |
 | \`progress\` * | float | Progress percentage between 0 and 100. |`,
-    path: '/start',
-    method: 'POST',
-    body: scrobbleRequestSchema,
-    responses: {
-      201: scrobbleResponseSchema,
+      path: '/start',
+      method: 'POST',
+      body: scrobbleRequestSchema,
+      responses: {
+        201: scrobbleResponseSchema,
+      },
     },
-  },
-  pause: {
-    summary: 'Pause watching in a media center',
-    description: `#### 🔒 OAuth Required
+    pause: {
+      summary: 'Pause watching in a media center',
+      description: `#### 🔒 OAuth Required
 Pause an active scrobble for a movie or episode. Send the media object and current progress in the request body; the response returns the updated scrobble state.`,
-    path: '/pause',
-    method: 'POST',
-    body: scrobbleRequestSchema,
-    responses: {
-      201: scrobbleResponseSchema,
+      path: '/pause',
+      method: 'POST',
+      body: scrobbleRequestSchema,
+      responses: {
+        201: scrobbleResponseSchema,
+      },
     },
-  },
-  stop: {
-    summary: 'Stop or finish watching in a media center',
-    description: `#### 🔒 OAuth Required
+    stop: {
+      summary: 'Stop or finish watching in a media center',
+      description: `#### 🔒 OAuth Required
 Use this method when the video is stopped or finishes playing on its own. If the progress is above 80%, the video will be scrobbled and the \`action\` will be set to **scrobble**. A unique history \`id\` (64-bit integer) will be returned and can be used to reference this \`scrobble\` directly.
 
 If the progress is between 1% and 79%, it will be treated as a *pause* and the \`action\` will be set to **pause**. The playback progress will be saved and [**/sync/playback**](/reference/sync/playback/) can be used to resume the video from this exact position.
@@ -66,17 +67,19 @@ If the progress is between 1% and 79%, it will be treated as a *pause* and the \
 
 > ### Note
 > _If the same item was just scrobbled, a \`409\` HTTP status code will returned to avoid scrobbling a duplicate. The response will contain a \`watched_at\` timestamp when the item was last scrobbled and a \`expires_at\` timestamp when the item can be scrobbled again._`,
-    path: '/stop',
-    method: 'POST',
-    body: scrobbleRequestSchema,
-    responses: {
-      201: scrobbleResponseSchema,
+      path: '/stop',
+      method: 'POST',
+      body: scrobbleRequestSchema,
+      responses: {
+        201: scrobbleResponseSchema,
+      },
     },
   },
-}, {
-  pathPrefix: '/scrobble',
-  metadata: authMetadata('required'),
-});
+  {
+    pathPrefix: '/scrobble',
+    metadata: authMetadata('required'),
+  },
+);
 
 export {
   episodeScrobbleRequestSchema,

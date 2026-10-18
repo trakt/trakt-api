@@ -69,9 +69,7 @@ export const episodeResponseSchema = z.object({
   /***
    * Available if requesting extended `images`.
    */
-  images: z
-    .object({ screenshot: z.array(z.string()) })
-    .nullish(),
+  images: z.object({ screenshot: z.array(z.string()) }).nullish(),
 });
 
 /** Zod schema for the typed episode response. */

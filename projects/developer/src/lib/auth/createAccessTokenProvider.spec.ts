@@ -21,10 +21,9 @@ function session(expiresAt = NOW / 1000 + 3600, token = 'fresh') {
 }
 
 function setup() {
-  const users = new Map<number, User | null>([[
-    0,
-    session(NOW / 1000 - 1, 'expired'),
-  ]]);
+  const users = new Map<number, User | null>([
+    [0, session(NOW / 1000 - 1, 'expired')],
+  ]);
   const values = new Map<string, string>();
   const queues = new Map<number, Promise<unknown>>();
   const storage = {
@@ -50,7 +49,8 @@ function setup() {
       signinSilent: () => renew(slot),
     }),
     lock: <T>(slot: number, operation: () => Promise<T>): Promise<T> => {
-      const result = (queues.get(slot) ?? Promise.resolve()).catch(() => {})
+      const result = (queues.get(slot) ?? Promise.resolve())
+        .catch(() => {})
         .then(operation);
       queues.set(slot, result);
       return result;
@@ -111,10 +111,11 @@ describe('access token provider', () => {
     const { users, token, renew } = setup();
     users.set(1, session(0));
     let finish: (user: User) => void = () => {};
-    renew.mockImplementationOnce(() =>
-      new Promise<User>((resolve) => {
-        finish = resolve;
-      })
+    renew.mockImplementationOnce(
+      () =>
+        new Promise<User>((resolve) => {
+          finish = resolve;
+        }),
     );
     const first = token(0);
     await expect(token(1)).resolves.toBe('fresh-1');

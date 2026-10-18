@@ -15,8 +15,9 @@ const historyQuerySchema = extendedMediaQuerySchema
   .merge(dateRangeParamsSchema)
   .merge(pageQuerySchema);
 
-const historyItemPathParamsSchema = profileParamsSchema
-  .merge(historyItemIdParamsSchema);
+const historyItemPathParamsSchema = profileParamsSchema.merge(
+  historyItemIdParamsSchema,
+);
 
 const historyItemQuerySchema = extendedMediaQuerySchema
   .merge(dateRangeParamsSchema)
@@ -29,106 +30,109 @@ const historyTypedItemParamsSchema = profileParamsSchema
   });
 
 /** ts-rest contract for the `history` endpoints. */
-export const history = builder.router({
-  all: {
-    summary: 'Get watched history',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+export const history = builder.router(
+  {
+    all: {
+      summary: 'Get watched history',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns watched history for a user across all supported media types. Use \`start_at\` and \`end_at\` to limit results to a UTC datetime range.`,
-    path: '/',
-    method: 'GET',
-    pathParams: profileParamsSchema,
-    query: historyQuerySchema,
-    responses: {
-      200: activityHistoryResponseSchema.array(),
+      path: '/',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: historyQuerySchema,
+      responses: {
+        200: activityHistoryResponseSchema.array(),
+      },
     },
-  },
-  movies: {
-    summary: 'Get movie watched history',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    movies: {
+      summary: 'Get movie watched history',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns movie watched history for a user. Use \`start_at\` and \`end_at\` to limit results to a UTC datetime range.`,
-    path: '/movies',
-    method: 'GET',
-    pathParams: profileParamsSchema,
-    query: historyQuerySchema,
-    responses: {
-      200: movieActivityHistoryResponseSchema.array(),
+      path: '/movies',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: historyQuerySchema,
+      responses: {
+        200: movieActivityHistoryResponseSchema.array(),
+      },
     },
-  },
-  shows: {
-    summary: 'Get show watched history',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    shows: {
+      summary: 'Get show watched history',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns show watched history for a user. Use \`start_at\` and \`end_at\` to limit results to a UTC datetime range.`,
-    path: '/shows',
-    method: 'GET',
-    pathParams: profileParamsSchema,
-    query: historyQuerySchema,
-    responses: {
-      200: episodeActivityHistoryResponseSchema.array(),
+      path: '/shows',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: historyQuerySchema,
+      responses: {
+        200: episodeActivityHistoryResponseSchema.array(),
+      },
     },
-  },
-  episodes: {
-    summary: 'Get episode watched history',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    episodes: {
+      summary: 'Get episode watched history',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns episode watched history for a user. Use \`start_at\` and \`end_at\` to limit results to a UTC datetime range.`,
-    path: '/episodes',
-    method: 'GET',
-    pathParams: profileParamsSchema,
-    query: historyQuerySchema,
-    responses: {
-      200: episodeActivityHistoryResponseSchema.array(),
+      path: '/episodes',
+      method: 'GET',
+      pathParams: profileParamsSchema,
+      query: historyQuerySchema,
+      responses: {
+        200: episodeActivityHistoryResponseSchema.array(),
+      },
     },
-  },
-  movie: {
-    summary: 'Get history for a movie',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    movie: {
+      summary: 'Get history for a movie',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns watched history entries for one movie. Use \`item_id\` to identify the movie and \`start_at\` or \`end_at\` to limit the date range.`,
-    path: '/movies/:item_id',
-    method: 'GET',
-    pathParams: historyItemPathParamsSchema,
-    query: historyItemQuerySchema,
-    responses: {
-      200: movieActivityHistoryResponseSchema.array(),
+      path: '/movies/:item_id',
+      method: 'GET',
+      pathParams: historyItemPathParamsSchema,
+      query: historyItemQuerySchema,
+      responses: {
+        200: movieActivityHistoryResponseSchema.array(),
+      },
     },
-  },
-  show: {
-    summary: 'Get history for a show',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    show: {
+      summary: 'Get history for a show',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns watched history entries for one show. Use \`item_id\` to identify the show and \`start_at\` or \`end_at\` to limit the date range.`,
-    path: '/shows/:item_id',
-    method: 'GET',
-    pathParams: historyItemPathParamsSchema,
-    query: historyItemQuerySchema,
-    responses: {
-      200: episodeActivityHistoryResponseSchema.array(),
+      path: '/shows/:item_id',
+      method: 'GET',
+      pathParams: historyItemPathParamsSchema,
+      query: historyItemQuerySchema,
+      responses: {
+        200: episodeActivityHistoryResponseSchema.array(),
+      },
     },
-  },
-  episode: {
-    summary: 'Get history for an episode',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    episode: {
+      summary: 'Get history for an episode',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns watched history entries for one episode. Use \`item_id\` to identify the episode and \`start_at\` or \`end_at\` to limit the date range.`,
-    path: '/episodes/:item_id',
-    method: 'GET',
-    pathParams: historyItemPathParamsSchema,
-    query: historyItemQuerySchema,
-    responses: {
-      200: episodeActivityHistoryResponseSchema.array(),
+      path: '/episodes/:item_id',
+      method: 'GET',
+      pathParams: historyItemPathParamsSchema,
+      query: historyItemQuerySchema,
+      responses: {
+        200: episodeActivityHistoryResponseSchema.array(),
+      },
     },
-  },
-  typedItem: {
-    summary: 'Get watched history',
-    description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+    typedItem: {
+      summary: 'Get watched history',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
 Returns watched history entries for one item. Use \`type\`, \`item_id\`, \`start_at\`, and \`end_at\` to limit the result set.`,
-    path: '/:type/:item_id',
-    method: 'GET',
-    pathParams: historyTypedItemParamsSchema,
-    query: historyItemQuerySchema,
-    responses: {
-      200: activityHistoryResponseSchema.array(),
+      path: '/:type/:item_id',
+      method: 'GET',
+      pathParams: historyTypedItemParamsSchema,
+      query: historyItemQuerySchema,
+      responses: {
+        200: activityHistoryResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/:id/history',
-});
+  {
+    pathPrefix: '/:id/history',
+  },
+);
 
 /** The movie activity history response payload. */
 export type MovieActivityHistoryResponse = z.infer<

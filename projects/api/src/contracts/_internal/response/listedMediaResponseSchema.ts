@@ -5,31 +5,35 @@ import { listMetadataResponseSchema } from './listMetadataResponseSchema.ts';
 import { movieResponseSchema } from './movieResponseSchema.ts';
 import { showResponseSchema } from './showResponseSchema.ts';
 
-const listedShowSchema = listMetadataResponseSchema
-  .merge(z.object({
+const listedShowSchema = listMetadataResponseSchema.merge(
+  z.object({
     type: z.literal('show'),
     show: showResponseSchema.nullish(),
-  }));
+  }),
+);
 
-const listedMovieSchema = listMetadataResponseSchema
-  .merge(z.object({
+const listedMovieSchema = listMetadataResponseSchema.merge(
+  z.object({
     type: z.literal('movie'),
     movie: movieResponseSchema.nullish(),
-  }));
+  }),
+);
 
-const listedSeasonSchema = listMetadataResponseSchema
-  .merge(z.object({
+const listedSeasonSchema = listMetadataResponseSchema.merge(
+  z.object({
     type: z.literal('season'),
     season: seasonResponseSchema.nullish(),
     show: showResponseSchema.nullish(),
-  }));
+  }),
+);
 
-const listedEpisodeSchema = listMetadataResponseSchema
-  .merge(z.object({
+const listedEpisodeSchema = listMetadataResponseSchema.merge(
+  z.object({
     type: z.literal('episode'),
     episode: episodeResponseSchema.nullish(),
     show: showResponseSchema.nullish(),
-  }));
+  }),
+);
 
 /** Zod schema for the listed media response. */
 export const listedMediaResponseSchema = z.union([

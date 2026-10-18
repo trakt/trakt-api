@@ -35,28 +35,34 @@ const endpoint: Endpoint = {
 
 describe('invalidParameterIds', () => {
   it('should reject decimal and non-numeric integer values', () => {
-    expect(invalidParameterIds({
-      endpoint,
-      values: { 'query:page': '1.5', 'query:enabled': 'true' },
-      headers: [],
-    })).toEqual(['query:page']);
+    expect(
+      invalidParameterIds({
+        endpoint,
+        values: { 'query:page': '1.5', 'query:enabled': 'true' },
+        headers: [],
+      }),
+    ).toEqual(['query:page']);
 
-    expect(hasInvalidParameterValues({
-      endpoint,
-      values: { 'query:page': 'many', 'query:enabled': 'true' },
-      headers: [],
-    })).toBe(true);
+    expect(
+      hasInvalidParameterValues({
+        endpoint,
+        values: { 'query:page': 'many', 'query:enabled': 'true' },
+        headers: [],
+      }),
+    ).toBe(true);
   });
 
   it('should accept signed integers without converting their precision', () => {
-    expect(invalidParameterIds({
-      endpoint,
-      values: {
-        'query:page': '-9223372036854775808',
-        'query:enabled': 'false',
-      },
-      headers: [],
-    })).toEqual([]);
+    expect(
+      invalidParameterIds({
+        endpoint,
+        values: {
+          'query:page': '-9223372036854775808',
+          'query:enabled': 'false',
+        },
+        headers: [],
+      }),
+    ).toEqual([]);
   });
 
   it('should allow an optional integer to remain empty', () => {
@@ -66,10 +72,12 @@ describe('invalidParameterIds', () => {
   });
 
   it('should reject boolean values outside true and false', () => {
-    expect(invalidParameterIds({
-      endpoint,
-      values: { 'query:enabled': 'yes' },
-      headers: [],
-    })).toEqual(['query:enabled']);
+    expect(
+      invalidParameterIds({
+        endpoint,
+        values: { 'query:enabled': 'yes' },
+        headers: [],
+      }),
+    ).toEqual(['query:enabled']);
   });
 });

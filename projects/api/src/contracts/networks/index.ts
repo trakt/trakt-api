@@ -8,19 +8,22 @@ export const networkResponseSchema = z.object({
 });
 
 /** ts-rest contract for the `networks` endpoints. */
-export const networks = builder.router({
-  list: {
-    summary: 'Get networks',
-    description: 'Get a list of all TV networks, including names.',
-    path: '',
-    method: 'GET',
-    responses: {
-      200: networkResponseSchema.array(),
+export const networks = builder.router(
+  {
+    list: {
+      summary: 'Get networks',
+      description: 'Get a list of all TV networks, including names.',
+      path: '',
+      method: 'GET',
+      responses: {
+        200: networkResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/networks',
-});
+  {
+    pathPrefix: '/networks',
+  },
+);
 
 /** The network response payload. */
 export type NetworkResponse = z.infer<typeof networkResponseSchema>;

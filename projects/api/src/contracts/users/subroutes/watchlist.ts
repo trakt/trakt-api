@@ -14,8 +14,9 @@ import { listCommentsSortParamsSchema } from '../schema/request/listCommentsSort
 import { profileParamsSchema } from '../schema/request/profileParamsSchema.ts';
 import { sortParamsSchema } from '../schema/request/sortParamsSchema.ts';
 
-const sortedWatchlistPathParamsSchema = profileParamsSchema
-  .merge(sortParamsSchema.partial());
+const sortedWatchlistPathParamsSchema = profileParamsSchema.merge(
+  sortParamsSchema.partial(),
+);
 
 const watchlistQuerySchema = extendedMediaQuerySchema
   .merge(sortQuerySchema)
@@ -31,76 +32,74 @@ const typedSortedWatchlistParamsSchema = profileParamsSchema.extend({
 });
 
 /** ts-rest contract for the `watchlist` endpoints. */
-export const watchlist = builder.router({
-  movies: {
-    summary: 'Get movie watchlist',
-    description:
-      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+export const watchlist = builder.router(
+  {
+    movies: {
+      summary: 'Get movie watchlist',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns movies on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
-    path: '/movies/:sort',
-    pathParams: sortedWatchlistPathParamsSchema,
-    method: 'GET',
-    query: watchlistQuerySchema,
-    responses: {
-      200: listedMovieResponseSchema.array(),
+      path: '/movies/:sort',
+      pathParams: sortedWatchlistPathParamsSchema,
+      method: 'GET',
+      query: watchlistQuerySchema,
+      responses: {
+        200: listedMovieResponseSchema.array(),
+      },
     },
-  },
-  shows: {
-    summary: 'Get show watchlist',
-    description:
-      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+    shows: {
+      summary: 'Get show watchlist',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns shows on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
-    path: '/shows/:sort',
-    pathParams: sortedWatchlistPathParamsSchema,
-    method: 'GET',
-    query: watchlistQuerySchema,
-    responses: {
-      200: listedShowResponseSchema.array(),
+      path: '/shows/:sort',
+      pathParams: sortedWatchlistPathParamsSchema,
+      method: 'GET',
+      query: watchlistQuerySchema,
+      responses: {
+        200: listedShowResponseSchema.array(),
+      },
     },
-  },
-  all: {
-    summary: 'Get media watchlist',
-    description:
-      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+    all: {
+      summary: 'Get media watchlist',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns movies and shows on a user watchlist. Use the \`sort\` path parameter plus query sorting, pagination, and filters to control the result order and contents.`,
-    path: '/movie,show/:sort',
-    pathParams: sortedWatchlistPathParamsSchema,
-    method: 'GET',
-    query: watchlistQuerySchema,
-    responses: {
-      200: listedMediaResponseSchema.array(),
+      path: '/movie,show/:sort',
+      pathParams: sortedWatchlistPathParamsSchema,
+      method: 'GET',
+      query: watchlistQuerySchema,
+      responses: {
+        200: listedMediaResponseSchema.array(),
+      },
     },
-  },
-  typedSorted: {
-    summary: 'Get watchlist',
-    description:
-      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
+    typedSorted: {
+      summary: 'Get watchlist',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters
 Returns all items in a user's watchlist filtered by type.`,
-    path: '/:type/:sort_by/:sort_how',
-    pathParams: typedSortedWatchlistParamsSchema,
-    method: 'GET',
-    query: watchlistQuerySchema,
-    responses: {
-      200: listedMediaResponseSchema.array(),
+      path: '/:type/:sort_by/:sort_how',
+      pathParams: typedSortedWatchlistParamsSchema,
+      method: 'GET',
+      query: watchlistQuerySchema,
+      responses: {
+        200: listedMediaResponseSchema.array(),
+      },
     },
-  },
-  comments: {
-    summary: 'Get all watchlist comments',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    comments: {
+      summary: 'Get all watchlist comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for the watchlist. By default, the comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
-    path: '/comments/:sort',
-    method: 'GET',
-    pathParams: profileParamsSchema
-      .merge(listCommentsSortParamsSchema),
-    query: pageQuerySchema,
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/comments/:sort',
+      method: 'GET',
+      pathParams: profileParamsSchema.merge(listCommentsSortParamsSchema),
+      query: pageQuerySchema,
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/:id/watchlist',
-});
+  {
+    pathPrefix: '/:id/watchlist',
+  },
+);

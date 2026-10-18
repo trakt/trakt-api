@@ -46,148 +46,147 @@ const listTypePathParamsSchema = z.object({
   type: z.string().describe('List type filter.'),
 });
 
-const ENTITY_LEVEL = builder.router({
-  summary: {
-    summary: 'Get list',
-    description: `#### 😁 Emojis
+const ENTITY_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get list',
+      description: `#### 😁 Emojis
 Returns a single list. Use the [**/lists/:id/items**](#reference/lists/list-items) method to get the actual items this list contains.
 
 > ### Note
 > _You must use an integer \`id\`, and only public lists will return data._`,
-    path: '',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedProfileQuerySchema
-      .merge(mediaFilterParamsSchema)
-      .merge(ignoreQuerySchema),
-    responses: {
-      200: listResponseSchema,
-    },
-  },
-  items: {
-    movie: {
-      summary: 'Get movie list items',
-      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
-Returns movie items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
-      path: '/items/movie',
+      path: '',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: listItemsQuerySchema,
-      responses: {
-        200: listedMovieResponseSchema.array(),
-      },
-    },
-    show: {
-      summary: 'Get show list items',
-      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
-Returns show items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
-      path: '/items/show',
-      method: 'GET',
-      pathParams: idParamsSchema,
-      query: listItemsQuerySchema,
-      responses: {
-        200: listedShowResponseSchema.array(),
-      },
-    },
-    media: {
-      summary: 'Get media list items',
-      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
-Returns movie and show items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
-      path: '/items/movie,show',
-      method: 'GET',
-      pathParams: idParamsSchema,
-      query: listItemsQuerySchema,
-      responses: {
-        200: listedMediaResponseSchema.array(),
-      },
-    },
-    all: {
-      summary: 'Get all list items',
-      description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
-Returns movie, show, episode, and season items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
-      path: '/items/movie,show,episode,season',
-      method: 'GET',
-      pathParams: idParamsSchema,
-      query: listItemsQuerySchema,
-      responses: {
-        200: listedAllResponseSchema.array(),
-      },
-    },
-    typedSorted: {
-      summary: 'Get items on a list',
-      description:
-        `#### 🔥 VIP Enhanced 📄 Pagination Optional ✨ Extended Info 😁 Emojis
-Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`, or \`episode\`. You can optionally specify the \`type\` parameter with a single value or comma delimited string for multiple item types.`,
-      path: '/items/:type/:sort_by/:sort_how',
-      method: 'GET',
-      pathParams: listItemsPathParamsSchema,
-      query: extendedMediaQuerySchema
+      query: extendedProfileQuerySchema
         .merge(mediaFilterParamsSchema)
-        .merge(ignoreQuerySchema)
-        .merge(pageQuerySchema)
-        .merge(limitlessQuerySchema),
+        .merge(ignoreQuerySchema),
       responses: {
-        200: listedAllResponseSchema.array(),
+        200: listResponseSchema,
       },
     },
-  },
-  comments: {
-    summary: 'Get all list comments',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    items: {
+      movie: {
+        summary: 'Get movie list items',
+        description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+Returns movie items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
+        path: '/items/movie',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        query: listItemsQuerySchema,
+        responses: {
+          200: listedMovieResponseSchema.array(),
+        },
+      },
+      show: {
+        summary: 'Get show list items',
+        description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+Returns show items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
+        path: '/items/show',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        query: listItemsQuerySchema,
+        responses: {
+          200: listedShowResponseSchema.array(),
+        },
+      },
+      media: {
+        summary: 'Get media list items',
+        description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+Returns movie and show items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
+        path: '/items/movie,show',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        query: listItemsQuerySchema,
+        responses: {
+          200: listedMediaResponseSchema.array(),
+        },
+      },
+      all: {
+        summary: 'Get all list items',
+        description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+Returns movie, show, episode, and season items on a public list. Use \`id\` to identify the list and query sorting, filters, and pagination to control the result set.`,
+        path: '/items/movie,show,episode,season',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        query: listItemsQuerySchema,
+        responses: {
+          200: listedAllResponseSchema.array(),
+        },
+      },
+      typedSorted: {
+        summary: 'Get items on a list',
+        description: `#### 🔥 VIP Enhanced 📄 Pagination Optional ✨ Extended Info 😁 Emojis
+Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`, or \`episode\`. You can optionally specify the \`type\` parameter with a single value or comma delimited string for multiple item types.`,
+        path: '/items/:type/:sort_by/:sort_how',
+        method: 'GET',
+        pathParams: listItemsPathParamsSchema,
+        query: extendedMediaQuerySchema
+          .merge(mediaFilterParamsSchema)
+          .merge(ignoreQuerySchema)
+          .merge(pageQuerySchema)
+          .merge(limitlessQuerySchema),
+        responses: {
+          200: listedAllResponseSchema.array(),
+        },
+      },
+    },
+    comments: {
+      summary: 'Get all list comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for a list. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
-    path: '/comments/:sort',
-    method: 'GET',
-    pathParams: listCommentsSortParamsSchema,
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/comments/:sort',
+      method: 'GET',
+      pathParams: listCommentsSortParamsSchema,
+      query: extendedProfileQuerySchema
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
-  },
-  likes: {
-    summary: 'Get all users who liked a list',
-    description: `#### 📄 Pagination
+    likes: {
+      summary: 'Get all users who liked a list',
+      description: `#### 📄 Pagination
 Returns all users who liked a list.`,
-    path: '/likes',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>()
-      .merge(pageQuerySchema),
-    responses: {
-      200: likeResponseSchema.array(),
+      path: '/likes',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedQuerySchemaFactory<['full']>().merge(pageQuerySchema),
+      responses: {
+        200: likeResponseSchema.array(),
+      },
     },
-  },
-  like: {
-    summary: 'Like a list',
-    description: `#### 🔒 OAuth Required
+    like: {
+      summary: 'Like a list',
+      description: `#### 🔒 OAuth Required
 Votes help determine popular lists. Only one like is allowed per list per user.`,
-    path: '/like',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: z.undefined(),
-    responses: {
-      204: z.undefined(),
+      path: '/like',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: z.undefined(),
+      responses: {
+        204: z.undefined(),
+      },
     },
-  },
-  unlike: {
-    summary: 'Remove like on a list',
-    description: `#### 🔒 OAuth Required
+    unlike: {
+      summary: 'Remove like on a list',
+      description: `#### 🔒 OAuth Required
 Remove a like on a list.`,
-    path: '/like',
-    method: 'DELETE',
-    pathParams: idParamsSchema,
-    responses: {
-      204: z.undefined(),
+      path: '/like',
+      method: 'DELETE',
+      pathParams: idParamsSchema,
+      responses: {
+        204: z.undefined(),
+      },
     },
-  },
-  report: {
-    summary: 'Report a list',
-    description: `#### 🔒 OAuth Required
+    report: {
+      summary: 'Report a list',
+      description: `#### 🔒 OAuth Required
 Report a list for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per list.
 
 | reason | description |
@@ -199,19 +198,21 @@ Report a list for moderator review. Send a \`reason\` and optional \`message\` w
 | \`language\` | Not in English |
 | \`spam\` | Spam or self-promotion |
 | \`other\` | Anything else (add details in \`message\`) |`,
-    path: '/report',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: listReportRequestSchema,
-    responses: {
-      201: z.undefined(),
-      400: z.undefined(),
-      409: z.undefined(),
+      path: '/report',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: listReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/:id',
-});
+  {
+    pathPrefix: '/:id',
+  },
+);
 
 const GLOBAL_LEVEL = builder.router({
   trending: {
@@ -263,12 +264,15 @@ Returns popular lists ordered by long-term activity. Use \`type\`, pagination, a
 });
 
 /** ts-rest contract for the `lists` endpoints. */
-export const lists = builder.router({
-  ...GLOBAL_LEVEL,
-  ...ENTITY_LEVEL,
-}, {
-  pathPrefix: '/lists',
-});
+export const lists = builder.router(
+  {
+    ...GLOBAL_LEVEL,
+    ...ENTITY_LEVEL,
+  },
+  {
+    pathPrefix: '/lists',
+  },
+);
 
 export { prominentListResponseSchema };
 

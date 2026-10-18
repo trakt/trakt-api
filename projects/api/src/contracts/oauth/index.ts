@@ -2,15 +2,11 @@ import { authMetadata, builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 import { clientSecretSchema } from './schema/request/clientSecretSchema.ts';
 import { codeRequestSchema } from './schema/request/codeRequestSchema.ts';
-import {
-  deviceTokenRequestSchema,
-} from './schema/request/deviceTokenRequestSchema.ts';
+import { deviceTokenRequestSchema } from './schema/request/deviceTokenRequestSchema.ts';
 import { tokenRefreshSchema } from './schema/request/tokenRefreshSchema.ts';
 import { tokenRequestSchema } from './schema/request/tokenRequestSchema.ts';
 import { codeResponseSchema } from './schema/response/codeResponseSchema.ts';
-import {
-  tokenErrorResponseSchema,
-} from './schema/response/tokenErrorResponseSchema.ts';
+import { tokenErrorResponseSchema } from './schema/response/tokenErrorResponseSchema.ts';
 import { tokenResponseSchema } from './schema/response/tokenResponseSchema.ts';
 
 const authorizeQuerySchema = z.object({
@@ -31,11 +27,11 @@ const revokeRequestSchema = z.object({
 const CLIENT_SECRET_NOTE = `> ### Note
 > _\`client_secret\` is deprecated in favor of [PKCE](https://developer.trakt.tv/docs/pkce). It is optional, and should only be sent from your own server, never from a website, mobile app, or desktop app._`;
 
-const device = builder.router({
-  code: {
-    summary: 'Generate new device codes',
-    description:
-      `Generate new codes to start the device authentication process. The \`device_code\` and \`interval\` will be used later to poll for the \`access_token\`. The \`user_code\` and \`verification_url\` should be presented to the user as mentioned in the flow steps above.
+const device = builder.router(
+  {
+    code: {
+      summary: 'Generate new device codes',
+      description: `Generate new codes to start the device authentication process. The \`device_code\` and \`interval\` will be used later to poll for the \`access_token\`. The \`user_code\` and \`verification_url\` should be presented to the user as mentioned in the flow steps above.
 
 #### QR Code
 
@@ -46,17 +42,16 @@ You might consider generating a QR code for the user to easily scan on their mob
 |---|---|---|
 | \`client_id\` * | string | Get this from your app settings. |
 `,
-    method: 'POST',
-    path: '/code',
-    body: codeRequestSchema,
-    responses: {
-      200: codeResponseSchema,
+      method: 'POST',
+      path: '/code',
+      body: codeRequestSchema,
+      responses: {
+        200: codeResponseSchema,
+      },
     },
-  },
-  token: {
-    summary: 'Poll for the access_token',
-    description:
-      `Use the \`device_code\` and poll at the \`interval\` (in seconds) to check if the user has authorized you app. Use \`expires_in\` to stop polling after that many seconds, and gracefully instruct the user to restart the process. **It is important to poll at the correct interval and also stop polling when expired.**
+    token: {
+      summary: 'Poll for the access_token',
+      description: `Use the \`device_code\` and poll at the \`interval\` (in seconds) to check if the user has authorized you app. Use \`expires_in\` to stop polling after that many seconds, and gracefully instruct the user to restart the process. **It is important to poll at the correct interval and also stop polling when expired.**
 
 When you receive a \`200\` success response, save the \`access_token\` so your app can authenticate the user in methods that require it. The \`access_token\` is valid for **7 days**. Save and use the \`refresh_token\` to get a new \`access_token\` without asking the user to re-authenticate. Check below for all the error codes that you should handle.
 
@@ -78,17 +73,19 @@ This method will send various HTTP status codes that you should handle according
 | \`410\` | Expired - *the tokens have expired, restart the process*
 | \`418\` | Denied - *user explicitly denied this code*
 | \`429\` | Slow Down - *your app is polling too quickly*`,
-    path: '/token',
-    method: 'POST',
-    body: deviceTokenRequestSchema,
-    responses: {
-      200: tokenResponseSchema,
-      400: z.undefined(),
+      path: '/token',
+      method: 'POST',
+      body: deviceTokenRequestSchema,
+      responses: {
+        200: tokenResponseSchema,
+        400: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/device',
-});
+  {
+    pathPrefix: '/device',
+  },
+);
 
 export { codeRequestSchema };
 /** The o auth device code request payload. */
@@ -115,12 +112,11 @@ export { tokenResponseSchema };
 export type OAuthTokenResponse = z.infer<typeof tokenResponseSchema>;
 
 /** ts-rest contract for the `oauth` endpoints. */
-export const oauth = builder
-  .router({
+export const oauth = builder.router(
+  {
     authorize: {
       summary: 'Authorize Application',
-      description:
-        `Construct then redirect to this URL. The Trakt website will request permissions for your app, which the user needs to approve. If the user isn't signed into Trakt, it will ask them to do so.
+      description: `Construct then redirect to this URL. The Trakt website will request permissions for your app, which the user needs to approve. If the user isn't signed into Trakt, it will ask them to do so.
 
 > ### Important
 > _Use the **https://auth.trakt.tv** hostname for all OAuth requests, including authorization, device authentication, token exchange and refresh, and token revocation. Do not use the API hostname for these requests._
@@ -154,8 +150,7 @@ ${CLIENT_SECRET_NOTE}`,
     device,
     token: {
       summary: 'Exchange a token',
-      description:
-        `Exchange an OAuth authorization code or refresh token for an access token.
+      description: `Exchange an OAuth authorization code or refresh token for an access token.
 
 If you started the flow with [PKCE](https://developer.trakt.tv/docs/pkce), send the \`code_verifier\`.
 
@@ -168,10 +163,7 @@ Refresh tokens are single-use. Each successful refresh returns a new \`refresh_t
 If the exchange cannot be completed, this endpoint returns a \`400\` response with an OAuth error and description.`,
       path: '/token',
       method: 'POST',
-      body: z.union([
-        tokenRequestSchema,
-        tokenRefreshSchema,
-      ]),
+      body: z.union([tokenRequestSchema, tokenRefreshSchema]),
       responses: {
         200: tokenResponseSchema,
         400: tokenErrorResponseSchema,
@@ -179,8 +171,7 @@ If the exchange cannot be completed, this endpoint returns a \`400\` response wi
     },
     revoke: {
       summary: 'Revoke an access_token',
-      description:
-        `An \`access_token\` can be revoked when a user signs out of their Trakt account in your app. This is not required, but might improve the user experience so the user doesn't have an unused app connection hanging around.
+      description: `An \`access_token\` can be revoked when a user signs out of their Trakt account in your app. This is not required, but might improve the user experience so the user doesn't have an unused app connection hanging around.
 
 #### JSON POST Data
 | Key | Type | Value |
@@ -196,7 +187,9 @@ ${CLIENT_SECRET_NOTE}`,
         200: z.undefined(),
       },
     },
-  }, {
+  },
+  {
     pathPrefix: '/oauth',
     metadata: authMetadata('none'),
-  });
+  },
+);

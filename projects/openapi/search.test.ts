@@ -20,8 +20,8 @@ const getParameter = (
   operation: OperationObject,
   name: string,
 ): ParameterObject => {
-  const parameter = operation.parameters?.find((candidate) =>
-    !('$ref' in candidate) && candidate.name === name
+  const parameter = operation.parameters?.find(
+    (candidate) => !('$ref' in candidate) && candidate.name === name,
   );
   if (!parameter || '$ref' in parameter) {
     throw new Error(`Missing ${name} parameter`);
@@ -54,8 +54,8 @@ test('search query docs omit the retired engine parameter', () => {
   for (const path of ['/search/{type}', '/search/{type}/exact']) {
     const operation = getOperation(path);
     expect(
-      operation.parameters?.some((parameter) =>
-        !('$ref' in parameter) && parameter.name === 'engine'
+      operation.parameters?.some(
+        (parameter) => !('$ref' in parameter) && parameter.name === 'engine',
       ) ?? false,
     ).toBe(false);
   }

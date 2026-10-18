@@ -17,139 +17,171 @@ const RANGE = (what: string, example: string): string =>
   `${what} range \`min-max\`, either side optional, e.g. \`${example}\`.`;
 
 const smartListItemsQuerySchema = extendedMediaQuerySchema
-  .merge(mediaFilterParamsSchema.omit({
-    start_date: true,
-    end_date: true,
-  }))
+  .merge(
+    mediaFilterParamsSchema.omit({
+      start_date: true,
+      end_date: true,
+    }),
+  )
   .merge(ignoreQuerySchema.omit({ ignore_collected: true }))
   .merge(pageQuerySchema)
   .merge(limitlessQuerySchema)
   .extend({
-    watchnow: z.string().nullish().describe(
-      'Streaming filter. `favorites` for services of the list owner, `any` for any service in the list region, `free` for free streaming, `subscriptions` for subscription services, or a service name such as `netflix`. Prefix a value with `-` to exclude it, e.g. `-netflix`.',
-    ),
-    released_within_days: z.number().int().min(1).max(3650).optional()
+    watchnow: z
+      .string()
+      .nullish()
+      .describe(
+        'Streaming filter. `favorites` for services of the list owner, `any` for any service in the list region, `free` for free streaming, `subscriptions` for subscription services, or a service name such as `netflix`. Prefix a value with `-` to exclude it, e.g. `-netflix`.',
+      ),
+    released_within_days: z
+      .number()
+      .int()
+      .min(1)
+      .max(3650)
+      .optional()
       .describe(
         'Only titles released within the last N days, from 1 to 3650. Movies use the release date, shows the first aired date.',
       ),
-    tmdb_ratings: z.string().optional().describe(
-      RANGE('TMDB rating, 0 to 10,', '7.5-10'),
-    ),
-    metascores: z.string().optional().describe(
-      RANGE('Metascore, 0 to 100,', '70-100'),
-    ),
-    votes: z.string().optional().describe(
-      RANGE('Trakt vote count', '1000-'),
-    ),
-    imdb_votes: z.string().optional().describe(
-      RANGE('IMDb vote count', '5000-'),
-    ),
-    studios: z.string().optional().describe(
-      'Comma-separated production company slugs or names. Prefix with `-` to exclude, e.g. `pixar,-dreamworks-animation`.',
-    ),
-    people: z.string().optional().describe(
-      'Comma-separated person slugs. Prefix with `-` to exclude, e.g. `steven-spielberg`.',
-    ),
-    people_operator: z.enum(['and', 'or']).optional().describe(
-      'Whether titles must include every listed person (`and`) or any of them (`or`). Defaults to `or`.',
-    ),
-    people_role: z.enum(['any', 'cast', 'directing', 'writing', 'producing'])
-      .optional().describe(
-        'Restrict `people` matches to a role. Defaults to `any`.',
+    tmdb_ratings: z
+      .string()
+      .optional()
+      .describe(RANGE('TMDB rating, 0 to 10,', '7.5-10')),
+    metascores: z
+      .string()
+      .optional()
+      .describe(RANGE('Metascore, 0 to 100,', '70-100')),
+    votes: z.string().optional().describe(RANGE('Trakt vote count', '1000-')),
+    imdb_votes: z
+      .string()
+      .optional()
+      .describe(RANGE('IMDb vote count', '5000-')),
+    studios: z
+      .string()
+      .optional()
+      .describe(
+        'Comma-separated production company slugs or names. Prefix with `-` to exclude, e.g. `pixar,-dreamworks-animation`.',
       ),
-    watchnow_country: z.string().optional().describe(
-      'Two-letter region for `watchnow`. Defaults to the list region, then the owner region, then `us`.',
-    ),
+    people: z
+      .string()
+      .optional()
+      .describe(
+        'Comma-separated person slugs. Prefix with `-` to exclude, e.g. `steven-spielberg`.',
+      ),
+    people_operator: z
+      .enum(['and', 'or'])
+      .optional()
+      .describe(
+        'Whether titles must include every listed person (`and`) or any of them (`or`). Defaults to `or`.',
+      ),
+    people_role: z
+      .enum(['any', 'cast', 'directing', 'writing', 'producing'])
+      .optional()
+      .describe('Restrict `people` matches to a role. Defaults to `any`.'),
+    watchnow_country: z
+      .string()
+      .optional()
+      .describe(
+        'Two-letter region for `watchnow`. Defaults to the list region, then the owner region, then `us`.',
+      ),
     parental_nudity: z.string().optional().describe(SEVERITY_RANGE),
     parental_violence: z.string().optional().describe(SEVERITY_RANGE),
     parental_profanity: z.string().optional().describe(SEVERITY_RANGE),
     parental_alcohol: z.string().optional().describe(SEVERITY_RANGE),
     parental_frightening: z.string().optional().describe(SEVERITY_RANGE),
-    parental_include_unrated: z.boolean().optional().describe(
-      'Keep titles without a parental guide when a parental range is set. Defaults to `false`.',
-    ),
+    parental_include_unrated: z
+      .boolean()
+      .optional()
+      .describe(
+        'Keep titles without a parental guide when a parental range is set. Defaults to `false`.',
+      ),
   });
 
 const smartListItemsPathParamsSchema = listParamsSchema.extend({
-  type: z.string().describe(
-    '`all`, `movies` or `shows`. Narrows a list holding both media types.',
-  ),
-  sort_by: z.string().describe(
-    '`rank` (default, the source order), `random`, `title`, `released`, `runtime`, `percentage`, `votes`, `imdb_rating`, `imdb_votes`, `tmdb_rating`, `tmdb_votes`, `rt_tomatometer`, `rt_audience`, `metascore`. Watchlist lists also take `added`. Recommendation lists always use `rank`. Unknown values fall back to `rank`.',
-  ),
-  sort_how: z.string().describe(
-    '`asc` or `desc`. Defaults to `asc` for `rank` and `title`, `desc` otherwise.',
-  ),
+  type: z
+    .string()
+    .describe(
+      '`all`, `movies` or `shows`. Narrows a list holding both media types.',
+    ),
+  sort_by: z
+    .string()
+    .describe(
+      '`rank` (default, the source order), `random`, `title`, `released`, `runtime`, `percentage`, `votes`, `imdb_rating`, `imdb_votes`, `tmdb_rating`, `tmdb_votes`, `rt_tomatometer`, `rt_audience`, `metascore`. Watchlist lists also take `added`. Recommendation lists always use `rank`. Unknown values fall back to `rank`.',
+    ),
+  sort_how: z
+    .string()
+    .describe(
+      '`asc` or `desc`. Defaults to `asc` for `rank` and `title`, `desc` otherwise.',
+    ),
 });
 
-const ITEMS_DESCRIPTION =
-  `Returns the dynamic items a smart list resolves to, worked out when you request them. A list can hold movies, shows, or both. Use query filters and pagination to refine the result set.
+const ITEMS_DESCRIPTION = `Returns the dynamic items a smart list resolves to, worked out when you request them. A list can hold movies, shows, or both. Use query filters and pagination to refine the result set.
 
 Streaming (\`watchnow\`) filters resolve against the list owner, not the caller: the list region, else the owner's region, else \`us\`, and \`favorites\` means the owner's services.
 
 List filters (\`genres\`, \`studios\`, \`people\`, \`watchnow\`, and similar) accept a \`-\` prefix on a value to exclude it. New filters: \`released_within_days\`, \`tmdb_ratings\`, \`metascores\`, \`votes\`, \`imdb_votes\`, \`studios\`, \`people\`, \`people_operator\` and \`people_role\`.`;
 
 /** ts-rest contract for the `smartLists` endpoints. */
-export const smartLists = builder.router({
-  summary: {
-    summary: 'Get smart list',
-    description: `#### 🔓 OAuth Optional 😁 Emojis
+export const smartLists = builder.router(
+  {
+    summary: {
+      summary: 'Get smart list',
+      description: `#### 🔓 OAuth Optional 😁 Emojis
 Returns a single smart list definition by its globally-unique slug. Use the [**/smart-lists/:list_id/items**](#reference/smart-lists) method to get the dynamic items this smart list resolves to.
 
 > ### Note
 > _Only public smart lists return data unless you send OAuth as the owner._`,
-    path: '/:list_id',
-    method: 'GET',
-    pathParams: listParamsSchema,
-    responses: {
-      200: smartListDefinitionResponseSchema,
-      404: z.undefined(),
+      path: '/:list_id',
+      method: 'GET',
+      pathParams: listParamsSchema,
+      responses: {
+        200: smartListDefinitionResponseSchema,
+        404: z.undefined(),
+      },
     },
-  },
-  items: {
-    summary: 'Get smart list items',
-    description:
-      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+    items: {
+      summary: 'Get smart list items',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
 ${ITEMS_DESCRIPTION}`,
-    path: '/:list_id/items',
-    method: 'GET',
-    pathParams: listParamsSchema,
-    query: smartListItemsQuerySchema,
-    responses: {
-      200: smartListItemResponseSchema.array(),
+      path: '/:list_id/items',
+      method: 'GET',
+      pathParams: listParamsSchema,
+      query: smartListItemsQuerySchema,
+      responses: {
+        200: smartListItemResponseSchema.array(),
+      },
     },
-  },
-  templates: {
-    summary: 'Get smart list templates',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info 😁 Emojis
+    templates: {
+      summary: 'Get smart list templates',
+      description: `#### 🔓 OAuth Optional ✨ Extended Info 😁 Emojis
 Returns the official smart list templates in display order. Each template has a stable \`id\`, a \`source\`, a \`media_type\` and the same \`filters\` a saved smart list returns, so a client can create a smart list from it as is.
 
 Templates whose results depend on the viewer have \`personal: true\`, \`total: null\` and no \`items\`. Load their items with \`/smart-lists/preview/items\` while signed in. The other templates return their \`total\` and up to 3 \`items\`. Use \`extended=images\` to include posters.`,
-    path: '/templates',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    responses: {
-      200: smartListTemplateResponseSchema.array(),
+      path: '/templates',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
+      responses: {
+        200: smartListTemplateResponseSchema.array(),
+      },
     },
-  },
-  typedSorted: {
-    summary: 'Get smart list items by type and sort',
-    description:
-      `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
+    typedSorted: {
+      summary: 'Get smart list items by type and sort',
+      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 🎚 Filters 😁 Emojis
 ${ITEMS_DESCRIPTION}
 
 Use \`type\` to narrow a list holding both media types, and \`sort_by\` / \`sort_how\` to reorder it. A sorted list holding both media types is merged into one order across pages.`,
-    path: '/:list_id/items/:type/:sort_by/:sort_how',
-    method: 'GET',
-    pathParams: smartListItemsPathParamsSchema,
-    query: smartListItemsQuerySchema,
-    responses: {
-      200: smartListItemResponseSchema.array(),
+      path: '/:list_id/items/:type/:sort_by/:sort_how',
+      method: 'GET',
+      pathParams: smartListItemsPathParamsSchema,
+      query: smartListItemsQuerySchema,
+      responses: {
+        200: smartListItemResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/smart-lists',
-});
+  {
+    pathPrefix: '/smart-lists',
+  },
+);
 
 /** The smart list template response payload. */
 export type SmartListTemplateResponse = z.infer<

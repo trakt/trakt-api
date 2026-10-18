@@ -2,7 +2,6 @@ import { profileResponseSchema } from '../../../_internal/response/profileRespon
 import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for user profile with notes. */
-export const userProfileWithNotesSchema = profileResponseSchema
-  .extend({
-    notes: z.string(),
-  });
+export const userProfileWithNotesSchema = profileResponseSchema.extend({
+  notes: z.string(),
+});

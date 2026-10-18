@@ -5,10 +5,12 @@ export function safeHeaders(
   headers: ReadonlyArray<ApiHeader>,
 ): ReadonlyArray<ApiHeader> {
   return headers
-    .filter((header) =>
-      header.managed !== true && !header.id.startsWith('managed-') &&
-      !isSensitiveName(header.name) &&
-      !/^(?:basic|bearer)\s+/i.test(header.value.trim())
+    .filter(
+      (header) =>
+        header.managed !== true &&
+        !header.id.startsWith('managed-') &&
+        !isSensitiveName(header.name) &&
+        !/^(?:basic|bearer)\s+/i.test(header.value.trim()),
     )
     .map(({ id, name, value, enabled }) => ({ id, name, value, enabled }));
 }

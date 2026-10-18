@@ -17,25 +17,29 @@ const ratedEpisodesResponseSchema = ratedResponseSchema.extend({
 
 const ratedSeasonResponseSchema = ratedResponseSchema.extend({
   type: z.literal('season'),
-  season: z.object({
-    number: z.number().int(),
-    ids: episodeIdsResponseSchema,
-    aired_episodes: z.number().int().nullish(),
-  }).nullish(),
+  season: z
+    .object({
+      number: z.number().int(),
+      ids: episodeIdsResponseSchema,
+      aired_episodes: z.number().int().nullish(),
+    })
+    .nullish(),
   show: showResponseSchema.nullish(),
 });
 
-const ratedMoviesResponseSchema = ratedResponseSchema
-  .merge(z.object({
+const ratedMoviesResponseSchema = ratedResponseSchema.merge(
+  z.object({
     type: z.literal('movie'),
     movie: movieResponseSchema.nullish(),
-  }));
+  }),
+);
 
-const ratedShowsResponseSchema = ratedResponseSchema
-  .merge(z.object({
+const ratedShowsResponseSchema = ratedResponseSchema.merge(
+  z.object({
     type: z.literal('show'),
     show: showResponseSchema.nullish(),
-  }));
+  }),
+);
 
 /** Zod schema for the rated item response. */
 export const RatedItemResponseSchema = z.union([

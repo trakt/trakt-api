@@ -12,6 +12,5 @@ export const reactedCommentResponseSchema = z.object({
   /***
    * When using extended 'min', only the id is returned
    */
-  comment: commentResponseSchema.partial()
-    .extend({ id: z.number().int() }),
+  comment: commentResponseSchema.partial().extend({ id: z.number().int() }),
 });

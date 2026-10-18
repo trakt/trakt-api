@@ -4,10 +4,12 @@ import { favoriteParamSchema } from '../request/favoritesParamSchema.ts';
 
 /** Zod schema for the favorites remove response. */
 export const favoritesRemoveResponseSchema = z.object({
-  deleted: z.object({
-    movies: z.number().int(),
-    shows: z.number().int(),
-  }).nullish(),
+  deleted: z
+    .object({
+      movies: z.number().int(),
+      shows: z.number().int(),
+    })
+    .nullish(),
   not_found: favoriteParamSchema,
   list: listSummaryResponseSchema,
 });

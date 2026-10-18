@@ -36,7 +36,7 @@ type DeveloperErrorCode = keyof typeof DEVELOPER_ERROR_MESSAGES;
 
 export function developerErrorMessage(code: unknown): string | null {
   return typeof code === 'string' &&
-      Object.hasOwn(DEVELOPER_ERROR_MESSAGES, code)
+    Object.hasOwn(DEVELOPER_ERROR_MESSAGES, code)
     ? DEVELOPER_ERROR_MESSAGES[code as DeveloperErrorCode]
     : null;
 }

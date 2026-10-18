@@ -33,9 +33,10 @@ function sanitizeBody(response: ApiExecutionResponse): string {
   }
 
   if (body.length <= MAX_STORED_BODY_CHARACTERS) return body;
-  return `${
-    body.slice(0, MAX_STORED_BODY_CHARACTERS)
-  }\n… Session history truncated`;
+  return `${body.slice(
+    0,
+    MAX_STORED_BODY_CHARACTERS,
+  )}\n… Session history truncated`;
 }
 
 function sanitizeUrl(value: string): string {

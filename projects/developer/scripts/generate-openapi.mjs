@@ -12,12 +12,10 @@ function run(command, args, cwd) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd, stdio: 'inherit' });
     child.on('error', reject);
-    child.on(
-      'close',
-      (code) =>
-        code === 0 ? resolve() : reject(
-          new Error(`${command} ${args.join(' ')} exited with ${code}`),
-        ),
+    child.on('close', (code) =>
+      code === 0
+        ? resolve()
+        : reject(new Error(`${command} ${args.join(' ')} exited with ${code}`)),
     );
   });
 }

@@ -7,7 +7,7 @@ export function renderSitemap(
       `    <loc>${url}</loc>`,
       ...(lastModified ? [`    <lastmod>${lastModified}</lastmod>`] : []),
       '  </url>',
-    ].join('\n')
+    ].join('\n'),
   );
 
   return [

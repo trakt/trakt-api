@@ -4,9 +4,8 @@ import { userProfileWithNotesSchema } from './userProfileWithNotesSchema.ts';
 
 /** Recommended show response. */
 export const recommendedShowResponse = z.array(
-  showResponseSchema
-    .extend({
-      favorited_by: z.array(userProfileWithNotesSchema).nullable(),
-      recommended_by: z.array(userProfileWithNotesSchema).nullable(),
-    }),
+  showResponseSchema.extend({
+    favorited_by: z.array(userProfileWithNotesSchema).nullable(),
+    recommended_by: z.array(userProfileWithNotesSchema).nullable(),
+  }),
 );

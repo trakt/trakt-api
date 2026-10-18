@@ -26,17 +26,23 @@ export function invalidParameterIds({
   values: Readonly<Record<string, string>>;
   headers: ReadonlyArray<ApiHeader>;
 }): ReadonlyArray<string> {
-  return endpoint.parameters.filter((parameter) => {
-    const value = currentParameterValue({ parameter, values, headers }).trim();
-    if (!value) return false;
+  return endpoint.parameters
+    .filter((parameter) => {
+      const value = currentParameterValue({
+        parameter,
+        values,
+        headers,
+      }).trim();
+      if (!value) return false;
 
-    switch (parameter.type.toLocaleLowerCase()) {
-      case 'boolean':
-        return value !== 'true' && value !== 'false';
-      case 'integer':
-        return !/^[+-]?\d+$/.test(value);
-      default:
-        return false;
-    }
-  }).map(({ id }) => id);
+      switch (parameter.type.toLocaleLowerCase()) {
+        case 'boolean':
+          return value !== 'true' && value !== 'false';
+        case 'integer':
+          return !/^[+-]?\d+$/.test(value);
+        default:
+          return false;
+      }
+    })
+    .map(({ id }) => id);
 }

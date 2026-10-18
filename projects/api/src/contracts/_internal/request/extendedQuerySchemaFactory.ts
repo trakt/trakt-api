@@ -6,10 +6,7 @@ export const extendedQuerySchemaFactory = <T extends string[]>(): z.ZodObject<{
   extended: z.ZodOptional<z.ZodNullable<z.ZodType<CombinationsFrom<T>>>>;
 }> =>
   z.object({
-    extended: z
-      .custom<CombinationsFrom<T>>()
-      .nullish()
-      .openapi({
-        description: 'Extended information to include in the response.',
-      }),
+    extended: z.custom<CombinationsFrom<T>>().nullish().openapi({
+      description: 'Extended information to include in the response.',
+    }),
   });

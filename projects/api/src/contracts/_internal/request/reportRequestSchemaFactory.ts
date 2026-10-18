@@ -3,7 +3,9 @@ import { z } from '../z.ts';
 /** Report request schema factory. */
 export const reportRequestSchemaFactory = <
   const T extends readonly [string, ...string[]],
->(reasons: T) =>
+>(
+  reasons: T,
+) =>
   z.object({
     reason: z.enum(reasons).openapi({
       description: 'Reason this item is being reported for moderator review.',

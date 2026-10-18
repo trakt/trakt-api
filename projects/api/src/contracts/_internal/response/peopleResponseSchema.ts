@@ -9,31 +9,34 @@ const headshotSchema = z.object({
 });
 
 /** Zod schema for the cast response. */
-export const castResponseSchema = z.object({
-  episode_count: z.number().int().nullish(),
-  person: personResponseSchema,
-  /***
-   * Available if requesting extended `images`.
-   */
-  images: headshotSchema.nullish(),
-}).merge(characterResponseSchema);
+export const castResponseSchema = z
+  .object({
+    episode_count: z.number().int().nullish(),
+    person: personResponseSchema,
+    /***
+     * Available if requesting extended `images`.
+     */
+    images: headshotSchema.nullish(),
+  })
+  .merge(characterResponseSchema);
 
 /** Zod schema for the crew response. */
-export const crewResponseSchema = z.object({
-  person: personResponseSchema,
-  episode_count: z.number().int().nullish(),
-  /***
-   * Available if requesting extended `images`.
-   */
-  images: headshotSchema.nullish(),
-}).merge(jobsResponseSchema);
+export const crewResponseSchema = z
+  .object({
+    person: personResponseSchema,
+    episode_count: z.number().int().nullish(),
+    /***
+     * Available if requesting extended `images`.
+     */
+    images: headshotSchema.nullish(),
+  })
+  .merge(jobsResponseSchema);
 
 /** Zod schema for the people response. */
 export const peopleResponseSchema = z.object({
   cast: z.array(castResponseSchema).nullish(),
   guest_stars: z.array(castResponseSchema).nullish(),
-  crew: z.record(
-    crewPositionResponseSchema,
-    z.array(crewResponseSchema),
-  ).nullish(),
+  crew: z
+    .record(crewPositionResponseSchema, z.array(crewResponseSchema))
+    .nullish(),
 });

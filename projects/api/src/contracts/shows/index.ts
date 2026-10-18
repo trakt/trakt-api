@@ -89,10 +89,11 @@ const showUpdatedResponseSchema = z.object({
   show: showResponseSchema,
 });
 
-const EPISODE_LEVEL = builder.router({
-  summary: {
-    summary: 'Get a single episode for a show',
-    description: `#### ✨ Extended Info
+const EPISODE_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get a single episode for a show',
+      description: `#### ✨ Extended Info
 Returns a single episode's details. All date and times are in UTC and were calculated using the episode's \`air_date\` and show's \`country\` and \`air_time\`.
 
 > ### Note
@@ -100,84 +101,83 @@ Returns a single episode's details. All date and times are in UTC and were calcu
 
 > ### Note
 > _When getting \`full\` extended info, the \`episode_type\` field can have a value of \`standard\`, \`series_premiere\` (season 1, episode 1), \`season_premiere\` (episode 1), \`mid_season_finale\`, \`mid_season_premiere\` (the next episode after the mid season finale), \`season_finale\`, or \`series_finale\` (last episode to air for an ended show)._`,
-    path: '',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    pathParams: episodePathParamsSchema,
-    responses: {
-      200: episodeResponseSchema,
+      path: '',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
+      pathParams: episodePathParamsSchema,
+      responses: {
+        200: episodeResponseSchema,
+      },
     },
-  },
-  translations: {
-    summary: 'Get all episode translations',
-    description:
-      'Returns all translations for an episode, including language, country, and translated values for title and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
-    path: '/translations',
-    method: 'GET',
-    pathParams: episodePathParamsSchema,
-    query: translationsLanguageQuerySchema,
-    responses: {
-      200: episodeTranslationResponseSchema,
+    translations: {
+      summary: 'Get all episode translations',
+      description:
+        'Returns all translations for an episode, including language, country, and translated values for title and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
+      path: '/translations',
+      method: 'GET',
+      pathParams: episodePathParamsSchema,
+      query: translationsLanguageQuerySchema,
+      responses: {
+        200: episodeTranslationResponseSchema,
+      },
     },
-  },
-  stats: {
-    summary: 'Get episode stats',
-    description: 'Returns lots of episode stats.',
-    path: '/stats',
-    method: 'GET',
-    pathParams: episodePathParamsSchema,
-    responses: {
-      200: episodeStatsResponseSchema,
+    stats: {
+      summary: 'Get episode stats',
+      description: 'Returns lots of episode stats.',
+      path: '/stats',
+      method: 'GET',
+      pathParams: episodePathParamsSchema,
+      responses: {
+        200: episodeStatsResponseSchema,
+      },
     },
-  },
-  ratings: {
-    summary: 'Get episode ratings',
-    description:
-      `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for an episode.
+    ratings: {
+      summary: 'Get episode ratings',
+      description: `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for an episode.
 
 Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten Tomatoes. External ratings, vote counts, and links can be \`null\` when unavailable.`,
-    path: '/ratings',
-    method: 'GET',
-    query: extendedRatingsQuerySchema,
-    pathParams: episodePathParamsSchema,
-    responses: {
-      200: ratingsResponseSchema,
+      path: '/ratings',
+      method: 'GET',
+      query: extendedRatingsQuerySchema,
+      pathParams: episodePathParamsSchema,
+      responses: {
+        200: ratingsResponseSchema,
+      },
     },
-  },
-  watching: {
-    summary: 'Get users watching right now',
-    description: `#### ✨ Extended Info
+    watching: {
+      summary: 'Get users watching right now',
+      description: `#### ✨ Extended Info
 Returns all users watching this episode right now.`,
-    path: '/watching',
-    method: 'GET',
-    pathParams: episodePathParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>(),
-    responses: {
-      200: profileResponseSchema.array(),
+      path: '/watching',
+      method: 'GET',
+      pathParams: episodePathParamsSchema,
+      query: extendedQuerySchemaFactory<['full']>(),
+      responses: {
+        200: profileResponseSchema.array(),
+      },
     },
-  },
-  comments: {
-    summary: 'Get all episode comments',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    comments: {
+      summary: 'Get all episode comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for an episode. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
-    path: '/comments/:sort',
-    method: 'GET',
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema)
-      .merge(commentsSortParamsSchema),
-    query: commentsPageQuerySchema,
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/comments/:sort',
+      method: 'GET',
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema)
+        .merge(episodeParamsSchema)
+        .merge(commentsSortParamsSchema),
+      query: commentsPageQuerySchema,
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
-  },
-  people: {
-    summary: 'Get all people for an episode',
-    description: `#### ✨ Extended Info
+    people: {
+      summary: 'Get all people for an episode',
+      description: `#### ✨ Extended Info
 Returns all \`cast\` and \`crew\` for an episode. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
 
 The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.
@@ -190,63 +190,63 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
 
 #### Markdown
 If you add \`?extended=markdown\` to the URL, person biographies include links to the movies and shows they mention. Without it the biography is plain text.`,
-    path: '/people',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
-    pathParams: episodePathParamsSchema,
-    responses: {
-      200: peopleResponseSchema,
+      path: '/people',
+      method: 'GET',
+      query:
+        extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
+      pathParams: episodePathParamsSchema,
+      responses: {
+        200: peopleResponseSchema,
+      },
     },
-  },
-  lists: {
-    summary: 'Get lists containing this episode',
-    description: `#### 📄 Pagination 😁 Emojis
+    lists: {
+      summary: 'Get lists containing this episode',
+      description: `#### 📄 Pagination 😁 Emojis
 
 Returns all lists that contain this episode. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
-    path: '/lists/:type/:sort',
-    method: 'GET',
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema),
-    pathParams: idParamsSchema
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema)
-      .merge(listSortSchema)
-      .merge(listTypeSchema),
-    responses: {
-      200: listResponseSchema.array(),
+      path: '/lists/:type/:sort',
+      method: 'GET',
+      query: extendedProfileQuerySchema.merge(pageQuerySchema),
+      pathParams: idParamsSchema
+        .merge(seasonParamsSchema)
+        .merge(episodeParamsSchema)
+        .merge(listSortSchema)
+        .merge(listTypeSchema),
+      responses: {
+        200: listResponseSchema.array(),
+      },
     },
-  },
-  videos: {
-    summary: 'Get all videos',
-    description: `#### ✨ Extended Info
+    videos: {
+      summary: 'Get all videos',
+      description: `#### ✨ Extended Info
 Returns all videos including trailers, teasers, clips, and featurettes.`,
-    path: '/videos',
-    method: 'GET',
-    pathParams: episodePathParamsSchema,
-    responses: {
-      200: videoResponseSchema.array(),
+      path: '/videos',
+      method: 'GET',
+      pathParams: episodePathParamsSchema,
+      responses: {
+        200: videoResponseSchema.array(),
+      },
     },
-  },
-  watchnow: {
-    summary: 'Get episode watch now sources',
-    description: `#### 🫣 Limited Access ✨ Extended Info
+    watchnow: {
+      summary: 'Get episode watch now sources',
+      description: `#### 🫣 Limited Access ✨ Extended Info
 This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
 
 Returns streaming and watch now sources for an episode in the requested country. Use \`links\` to include provider links when available.`,
-    path: '/watchnow/:country',
-    query: linksQuerySchema
-      .merge(extendedWatchNowQuerySchema),
-    method: 'GET',
-    pathParams: idParamsSchema.merge(countryParamsSchema)
-      .merge(seasonParamsSchema)
-      .merge(episodeParamsSchema),
-    responses: {
-      200: watchNowResponseSchema,
+      path: '/watchnow/:country',
+      query: linksQuerySchema.merge(extendedWatchNowQuerySchema),
+      method: 'GET',
+      pathParams: idParamsSchema
+        .merge(countryParamsSchema)
+        .merge(seasonParamsSchema)
+        .merge(episodeParamsSchema),
+      responses: {
+        200: watchNowResponseSchema,
+      },
     },
-  },
-  report: {
-    summary: 'Report an episode',
-    description: `#### 🔒 OAuth Required
+    report: {
+      summary: 'Report an episode',
+      description: `#### 🔒 OAuth Required
 Report an episode for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per episode.
 
 | reason | description |
@@ -261,109 +261,111 @@ Report an episode for moderator review. Send a \`reason\` and optional \`message
 | \`spam\` | Spam or fake episode |
 | \`tmdb\` | Should use TMDB as the datasource |
 | \`other\` | Anything else (add details in \`message\`) |`,
-    path: '/report',
-    method: 'POST',
-    pathParams: episodePathParamsSchema,
-    body: mediaReportRequestSchema,
-    responses: {
-      201: z.undefined(),
-      400: z.undefined(),
-      409: z.undefined(),
+      path: '/report',
+      method: 'POST',
+      pathParams: episodePathParamsSchema,
+      body: mediaReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/seasons/:season/episodes/:episode',
-});
+  {
+    pathPrefix: '/seasons/:season/episodes/:episode',
+  },
+);
 
-const ENTITY_LEVEL = builder.router({
-  summary: {
-    summary: 'Get a single show',
-    description: `#### ✨ Extended Info
+const ENTITY_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get a single show',
+      description: `#### ✨ Extended Info
 Returns a single shows's details. If you request extended info, the \`airs\` object is relative to the show's country. You can use the \`day\`, \`time\`, and \`timezone\` to construct your own date then convert it to whatever timezone your user is in.
 
 > ### Note
 > _When getting \`full\` extended info, the \`status\` field can have a value of \`returning series\` (airing right now),  \`continuing\` (airing right now), \`in production\` (airing soon), \`planned\` (in development), \`upcoming\` (in development),  \`pilot\`, \`canceled\`, or \`ended\`._`,
-    path: '',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: showResponseSchema,
+      path: '',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
+      pathParams: idParamsSchema,
+      responses: {
+        200: showResponseSchema,
+      },
     },
-  },
-  ratings: {
-    summary: 'Get show ratings',
-    description:
-      `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a show.
+    ratings: {
+      summary: 'Get show ratings',
+      description: `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a show.
 
 Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Tomatoes, and MyAnimeList. External ratings, vote counts, and links can be \`null\` when unavailable.`,
-    path: '/ratings',
-    method: 'GET',
-    query: extendedRatingsQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: showRatingsResponseSchema,
+      path: '/ratings',
+      method: 'GET',
+      query: extendedRatingsQuerySchema,
+      pathParams: idParamsSchema,
+      responses: {
+        200: showRatingsResponseSchema,
+      },
     },
-  },
-  stats: {
-    summary: 'Get show stats',
-    description: 'Returns lots of show stats.',
-    path: '/stats',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: showStatsResponseSchema,
+    stats: {
+      summary: 'Get show stats',
+      description: 'Returns lots of show stats.',
+      path: '/stats',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: showStatsResponseSchema,
+      },
     },
-  },
-  aliases: {
-    summary: 'Get all show aliases',
-    description:
-      'Returns all title aliases for a show. Includes localized and alternate titles when available.',
-    path: '/aliases',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: showAliasResponseSchema.array(),
+    aliases: {
+      summary: 'Get all show aliases',
+      description:
+        'Returns all title aliases for a show. Includes localized and alternate titles when available.',
+      path: '/aliases',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: showAliasResponseSchema.array(),
+      },
     },
-  },
-  certifications: {
-    summary: 'Get all show certifications',
-    description:
-      'Returns all content certifications for a show, grouped by country.',
-    path: '/certifications',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: showCertificationResponseSchema,
+    certifications: {
+      summary: 'Get all show certifications',
+      description:
+        'Returns all content certifications for a show, grouped by country.',
+      path: '/certifications',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: showCertificationResponseSchema,
+      },
     },
-  },
-  progress: {
-    collection: {
-      summary: 'Get show collection progress',
-      description: `#### 🔒 OAuth Required
+    progress: {
+      collection: {
+        summary: 'Get show collection progress',
+        description: `#### 🔒 OAuth Required
 Returns collection progress for a show including details on all aired seasons and episodes. The \`next_episode\` will be the next episode the user should collect, if there are no upcoming episodes it will be set to \`null\`.
 
 By default, any hidden seasons will be removed from the response and stats. To include these and adjust the completion stats, set the \`hidden\` flag to \`true\`.
 
 By default, the \`last_episode\` and \`next_episode\` are calculated using the last \`aired\` episode the user has collected, even if they've collected older episodes more recently. To use their last collected episode for these calculations, set the \`last_activity\` flag to \`collected\`.`,
-      path: '/progress/collection',
-      method: 'GET',
-      pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(showQueryParamsSchema)
-        .merge(z.object({
-          last_activity: z.enum(['aired', 'collected']).nullish().openapi({
-            description:
-              'Which episode `last_episode` and `next_episode` are calculated from.',
+        path: '/progress/collection',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        query: extendedMediaQuerySchema.merge(showQueryParamsSchema).merge(
+          z.object({
+            last_activity: z.enum(['aired', 'collected']).nullish().openapi({
+              description:
+                'Which episode `last_episode` and `next_episode` are calculated from.',
+            }),
           }),
-        })),
-      responses: {
-        200: showCollectionProgressResponseSchema,
+        ),
+        responses: {
+          200: showCollectionProgressResponseSchema,
+        },
       },
-    },
-    watched: {
-      summary: 'Get show watched progress',
-      description: `#### 🔒 OAuth Required
+      watched: {
+        summary: 'Get show watched progress',
+        description: `#### 🔒 OAuth Required
 Returns watched progress for a show including details on all aired seasons and episodes. The \`next_episode\` will be the next episode the user should watch, if there are no upcoming episodes it will be set to \`null\`. If not \`null\`, the \`reset_at\` date is when the user started re-watching the show. Your app can adjust the progress by ignoring episodes with a \`last_watched_at\` prior to the \`reset_at\`.
 
 By default, any hidden seasons will be removed from the response and stats. To include these and adjust the completion stats, set the \`hidden\` flag to \`true\`.
@@ -374,157 +376,155 @@ By default, the \`last_episode\` and \`next_episode\` are calculated using the l
 
 > ### Note
 > _Only aired episodes are used to calculate progress. Episodes in the future or without an air date are ignored._`,
-      path: '/progress/watched',
+        path: '/progress/watched',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        query: extendedMediaQuerySchema
+          .merge(showQueryParamsSchema)
+          .merge(statsQuerySchema),
+        responses: {
+          200: showProgressResponseSchema,
+        },
+      },
+      reset: {
+        summary: 'Reset show progress',
+        description:
+          'Reset a show progress. This starts re-watching a show and allows watched progress calculations to ignore previous watches.',
+        path: '/progress/watched/reset',
+        method: 'POST',
+        pathParams: idParamsSchema,
+        body: z.undefined(),
+        responses: {
+          200: z.undefined(),
+        },
+      },
+      undoReset: {
+        summary: 'Undo reset show progress',
+        description:
+          'Undo a show progress reset and restore normal watched progress calculations.',
+        path: '/progress/watched/reset',
+        method: 'DELETE',
+        pathParams: idParamsSchema,
+        responses: {
+          204: z.undefined(),
+        },
+      },
+    },
+    translations: {
+      summary: 'Get all show translations',
+      description:
+        'Returns all translations for a show, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
+      path: '/translations',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(showQueryParamsSchema)
-        .merge(statsQuerySchema),
+      query: translationsLanguageQuerySchema,
       responses: {
-        200: showProgressResponseSchema,
+        200: translationResponseSchema,
       },
     },
-    reset: {
-      summary: 'Reset show progress',
-      description:
-        'Reset a show progress. This starts re-watching a show and allows watched progress calculations to ignore previous watches.',
-      path: '/progress/watched/reset',
-      method: 'POST',
+    related: {
+      summary: 'Get related shows',
+      description: `#### 📄 Pagination ✨ Extended Info
+
+Returns related and similar shows.`,
+      path: '/related',
+      method: 'GET',
       pathParams: idParamsSchema,
-      body: z.undefined(),
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
       responses: {
-        200: z.undefined(),
+        200: showResponseSchema.array(),
       },
     },
-    undoReset: {
-      summary: 'Undo reset show progress',
+    watching: {
+      summary: 'Get users watching right now',
+      description: `#### ✨ Extended Info
+Returns all users watching this show right now.`,
+      path: '/watching',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedQuerySchemaFactory<['full']>(),
+      responses: {
+        200: profileResponseSchema.array(),
+      },
+    },
+    nextEpisode: {
+      summary: 'Get next episode',
       description:
-        'Undo a show progress reset and restore normal watched progress calculations.',
-      path: '/progress/watched/reset',
-      method: 'DELETE',
+        'Returns the next scheduled episode for a show. If no episode is found, a `204` response is returned.',
+      path: '/next_episode',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
       pathParams: idParamsSchema,
       responses: {
+        200: episodeResponseSchema,
         204: z.undefined(),
       },
     },
-  },
-  translations: {
-    summary: 'Get all show translations',
-    description:
-      'Returns all translations for a show, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
-    path: '/translations',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: translationsLanguageQuerySchema,
-    responses: {
-      200: translationResponseSchema,
-    },
-  },
-  related: {
-    summary: 'Get related shows',
-    description: `#### 📄 Pagination ✨ Extended Info
-
-Returns related and similar shows.`,
-    path: '/related',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: showResponseSchema.array(),
-    },
-  },
-  watching: {
-    summary: 'Get users watching right now',
-    description: `#### ✨ Extended Info
-Returns all users watching this show right now.`,
-    path: '/watching',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>(),
-    responses: {
-      200: profileResponseSchema.array(),
-    },
-  },
-  nextEpisode: {
-    summary: 'Get next episode',
-    description:
-      'Returns the next scheduled episode for a show. If no episode is found, a `204` response is returned.',
-    path: '/next_episode',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: episodeResponseSchema,
-      204: z.undefined(),
-    },
-  },
-  lastEpisode: {
-    summary: 'Get last episode',
-    description:
-      'Returns the most recently aired episode for a show. If no episode is found, a `204` response is returned.',
-    path: '/last_episode',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: episodeResponseSchema,
-      204: z.undefined(),
-    },
-  },
-  studios: {
-    summary: 'Get show studios',
-    description: 'Returns all studios for a show.',
-    path: '/studios',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: studioResponseSchema.array(),
-    },
-  },
-  watchnow: {
-    summary: 'Get show watch now sources',
-    description: `#### 🫣 Limited Access ✨ Extended Info
-This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
-
-Returns streaming and watch now sources for a show in the requested country. Use \`links\` to include provider links when available.`,
-    path: '/watchnow/:country',
-    query: linksQuerySchema
-      .merge(extendedWatchNowQuerySchema),
-    method: 'GET',
-    pathParams: idParamsSchema.merge(countryParamsSchema),
-    responses: {
-      200: watchNowResponseSchema,
-    },
-  },
-  justwatch: builder.router({
-    link: {
-      summary: 'Get show JustWatch links',
+    lastEpisode: {
+      summary: 'Get last episode',
       description:
-        '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a show in the requested country. Use the show `id` and two-character `country` path parameter to identify the lookup.',
-      path: '/watchnow/justwatch_links/:country',
+        'Returns the most recently aired episode for a show. If no episode is found, a `204` response is returned.',
+      path: '/last_episode',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
+      pathParams: idParamsSchema,
+      responses: {
+        200: episodeResponseSchema,
+        204: z.undefined(),
+      },
+    },
+    studios: {
+      summary: 'Get show studios',
+      description: 'Returns all studios for a show.',
+      path: '/studios',
       method: 'GET',
       pathParams: idParamsSchema,
       responses: {
-        200: justWatchLinkResponseSchema,
+        200: studioResponseSchema.array(),
       },
     },
-    refresh: {
-      summary: 'Refresh show JustWatch links',
-      description: `#### 🔥 VIP Only 🔒 OAuth Required
-Queue a refresh of a show's JustWatch watch now links.`,
-      path: '/refresh/justwatch',
-      method: 'POST',
-      pathParams: idParamsSchema,
-      body: z.undefined(),
+    watchnow: {
+      summary: 'Get show watch now sources',
+      description: `#### 🫣 Limited Access ✨ Extended Info
+This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
+
+Returns streaming and watch now sources for a show in the requested country. Use \`links\` to include provider links when available.`,
+      path: '/watchnow/:country',
+      query: linksQuerySchema.merge(extendedWatchNowQuerySchema),
+      method: 'GET',
+      pathParams: idParamsSchema.merge(countryParamsSchema),
       responses: {
-        201: z.undefined(),
+        200: watchNowResponseSchema,
       },
     },
-  }),
-  people: {
-    summary: 'Get all people for a show',
-    description: `#### ✨ Extended Info
+    justwatch: builder.router({
+      link: {
+        summary: 'Get show JustWatch links',
+        description:
+          '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a show in the requested country. Use the show `id` and two-character `country` path parameter to identify the lookup.',
+        path: '/watchnow/justwatch_links/:country',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        responses: {
+          200: justWatchLinkResponseSchema,
+        },
+      },
+      refresh: {
+        summary: 'Refresh show JustWatch links',
+        description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a refresh of a show's JustWatch watch now links.`,
+        path: '/refresh/justwatch',
+        method: 'POST',
+        pathParams: idParamsSchema,
+        body: z.undefined(),
+        responses: {
+          201: z.undefined(),
+        },
+      },
+    }),
+    people: {
+      summary: 'Get all people for a show',
+      description: `#### ✨ Extended Info
 Returns all \`cast\` and \`crew\` for a show, including the \`episode_count\` for which they appears. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
 
 The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, \`editing\`, and \`created  by\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.
@@ -537,17 +537,18 @@ If you add \`?extended=guest_stars\` to the URL, it will return all guest stars 
 
 #### Markdown
 If you add \`?extended=markdown\` to the URL, person biographies include links to the movies and shows they mention. Without it the biography is plain text.`,
-    path: '/people',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
-    pathParams: idParamsSchema,
-    responses: {
-      200: peopleResponseSchema,
+      path: '/people',
+      method: 'GET',
+      query:
+        extendedQuerySchemaFactory<['images', 'guest_stars', 'markdown']>(),
+      pathParams: idParamsSchema,
+      responses: {
+        200: peopleResponseSchema,
+      },
     },
-  },
-  seasons: {
-    summary: 'Get all seasons for a show',
-    description: `#### ✨ Extended Info
+    seasons: {
+      summary: 'Get all seasons for a show',
+      description: `#### ✨ Extended Info
 Returns all seasons for a show including the number of episodes in each season.
 
 #### Episodes
@@ -555,30 +556,31 @@ If you add \`?extended=episodes\` to the URL, it will return all episodes for al
 
 > ### Note
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
-    path: '/seasons',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: seasonResponseSchema.array(),
-    },
-  },
-  season: builder.router({
-    info: {
-      summary: 'Get single seasons for a show',
-      description:
-        'Returns a single season for a show including the number of episodes in that season.',
-      path: '/info',
+      path: '/seasons',
       method: 'GET',
       query: extendedMediaQuerySchema,
-      pathParams: seasonPathParamsSchema,
+      pathParams: idParamsSchema,
       responses: {
-        200: seasonResponseSchema,
+        200: seasonResponseSchema.array(),
       },
     },
-    episodes: {
-      summary: 'Get all episodes for a single season',
-      description: `#### ✨ Extended Info
+    season: builder.router(
+      {
+        info: {
+          summary: 'Get single seasons for a show',
+          description:
+            'Returns a single season for a show including the number of episodes in that season.',
+          path: '/info',
+          method: 'GET',
+          query: extendedMediaQuerySchema,
+          pathParams: seasonPathParamsSchema,
+          responses: {
+            200: seasonResponseSchema,
+          },
+        },
+        episodes: {
+          summary: 'Get all episodes for a single season',
+          description: `#### ✨ Extended Info
 Returns all episodes for a specific season of a show.
 
 #### Translations
@@ -586,133 +588,131 @@ If you'd like to included translated episode titles and overviews in the respons
 
 > ### Note
 > _This returns a lot of data, so please only use this extended parameter if you actually need it!_`,
-      path: '',
-      method: 'GET',
-      query: extendedMediaQuerySchema,
-      pathParams: seasonPathParamsSchema,
-      responses: {
-        200: episodeResponseSchema.array(),
-      },
-    },
-    translations: {
-      summary: 'Get all season translations',
-      description:
-        'Returns all translations for a season, including language, country, and translated title and overview values. Use the optional `language` query param to filter to a single language.',
-      path: '/translations',
-      method: 'GET',
-      pathParams: seasonPathParamsSchema,
-      query: translationsLanguageQuerySchema,
-      responses: {
-        200: translationResponseSchema,
-      },
-    },
-    comments: {
-      summary: 'Get all season comments',
-      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+          path: '',
+          method: 'GET',
+          query: extendedMediaQuerySchema,
+          pathParams: seasonPathParamsSchema,
+          responses: {
+            200: episodeResponseSchema.array(),
+          },
+        },
+        translations: {
+          summary: 'Get all season translations',
+          description:
+            'Returns all translations for a season, including language, country, and translated title and overview values. Use the optional `language` query param to filter to a single language.',
+          path: '/translations',
+          method: 'GET',
+          pathParams: seasonPathParamsSchema,
+          query: translationsLanguageQuerySchema,
+          responses: {
+            200: translationResponseSchema,
+          },
+        },
+        comments: {
+          summary: 'Get all season comments',
+          description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for a season. By default, comments are sorted by most \`likes\`.`,
-      path: '/comments/:sort',
-      method: 'GET',
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema)
-        .merge(commentsSortParamsSchema),
-      query: commentsPageQuerySchema,
-      responses: {
-        200: commentResponseSchema.array(),
-      },
-    },
-    lists: {
-      summary: 'Get lists containing this season',
-      description: `#### 📄 Pagination 😁 Emojis
+          path: '/comments/:sort',
+          method: 'GET',
+          pathParams: idParamsSchema
+            .merge(seasonParamsSchema)
+            .merge(commentsSortParamsSchema),
+          query: commentsPageQuerySchema,
+          responses: {
+            200: commentResponseSchema.array(),
+          },
+        },
+        lists: {
+          summary: 'Get lists containing this season',
+          description: `#### 📄 Pagination 😁 Emojis
 
 Returns all lists that contain this season. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
-      path: '/lists/:type/:sort',
-      method: 'GET',
-      query: extendedProfileQuerySchema
-        .merge(pageQuerySchema),
-      pathParams: idParamsSchema
-        .merge(seasonParamsSchema)
-        .merge(listSortSchema)
-        .merge(listTypeSchema),
-      responses: {
-        200: listResponseSchema.array(),
-      },
-    },
-    people: {
-      summary: 'Get all people for a season',
-      description:
-        'Returns all cast and crew for a season. Each cast member will have a characters array and a standard person object. Add `?extended=markdown` to include links to the movies and shows in person biographies; without it the biography is plain text.',
-      path: '/people',
-      method: 'GET',
-      query: extendedQuerySchemaFactory<['images', 'markdown']>(),
-      pathParams: seasonPathParamsSchema,
-      responses: {
-        200: peopleResponseSchema,
-      },
-    },
-    ratings: {
-      summary: 'Get season ratings',
-      description:
-        `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a season.
+          path: '/lists/:type/:sort',
+          method: 'GET',
+          query: extendedProfileQuerySchema.merge(pageQuerySchema),
+          pathParams: idParamsSchema
+            .merge(seasonParamsSchema)
+            .merge(listSortSchema)
+            .merge(listTypeSchema),
+          responses: {
+            200: listResponseSchema.array(),
+          },
+        },
+        people: {
+          summary: 'Get all people for a season',
+          description:
+            'Returns all cast and crew for a season. Each cast member will have a characters array and a standard person object. Add `?extended=markdown` to include links to the movies and shows in person biographies; without it the biography is plain text.',
+          path: '/people',
+          method: 'GET',
+          query: extendedQuerySchemaFactory<['images', 'markdown']>(),
+          pathParams: seasonPathParamsSchema,
+          responses: {
+            200: peopleResponseSchema,
+          },
+        },
+        ratings: {
+          summary: 'Get season ratings',
+          description: `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a season.
 
 Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, and Rotten Tomatoes. External ratings, vote counts, and links can be \`null\` when unavailable.`,
-      path: '/ratings',
-      method: 'GET',
-      query: extendedRatingsQuerySchema,
-      pathParams: seasonPathParamsSchema,
-      responses: {
-        200: ratingsResponseSchema,
-      },
-    },
-    stats: {
-      summary: 'Get season stats',
-      description: 'Returns lots of season stats.',
-      path: '/stats',
-      method: 'GET',
-      pathParams: seasonPathParamsSchema,
-      responses: {
-        200: episodeStatsResponseSchema,
-      },
-    },
-    watching: {
-      summary: 'Get users watching right now',
-      description: `#### ✨ Extended Info
-Returns all users watching this season right now.`,
-      path: '/watching',
-      method: 'GET',
-      pathParams: seasonPathParamsSchema,
-      query: extendedQuerySchemaFactory<['full']>(),
-      responses: {
-        200: profileResponseSchema.array(),
-      },
-    },
-    videos: {
-      summary: 'Get all videos',
-      description: `#### ✨ Extended Info
-Returns all videos including trailers, teasers, clips, and featurettes.`,
-      path: '/videos',
-      method: 'GET',
-      pathParams: seasonPathParamsSchema,
-      responses: {
-        200: videoResponseSchema.array(),
-      },
-    },
-    justwatch: builder.router({
-      link: {
-        summary: 'Get season JustWatch links',
-        description:
-          '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a show season in the requested country. Use `id`, `season`, and the two-character `country` path parameter to identify the lookup.',
-        path: '/watchnow/justwatch_links/:country',
-        method: 'GET',
-        pathParams: idParamsSchema,
-        responses: {
-          200: justWatchLinkResponseSchema,
+          path: '/ratings',
+          method: 'GET',
+          query: extendedRatingsQuerySchema,
+          pathParams: seasonPathParamsSchema,
+          responses: {
+            200: ratingsResponseSchema,
+          },
         },
-      },
-    }),
-    report: {
-      summary: 'Report a season',
-      description: `#### 🔒 OAuth Required
+        stats: {
+          summary: 'Get season stats',
+          description: 'Returns lots of season stats.',
+          path: '/stats',
+          method: 'GET',
+          pathParams: seasonPathParamsSchema,
+          responses: {
+            200: episodeStatsResponseSchema,
+          },
+        },
+        watching: {
+          summary: 'Get users watching right now',
+          description: `#### ✨ Extended Info
+Returns all users watching this season right now.`,
+          path: '/watching',
+          method: 'GET',
+          pathParams: seasonPathParamsSchema,
+          query: extendedQuerySchemaFactory<['full']>(),
+          responses: {
+            200: profileResponseSchema.array(),
+          },
+        },
+        videos: {
+          summary: 'Get all videos',
+          description: `#### ✨ Extended Info
+Returns all videos including trailers, teasers, clips, and featurettes.`,
+          path: '/videos',
+          method: 'GET',
+          pathParams: seasonPathParamsSchema,
+          responses: {
+            200: videoResponseSchema.array(),
+          },
+        },
+        justwatch: builder.router({
+          link: {
+            summary: 'Get season JustWatch links',
+            description:
+              '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a show season in the requested country. Use `id`, `season`, and the two-character `country` path parameter to identify the lookup.',
+            path: '/watchnow/justwatch_links/:country',
+            method: 'GET',
+            pathParams: idParamsSchema,
+            responses: {
+              200: justWatchLinkResponseSchema,
+            },
+          },
+        }),
+        report: {
+          summary: 'Report a season',
+          description: `#### 🔒 OAuth Required
 Report a season for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per season.
 
 | reason | description |
@@ -727,77 +727,75 @@ Report a season for moderator review. Send a \`reason\` and optional \`message\`
 | \`spam\` | Spam or fake season |
 | \`tmdb\` | Should use TMDB as the datasource |
 | \`other\` | Anything else (add details in \`message\`) |`,
-      path: '/report',
-      method: 'POST',
-      pathParams: seasonPathParamsSchema,
-      body: mediaReportRequestSchema,
+          path: '/report',
+          method: 'POST',
+          pathParams: seasonPathParamsSchema,
+          body: mediaReportRequestSchema,
+          responses: {
+            201: z.undefined(),
+            400: z.undefined(),
+            409: z.undefined(),
+          },
+        },
+      },
+      {
+        pathPrefix: '/seasons/:season',
+      },
+    ),
+    videos: {
+      summary: 'Get all videos',
+      description: `#### ✨ Extended Info
+Returns all videos including trailers, teasers, clips, and featurettes.`,
+      path: '/videos',
+      method: 'GET',
+      pathParams: idParamsSchema,
       responses: {
-        201: z.undefined(),
-        400: z.undefined(),
-        409: z.undefined(),
+        200: videoResponseSchema.array(),
       },
     },
-  }, {
-    pathPrefix: '/seasons/:season',
-  }),
-  videos: {
-    summary: 'Get all videos',
-    description: `#### ✨ Extended Info
-Returns all videos including trailers, teasers, clips, and featurettes.`,
-    path: '/videos',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: videoResponseSchema.array(),
-    },
-  },
-  lists: {
-    summary: 'Get lists containing this show',
-    description: `#### 📄 Pagination 😁 Emojis
+    lists: {
+      summary: 'Get lists containing this show',
+      description: `#### 📄 Pagination 😁 Emojis
 
 Returns all lists that contain this show. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
-    path: '/lists/:type/:sort',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['images']>()
-      .merge(pageQuerySchema),
-    pathParams: idParamsSchema
-      .merge(listSortSchema)
-      .merge(listTypeSchema),
-    responses: {
-      200: listResponseSchema.array(),
+      path: '/lists/:type/:sort',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['images']>().merge(pageQuerySchema),
+      pathParams: idParamsSchema.merge(listSortSchema).merge(listTypeSchema),
+      responses: {
+        200: listResponseSchema.array(),
+      },
     },
-  },
-  comments: {
-    summary: 'Get all show comments',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    comments: {
+      summary: 'Get all show comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for a show. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, highest \`watched\` percentage, most \`plays\`, highest \`rating\`, and \`added\` date.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
-    path: '/comments/:sort',
-    method: 'GET',
-    pathParams: idParamsSchema
-      .merge(commentsSortParamsSchema),
-    query: commentsPageQuerySchema,
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/comments/:sort',
+      method: 'GET',
+      pathParams: idParamsSchema.merge(commentsSortParamsSchema),
+      query: commentsPageQuerySchema,
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
-  },
-  sentiments: {
-    summary: 'Get show sentiments',
-    description:
-      'Returns sentiment counts for comments and reactions attached to a show.',
-    path: '/sentiments',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: sentimentsResponseSchema,
+    sentiments: {
+      summary: 'Get show sentiments',
+      description:
+        'Returns sentiment counts for comments and reactions attached to a show.',
+      path: '/sentiments',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: sentimentsResponseSchema,
+      },
     },
-  },
-  report: {
-    summary: 'Report a show',
-    description: `#### 🔒 OAuth Required
+    report: {
+      summary: 'Report a show',
+      description: `#### 🔒 OAuth Required
 Report a show for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per show.
 
 | reason | description |
@@ -812,20 +810,22 @@ Report a show for moderator review. Send a \`reason\` and optional \`message\` w
 | \`spam\` | Spam or fake title |
 | \`tmdb\` | Should use TMDB as the datasource |
 | \`other\` | Anything else (add details in \`message\`) |`,
-    path: '/report',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: mediaReportRequestSchema,
-    responses: {
-      201: z.undefined(),
-      400: z.undefined(),
-      409: z.undefined(),
+      path: '/report',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: mediaReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
     },
+    episode: EPISODE_LEVEL,
   },
-  episode: EPISODE_LEVEL,
-}, {
-  pathPrefix: '/:id',
-});
+  {
+    pathPrefix: '/:id',
+  },
+);
 
 const GLOBAL_LEVEL = builder.router({
   trending: {
@@ -899,8 +899,7 @@ Returns the most collected shows in the specified time \`period\`, defaulting to
     path: '/updates/:start_date',
     method: 'GET',
     pathParams: startDateParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
+    query: extendedMediaQuerySchema.merge(pageQuerySchema),
     responses: {
       200: showUpdatedResponseSchema.array(),
     },
@@ -967,12 +966,15 @@ Returns shows recently available on streaming services for the requested \`perio
 });
 
 /** ts-rest contract for the `shows` endpoints. */
-export const shows = builder.router({
-  ...ENTITY_LEVEL,
-  ...GLOBAL_LEVEL,
-}, {
-  pathPrefix: '/shows',
-});
+export const shows = builder.router(
+  {
+    ...ENTITY_LEVEL,
+    ...GLOBAL_LEVEL,
+  },
+  {
+    pathPrefix: '/shows',
+  },
+);
 
 /** The show id parameters. */
 export type ShowIdParams = z.infer<typeof idParamsSchema>;
@@ -1018,9 +1020,7 @@ export type ShowAnticipatedResponse = z.infer<
 
 export { showHotResponseSchema };
 /** The show hot response payload. */
-export type ShowHotResponse = z.infer<
-  typeof showHotResponseSchema
->;
+export type ShowHotResponse = z.infer<typeof showHotResponseSchema>;
 
 /** The show certification response payload. */
 export type ShowCertificationResponse = z.infer<

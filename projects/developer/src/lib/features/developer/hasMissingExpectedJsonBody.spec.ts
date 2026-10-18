@@ -3,8 +3,8 @@ import { seedCatalog } from '$lib/openapi/seedCatalog.ts';
 import { hasMissingExpectedJsonBody } from './hasMissingExpectedJsonBody.ts';
 
 describe('hasMissingExpectedJsonBody', () => {
-  const endpoint = seedCatalog.endpoints.find(({ requestBody }) =>
-    requestBody?.contentType === 'application/json'
+  const endpoint = seedCatalog.endpoints.find(
+    ({ requestBody }) => requestBody?.contentType === 'application/json',
   );
 
   if (!endpoint) throw new Error('Missing seed endpoint with a JSON body.');
@@ -18,8 +18,8 @@ describe('hasMissingExpectedJsonBody', () => {
   });
 
   it('should ignore endpoints without a JSON request body', () => {
-    const endpointWithoutBody = seedCatalog.endpoints.find(({ requestBody }) =>
-      requestBody === null
+    const endpointWithoutBody = seedCatalog.endpoints.find(
+      ({ requestBody }) => requestBody === null,
     );
     if (!endpointWithoutBody) {
       throw new Error('Missing seed endpoint without a body.');

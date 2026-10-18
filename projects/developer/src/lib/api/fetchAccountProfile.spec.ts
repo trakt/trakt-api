@@ -13,12 +13,14 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe('fetchAccountProfile', () => {
   it('derives vip and avatar from the account settings response', async () => {
-    respondWith(JSON.stringify({
-      user: {
-        vip: true,
-        images: { avatar: { full: 'https://media.trakt.tv/avatar.jpg' } },
-      },
-    }));
+    respondWith(
+      JSON.stringify({
+        user: {
+          vip: true,
+          images: { avatar: { full: 'https://media.trakt.tv/avatar.jpg' } },
+        },
+      }),
+    );
 
     await expect(fetchAccountProfile(1)).resolves.toEqual({
       vip: true,
@@ -45,9 +47,11 @@ describe('fetchAccountProfile', () => {
   });
 
   it('drops an unsafe avatar url the same way avatarUrl does', async () => {
-    respondWith(JSON.stringify({
-      user: { images: { avatar: { full: 'javascript:alert(1)' } } },
-    }));
+    respondWith(
+      JSON.stringify({
+        user: { images: { avatar: { full: 'javascript:alert(1)' } } },
+      }),
+    );
 
     await expect(fetchAccountProfile(1)).resolves.toEqual({
       vip: false,

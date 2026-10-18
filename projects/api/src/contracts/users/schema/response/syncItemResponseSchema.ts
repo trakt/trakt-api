@@ -42,32 +42,34 @@ export const traktItemSchema = z.discriminatedUnion('type', [
 ]);
 
 /** Zod schema for sync item. */
-export const syncItemSchema = z.object({
-  kind: z.enum(['history', 'rating']).openapi({
-    description:
-      'Discriminator. `skipped` mixes `history` and `rating`; `paused` is always `history`.',
-  }),
-  type: z.enum(['movie', 'episode', 'show']).nullable().openapi({
-    description:
-      'Resolved media type, or null when it could not be derived from the available ids.',
-  }),
-  trakt_item: traktItemSchema.nullable().openapi({
-    description:
-      'Resolved trakt object when a tmdb id matches, null otherwise.',
-  }),
-  // younify fields — all nullish, plex items won't carry them.
-  service_id: z.string().nullish(),
-  content_id: z.string().nullish(),
-  profile_id: z.string().nullish(),
-  tmdb_id: z.number().int().nullish(),
-  tmdb_series_id: z.number().int().nullish(),
-  watched_at: z.string().datetime().nullish().openapi({
-    description: 'History timestamp, normalized to `.000Z`.',
-  }),
-  rated_at: z.string().datetime().nullish().openapi({
-    description: 'Rating timestamp, normalized to `.000Z`.',
-  }),
-  progress: float(z.number()).nullish(),
-  rating_type: z.string().nullish(),
-  rating_value: z.number().int().nullish(),
-}).passthrough();
+export const syncItemSchema = z
+  .object({
+    kind: z.enum(['history', 'rating']).openapi({
+      description:
+        'Discriminator. `skipped` mixes `history` and `rating`; `paused` is always `history`.',
+    }),
+    type: z.enum(['movie', 'episode', 'show']).nullable().openapi({
+      description:
+        'Resolved media type, or null when it could not be derived from the available ids.',
+    }),
+    trakt_item: traktItemSchema.nullable().openapi({
+      description:
+        'Resolved trakt object when a tmdb id matches, null otherwise.',
+    }),
+    // younify fields — all nullish, plex items won't carry them.
+    service_id: z.string().nullish(),
+    content_id: z.string().nullish(),
+    profile_id: z.string().nullish(),
+    tmdb_id: z.number().int().nullish(),
+    tmdb_series_id: z.number().int().nullish(),
+    watched_at: z.string().datetime().nullish().openapi({
+      description: 'History timestamp, normalized to `.000Z`.',
+    }),
+    rated_at: z.string().datetime().nullish().openapi({
+      description: 'Rating timestamp, normalized to `.000Z`.',
+    }),
+    progress: float(z.number()).nullish(),
+    rating_type: z.string().nullish(),
+    rating_value: z.number().int().nullish(),
+  })
+  .passthrough();

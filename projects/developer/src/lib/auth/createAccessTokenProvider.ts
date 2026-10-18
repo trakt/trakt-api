@@ -6,7 +6,8 @@ const RETRY_DELAY_MS = 30_000;
 
 function isFresh(user: User | null, now: number): boolean {
   return Boolean(
-    user?.access_token && Number.isFinite(user.expires_at) &&
+    user?.access_token &&
+      Number.isFinite(user.expires_at) &&
       (user.expires_at ?? 0) > now / 1000 + EXPIRY_MARGIN_SECONDS,
   );
 }

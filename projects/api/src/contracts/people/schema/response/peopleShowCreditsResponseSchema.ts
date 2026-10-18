@@ -6,20 +6,28 @@ import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for the people show credits response. */
 export const peopleShowCreditsResponseSchema = z.object({
-  cast: z.array(
-    z.object({
-      show: showResponseSchema,
-      episode_count: z.number().int().nullish(),
-      series_regular: z.boolean(),
-    }).merge(characterResponseSchema),
-  ).nullish(),
-  crew: z.record(
-    crewPositionResponseSchema,
-    z.array(
-      z.object({
-        show: showResponseSchema,
-        episode_count: z.number().int().nullish(),
-      }).merge(jobsResponseSchema),
-    ),
-  ).nullish(),
+  cast: z
+    .array(
+      z
+        .object({
+          show: showResponseSchema,
+          episode_count: z.number().int().nullish(),
+          series_regular: z.boolean(),
+        })
+        .merge(characterResponseSchema),
+    )
+    .nullish(),
+  crew: z
+    .record(
+      crewPositionResponseSchema,
+      z.array(
+        z
+          .object({
+            show: showResponseSchema,
+            episode_count: z.number().int().nullish(),
+          })
+          .merge(jobsResponseSchema),
+      ),
+    )
+    .nullish(),
 });

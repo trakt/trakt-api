@@ -17,20 +17,26 @@ test('@types/YearInReviewPersonaResponse: complete persona response', () => {
       'day-one-devotee': 5,
       'weekend-marathoner': 10,
       'comfort-rewatcher': 15,
-      'omnivore': 20,
+      omnivore: 20,
       'opening-night': 25,
-      'cinephile': 90,
-      'critic': 30,
-      'loyalist': 35,
-      'curator': 40,
-      'wildcard': 45,
+      cinephile: 90,
+      critic: 30,
+      loyalist: 35,
+      curator: 40,
+      wildcard: 45,
       'opening-act': 50,
     },
     streak: { longest: 14, started_at: null },
     monthly: [{ month: 1, persona: 'critic' }],
   };
 
-  expectTypeOf<typeof persona.runner_up>().toEqualTypeOf<YearInReviewPersonaResponse['runner_up']>();
-  expectTypeOf<typeof persona.confidence>().toEqualTypeOf<'strong' | 'leaning'>();
-  expectTypeOf<YearInReviewPersonaResponse['scores']['cinephile']>().toEqualTypeOf<number>();
+  expectTypeOf<typeof persona.runner_up>().toEqualTypeOf<
+    YearInReviewPersonaResponse['runner_up']
+  >();
+  expectTypeOf<typeof persona.confidence>().toEqualTypeOf<
+    'strong' | 'leaning'
+  >();
+  expectTypeOf<
+    YearInReviewPersonaResponse['scores']['cinephile']
+  >().toEqualTypeOf<number>();
 });

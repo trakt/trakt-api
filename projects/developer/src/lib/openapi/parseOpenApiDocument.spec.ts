@@ -72,11 +72,13 @@ describe('parseOpenApiDocument', () => {
       status: '200',
       description: 'Movie information',
       contentType: 'application/json',
-      headers: [{
-        name: 'X-Pagination-Page',
-        description: 'Current page',
-        example: '1',
-      }],
+      headers: [
+        {
+          name: 'X-Pagination-Page',
+          description: 'Current page',
+          example: '1',
+        },
+      ],
       example: '{\n  "title": "TRON: Legacy",\n  "year": 0\n}',
       requiredExample: '{\n  "title": "TRON: Legacy"\n}',
     });
@@ -107,10 +109,7 @@ describe('parseOpenApiDocument', () => {
           },
           '/optional': {
             get: {
-              security: [
-                { traktAPI: [], traktOAuth: [] },
-                { traktAPI: [] },
-              ],
+              security: [{ traktAPI: [], traktOAuth: [] }, { traktAPI: [] }],
               responses: { '200': { description: 'OK' } },
             },
           },

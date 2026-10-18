@@ -19,8 +19,9 @@ function revision() {
   if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA;
 
   try {
-    return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' })
-      .trim();
+    return execFileSync('git', ['rev-parse', 'HEAD'], {
+      encoding: 'utf8',
+    }).trim();
   } catch {
     return 'unknown';
   }
@@ -44,8 +45,9 @@ const sha = revision();
 const chosen = pick(cards, sha);
 const url = `${ORIGIN}/og/${chosen}?v=${sha.slice(0, 12)}`;
 
-const pages = (await readdir(BUILD, { recursive: true }))
-  .filter((name) => name.endsWith('.html'));
+const pages = (await readdir(BUILD, { recursive: true })).filter((name) =>
+  name.endsWith('.html'),
+);
 let replacements = 0;
 
 for (const page of pages) {
@@ -65,7 +67,8 @@ if (replacements === 0) {
 }
 
 console.log(
-  `Share card for this build: ${chosen}?v=${
-    sha.slice(0, 12)
-  } (${replacements} page${replacements === 1 ? '' : 's'})`,
+  `Share card for this build: ${chosen}?v=${sha.slice(
+    0,
+    12,
+  )} (${replacements} page${replacements === 1 ? '' : 's'})`,
 );
