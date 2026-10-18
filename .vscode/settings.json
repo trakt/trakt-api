@@ -1,12 +1,10 @@
 {
   "editor.tabSize": 2,
-  "deno.enable": true,
-  "deno.lint": true,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always"
   },
-  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.defaultFormatter": "biomejs.biome",
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },

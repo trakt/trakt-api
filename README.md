@@ -10,7 +10,7 @@ made just for this purpose. Let us know what you create!
 
 ## Project Structure
 
-This [workspace](https://docs.deno.com/runtime/fundamentals/workspaces/)
+This [workspace](https://bun.com/docs/install/workspaces)
 contains multiple projects:
 
 - **`api`:** Core library that implements Trakt API interactions using `ts-rest`
@@ -65,34 +65,34 @@ prevent abuse from automated scrapers and unauthorized access.
 
 ## Getting Started
 
-This is a Deno project, so you need to have Deno installed on your machine
+This is a Bun project, so you need to have Bun installed on your machine
 please refer to the
-[Deno installation guide](https://docs.deno.com/runtime/getting_started/installation/).
-The `developer` app requires Deno 2.9.4 or later, with dependencies installed
+[Bun installation guide](https://bun.com/docs/installation).
+The `developer` app requires Bun 1.3.14 or later, with dependencies installed
 separately using the task below.
 
 1. **Clone the repository**
-1. **Install dependencies:** `deno task install`
+1. **Install dependencies:** `bun run install:frozen`
 1. **Run tasks:**
 
 - Workspace:
-  - Format & Lint: `deno task format`
+  - Format & Lint: `bun run format`
 
 - Playground:
-  - Development: `deno task playground:dev`
+  - Development: `bun run playground:dev`
 
 - Developer:
-  - Install: `deno task developer:install`
-  - Development: `deno task developer:dev`
-  - Check: `deno task developer:check`
-  - Test: `deno task developer:test`
-  - Build: `deno task developer:build`
+  - Install: `bun run developer:install`
+  - Development: `bun run developer:dev`
+  - Check: `bun run developer:check`
+  - Test: `bun run developer:test`
+  - Build: `bun run developer:build`
   - Set `PUBLIC_TRAKT_CLIENT_ID` in `projects/developer/.env` first, as
     documented in that project's README. No other local application is required.
 
 - OpenAPI:
-  - Serve: `deno task openapi`
-  - Development: `deno task openapi:dev`
+  - Serve: `bun run openapi`
+  - Development: `bun run openapi:dev`
 
 ## Questions & Bugs
 

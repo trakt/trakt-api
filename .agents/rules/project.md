@@ -9,7 +9,7 @@ applyTo: '**'
 
 ## Tech Stack
 
-Deno workspace (monorepo). TypeScript. The publishable artifact is `@trakt/api`
+Bun workspace (monorepo). TypeScript. The publishable artifact is `@trakt/api`
 in `projects/api/` - a fully typed [ts-rest](https://ts-rest.com) contract +
 client for the Trakt API, backed by Zod schemas, published to
 [JSR](https://jsr.io/@trakt/api).
@@ -29,18 +29,19 @@ projects/
     scripts/        # build tooling (build-types.ts)
   openapi/          # generates OpenAPI from the contract (runtime consumer)
   playground/       # local scratch client
-  developer/        # SvelteKit developer portal (own deno.json, not in the workspace)
+  developer/        # SvelteKit developer portal (own package.json, not in the workspace)
 ```
 
 ## Tooling
 
-- `deno task install` - frozen install (matches lockfile; run before CI work).
-- `deno fmt` / `deno lint` - formatting and lint (config in root + api
-  deno.json).
-- `deno task openapi:validate` - validates the generated OpenAPI.
-- `cd projects/api && deno task test` - package tests.
-- Never hand-edit `deno.lock` for build-only deps; `build:types` runs with
-  `--no-lock` so it never dirties it.
+- `bun run install:frozen` - frozen install (matches lockfile; run before CI
+  work).
+- `bun run format` / `bun run format:check` / `bun run lint` - Biome formatting
+  and lint (config in root `biome.json`).
+- `bun run openapi:validate` - validates the generated OpenAPI.
+- `cd projects/api && bun run test` - package tests (`bun test`).
+- `cd projects/api && bun run check` - type check (`tsc`, also covers the
+  `expectTypeOf` type tests, which `bun test` does not check).
 
 ## Restrictions
 
@@ -50,9 +51,9 @@ Hard limits for every contributor, human or agent. Ask before crossing one.
   `build:types`), `projects/developer/static/openapi.json` (built by
   `generate:openapi`), and `.svelte-kit/` are regenerated from source. Change
   the source and rerun the generator.
-- **Never hand-edit `deno.lock`.** Change dependencies through `deno add` /
-  `deno install` so the lockfile stays consistent with `--frozen` installs in
-  CI.
+- **Never hand-edit `bun.lock`.** Change dependencies through `bun add` /
+  `bun install` so the lockfile stays consistent with `--frozen-lockfile`
+  installs in CI.
 - **No new dependencies without asking.** Every dependency of `@trakt/api` ships
   to consumers; every dependency of the portal ships to the browser.
 - **Do not touch the publish flow** (`.github/workflows/publish.yml`, version

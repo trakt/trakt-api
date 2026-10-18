@@ -1,7 +1,7 @@
 # Trakt Developer Portal
 
 A SvelteKit application for reading Trakt API guides, exploring endpoints, and
-trying authenticated requests. It uses Svelte, TypeScript, and SCSS, with Deno
+trying authenticated requests. It uses Svelte, TypeScript, and SCSS, with Bun
 for dependency management and development tasks.
 
 - **Getting Started** presents local Markdown guides in a grouped sidebar with
@@ -14,15 +14,15 @@ for dependency management and development tasks.
 
 ## Run locally
 
-Use Deno 2.9.4, the version used by CI, or later. Run these commands from
+Use Bun 1.3.14, the version used by CI, or later. Run these commands from
 `projects/developer`:
 
 ```sh
-deno install --allow-scripts --frozen
+bun install --frozen-lockfile
 cp .env.example .env
 ```
 
-Install the root workspace too, with `deno task install` from the repository
+Install the root workspace too, with `bun run install:frozen` from the repository
 root. The OpenAPI document is generated from the contract before every `dev` and
 `build`, and generation runs there.
 
@@ -31,7 +31,7 @@ then register `http://localhost:5174/callback` as a redirect URI on that
 application.
 
 ```sh
-deno task dev:local
+bun run dev:local
 ```
 
 Open [localhost:5174](http://localhost:5174). Use the header account menu to
@@ -39,10 +39,10 @@ sign in or switch accounts. API Reference has a separate API server selector.
 The redirect URI must match the registered one exactly, including the hostname
 and port.
 
-This directory is a standalone Deno workspace with its own `deno.lock`.
+This directory is a standalone Bun project with its own `bun.lock`.
 Dependencies are installed here. From the repository root, the equivalent setup
-and development tasks are `deno task developer:install` and
-`deno task developer:dev`.
+and development tasks are `bun run developer:install` and
+`bun run developer:dev`.
 
 ## Configuration
 
@@ -124,8 +124,8 @@ parameter definitions, descriptions, or response schemas in the ts-rest contract
 under `projects/api/src/contracts/`. The app loads the generated document and
 parses it with the utilities in [`src/lib/openapi/`](src/lib/openapi/).
 
-`deno task dev` and `deno task build` regenerate it first, so it tracks the
-contract automatically. Run `deno task generate:openapi` to refresh it on its
+`bun run dev` and `bun run build` regenerate it first, so it tracks the
+contract automatically. Run `bun run generate:openapi` to refresh it on its
 own. Generation runs the root `openapi:generate` task, so the root workspace
 must be installed.
 
@@ -148,7 +148,7 @@ to them. `app.html` is the prerendered shell that actually ships.
 Regenerate the cards after a design change:
 
 ```sh
-deno task generate:share-cards
+bun run generate:share-cards
 ```
 
 It renders each card through headless Chrome, then runs `pngquant` and `oxipng`
@@ -220,20 +220,20 @@ session storage. Review copied requests or responses before sharing them.
 Run from this directory:
 
 ```sh
-deno fmt --check --config deno.json
-deno lint --config deno.json
-deno task format:svelte:check
-deno task check
-deno task test
-deno task build
+bun run format:check
+bun run lint
+bun run format:svelte:check
+bun run check
+bun run test
+bun run build
 ```
 
-`deno fmt` does not read `.svelte` files, so Prettier with
-`prettier-plugin-svelte` formats them instead; run `deno task format:svelte` to
+Biome skips `.svelte` files here, so Prettier with
+`prettier-plugin-svelte` formats them instead; run `bun run format:svelte` to
 apply it. `check` validates TypeScript and Svelte components. `test` runs
 Vitest, including guide coverage, Markdown rendering, request state, account
 handling, and request execution. `build` regenerates the OpenAPI document and
-produces the static site in `build/`. Use `deno task preview` to inspect it
+produces the static site in `build/`. Use `bun run preview` to inspect it
 locally.
 
 The [Developer Verify workflow](../../.github/workflows/developer-verify.yml)

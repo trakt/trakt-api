@@ -1,6 +1,6 @@
 # trakt-api
 
-Deno monorepo: `@trakt/api` (typed ts-rest + Zod contract and client, published
+Bun monorepo: `@trakt/api` (typed ts-rest + Zod contract and client, published
 to JSR) in `projects/api/`, and the SvelteKit developer portal in
 `projects/developer/`.
 
@@ -18,7 +18,7 @@ Key restrictions:
 
 - Never edit generated output (`projects/api/types/`,
   `projects/developer/static/openapi.json`, `.svelte-kit/`) or hand-edit
-  `deno.lock`.
+  `bun.lock`.
 - No new dependencies without asking. Do not touch the publish flow.
 - Conventional Commits, scoped `(api)` or `(developer)`. No em-dashes or
   en-dashes.
