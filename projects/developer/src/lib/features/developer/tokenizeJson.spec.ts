@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { tokenizeJson } from './tokenizeJson.ts';
 
+function numberArray(length: number): string {
+  return `[${Array.from({ length }, () => '1').join(',')}]`;
+}
+
 describe('tokenizeJson', () => {
   it('should preserve JSON while classifying its values', () => {
     const json =
@@ -29,5 +33,19 @@ describe('tokenizeJson', () => {
       { type: 'string', value: '"Say \\"hello\\""' },
       { type: 'plain', value: '}' },
     ]);
+  });
+
+  it('should highlight a body under 10,000 tokens', () => {
+    const json = numberArray(4_999);
+    const tokens = tokenizeJson(json);
+
+    expect(tokens).toHaveLength(9_999);
+    expect(tokens).toContainEqual({ type: 'number', value: '1' });
+  });
+
+  it('should fall back to one plain token holding the full text past 10,000 tokens', () => {
+    const json = numberArray(5_000);
+
+    expect(tokenizeJson(json)).toEqual([{ type: 'plain', value: json }]);
   });
 });
