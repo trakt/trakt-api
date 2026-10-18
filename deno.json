@@ -21,7 +21,11 @@
   },
   "fmt": {
     "singleQuote": true,
-    "indentWidth": 2
+    "indentWidth": 2,
+    "exclude": ["projects/developer"]
+  },
+  "lint": {
+    "exclude": ["projects/developer"]
   },
   "compilerOptions": {
     "noUnusedParameters": true,
