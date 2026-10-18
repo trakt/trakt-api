@@ -1,6 +1,5 @@
 <script lang="ts">
   import { DEFAULT_AVATAR } from "$lib/auth/DEFAULT_AVATAR.ts";
-  import { onMount } from "svelte";
   import { signOutAccount } from "$lib/auth/signOutAccount.ts";
   import { signInAccount } from "$lib/auth/signInAccount.ts";
   import type { AccountMenuProps } from "./AccountMenuProps.ts";
@@ -22,10 +21,15 @@
   let errors = $state<Record<number, string>>({});
   let connectError = $state("");
   let now = $state(Date.now());
-  onMount(() => {
+
+  $effect(() => {
+    if (!isOpen) return;
+
+    now = Date.now();
     const timer = setInterval(() => {
       now = Date.now();
     }, 1_000);
+
     return () => clearInterval(timer);
   });
 
