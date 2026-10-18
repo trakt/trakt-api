@@ -1,8 +1,8 @@
-import { assertType, type IsExact } from '@std/testing/types';
+import { expectTypeOf, test } from 'bun:test';
 
 import type { UserStatsResponse } from './index.ts';
 
-Deno.test('@types/UserStatsResponse: complete stats response', () => {
+test('@types/UserStatsResponse: complete stats response', () => {
   const stats: UserStatsResponse = {
     movies: {
       plays: 1845,
@@ -60,5 +60,5 @@ Deno.test('@types/UserStatsResponse: complete stats response', () => {
     total_plays: 12473,
   };
 
-  assertType<IsExact<typeof stats, UserStatsResponse>>(true);
+  expectTypeOf<typeof stats>().toEqualTypeOf<UserStatsResponse>();
 });

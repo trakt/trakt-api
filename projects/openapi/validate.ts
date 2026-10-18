@@ -11,7 +11,7 @@ async function validate() {
     }
 
     console.error(errors);
-    Deno.exit(1);
+    process.exit(1);
   }
 }
 

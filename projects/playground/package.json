@@ -1,0 +1,14 @@
+{
+  "name": "@trakt/playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch main.ts"
+  },
+  "dependencies": {
+    "@trakt/api": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.14"
+  }
+}

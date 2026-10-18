@@ -5,16 +5,19 @@
   "type": "module",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "dev": "deno task generate:openapi && vite dev",
-    "dev:local": "deno task generate:openapi && vite dev --host localhost --port 5174 --strictPort",
-    "build": "deno task generate:openapi && vite build && deno run -A scripts/set-share-card.mjs",
-    "generate:openapi": "deno run -A scripts/generate-openapi.mjs",
-    "generate:share-cards": "deno run -A scripts/generate-share-cards.mjs",
+    "dev": "bun run generate:openapi && vite dev",
+    "dev:local": "bun run generate:openapi && vite dev --host localhost --port 5174 --strictPort",
+    "build": "bun run generate:openapi && vite build && bun scripts/set-share-card.mjs",
+    "generate:openapi": "bun scripts/generate-openapi.mjs",
+    "generate:share-cards": "bun scripts/generate-share-cards.mjs",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest --run",
     "format:svelte": "prettier --write \"src/**/*.svelte\"",
-    "format:svelte:check": "prettier --check \"src/**/*.svelte\""
+    "format:svelte:check": "prettier --check \"src/**/*.svelte\"",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint ."
   },
   "dependencies": {
     "@sveltejs/kit": "2.70.2",
@@ -24,14 +27,15 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.15",
     "@sveltejs/adapter-static": "3.0.10",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
     "prettier": "3.9.6",
     "prettier-plugin-svelte": "4.1.1",
+    "sass": "1.102.0",
     "svelte-check": "4.7.4",
     "typescript": "5.9.3",
     "vite": "8.2.2",
-    "vitest": "4.1.11",
-    "sass": "1.102.0"
+    "vitest": "4.1.11"
   }
 }

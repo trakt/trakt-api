@@ -223,7 +223,7 @@ const extractReferenceSchemas = (
 
   if (schema.additionalProperties) {
     schema.additionalProperties =
-      typeof schema.additionalProperties != 'boolean'
+      typeof schema.additionalProperties !== 'boolean'
         ? extractReferenceSchemas(schema.additionalProperties, referenceSchemas)
         : schema.additionalProperties;
   }

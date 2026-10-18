@@ -37,7 +37,7 @@ export function parseApplication({
 
   for (const uri of redirect_uri) {
     if (uri === 'urn:ietf:wg:oauth:2.0:oob') continue;
-    let url;
+    let url: URL;
     try {
       url = new URL(uri);
     } catch {
@@ -63,7 +63,7 @@ export function parseApplication({
   }
 
   const canonical = origins.map((origin) => {
-    let url;
+    let url: URL;
     try {
       url = new URL(origin);
     } catch {

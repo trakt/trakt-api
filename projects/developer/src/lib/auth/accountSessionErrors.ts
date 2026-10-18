@@ -7,7 +7,9 @@ export const accountSessionErrors = {
     if (errors.has(slot)) return;
 
     errors.add(slot);
-    listeners.forEach((listener) => listener());
+    listeners.forEach((listener) => {
+      listener();
+    });
   },
   clear(slot: number): void {
     errors.delete(slot);

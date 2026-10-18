@@ -1,8 +1,8 @@
-import { assertType, type IsExact } from '@std/testing/types';
+import { expectTypeOf, test } from 'bun:test';
 
 import type { HistoryAddRequest } from './index.ts';
 
-Deno.test('@types/HistoryAddRequest: movie with id', () => {
+test('@types/HistoryAddRequest: movie with id', () => {
   const movieWithId: HistoryAddRequest = {
     movies: [
       {
@@ -37,10 +37,10 @@ Deno.test('@types/HistoryAddRequest: movie with id', () => {
     ],
   };
 
-  assertType<IsExact<typeof movieWithId, HistoryAddRequest>>(true);
+  expectTypeOf<typeof movieWithId>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: movie should not work with tvdb', () => {
+test('@types/HistoryAddRequest: movie should not work with tvdb', () => {
   const movieWithTvdb = {
     movies: [
       {
@@ -52,10 +52,10 @@ Deno.test('@types/HistoryAddRequest: movie should not work with tvdb', () => {
     ],
   };
 
-  assertType<IsExact<typeof movieWithTvdb, HistoryAddRequest>>(false);
+  expectTypeOf<typeof movieWithTvdb>().not.toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: movie with title and year', () => {
+test('@types/HistoryAddRequest: movie with title and year', () => {
   const movieWithTitleAndYear: HistoryAddRequest = {
     movies: [
       {
@@ -70,10 +70,10 @@ Deno.test('@types/HistoryAddRequest: movie with title and year', () => {
     ],
   };
 
-  assertType<IsExact<typeof movieWithTitleAndYear, HistoryAddRequest>>(true);
+  expectTypeOf<typeof movieWithTitleAndYear>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: movie must be identifiable', () => {
+test('@types/HistoryAddRequest: movie must be identifiable', () => {
   const emptyIds = {
     movies: [
       {
@@ -82,10 +82,10 @@ Deno.test('@types/HistoryAddRequest: movie must be identifiable', () => {
     ],
   };
 
-  assertType<IsExact<typeof emptyIds, HistoryAddRequest>>(false);
+  expectTypeOf<typeof emptyIds>().not.toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: show with id', () => {
+test('@types/HistoryAddRequest: show with id', () => {
   const showWithId: HistoryAddRequest = {
     shows: [
       {
@@ -121,10 +121,10 @@ Deno.test('@types/HistoryAddRequest: show with id', () => {
     ],
   };
 
-  assertType<IsExact<typeof showWithId, HistoryAddRequest>>(true);
+  expectTypeOf<typeof showWithId>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: show with title and year', () => {
+test('@types/HistoryAddRequest: show with title and year', () => {
   const showWithTitleAndYear: HistoryAddRequest = {
     shows: [
       {
@@ -135,10 +135,10 @@ Deno.test('@types/HistoryAddRequest: show with title and year', () => {
     ],
   };
 
-  assertType<IsExact<typeof showWithTitleAndYear, HistoryAddRequest>>(true);
+  expectTypeOf<typeof showWithTitleAndYear>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: show with season', () => {
+test('@types/HistoryAddRequest: show with season', () => {
   const showWithSeason: HistoryAddRequest = {
     shows: [
       {
@@ -156,10 +156,10 @@ Deno.test('@types/HistoryAddRequest: show with season', () => {
     ],
   };
 
-  assertType<IsExact<typeof showWithSeason, HistoryAddRequest>>(true);
+  expectTypeOf<typeof showWithSeason>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: show with episode in season', () => {
+test('@types/HistoryAddRequest: show with episode in season', () => {
   const showWithEpisodeInSeason: HistoryAddRequest = {
     shows: [
       {
@@ -180,10 +180,10 @@ Deno.test('@types/HistoryAddRequest: show with episode in season', () => {
     ],
   };
 
-  assertType<IsExact<typeof showWithEpisodeInSeason, HistoryAddRequest>>(true);
+  expectTypeOf<typeof showWithEpisodeInSeason>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: show must be identifiable', () => {
+test('@types/HistoryAddRequest: show must be identifiable', () => {
   const emptyIds = {
     shows: [
       {
@@ -192,10 +192,10 @@ Deno.test('@types/HistoryAddRequest: show must be identifiable', () => {
     ],
   };
 
-  assertType<IsExact<typeof emptyIds, HistoryAddRequest>>(false);
+  expectTypeOf<typeof emptyIds>().not.toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: season with id', () => {
+test('@types/HistoryAddRequest: season with id', () => {
   const season: HistoryAddRequest = {
     seasons: [
       {
@@ -213,10 +213,10 @@ Deno.test('@types/HistoryAddRequest: season with id', () => {
     ],
   };
 
-  assertType<IsExact<typeof season, HistoryAddRequest>>(true);
+  expectTypeOf<typeof season>().toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: season should not allow tmdb ids', () => {
+test('@types/HistoryAddRequest: season should not allow tmdb ids', () => {
   const seasonWithTmdb = {
     seasons: [
       {
@@ -228,10 +228,10 @@ Deno.test('@types/HistoryAddRequest: season should not allow tmdb ids', () => {
     ],
   };
 
-  assertType<IsExact<typeof seasonWithTmdb, HistoryAddRequest>>(false);
+  expectTypeOf<typeof seasonWithTmdb>().not.toEqualTypeOf<HistoryAddRequest>();
 });
 
-Deno.test('@types/HistoryAddRequest: episode with id', () => {
+test('@types/HistoryAddRequest: episode with id', () => {
   const episode: HistoryAddRequest = {
     episodes: [
       {
@@ -249,5 +249,5 @@ Deno.test('@types/HistoryAddRequest: episode with id', () => {
     ],
   };
 
-  assertType<IsExact<typeof episode, HistoryAddRequest>>(true);
+  expectTypeOf<typeof episode>().toEqualTypeOf<HistoryAddRequest>();
 });

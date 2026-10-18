@@ -1,0 +1,30 @@
+{
+  "name": "trakt-api-workspace",
+  "private": true,
+  "workspaces": [
+    "projects/api",
+    "projects/playground",
+    "projects/openapi"
+  ],
+  "scripts": {
+    "reinstall": "bun install --force",
+    "install:frozen": "bun install --frozen-lockfile",
+    "format": "biome check --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "openapi": "cd projects/openapi && bun run start",
+    "openapi:dev": "cd projects/openapi && bun run dev",
+    "openapi:generate": "cd projects/openapi && bun run generate",
+    "openapi:validate": "cd projects/openapi && bun run validate",
+    "playground:dev": "cd projects/playground && bun run dev",
+    "developer:install": "cd projects/developer && bun install --frozen-lockfile",
+    "developer:dev": "cd projects/developer && bun run dev:local",
+    "developer:check": "cd projects/developer && bun run check",
+    "developer:test": "cd projects/developer && bun run test",
+    "developer:build": "cd projects/developer && bun run build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "typescript": "5.8.3"
+  }
+}

@@ -25,7 +25,7 @@ async function authDevice() {
       'You snooze, you lose, chum.',
       "The code has expired. Maybe next time you'll be a bit quicker on the draw.",
     );
-    Deno.exit(-1);
+    process.exit(-1);
   });
 
   return result;

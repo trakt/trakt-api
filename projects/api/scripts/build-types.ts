@@ -3,39 +3,46 @@
  *
  * The contracts are built on Zod + ts-rest, whose fully-inferred types are
  * "slow types" for JSR (and force every consumer to re-derive them on each
- * type-check). This precomputes explicit declarations once, so `mod.ts` can
- * expose them via `@ts-types` and consumers get fast, static types.
+ * type-check). This precomputes explicit declarations once, so `mod.js` can
+ * expose them via `@ts-self-types` and consumers get fast, static types.
  *
- * Uses dnt to resolve the Deno graph (npm:/jsr:/.ts specifiers) and run tsc
- * for declaration emit, then copies the declarations into `./types` and
- * rewrites relative `.js` import specifiers to `.d.ts` so the types resolve in
- * a declaration-only tree.
+ * Runs tsc for declaration emit, then copies the declarations into `./types`
+ * and rewrites relative `.js`/`.ts` import specifiers to `.d.ts` so the types
+ * resolve in a declaration-only tree.
  */
-import { build, emptyDir } from 'jsr:@deno/dnt@^0.42.1';
-import { dirname, join, relative } from 'jsr:@std/path@^1.0.8';
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  writeFile,
+} from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 
-const root = dirname(import.meta.dirname!);
-const tmp = await Deno.makeTempDir({ prefix: 'trakt-api-dts-' });
+const root = dirname(import.meta.dir);
+const tmp = await mkdtemp(join(tmpdir(), 'trakt-api-dts-'));
 const typesDir = join(root, 'types');
 
-console.log('Emitting declarations via dnt...');
-await build({
-  entryPoints: [join(root, 'src/index.ts')],
-  outDir: tmp,
-  test: false,
-  typeCheck: false,
-  declaration: 'inline',
-  scriptModule: false,
-  esModule: true,
-  skipSourceOutput: true,
-  shims: {},
-  package: { name: '@trakt/api', version: '0.0.0' },
-  compilerOptions: { lib: ['ESNext', 'DOM'] },
-  postBuild() {},
-});
+console.log('Emitting declarations via tsc...');
+const tsc = Bun.spawnSync(
+  [
+    process.execPath,
+    Bun.resolveSync('typescript/bin/tsc', root),
+    '-p',
+    join(root, 'tsconfig.build.json'),
+    '--outDir',
+    tmp,
+  ],
+  { stdout: 'inherit', stderr: 'inherit' },
+);
+if (tsc.exitCode !== 0) {
+  await rm(tmp, { recursive: true, force: true });
+  process.exit(tsc.exitCode);
+}
 
-const esm = join(tmp, 'esm');
-await emptyDir(typesDir);
+await rm(typesDir, { recursive: true, force: true });
 
 // Rewrite relative `.js`/`.ts` specifiers to `.d.ts` (in both `from '...'`
 // and inline `import("...")`), so declarations resolve in a types-only tree.
@@ -45,22 +52,17 @@ const rewrite = (src: string): string =>
     (_m, quote, path) => `${quote}${path}.d.ts${quote}`,
   );
 
-let count = 0;
-async function copyDeclarations(dir: string): Promise<void> {
-  for await (const entry of Deno.readDir(dir)) {
-    const from = join(dir, entry.name);
-    if (entry.isDirectory) {
-      await copyDeclarations(from);
-    } else if (from.endsWith('.d.ts')) {
-      const dest = join(typesDir, relative(esm, from));
-      await Deno.mkdir(dirname(dest), { recursive: true });
-      await Deno.writeTextFile(dest, rewrite(await Deno.readTextFile(from)));
-      count++;
-    }
-  }
-}
-await copyDeclarations(esm);
-await Deno.remove(tmp, { recursive: true });
+const declarations = (await readdir(tmp, { recursive: true })).filter(
+  (path) => path.endsWith('.d.ts'),
+);
+await Promise.all(
+  declarations.map(async (path) => {
+    const dest = join(typesDir, path);
+    await mkdir(dirname(dest), { recursive: true });
+    await writeFile(dest, rewrite(await readFile(join(tmp, path), 'utf8')));
+  }),
+);
+await rm(tmp, { recursive: true });
 
 // `mod.js` uses `@ts-self-types` to point at `types/index.d.ts`, so JSR reads
 // the module doc from there - not from `mod.js`. tsc drops module-level JSDoc
@@ -89,9 +91,6 @@ const moduleDoc = `/**
  */
 `;
 const indexDts = join(typesDir, 'index.d.ts');
-await Deno.writeTextFile(
-  indexDts,
-  moduleDoc + await Deno.readTextFile(indexDts),
-);
+await writeFile(indexDts, moduleDoc + (await readFile(indexDts, 'utf8')));
 
-console.log(`Wrote ${count} declaration files to ./types`);
+console.log(`Wrote ${declarations.length} declaration files to ./types`);
