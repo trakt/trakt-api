@@ -18,7 +18,7 @@ describe('sign in account', () => {
       vi.stubGlobal('sessionStorage', { setItem: vi.fn() });
       const signinRedirect = vi.fn();
       vi.mocked(userManager).mockReturnValue({
-        getUser: async () => existing ? {} : null,
+        getUser: () => Promise.resolve(existing ? {} : null),
         signinRedirect,
       } as unknown as ReturnType<typeof userManager>);
 

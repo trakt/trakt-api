@@ -36,17 +36,17 @@ function setup() {
       values.delete(key);
     },
   };
-  const renew = vi.fn(async (slot: number) => {
+  const renew = vi.fn((slot: number) => {
     const user = session(undefined, `fresh-${slot}`);
     users.set(slot, user);
-    return user;
+    return Promise.resolve(user);
   });
   const clock = { value: NOW };
   const onSessionError = vi.fn();
   const dependencies = {
     onSessionError,
     manager: (slot: number) => ({
-      getUser: async () => users.get(slot) ?? null,
+      getUser: () => Promise.resolve(users.get(slot) ?? null),
       signinSilent: () => renew(slot),
     }),
     lock: <T>(slot: number, operation: () => Promise<T>): Promise<T> => {
@@ -153,8 +153,9 @@ describe('access token provider', () => {
 
   it('does not refresh a session removed while waiting for the lock', async () => {
     const { token, users, renew, dependencies } = setup();
-    const logout = dependencies.lock(0, async () => {
+    const logout = dependencies.lock(0, () => {
       users.delete(0);
+      return Promise.resolve();
     });
     const request = token(0);
     await logout;

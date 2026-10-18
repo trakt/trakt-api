@@ -14,7 +14,7 @@ export async function withAccountLock<T>(
     );
   }
 
-  return globalThis.navigator.locks.request(
+  return await globalThis.navigator.locks.request(
     `trakt-developer-account-${slot}`,
     operation,
   );
