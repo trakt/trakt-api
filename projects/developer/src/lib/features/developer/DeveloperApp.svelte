@@ -88,7 +88,7 @@
     currentTarget: HTMLButtonElement;
   };
 
-  let catalog = $state<OpenApiCatalog>(seedCatalog);
+  let catalog = $state.raw<OpenApiCatalog>(seedCatalog);
   let query = $state("");
   let selectedId = $state(seedCatalog.endpoints.at(0)?.id ?? "");
   let mainServerUrl = $state(DEFAULT_SERVER);
