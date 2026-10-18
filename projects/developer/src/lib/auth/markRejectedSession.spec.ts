@@ -19,7 +19,8 @@ describe('rejected sessions', () => {
         slot: 2,
         accessToken: 'old-token',
         manager: () => ({
-          getUser: async () => currentToken ? user(currentToken) : null,
+          getUser: () =>
+            Promise.resolve(currentToken ? user(currentToken) : null),
         }),
         lock: (_slot, operation) => operation(),
         mark,
@@ -40,7 +41,7 @@ describe('rejected sessions', () => {
     const rejected = markRejectedSession({
       slot: 0,
       accessToken: 'old-token',
-      manager: () => ({ getUser: async () => stored }),
+      manager: () => ({ getUser: () => Promise.resolve(stored) }),
       lock: async (_slot, operation) => {
         await refreshing;
         return operation();

@@ -5,13 +5,15 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe('account lock', () => {
   it('uses a distinct lock name for each account', async () => {
-    const request = vi.fn(async (
+    const request = vi.fn((
       _name: string,
       operation: () => Promise<string>,
     ) => operation());
     vi.stubGlobal('navigator', { locks: { request } });
-    await expect(withAccountLock(0, async () => 'zero')).resolves.toBe('zero');
-    await expect(withAccountLock(1, async () => 'one')).resolves.toBe('one');
+    await expect(withAccountLock(0, () => Promise.resolve('zero'))).resolves
+      .toBe('zero');
+    await expect(withAccountLock(1, () => Promise.resolve('one'))).resolves
+      .toBe('one');
     expect(request.mock.calls.map(([name]) => name)).toEqual([
       'trakt-developer-account-0',
       'trakt-developer-account-1',

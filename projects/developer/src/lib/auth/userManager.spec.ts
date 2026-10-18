@@ -102,7 +102,7 @@ describe('authentication request timeouts', () => {
       const failed = expect(token(0)).rejects.toThrow(
         'sign in again from the account menu',
       );
-      const queued = lock(0, async () => 'released');
+      const queued = lock(0, () => Promise.resolve('released'));
       await vi.advanceTimersByTimeAsync(AUTH_REQUEST_TIMEOUT_SECONDS * 1000);
       await failed;
       await expect(queued).resolves.toBe('released');
