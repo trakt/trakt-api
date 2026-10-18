@@ -3,7 +3,7 @@ type JsonToken = {
   value: string;
 };
 
-const MAX_HIGHLIGHTED_TOKENS = 50_000;
+const MAX_HIGHLIGHTED_TOKENS = 10_000;
 const JSON_TOKEN_PATTERN =
   /("(?:\\[\s\S]|[^"\\])*")(?=\s*:)|("(?:\\[\s\S]|[^"\\])*")|(-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)|\b(true|false)\b|\b(null)\b|((?:[{}\[\],:]|\s+)+)|([\s\S])/g;
 
