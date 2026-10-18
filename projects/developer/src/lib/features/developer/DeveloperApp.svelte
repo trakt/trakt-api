@@ -8,15 +8,13 @@
   import { selectedSlot } from "$lib/auth/selectedSlot.ts";
   import { setPortalSession } from "$lib/auth/setPortalSession.ts";
   import type { Snippet } from "svelte";
-  import { fetchAccountProfile } from "$lib/api/fetchAccountProfile.ts";
   import GuideReader from "./GuideReader.svelte";
   import { guidePath } from "$lib/guides/guidePath.ts";
   import { applyPageMeta } from "$lib/seo/applyPageMeta.ts";
   import { pageMeta } from "$lib/seo/pageMeta.ts";
   import type { ApiHeader } from "$lib/api/ApiHeader.ts";
   import { executeApiRequest } from "$lib/api/executeApiRequest.ts";
-  import { observeAccountChanges } from "$lib/auth/observeAccountChanges.ts";
-  import { listAccounts } from "$lib/auth/listAccounts.ts";
+  import { observeAccountChangesLazily } from "./observeAccountChangesLazily.ts";
   import type { DeveloperAccount } from "$lib/api/DeveloperAccount.ts";
   import type { Endpoint } from "$lib/openapi/Endpoint.ts";
   import { buildEndpointUrl } from "$lib/openapi/buildEndpointUrl.ts";
@@ -133,11 +131,14 @@
     vip = null;
     let current = true;
     if (slot !== null)
-      void fetchAccountProfile(slot).then((profile) => {
-        if (!current || !profile) return;
-        vip = profile.vip;
-        avatar = profile.avatar;
-      });
+      void import("$lib/api/fetchAccountProfile.ts")
+        .then(({ fetchAccountProfile }) => fetchAccountProfile(slot))
+        .catch(() => null)
+        .then((profile) => {
+          if (!current || !profile) return;
+          vip = profile.vip;
+          avatar = profile.avatar;
+        });
     return () => {
       current = false;
     };
@@ -374,7 +375,9 @@
 
   async function refreshAccounts() {
     const generation = sessionGeneration;
-    const nextAccounts = await listAccounts().catch(() => []);
+    const nextAccounts = await import("$lib/auth/listAccounts.ts")
+      .then(({ listAccounts }) => listAccounts())
+      .catch(() => []);
     if (generation !== sessionGeneration) return;
     accountsLoading = false;
     if (!haveSameAccounts(accounts, nextAccounts)) {
@@ -570,7 +573,7 @@
 
     globalThis.addEventListener("keydown", focusSearch);
     globalThis.addEventListener("focus", refreshAccounts);
-    const stopObservingAccounts = observeAccountChanges(() => {
+    const stopObservingAccounts = observeAccountChangesLazily(() => {
       void refreshAccounts();
     });
     void Promise.all([loadCatalog(sharedState), refreshAccounts()]);
