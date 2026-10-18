@@ -19,8 +19,8 @@ not sweep unrelated files to conform; fix what you touch.
 ## Tech Stack
 
 Svelte 5 (runes mode) + SvelteKit 2 + TypeScript, built with `adapter-static`
-and deployed to GitHub Pages. The portal has its own `deno.json` and
-`package.json` and is not part of the root Deno workspace. There is no RxJS,
+and deployed to GitHub Pages. The portal has its own
+`package.json` and `bun.lock` and is not part of the root Bun workspace. There is no RxJS,
 query library, or i18n layer - do not add one without asking.
 
 ## Structure
@@ -130,10 +130,10 @@ Reach for these before writing the idiom again:
 
 ## Formatting
 
-- `.ts`/`.spec.ts` files: `deno fmt` (uses this project's own `deno.json`, not
-  the root workspace).
-- `.svelte` files: prettier, not `deno fmt` (deno fmt doesn't format Svelte) -
-  `deno task format:svelte` or `npx prettier --write "src/**/*.svelte"`.
+- `.ts`/`.spec.ts` files: Biome (`bun run format`, uses this project's own
+  `biome.json`, not the root one).
+- `.svelte` files: prettier, not Biome (this project's Biome config skips
+  Svelte) - `bun run format:svelte`.
   Prettier is only for `.svelte` here; never run it on `.ts`.
 - **Leave a blank line between logical blocks.** Neither formatter inserts blank
   lines for you, and this codebase had drifted toward everything packed together
@@ -154,7 +154,7 @@ Reach for these before writing the idiom again:
 ## Testing
 
 Vitest, tests co-located as `*.spec.ts` next to the source file. Run with
-`deno task test` (from `projects/developer`) or `deno task developer:test` from
+`bun run test` (from `projects/developer`) or `bun run developer:test` from
 the repo root.
 
 - **Test pure helpers and behavior, not implementation.** Every new `.ts` helper
@@ -171,10 +171,10 @@ Before pushing, run what CI runs (`.github/workflows/developer-verify.yml`),
 from `projects/developer`:
 
 ```sh
-deno fmt --check --config deno.json
-deno lint --config deno.json
-deno task format:svelte:check
-deno task check   # svelte-kit sync + svelte-check
-deno task test
-deno task build
+bun run format:check
+bun run lint
+bun run format:svelte:check
+bun run check   # svelte-kit sync + svelte-check
+bun run test
+bun run build
 ```

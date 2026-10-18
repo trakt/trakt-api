@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "denoland.vscode-deno",
+    "biomejs.biome",
     "redhat.vscode-yaml",
     "svelte.svelte-vscode",
     "deepsourcecorp.deepsource-vscode"

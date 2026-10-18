@@ -15,8 +15,8 @@ Source: `.agents/rules/project.md`, `.agents/rules/code-principles.md`.
 
 - Generated output is never edited by hand: `projects/api/types/`,
   `projects/developer/static/openapi.json`, `.svelte-kit/`.
-- `deno.lock` changes only come with a matching dependency change in `deno.json`
-  / `package.json`.
+- `bun.lock` changes only come with a matching dependency change in
+  `package.json`.
 - New dependencies must be called out and justified in the PR description.
 - `.github/workflows/publish.yml`, version fields, and provenance settings are
   not changed unless the PR is about publishing.
@@ -60,7 +60,7 @@ Source: `.agents/rules/jsr.md`, `.agents/rules/schemas.md`.
   `builder` are not "simplified" away.
 - Responses that vary by entity type are one flat `z.object` with nullish
   shape-specific fields, never `z.union`.
-- `deno.json` `version` stays at the `0.0.0` placeholder.
+- `jsr.json` `version` stays at the `0.0.0` placeholder.
 
 ## `projects/developer/**`
 
@@ -89,7 +89,7 @@ Source: `.agents/rules/developer.md`.
 - A blank line between the import block and code, between top-level
   declarations, before functions in a Svelte `<script>`, between top-level CSS
   rules, and between `it()`/`describe()` blocks.
-- `.svelte` files are formatted with prettier; `.ts` files with `deno fmt`.
+- `.svelte` files are formatted with prettier; `.ts` files with Biome.
 - New helpers with logic have specs; bug fixes come with a regression spec.
 
 ## `projects/developer/src/**/*.{svelte,scss,css}`
