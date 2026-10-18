@@ -17,15 +17,17 @@ describe('resolveEndpointServer', () => {
   it('should apply the main server when the endpoint supports it', () => {
     const endpoint = endpointWithServers([PUBLIC_SERVER, PREMIUM_SERVER]);
 
-    expect(resolveEndpointServer({ endpoint, mainServerUrl: PREMIUM_SERVER }))
-      .toBe(PREMIUM_SERVER);
+    expect(
+      resolveEndpointServer({ endpoint, mainServerUrl: PREMIUM_SERVER }),
+    ).toBe(PREMIUM_SERVER);
   });
 
   it('should preserve an endpoint-specific auth server', () => {
     const endpoint = endpointWithServers([AUTH_SERVER]);
 
-    expect(resolveEndpointServer({ endpoint, mainServerUrl: PREMIUM_SERVER }))
-      .toBe(AUTH_SERVER);
+    expect(
+      resolveEndpointServer({ endpoint, mainServerUrl: PREMIUM_SERVER }),
+    ).toBe(AUTH_SERVER);
   });
 
   it('should restore a valid request-level override when the main server is unavailable', () => {
@@ -34,10 +36,12 @@ describe('resolveEndpointServer', () => {
       'https://auth-alt.trakt.tv',
     ]);
 
-    expect(resolveEndpointServer({
-      endpoint,
-      mainServerUrl: PUBLIC_SERVER,
-      requestServerUrl: 'https://auth-alt.trakt.tv',
-    })).toBe('https://auth-alt.trakt.tv');
+    expect(
+      resolveEndpointServer({
+        endpoint,
+        mainServerUrl: PUBLIC_SERVER,
+        requestServerUrl: 'https://auth-alt.trakt.tv',
+      }),
+    ).toBe('https://auth-alt.trakt.tv');
   });
 });

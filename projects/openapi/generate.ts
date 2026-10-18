@@ -17,7 +17,8 @@ function getAuthRequirement(
   if (metadata && typeof metadata === 'object' && 'auth' in metadata) {
     const auth = (metadata as Record<string, unknown>).auth;
     if (
-      typeof auth === 'string' && authRequirements.has(auth as AuthRequirement)
+      typeof auth === 'string' &&
+      authRequirements.has(auth as AuthRequirement)
     ) {
       return auth as AuthRequirement;
     }
@@ -106,10 +107,7 @@ export function generate(): ReturnType<typeof generateOpenApi> {
     },
     {
       operationMapper: (operation, route, id) => {
-        const parts = [
-          ...(operation.tags ?? []),
-          id,
-        ];
+        const parts = [...(operation.tags ?? []), id];
 
         const auth = getAuthRequirement(route.metadata, operation.tags ?? []);
         const isAuthEndpoint = operation.tags?.includes('oauth') ?? false;
@@ -118,11 +116,9 @@ export function generate(): ReturnType<typeof generateOpenApi> {
           ...operation,
           security: getSecurityFromAuth(auth),
           ...(isAuthEndpoint ? { servers: authServers } : {}),
-          operationId: `${route.method.toLowerCase()}${
-            parts
-              .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-              .join('')
-          }`,
+          operationId: `${route.method.toLowerCase()}${parts
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join('')}`,
         };
       },
     },

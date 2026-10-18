@@ -40,11 +40,13 @@ export function decodeRequestUrlState(
   );
 
   const headerIndexes = [
-    ...new Set([...parameters.keys()].flatMap((key) => {
-      const match = /^header\.(\d+)\./.exec(key);
-      const index = Number(match?.at(1));
-      return Number.isInteger(index) ? [index] : [];
-    })),
+    ...new Set(
+      [...parameters.keys()].flatMap((key) => {
+        const match = /^header\.(\d+)\./.exec(key);
+        const index = Number(match?.at(1));
+        return Number.isInteger(index) ? [index] : [];
+      }),
+    ),
   ].sort((left, right) => left - right);
   const headers = headerIndexes.flatMap((index): Array<ApiHeader> => {
     const id = parameters.get(`${HEADER_PREFIX}${index}.id`);

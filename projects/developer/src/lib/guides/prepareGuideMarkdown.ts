@@ -17,9 +17,10 @@ export function prepareGuideMarkdown({
     .replace(
       /\]\((?:https:\/\/docs\.trakt\.tv)?\/docs\/([\w-]+)(?:\.md)?\)/g,
       (_, originalSlug: string) => {
-        const slug = originalSlug === 'caching-and-fresh-metadata'
-          ? 'caching-and-fresh-data'
-          : originalSlug;
+        const slug =
+          originalSlug === 'caching-and-fresh-metadata'
+            ? 'caching-and-fresh-data'
+            : originalSlug;
         return slugs.has(slug)
           ? `](${guidePath(slug)})`
           : `](https://docs.trakt.tv/docs/${originalSlug})`;

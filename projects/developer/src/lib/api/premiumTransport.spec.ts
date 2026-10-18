@@ -7,10 +7,9 @@ import { startPremiumCheckout } from './startPremiumCheckout.ts';
 import { updatePaymentMethodUrl } from './updatePaymentMethodUrl.ts';
 
 vi.mock('$lib/auth/accessToken.ts', () => ({ accessToken: vi.fn() }));
-vi.mock(
-  '$env/static/public',
-  () => ({ PUBLIC_TRAKT_CLIENT_ID: 'test-client' }),
-);
+vi.mock('$env/static/public', () => ({
+  PUBLIC_TRAKT_CLIENT_ID: 'test-client',
+}));
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -41,8 +40,9 @@ describe('premium transport', () => {
       Response.json({ checkout_url: 'https://checkout.stripe.com/c/pay/cs_1' }),
     );
 
-    await expect(startPremiumCheckout({ slot: 1, ...returnUrls })).resolves
-      .toBe('https://checkout.stripe.com/c/pay/cs_1');
+    await expect(
+      startPremiumCheckout({ slot: 1, ...returnUrls }),
+    ).resolves.toBe('https://checkout.stripe.com/c/pay/cs_1');
 
     const { url, init } = requestOf(fetcher);
     expect(url.origin + url.pathname).toBe(
@@ -57,15 +57,17 @@ describe('premium transport', () => {
   it('refuses a checkout URL that is not on stripe.com', async () => {
     stubFetch(Response.json({ checkout_url: 'https://example.com/pay' }));
 
-    await expect(startPremiumCheckout({ slot: 1, ...returnUrls })).rejects
-      .toThrow('Checkout could not be started');
+    await expect(
+      startPremiumCheckout({ slot: 1, ...returnUrls }),
+    ).rejects.toThrow('Checkout could not be started');
   });
 
   it('confirms a session by id with no body', async () => {
     const fetcher = stubFetch(new Response(null, { status: 204 }));
 
-    await expect(confirmPremiumCheckout({ slot: 2, sessionId: 'cs_1' }))
-      .resolves.toBeUndefined();
+    await expect(
+      confirmPremiumCheckout({ slot: 2, sessionId: 'cs_1' }),
+    ).resolves.toBeUndefined();
 
     const { url, init } = requestOf(fetcher);
     expect(url.pathname).toBe('/developer/stripe/confirm');
@@ -88,8 +90,9 @@ describe('premium transport', () => {
       Response.json({ checkout_url: 'https://checkout.stripe.com/c/pay/cs_2' }),
     );
 
-    await expect(updatePaymentMethodUrl({ slot: 1, ...returnUrls })).resolves
-      .toBe('https://checkout.stripe.com/c/pay/cs_2');
+    await expect(
+      updatePaymentMethodUrl({ slot: 1, ...returnUrls }),
+    ).resolves.toBe('https://checkout.stripe.com/c/pay/cs_2');
 
     const { url } = requestOf(fetcher);
     expect(url.pathname).toBe('/developer/stripe/update');

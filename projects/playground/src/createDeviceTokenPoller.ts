@@ -28,51 +28,48 @@ export function createDeviceTokenPoller(api: TraktApi) {
       `${codeResponse.body.verification_url}/${codeResponse.body.user_code}`,
     );
 
-    return new Promise(
-      (resolve, reject) => {
-        const codeExpiresAt = Date.now() +
-          codeResponse.body.expires_in * 1000;
+    return new Promise((resolve, reject) => {
+      const codeExpiresAt = Date.now() + codeResponse.body.expires_in * 1000;
 
-        const tokenInterval = setInterval(async () => {
-          if (Date.now() > codeExpiresAt) {
-            clearInterval(tokenInterval);
-            const error = new Error([
+      const tokenInterval = setInterval(async () => {
+        if (Date.now() > codeExpiresAt) {
+          clearInterval(tokenInterval);
+          const error = new Error(
+            [
               'The code, a delicate snowflake, melted under the harsh glare of scrutiny',
               ', its potential extinguished before it could blossom into a token of authentication.',
-            ].join(''));
+            ].join(''),
+          );
 
-            reject(error);
-          }
+          reject(error);
+        }
 
-          const tokenResponse = await api.oauth.device
-            .token({
-              body: {
-                code: codeResponse.body.device_code,
-                client_id,
-                client_secret,
-              },
-            })
-            .catch(() => {
-              // Trakt API does not return a correct body for 400 responses
-              // throws error when trying to parse JSON
-              return Promise.resolve(
-                { status: 400, body: undefined } as {
-                  status: 400;
-                  body: undefined;
-                },
-              );
+        const tokenResponse = await api.oauth.device
+          .token({
+            body: {
+              code: codeResponse.body.device_code,
+              client_id,
+              client_secret,
+            },
+          })
+          .catch(() => {
+            // Trakt API does not return a correct body for 400 responses
+            // throws error when trying to parse JSON
+            return Promise.resolve({ status: 400, body: undefined } as {
+              status: 400;
+              body: undefined;
             });
+          });
 
-          if (tokenResponse.status === 200) {
-            logger.statement(
-              'The digital gods have spoken!',
-              'A code has been issued!',
-            );
-            resolve(tokenResponse.body);
-            clearInterval(tokenInterval);
-          }
-        }, codeResponse.body.interval * 1000);
-      },
-    );
+        if (tokenResponse.status === 200) {
+          logger.statement(
+            'The digital gods have spoken!',
+            'A code has been issued!',
+          );
+          resolve(tokenResponse.body);
+          clearInterval(tokenInterval);
+        }
+      }, codeResponse.body.interval * 1000);
+    });
   };
 }

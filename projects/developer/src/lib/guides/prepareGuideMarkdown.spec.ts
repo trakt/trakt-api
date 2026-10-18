@@ -12,13 +12,16 @@ const slugs = new Set(Object.keys(files).map((path) => path.slice(2, -3)));
 
 describe('guide snapshots', () => {
   it('resolves known ReadMe operations locally and preserves other links', () => {
-    const source = '[Token](https://docs.trakt.tv/reference/postoauthtoken) ' +
+    const source =
+      '[Token](https://docs.trakt.tv/reference/postoauthtoken) ' +
       '[Search](/reference/getsearchquery) [Auth](https://docs.trakt.tv/reference/auth)';
-    const html = renderMarkdown(prepareGuideMarkdown({
-      source,
-      slugs,
-      operationIds: ['postOauthToken', 'getSearchQuery'],
-    }));
+    const html = renderMarkdown(
+      prepareGuideMarkdown({
+        source,
+        slugs,
+        operationIds: ['postOauthToken', 'getSearchQuery'],
+      }),
+    );
 
     expect(html).toContain(
       'href="/?section=reference&amp;operation=postOauthToken"',
@@ -35,15 +38,13 @@ describe('guide snapshots', () => {
     expect(groups[0].items[0].slug).toBe('getting-started');
     expect(
       groups.flatMap((group) => group.items.map((item) => item.slug)).sort(),
-    )
-      .toEqual([...slugs].filter((slug) => slug !== 'contents').sort());
+    ).toEqual([...slugs].filter((slug) => slug !== 'contents').sort());
   });
 
   it('lists every downloaded guide exactly once with a working local link', () => {
     const links = [
       ...files['./contents.md'].matchAll(/\]\(\/docs\/([\w-]+)\)/g),
-    ]
-      .map((match) => match[1]);
+    ].map((match) => match[1]);
 
     expect(links.sort()).toEqual(
       [...slugs].filter((slug) => slug !== 'contents').sort(),
@@ -65,9 +66,7 @@ describe('guide snapshots', () => {
     );
     expect(table).toContain('<table>');
     expect(table).toContain('<code>metadata</code>');
-    expect(table).toContain(
-      'href="/docs/caching-and-fresh-data"',
-    );
+    expect(table).toContain('href="/docs/caching-and-fresh-data"');
 
     const app = renderMarkdown(
       prepareGuideMarkdown({ source: files['./create-an-app.md'], slugs }),

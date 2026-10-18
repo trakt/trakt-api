@@ -3,15 +3,21 @@ import { avatarUrl } from '$lib/auth/avatarUrl.ts';
 import { accountRequest } from './accountRequest.ts';
 
 const accountSettingsSchema = z.object({
-  user: z.object({
-    vip: z.boolean().nullish(),
-    vip_ep: z.boolean().nullish(),
-    images: z.object({
-      avatar: z.object({
-        full: z.string().nullish(),
-      }).nullish(),
-    }).nullish(),
-  }).nullish(),
+  user: z
+    .object({
+      vip: z.boolean().nullish(),
+      vip_ep: z.boolean().nullish(),
+      images: z
+        .object({
+          avatar: z
+            .object({
+              full: z.string().nullish(),
+            })
+            .nullish(),
+        })
+        .nullish(),
+    })
+    .nullish(),
 });
 
 export async function fetchAccountProfile(

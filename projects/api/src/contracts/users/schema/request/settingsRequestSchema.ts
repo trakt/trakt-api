@@ -12,20 +12,26 @@ const userSettingsSettingsSchema = z.object({
 });
 
 const browsingSettingsSchema = z.object({
-  genres: z.object({
-    favorites: z.array(genreEnumSchema).nullish(),
-    disliked: z.array(genreEnumSchema).nullish(),
-  }).nullish(),
-  spoilers: z.object({
-    episodes: spoilerEnumSchema.nullish(),
-    shows: spoilerEnumSchema.nullish(),
-    movies: spoilerEnumSchema.nullish(),
-  }).nullish(),
-  watchnow: z.object({
-    country: z.string().nullish(),
-    favorites: z.array(z.string()).nullish(),
-    only_favorites: z.boolean().nullish(),
-  }).nullish(),
+  genres: z
+    .object({
+      favorites: z.array(genreEnumSchema).nullish(),
+      disliked: z.array(genreEnumSchema).nullish(),
+    })
+    .nullish(),
+  spoilers: z
+    .object({
+      episodes: spoilerEnumSchema.nullish(),
+      shows: spoilerEnumSchema.nullish(),
+      movies: spoilerEnumSchema.nullish(),
+    })
+    .nullish(),
+  watchnow: z
+    .object({
+      country: z.string().nullish(),
+      favorites: z.array(z.string()).nullish(),
+      only_favorites: z.boolean().nullish(),
+    })
+    .nullish(),
   dark_knight: z.enum(['true', 'false', 'auto']).nullish(),
   watch_only_once: z.boolean().nullish(),
   show_rating_prompt: z.boolean().nullish(),

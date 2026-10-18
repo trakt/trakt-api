@@ -4,21 +4,24 @@ import type { z } from '../_internal/z.ts';
 import { teamMemberResponseSchema } from './schema/response/teamMemberResponseSchema.ts';
 
 /** ts-rest contract for the `team` endpoints. */
-export const team = builder.router({
-  members: {
-    summary: 'Get team members',
-    description: `#### ✨ Extended Info
+export const team = builder.router(
+  {
+    members: {
+      summary: 'Get team members',
+      description: `#### ✨ Extended Info
 Returns Trakt team members. Use \`extended\` to include additional person details and images when available.`,
-    path: '/',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
-    responses: {
-      200: teamMemberResponseSchema.array(),
+      path: '/',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['full', 'images']>(),
+      responses: {
+        200: teamMemberResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/team',
-});
+  {
+    pathPrefix: '/team',
+  },
+);
 
 export { teamMemberResponseSchema };
 /** The team member response payload. */

@@ -4,14 +4,18 @@ import { favoriteParamSchema } from '../request/favoritesParamSchema.ts';
 
 /** Zod schema for the favorites response. */
 export const favoritesResponseSchema = z.object({
-  added: z.object({
-    movies: z.number().int(),
-    shows: z.number().int(),
-  }).nullish(),
-  existing: z.object({
-    movies: z.number().int(),
-    shows: z.number().int(),
-  }).nullish(),
+  added: z
+    .object({
+      movies: z.number().int(),
+      shows: z.number().int(),
+    })
+    .nullish(),
+  existing: z
+    .object({
+      movies: z.number().int(),
+      shows: z.number().int(),
+    })
+    .nullish(),
   not_found: favoriteParamSchema,
   list: listSummaryResponseSchema,
 });

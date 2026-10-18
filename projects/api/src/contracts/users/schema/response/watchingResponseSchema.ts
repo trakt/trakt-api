@@ -9,18 +9,20 @@ const commonWatchingResponseSchema = z.object({
   action: asString(z.enum(['checkin', 'scrobble'])),
 });
 
-const movieWatchingResponseSchema = commonWatchingResponseSchema
-  .merge(z.object({
+const movieWatchingResponseSchema = commonWatchingResponseSchema.merge(
+  z.object({
     type: z.literal('movie'),
     movie: movieResponseSchema.nullish(),
-  }));
+  }),
+);
 
-const episodeWatchingResponseSchema = commonWatchingResponseSchema
-  .merge(z.object({
+const episodeWatchingResponseSchema = commonWatchingResponseSchema.merge(
+  z.object({
     type: z.literal('episode'),
     episode: episodeResponseSchema.nullish(),
     show: showResponseSchema.nullish(),
-  }));
+  }),
+);
 
 /** Zod schema for the watching response. */
 export const watchingResponseSchema = z.union([

@@ -40,12 +40,9 @@ export async function accountRequest({
   if (!response.ok) {
     const localized = developerErrorMessage(await errorCode(response));
     const messages: Record<number, string> = {
-      400:
-        'The request could not be accepted. Check your details and try again.',
-      401:
-        'Your session is no longer valid. Sign in again from the account menu.',
-      403:
-        'This account cannot perform this action. Check your app limit and your GitHub account connection.',
+      400: 'The request could not be accepted. Check your details and try again.',
+      401: 'Your session is no longer valid. Sign in again from the account menu.',
+      403: 'This account cannot perform this action. Check your app limit and your GitHub account connection.',
       404: 'This app is no longer available. Reload your apps.',
       422: 'Check your app details. The server could not accept these values.',
       429: 'Too many requests. Please wait before trying again.',

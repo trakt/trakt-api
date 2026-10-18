@@ -7,11 +7,8 @@ export function guideUpdatedAt(source: string, now = Date.now()) {
   if (!Number.isFinite(timestamp)) return null;
 
   const days = Math.max(0, Math.floor((now - timestamp) / 86_400_000));
-  let relative = days === 0
-    ? 'today'
-    : days === 1
-    ? 'yesterday'
-    : `${days} days ago`;
+  let relative =
+    days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days} days ago`;
 
   if (days >= 30) {
     const years = days >= 365;

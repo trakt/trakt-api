@@ -65,10 +65,11 @@ describe('list accounts', () => {
   });
 
   it('skips a slot whose stored session cannot be read', async () => {
-    vi.mocked(userManager).mockImplementation(() =>
-      ({
-        getUser: () => Promise.reject(new Error('corrupt')),
-      }) as unknown as ReturnType<typeof userManager>
+    vi.mocked(userManager).mockImplementation(
+      () =>
+        ({
+          getUser: () => Promise.reject(new Error('corrupt')),
+        }) as unknown as ReturnType<typeof userManager>,
     );
     await expect(listAccounts()).resolves.toEqual([]);
   });

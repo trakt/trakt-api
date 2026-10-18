@@ -33,7 +33,9 @@ function targetUrl(value: string): URL {
   const target = parseUrl(value);
 
   if (
-    !target || target.protocol !== 'https:' || target.port ||
+    !target ||
+    target.protocol !== 'https:' ||
+    target.port ||
     !ALLOWED_HOSTS.has(target.hostname)
   ) {
     throw new Error('Only approved Trakt API hosts can be requested.');
@@ -46,9 +48,7 @@ function targetUrl(value: string): URL {
   return target;
 }
 
-function requestHeaders(
-  entries: ApiExecutionRequest['headers'],
-): Headers {
+function requestHeaders(entries: ApiExecutionRequest['headers']): Headers {
   return entries.reduce((headers, entry) => {
     const name = entry.name.trim().toLocaleLowerCase();
 
@@ -73,7 +73,8 @@ export async function executeApiRequest(
   request: ApiExecutionRequest,
 ): Promise<ApiExecutionResponse> {
   const target = targetUrl(request.url);
-  const isOAuthEndpoint = target.hostname === 'auth.trakt.tv' ||
+  const isOAuthEndpoint =
+    target.hostname === 'auth.trakt.tv' ||
     /^\/oauth(?:\/|$)/.test(decodeURIComponent(target.pathname));
   const slot = isOAuthEndpoint ? null : request.accountSlot;
   const token = slot === null ? null : await accessToken(slot);
@@ -94,9 +95,10 @@ export async function executeApiRequest(
   const response = await fetch(target, {
     method: request.method,
     headers,
-    body: ['GET', 'DELETE'].includes(request.method) && !request.body
-      ? undefined
-      : request.body,
+    body:
+      ['GET', 'DELETE'].includes(request.method) && !request.body
+        ? undefined
+        : request.body,
     credentials: 'omit',
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   }).catch(() => null);

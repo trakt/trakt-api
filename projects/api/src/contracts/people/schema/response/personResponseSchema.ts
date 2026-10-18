@@ -51,8 +51,9 @@ export const personResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  gender: asString(z.enum(['unknown', 'male', 'female', 'non_binary']))
-    .nullish(),
+  gender: asString(
+    z.enum(['unknown', 'male', 'female', 'non_binary']),
+  ).nullish(),
   /***
    * Available if requesting extended `full`.
    */
@@ -64,8 +65,10 @@ export const personResponseSchema = z.object({
   /***
    * Available if requesting extended `images`.
    */
-  images: z.object({
-    headshot: z.array(z.string()),
-    fanart: z.array(z.string()),
-  }).nullish(),
+  images: z
+    .object({
+      headshot: z.array(z.string()),
+      fanart: z.array(z.string()),
+    })
+    .nullish(),
 });

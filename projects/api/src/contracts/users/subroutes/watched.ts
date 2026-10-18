@@ -15,77 +15,76 @@ const watchedTypeParamsSchema = profileParamsSchema.extend({
 });
 
 /** ts-rest contract for the `watched` endpoints. */
-export const watched = builder.router({
-  movies: {
-    path: '/movies',
-    method: 'GET',
-    pathParams: profileParamsSchema,
-    responses: {
-      200: watchedMoviesResponseSchema,
-    },
-  },
-  shows: {
-    path: '/shows',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['noseasons']>().merge(
-      showQueryParamsSchema,
-    ),
-    responses: {
-      200: watchedShowsResponseSchema,
-    },
-  },
-  typed: {
-    summary: 'Get watched',
-    description: `#### 🔓 OAuth Optional ✨ Extended Info
-Returns all movies or shows a user has watched sorted by most recently watched.`,
-    path: '/:type',
-    method: 'GET',
-    pathParams: watchedTypeParamsSchema,
-    query: extendedQuerySchemaFactory<['noseasons']>().merge(
-      showQueryParamsSchema,
-    ),
-    responses: {
-      200: z.union([
-        watchedMoviesResponseSchema,
-        watchedShowsResponseSchema,
-      ]),
-    },
-  },
-  minimal: builder.router({
+export const watched = builder.router(
+  {
     movies: {
-      summary: 'Get watched movies',
-      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
-Returns movies watched by a user in a minimal paginated format. Use \`extended\`, \`page\`, and \`limit\` to control the response.`,
       path: '/movies',
       method: 'GET',
       pathParams: profileParamsSchema,
-      query: minimalParamSchema.merge(pageQuerySchema),
       responses: {
-        200: watchedMoviesMinimalResponseSchema,
+        200: watchedMoviesResponseSchema,
       },
     },
     shows: {
-      summary: 'Get watched shows',
-      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
-Returns shows watched by a user in a minimal paginated format. Use \`specials\` and \`season_numbers\` to control season details in the response.`,
       path: '/shows',
       method: 'GET',
-      pathParams: profileParamsSchema,
-      query: minimalParamSchema
-        .merge(pageQuerySchema)
-        .merge(
-          showQueryParamsSchema.pick({ specials: true }),
-        ).extend({
-          season_numbers: z.boolean().nullish(),
-        }),
+      query: extendedQuerySchemaFactory<['noseasons']>().merge(
+        showQueryParamsSchema,
+      ),
       responses: {
-        200: watchedShowsMinimalResponseSchema,
+        200: watchedShowsResponseSchema,
       },
     },
-  }),
-}, {
-  pathPrefix: '/:id/watched',
-});
+    typed: {
+      summary: 'Get watched',
+      description: `#### 🔓 OAuth Optional ✨ Extended Info
+Returns all movies or shows a user has watched sorted by most recently watched.`,
+      path: '/:type',
+      method: 'GET',
+      pathParams: watchedTypeParamsSchema,
+      query: extendedQuerySchemaFactory<['noseasons']>().merge(
+        showQueryParamsSchema,
+      ),
+      responses: {
+        200: z.union([watchedMoviesResponseSchema, watchedShowsResponseSchema]),
+      },
+    },
+    minimal: builder.router({
+      movies: {
+        summary: 'Get watched movies',
+        description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns movies watched by a user in a minimal paginated format. Use \`extended\`, \`page\`, and \`limit\` to control the response.`,
+        path: '/movies',
+        method: 'GET',
+        pathParams: profileParamsSchema,
+        query: minimalParamSchema.merge(pageQuerySchema),
+        responses: {
+          200: watchedMoviesMinimalResponseSchema,
+        },
+      },
+      shows: {
+        summary: 'Get watched shows',
+        description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+Returns shows watched by a user in a minimal paginated format. Use \`specials\` and \`season_numbers\` to control season details in the response.`,
+        path: '/shows',
+        method: 'GET',
+        pathParams: profileParamsSchema,
+        query: minimalParamSchema
+          .merge(pageQuerySchema)
+          .merge(showQueryParamsSchema.pick({ specials: true }))
+          .extend({
+            season_numbers: z.boolean().nullish(),
+          }),
+        responses: {
+          200: watchedShowsMinimalResponseSchema,
+        },
+      },
+    }),
+  },
+  {
+    pathPrefix: '/:id/watched',
+  },
+);
 
 /** The watched movies response payload. */
 export type WatchedMoviesResponse = z.infer<typeof watchedMoviesResponseSchema>;

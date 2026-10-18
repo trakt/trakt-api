@@ -8,23 +8,26 @@ describe('hasMissingRequiredParameters', () => {
     const endpoint = seedCatalog.endpoints.at(0);
     if (!endpoint) throw new Error('Missing seed endpoint.');
 
-    expect(hasMissingRequiredParameters({
-      endpoint,
-      values: { 'path:id': '   ' },
-      headers: [],
-    })).toBe(true);
+    expect(
+      hasMissingRequiredParameters({
+        endpoint,
+        values: { 'path:id': '   ' },
+        headers: [],
+      }),
+    ).toBe(true);
   });
 
   it('should return missing parameters in document order', () => {
     const endpoint = seedCatalog.endpoints.at(0);
     if (!endpoint) throw new Error('Missing seed endpoint.');
 
-    expect(missingRequiredParameterIds({ endpoint, values: {}, headers: [] }))
-      .toEqual(
-        endpoint.parameters.filter(({ required }) => required).map(({ id }) =>
-          id
-        ),
-      );
+    expect(
+      missingRequiredParameterIds({ endpoint, values: {}, headers: [] }),
+    ).toEqual(
+      endpoint.parameters
+        .filter(({ required }) => required)
+        .map(({ id }) => id),
+    );
   });
 
   it('should accept supplied required parameters', () => {
@@ -48,15 +51,19 @@ describe('hasMissingRequiredParameters', () => {
       ],
     };
 
-    expect(hasMissingRequiredParameters({
-      endpoint,
-      values: { 'path:id': 'tron-legacy-2010' },
-      headers: [{
-        id: 'parameter:header:content-type',
-        name: 'Content-Type',
-        value: 'application/json',
-        enabled: true,
-      }],
-    })).toBe(false);
+    expect(
+      hasMissingRequiredParameters({
+        endpoint,
+        values: { 'path:id': 'tron-legacy-2010' },
+        headers: [
+          {
+            id: 'parameter:header:content-type',
+            name: 'Content-Type',
+            value: 'application/json',
+            enabled: true,
+          },
+        ],
+      }),
+    ).toBe(false);
   });
 });

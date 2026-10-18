@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = join(HERE, '..', 'static', 'og');
 const WORK = join(HERE, '..', '.share-cards');
-const CHROME = process.env.CHROME_PATH ??
+const CHROME =
+  process.env.CHROME_PATH ??
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 // Measured at 50 dB PSNR against the raw capture, so visually lossless for
@@ -21,10 +22,9 @@ const VARIANTS = [
   { slug: 'shows-anticipated', method: 'GET', path: '/shows/anticipated' },
 ];
 
-const LOGOMARK = `<img class="mark" alt="" src="data:image/svg+xml;base64,${
-  Buffer.from(await readFile(join(HERE, '..', 'static', 'trakt-logomark.svg')))
-    .toString('base64')
-}" />`;
+const LOGOMARK = `<img class="mark" alt="" src="data:image/svg+xml;base64,${Buffer.from(
+  await readFile(join(HERE, '..', 'static', 'trakt-logomark.svg')),
+).toString('base64')}" />`;
 
 const page = ({ method, path }) =>
   `<!doctype html>
@@ -48,10 +48,10 @@ const page = ({ method, path }) =>
     method === 'GET'
       ? '#65d28b'
       : method === 'POST'
-      ? '#78a9ff'
-      : method === 'PUT'
-      ? '#ffbd5b'
-      : '#ff6b72'
+        ? '#78a9ff'
+        : method === 'PUT'
+          ? '#ffbd5b'
+          : '#ff6b72'
   }}
   .rule{width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,#9f42c6,#c02b81 42%,#f50613 78%,transparent)}
   .methods{display:flex;align-items:center;gap:12px}
@@ -78,13 +78,11 @@ const page = ({ method, path }) =>
 function run(cmd, args) {
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, { stdio: 'ignore' });
-    child.on(
-      'error',
-      () => reject(new Error(`${cmd} is not installed or not on PATH.`)),
+    child.on('error', () =>
+      reject(new Error(`${cmd} is not installed or not on PATH.`)),
     );
-    child.on(
-      'close',
-      (code) => code === 0 ? resolve() : reject(new Error(`exit ${code}`)),
+    child.on('close', (code) =>
+      code === 0 ? resolve() : reject(new Error(`exit ${code}`)),
     );
   });
 }

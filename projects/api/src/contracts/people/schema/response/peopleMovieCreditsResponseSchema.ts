@@ -6,17 +6,25 @@ import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for the people movie credits response. */
 export const peopleMovieCreditsResponseSchema = z.object({
-  cast: z.array(
-    z.object({
-      movie: movieResponseSchema,
-    }).merge(characterResponseSchema),
-  ).nullish(),
-  crew: z.record(
-    crewPositionResponseSchema,
-    z.array(
-      z.object({
-        movie: movieResponseSchema,
-      }).merge(jobsResponseSchema),
-    ),
-  ).nullish(),
+  cast: z
+    .array(
+      z
+        .object({
+          movie: movieResponseSchema,
+        })
+        .merge(characterResponseSchema),
+    )
+    .nullish(),
+  crew: z
+    .record(
+      crewPositionResponseSchema,
+      z.array(
+        z
+          .object({
+            movie: movieResponseSchema,
+          })
+          .merge(jobsResponseSchema),
+      ),
+    )
+    .nullish(),
 });

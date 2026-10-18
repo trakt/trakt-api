@@ -4,9 +4,8 @@ import { userProfileWithNotesSchema } from './userProfileWithNotesSchema.ts';
 
 /** Recommended movie response. */
 export const recommendedMovieResponse = z.array(
-  movieResponseSchema
-    .extend({
-      favorited_by: z.array(userProfileWithNotesSchema).nullable(),
-      recommended_by: z.array(userProfileWithNotesSchema).nullable(),
-    }),
+  movieResponseSchema.extend({
+    favorited_by: z.array(userProfileWithNotesSchema).nullable(),
+    recommended_by: z.array(userProfileWithNotesSchema).nullable(),
+  }),
 );

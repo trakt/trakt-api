@@ -70,7 +70,9 @@ test('@types/HistoryAddRequest: movie with title and year', () => {
     ],
   };
 
-  expectTypeOf<typeof movieWithTitleAndYear>().toEqualTypeOf<HistoryAddRequest>();
+  expectTypeOf<
+    typeof movieWithTitleAndYear
+  >().toEqualTypeOf<HistoryAddRequest>();
 });
 
 test('@types/HistoryAddRequest: movie must be identifiable', () => {
@@ -135,7 +137,9 @@ test('@types/HistoryAddRequest: show with title and year', () => {
     ],
   };
 
-  expectTypeOf<typeof showWithTitleAndYear>().toEqualTypeOf<HistoryAddRequest>();
+  expectTypeOf<
+    typeof showWithTitleAndYear
+  >().toEqualTypeOf<HistoryAddRequest>();
 });
 
 test('@types/HistoryAddRequest: show with season', () => {
@@ -180,7 +184,9 @@ test('@types/HistoryAddRequest: show with episode in season', () => {
     ],
   };
 
-  expectTypeOf<typeof showWithEpisodeInSeason>().toEqualTypeOf<HistoryAddRequest>();
+  expectTypeOf<
+    typeof showWithEpisodeInSeason
+  >().toEqualTypeOf<HistoryAddRequest>();
 });
 
 test('@types/HistoryAddRequest: show must be identifiable', () => {

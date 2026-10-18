@@ -8,15 +8,20 @@ function selector({ name, value }: { name: string; value: string }): string {
   return `[${name}="${value}"]`;
 }
 
-export function applyPageMeta(
-  { document, meta }: { document: PageMetaDocument; meta: PageMeta },
-): void {
+export function applyPageMeta({
+  document,
+  meta,
+}: {
+  document: PageMetaDocument;
+  meta: PageMeta;
+}): void {
   const tags = pageMetaTags(meta);
 
   for (const key of PAGE_META_KEYS) {
     const existing = document.head.querySelector(selector(key));
-    const tag = tags.find((candidate) =>
-      candidate.key.name === key.name && candidate.key.value === key.value
+    const tag = tags.find(
+      (candidate) =>
+        candidate.key.name === key.name && candidate.key.value === key.value,
     );
 
     if (!tag) {

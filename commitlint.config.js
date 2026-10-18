@@ -13,11 +13,7 @@ module.exports = {
     'body-leading-blank': [RuleConfigSeverity.Warning, 'always'],
     'body-max-line-length': [RuleConfigSeverity.Error, 'always', 250],
     'footer-leading-blank': [RuleConfigSeverity.Warning, 'always'],
-    'footer-max-line-length': [
-      RuleConfigSeverity.Error,
-      'always',
-      100,
-    ],
+    'footer-max-line-length': [RuleConfigSeverity.Error, 'always', 100],
     'header-max-length': [RuleConfigSeverity.Error, 'always', 100],
     'subject-case': [
       RuleConfigSeverity.Error,

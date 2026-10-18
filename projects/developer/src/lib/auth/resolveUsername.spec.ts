@@ -6,17 +6,16 @@ afterEach(() => vi.unstubAllGlobals());
 function respondWith(body: unknown, status = 200) {
   vi.stubGlobal(
     'fetch',
-    vi.fn().mockResolvedValue(
-      new Response(JSON.stringify(body), { status }),
-    ),
+    vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status })),
   );
 }
 
 describe('resolve username', () => {
   it('uses the username from account settings', async () => {
     respondWith({ user: { username: 'sean' } });
-    await expect(resolveUsername({ accessToken: 't', slot: 0 }))
-      .resolves.toBe('sean');
+    await expect(resolveUsername({ accessToken: 't', slot: 0 })).resolves.toBe(
+      'sean',
+    );
   });
 
   it('sends the token and the public client id', async () => {
@@ -37,11 +36,14 @@ describe('resolve username', () => {
     ['the request fails', () => respondWith({}, 500)],
     ['the payload has no username', () => respondWith({ user: {} })],
     ['the username is empty', () => respondWith({ user: { username: '' } })],
-    ['the body is not json', () =>
-      vi.stubGlobal(
-        'fetch',
-        vi.fn().mockResolvedValue(new Response('not json')),
-      )],
+    [
+      'the body is not json',
+      () =>
+        vi.stubGlobal(
+          'fetch',
+          vi.fn().mockResolvedValue(new Response('not json')),
+        ),
+    ],
     [
       'the network is unavailable',
       () =>
@@ -49,7 +51,8 @@ describe('resolve username', () => {
     ],
   ])('falls back to the slot name when %s', async (_, arrange) => {
     arrange();
-    await expect(resolveUsername({ accessToken: 't', slot: 2 }))
-      .resolves.toBe('Account 3');
+    await expect(resolveUsername({ accessToken: 't', slot: 2 })).resolves.toBe(
+      'Account 3',
+    );
   });
 });

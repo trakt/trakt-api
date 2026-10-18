@@ -31,7 +31,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: uri,
         originsText: '',
-      })
+      }),
     ).toThrow();
   });
 
@@ -47,7 +47,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: 'myapp://callback',
         originsText: origin,
-      })
+      }),
     ).toThrow();
   });
 
@@ -58,7 +58,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: 'myapp://callback',
         originsText: '',
-      })
+      }),
     ).toThrow();
     expect(() =>
       parseApplication({
@@ -66,7 +66,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: '',
         originsText: '',
-      })
+      }),
     ).toThrow();
     expect(() =>
       parseApplication({
@@ -74,7 +74,7 @@ describe('V3 application validation parity', () => {
         description: 'x'.repeat(256),
         redirects: 'myapp://callback',
         originsText: '',
-      })
+      }),
     ).toThrow();
     expect(() =>
       parseApplication({
@@ -82,7 +82,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: Array(26).fill('myapp://callback').join('\n'),
         originsText: '',
-      })
+      }),
     ).toThrow();
     expect(() =>
       parseApplication({
@@ -90,7 +90,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: 'https://example.com/' + 'x'.repeat(2048),
         originsText: '',
-      })
+      }),
     ).toThrow();
     expect(() =>
       parseApplication({
@@ -98,7 +98,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: 'myapp://callback',
         originsText: Array(25).fill('https://example.com').join('\n'),
-      })
+      }),
     ).toThrow();
   });
 
@@ -117,7 +117,7 @@ describe('V3 application validation parity', () => {
         ...base,
         redirects: 'http://localhost:5173/callback\nhttps://example.com/cb',
         dev: true,
-      })
+      }),
     ).toThrow(
       'Development apps can only redirect to localhost. Remove https://example.com/cb.',
     );

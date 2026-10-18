@@ -8,9 +8,8 @@ describe('account slots', () => {
     expect(isAccountSlot(slot)).toBe(true);
   });
 
-  it.each([-1, ACCOUNT_LIMIT, 1.5, Number.NaN])(
-    'rejects %s',
-    (slot) => expect(isAccountSlot(slot)).toBe(false),
+  it.each([-1, ACCOUNT_LIMIT, 1.5, Number.NaN])('rejects %s', (slot) =>
+    expect(isAccountSlot(slot)).toBe(false),
   );
 
   it('numbers the fallback username from one', () => {

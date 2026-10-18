@@ -9,11 +9,12 @@ extendZodWithOpenApi(z);
  */
 export function float(schema: z.ZodNumber) {
   // Use type assertion to access the openapi method added by extendZodWithOpenApi
-  return (schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber })
-    .openapi({
-      type: 'number',
-      format: 'float',
-    });
+  return (
+    schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber }
+  ).openapi({
+    type: 'number',
+    format: 'float',
+  });
 }
 
 /**
@@ -21,11 +22,12 @@ export function float(schema: z.ZodNumber) {
  */
 export function int64(schema: z.ZodNumber) {
   // Use type assertion to access the openapi method added by extendZodWithOpenApi
-  return (schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber })
-    .openapi({
-      type: 'number',
-      format: 'int64',
-    });
+  return (
+    schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber }
+  ).openapi({
+    type: 'number',
+    format: 'int64',
+  });
 }
 
 /**
@@ -38,13 +40,14 @@ export function asString<T extends z.ZodEnum<[string, ...string[]]>>(
   // bind their own zod for the @anatine/zod-openapi peer, and under zod 4 the
   // enum would otherwise leak as a literal union and break assignments from
   // plain string data. Runtime keeps validating enum membership.
-  return (schema as unknown as z.ZodString & {
-    openapi: (meta: unknown) => z.ZodString;
-  })
-    .openapi({
-      type: 'string',
-      enum: undefined,
-    });
+  return (
+    schema as unknown as z.ZodString & {
+      openapi: (meta: unknown) => z.ZodString;
+    }
+  ).openapi({
+    type: 'string',
+    enum: undefined,
+  });
 }
 
 export { z };

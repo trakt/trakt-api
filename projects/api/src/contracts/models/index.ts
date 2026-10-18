@@ -55,33 +55,23 @@ export type ListAddResponse = z.infer<typeof listAddResponseSchema>;
 
 export { listedMovieResponseSchema };
 /** The listed movie response payload. */
-export type ListedMovieResponse = z.infer<
-  typeof listedMovieResponseSchema
->;
+export type ListedMovieResponse = z.infer<typeof listedMovieResponseSchema>;
 
 export { listedShowResponseSchema };
 /** The listed show response payload. */
-export type ListedShowResponse = z.infer<
-  typeof listedShowResponseSchema
->;
+export type ListedShowResponse = z.infer<typeof listedShowResponseSchema>;
 
 export { listedMediaResponseSchema };
 /** The listed media response payload. */
-export type ListedMediaResponse = z.infer<
-  typeof listedMediaResponseSchema
->;
+export type ListedMediaResponse = z.infer<typeof listedMediaResponseSchema>;
 
 export { listedAllResponseSchema };
 /** The listed all response payload. */
-export type ListedAllResponse = z.infer<
-  typeof listedAllResponseSchema
->;
+export type ListedAllResponse = z.infer<typeof listedAllResponseSchema>;
 
 export { listRemoveResponseSchema };
 /** The list remove response payload. */
-export type ListRemoveResponse = z.infer<
-  typeof listRemoveResponseSchema
->;
+export type ListRemoveResponse = z.infer<typeof listRemoveResponseSchema>;
 
 export { listResponseSchema };
 /** The list response payload. */
@@ -117,9 +107,7 @@ export type StudioResponse = z.infer<typeof studioResponseSchema>;
 
 export { translationResponseSchema };
 /** The translation response payload. */
-export type TranslationResponse = z.infer<
-  typeof translationResponseSchema
->;
+export type TranslationResponse = z.infer<typeof translationResponseSchema>;
 
 export { profileResponseSchema };
 /** The profile response payload. */
@@ -139,6 +127,4 @@ export type VideoResponse = z.infer<typeof videoResponseSchema>;
 
 export { socialIdsResponseSchema };
 /** The social ids response payload. */
-export type SocialIdsResponse = z.infer<
-  typeof socialIdsResponseSchema
->;
+export type SocialIdsResponse = z.infer<typeof socialIdsResponseSchema>;

@@ -11,13 +11,9 @@ export const listResponseSchema = z.object({
   description: z.string().nullish(),
   privacy: listPrivacyEnumSchema,
   share_link: z.string(),
-  type: asString(z.enum([
-    'all',
-    'personal',
-    'official',
-    'watchlist',
-    'favorites',
-  ])),
+  type: asString(
+    z.enum(['all', 'personal', 'official', 'watchlist', 'favorites']),
+  ),
   display_numbers: z.boolean(),
   allow_comments: z.boolean(),
   sort_by: sortEnumSchema,
@@ -36,10 +32,12 @@ export const listResponseSchema = z.object({
    * Set for the list owner when the tool that kept this list updated stopped
    * syncing it. `null` otherwise, and for every other viewer.
    */
-  stale_origin: z.object({
-    name: z.string(),
-    url: z.string().nullable(),
-  }).nullish(),
+  stale_origin: z
+    .object({
+      name: z.string(),
+      url: z.string().nullable(),
+    })
+    .nullish(),
   /***
    * Set once the owner turned this list into a smart list. Visible to
    * everyone when that smart list is public, and always to the owner.
@@ -48,7 +46,9 @@ export const listResponseSchema = z.object({
   /***
    * Available if requesting extended `images`.
    */
-  images: z.object({
-    posters: z.array(z.string()),
-  }).nullish(),
+  images: z
+    .object({
+      posters: z.array(z.string()),
+    })
+    .nullish(),
 });

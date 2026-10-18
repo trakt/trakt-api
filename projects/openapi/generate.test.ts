@@ -5,18 +5,19 @@ import { generate } from './generate.ts';
 function assertEquals(actual: unknown, expected: unknown): void {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     throw new Error(
-      `Expected ${JSON.stringify(expected)}, received ${
-        JSON.stringify(actual)
-      }`,
+      `Expected ${JSON.stringify(expected)}, received ${JSON.stringify(
+        actual,
+      )}`,
     );
   }
 }
 
 function getOperations(): OperationObject[] {
   return Object.values(generate().paths).flatMap((path) =>
-    Object.values(path ?? {}).filter((value): value is OperationObject =>
-      typeof value === 'object' && value !== null && 'responses' in value
-    )
+    Object.values(path ?? {}).filter(
+      (value): value is OperationObject =>
+        typeof value === 'object' && value !== null && 'responses' in value,
+    ),
   );
 }
 
@@ -39,15 +40,17 @@ test('uses the API host by default', () => {
 
 test('uses the auth host for every OAuth endpoint', () => {
   const oauthOperations = getOperations().filter((operation) =>
-    operation.tags?.includes('oauth')
+    operation.tags?.includes('oauth'),
   );
 
   assertEquals(oauthOperations.length > 0, true);
   for (const operation of oauthOperations) {
-    assertEquals(operation.servers, [{
-      url: 'https://auth.trakt.tv',
-      description: 'Authentication',
-    }]);
+    assertEquals(operation.servers, [
+      {
+        url: 'https://auth.trakt.tv',
+        description: 'Authentication',
+      },
+    ]);
   }
 });
 

@@ -26,19 +26,19 @@ export function managedHeaders({
       enabled: Boolean(parameter.defaultValue),
     }));
 
-  const authorizationHeader: Array<ApiHeader> = endpoint.auth === 'endpoint'
-    ? []
-    : [
-      {
-        id: MANAGED_AUTHORIZATION_HEADER_ID,
-        name: 'Authorization',
-        value: selectedAccountSlot === null
-          ? 'Not attached'
-          : 'Bearer ••••••••',
-        enabled: selectedAccountSlot !== null && authorizationEnabled,
-        managed: true,
-      },
-    ];
+  const authorizationHeader: Array<ApiHeader> =
+    endpoint.auth === 'endpoint'
+      ? []
+      : [
+          {
+            id: MANAGED_AUTHORIZATION_HEADER_ID,
+            name: 'Authorization',
+            value:
+              selectedAccountSlot === null ? 'Not attached' : 'Bearer ••••••••',
+            enabled: selectedAccountSlot !== null && authorizationEnabled,
+            managed: true,
+          },
+        ];
 
   return [
     {

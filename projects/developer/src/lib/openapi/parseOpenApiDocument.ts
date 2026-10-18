@@ -16,7 +16,7 @@ const HTTP_METHODS: ReadonlyArray<HttpMethod> = [
 
 function asObject(value: unknown): JsonObject {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
-    ? value as JsonObject
+    ? (value as JsonObject)
     : {};
 }
 
@@ -43,10 +43,10 @@ function resolveReference({
   const reference = asString(object.$ref);
   if (!reference.startsWith('#/')) return object;
 
-  return reference.slice(2).split('/').reduce<JsonObject>(
-    (current, segment) => asObject(current[segment]),
-    root,
-  );
+  return reference
+    .slice(2)
+    .split('/')
+    .reduce<JsonObject>((current, segment) => asObject(current[segment]), root);
 }
 
 function schemaType(schema: JsonObject): string {
@@ -99,8 +99,8 @@ function sampleFromSchema({
   const enumValue = asArray(schema.enum).at(0);
   if (enumValue !== undefined) return enumValue;
 
-  const composition = asArray(schema.oneOf).at(0) ??
-    asArray(schema.anyOf).at(0);
+  const composition =
+    asArray(schema.oneOf).at(0) ?? asArray(schema.anyOf).at(0);
   if (composition) {
     return sampleFromSchema({
       root,
@@ -127,8 +127,11 @@ function sampleFromSchema({
     case 'object':
       return Object.fromEntries(
         Object.entries(asObject(schema.properties))
-          .filter(([, property]) =>
-            !asBoolean(resolveReference({ root, value: property }).deprecated)
+          .filter(
+            ([, property]) =>
+              !asBoolean(
+                resolveReference({ root, value: property }).deprecated,
+              ),
           )
           .map(([name, property]) => [
             name,
@@ -198,10 +201,9 @@ function requiredSampleFromSchema({
     ? new Set([...references, reference])
     : references;
   const schema = resolveReference({ root, value: initial });
-  const composition = [
-    ...asArray(schema.oneOf),
-    ...asArray(schema.anyOf),
-  ].find((candidate) => !schemaAllowsNull({ root, schemaValue: candidate }));
+  const composition = [...asArray(schema.oneOf), ...asArray(schema.anyOf)].find(
+    (candidate) => !schemaAllowsNull({ root, schemaValue: candidate }),
+  );
 
   if (composition) {
     return requiredSampleFromSchema({
@@ -215,21 +217,28 @@ function requiredSampleFromSchema({
 
   const allOf = asArray(schema.allOf);
   if (allOf.length > 0) {
-    return allOf.reduce<JsonObject>((result, item) => ({
-      ...result,
-      ...asObject(requiredSampleFromSchema({
-        root,
-        schemaValue: item,
-        sampleValue,
-        depth: depth + 1,
-        references: nextReferences,
-      })),
-    }), {});
+    return allOf.reduce<JsonObject>(
+      (result, item) => ({
+        ...result,
+        ...asObject(
+          requiredSampleFromSchema({
+            root,
+            schemaValue: item,
+            sampleValue,
+            depth: depth + 1,
+            references: nextReferences,
+          }),
+        ),
+      }),
+      {},
+    );
   }
 
   if (schemaType(schema) === 'object') {
     const requiredNames = new Set(
-      asArray(schema.required).map((name) => asString(name)).filter(Boolean),
+      asArray(schema.required)
+        .map((name) => asString(name))
+        .filter(Boolean),
     );
     const sample = asObject(sampleValue);
 
@@ -239,11 +248,13 @@ function requiredSampleFromSchema({
           if (
             !requiredNames.has(name) ||
             schemaAllowsNull({ root, schemaValue: property })
-          ) return [];
+          )
+            return [];
 
-          const propertySample = name in sample
-            ? sample[name]
-            : sampleFromSchema({ root, schemaValue: property });
+          const propertySample =
+            name in sample
+              ? sample[name]
+              : sampleFromSchema({ root, schemaValue: property });
           const value = requiredSampleFromSchema({
             root,
             schemaValue: property,
@@ -259,7 +270,8 @@ function requiredSampleFromSchema({
   }
 
   if (schemaType(schema) === 'array') {
-    const itemSample = asArray(sampleValue).at(0) ??
+    const itemSample =
+      asArray(sampleValue).at(0) ??
       sampleFromSchema({ root, schemaValue: schema.items });
     const item = requiredSampleFromSchema({
       root,
@@ -288,7 +300,10 @@ function parseParameter({
   if (!name || !['path', 'query', 'header'].includes(location)) return null;
 
   const schema = resolveReference({ root, value: parameter.schema });
-  const defaultValue = parameter.example ?? schema.example ?? schema.default ??
+  const defaultValue =
+    parameter.example ??
+    schema.example ??
+    schema.default ??
     asArray(schema.enum).at(0);
 
   return {
@@ -298,9 +313,9 @@ function parseParameter({
     required: location === 'path' || asBoolean(parameter.required),
     description: asString(parameter.description),
     type: schemaType(schema),
-    enumValues: asArray(schema.enum).map((entry) => asString(entry)).filter(
-      Boolean,
-    ),
+    enumValues: asArray(schema.enum)
+      .map((entry) => asString(entry))
+      .filter(Boolean),
     defaultValue: toEditableValue(defaultValue),
   };
 }
@@ -327,8 +342,10 @@ function parseParameters({
 }
 
 function preferredContentType(content: JsonObject): string | undefined {
-  return Object.keys(content).find((type) => type.includes('json')) ??
-    Object.keys(content).at(0);
+  return (
+    Object.keys(content).find((type) => type.includes('json')) ??
+    Object.keys(content).at(0)
+  );
 }
 
 function formatExample(value: unknown, contentType: string): string {
@@ -352,10 +369,12 @@ function parseRequestBody({
   if (!contentType) return null;
 
   const media = asObject(content[contentType]);
-  const sample = media.example ?? sampleFromSchema({
-    root,
-    schemaValue: media.schema,
-  });
+  const sample =
+    media.example ??
+    sampleFromSchema({
+      root,
+      schemaValue: media.schema,
+    });
 
   return {
     required: asBoolean(body.required),
@@ -376,9 +395,10 @@ function parseAuth({
 }): Endpoint['auth'] {
   if (isOAuthEndpoint) return 'endpoint';
 
-  const security = 'security' in operation
-    ? asArray(operation.security)
-    : asArray(root.security);
+  const security =
+    'security' in operation
+      ? asArray(operation.security)
+      : asArray(root.security);
 
   if (security.length === 0) return 'optional';
 
@@ -393,7 +413,7 @@ function parseAuth({
   );
   const alternativeRequiresOAuth = (requirement: unknown) =>
     Object.keys(asObject(requirement)).some((name) =>
-      oauthSchemeNames.has(name)
+      oauthSchemeNames.has(name),
     );
 
   if (!security.some(alternativeRequiresOAuth)) return 'optional';
@@ -413,29 +433,32 @@ function parseResponses({
       const content = asObject(response.content);
       const contentType = preferredContentType(content) ?? '';
       const media = asObject(content[contentType]);
-      const exampleEntry = asArray(Object.values(asObject(media.examples)))
-        .at(0);
+      const exampleEntry = asArray(Object.values(asObject(media.examples))).at(
+        0,
+      );
       const exampleObject = resolveReference({ root, value: exampleEntry });
       const schema = resolveReference({ root, value: media.schema });
       const explicitExample = media.example ?? exampleObject.value;
-      const sample = explicitExample ??
+      const sample =
+        explicitExample ??
         (Object.keys(schema).length > 0
           ? sampleFromSchema({ root, schemaValue: media.schema })
           : undefined);
-      const requiredSample = Object.keys(schema).length > 0
-        ? requiredSampleFromSchema({
-          root,
-          schemaValue: media.schema,
-          sampleValue: sample,
-        })
-        : sample;
+      const requiredSample =
+        Object.keys(schema).length > 0
+          ? requiredSampleFromSchema({
+              root,
+              schemaValue: media.schema,
+              sampleValue: sample,
+            })
+          : sample;
 
       const headers = Object.entries(asObject(response.headers)).map(
         ([name, headerValue]) => {
           const header = resolveReference({ root, value: headerValue });
           const headerSchema = resolveReference({ root, value: header.schema });
-          const example = header.example ?? headerSchema.example ??
-            headerSchema.default;
+          const example =
+            header.example ?? headerSchema.example ?? headerSchema.default;
 
           return {
             name,
@@ -466,15 +489,16 @@ function parseServers({
   pathItem: JsonObject;
   operation: JsonObject;
 }): ReadonlyArray<string> {
-  const declared = asArray(operation.servers).length > 0
-    ? asArray(operation.servers)
-    : asArray(pathItem.servers).length > 0
-    ? asArray(pathItem.servers)
-    : asArray(root.servers);
+  const declared =
+    asArray(operation.servers).length > 0
+      ? asArray(operation.servers)
+      : asArray(pathItem.servers).length > 0
+        ? asArray(pathItem.servers)
+        : asArray(root.servers);
 
-  return declared.map((server) => asString(asObject(server).url)).filter(
-    Boolean,
-  );
+  return declared
+    .map((server) => asString(asObject(server).url))
+    .filter(Boolean);
 }
 
 function parseEndpoint({
@@ -502,13 +526,15 @@ function parseEndpoint({
     summary,
     description: asString(operation.description),
     operationId,
-    tags: asArray(operation.tags).map((tag) => asString(tag)).filter(Boolean),
+    tags: asArray(operation.tags)
+      .map((tag) => asString(tag))
+      .filter(Boolean),
     deprecated: asBoolean(operation.deprecated),
     auth: parseAuth({
       root,
       operation,
-      isOAuthEndpoint: serverUrls.some((url) =>
-        url === 'https://auth.trakt.tv'
+      isOAuthEndpoint: serverUrls.some(
+        (url) => url === 'https://auth.trakt.tv',
       ),
     }),
     parameters: parseParameters({ root, pathItem, operation }),
@@ -531,7 +557,7 @@ export function parseOpenApiDocument({
     ([path, value]) => {
       const pathItem = asObject(value);
       return HTTP_METHODS.map((method) =>
-        parseEndpoint({ root, method, path, pathItem })
+        parseEndpoint({ root, method, path, pathItem }),
       ).filter((endpoint): endpoint is Endpoint => endpoint !== null);
     },
   );

@@ -26,15 +26,17 @@ export const syncSchema = z.object({
   undone_at: z.string().datetime().nullable().openapi({
     description: 'When the sync was reversed, normalized to `.000Z`, or null.',
   }),
-  items: z.object({
-    history: countBlock.optional(),
-    library: countBlock.optional(),
-    ratings: countBlock.optional(),
-    watchlist: countBlock.optional(),
-  }).openapi({
-    description:
-      'Added counts per section. Empty sections and media types are omitted.',
-  }),
+  items: z
+    .object({
+      history: countBlock.optional(),
+      library: countBlock.optional(),
+      ratings: countBlock.optional(),
+      watchlist: countBlock.optional(),
+    })
+    .openapi({
+      description:
+        'Added counts per section. Empty sections and media types are omitted.',
+    }),
   paused_count: z.number().int(),
   skipped_count: z.number().int(),
 });

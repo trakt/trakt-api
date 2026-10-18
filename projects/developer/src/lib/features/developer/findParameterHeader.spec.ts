@@ -21,9 +21,7 @@ describe('findParameterHeader', () => {
       enabled: true,
     };
 
-    expect(findParameterHeader({ parameter, headers: [header] })).toBe(
-      header,
-    );
+    expect(findParameterHeader({ parameter, headers: [header] })).toBe(header);
   });
 
   it('returns undefined when no header matches the parameter', () => {

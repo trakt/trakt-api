@@ -5,7 +5,8 @@ import { guideDescription } from './guideDescription.ts';
 
 describe('guideDescription', () => {
   it('uses the first paragraph after the title as plain text', () => {
-    const source = '---\nupdatedAt: 2026-01-01\n---\n\n# Title\n\n' +
+    const source =
+      '---\nupdatedAt: 2026-01-01\n---\n\n# Title\n\n' +
       'Read the [**Extended Info**](/docs/extended-info) for `full` data.\n\n' +
       'Second paragraph.';
 
@@ -15,7 +16,8 @@ describe('guideDescription', () => {
   });
 
   it('skips headings, quotes, tables, lists, and code', () => {
-    const source = '# Title\n\n#### Sub\n\n> Note\n\n| a |\n\n- item\n\n' +
+    const source =
+      '# Title\n\n#### Sub\n\n> Note\n\n| a |\n\n- item\n\n' +
       '```\ncode\n```\n\nThe real summary.';
 
     expect(guideDescription(source)).toBe('The real summary.');

@@ -2,9 +2,9 @@ import { builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 
 const languageTypeParamsSchema = z.object({
-  type: z.enum(['movies', 'shows']).describe(
-    'Media type to return languages for.',
-  ),
+  type: z
+    .enum(['movies', 'shows'])
+    .describe('Media type to return languages for.'),
 });
 
 /** Zod schema for the language response. */
@@ -14,20 +14,23 @@ export const languageResponseSchema = z.object({
 });
 
 /** ts-rest contract for the `languages` endpoints. */
-export const languages = builder.router({
-  list: {
-    summary: 'Get languages',
-    description: 'Get a list of all languages, including names and codes.',
-    path: '/:type',
-    method: 'GET',
-    pathParams: languageTypeParamsSchema,
-    responses: {
-      200: languageResponseSchema.array(),
+export const languages = builder.router(
+  {
+    list: {
+      summary: 'Get languages',
+      description: 'Get a list of all languages, including names and codes.',
+      path: '/:type',
+      method: 'GET',
+      pathParams: languageTypeParamsSchema,
+      responses: {
+        200: languageResponseSchema.array(),
+      },
     },
   },
-}, {
-  pathPrefix: '/languages',
-});
+  {
+    pathPrefix: '/languages',
+  },
+);
 
 /** The language response payload. */
 export type LanguageResponse = z.infer<typeof languageResponseSchema>;

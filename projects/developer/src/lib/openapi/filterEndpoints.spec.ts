@@ -36,16 +36,8 @@ describe('filterEndpoints', () => {
       description: 'Hidden description',
     };
 
-    for (
-      const query of [
-        'DELETE',
-        'Hidden tag',
-        'Hidden description',
-      ]
-    ) {
-      expect(
-        filterEndpoints({ endpoints: [endpoint], query }),
-      ).toEqual([]);
+    for (const query of ['DELETE', 'Hidden tag', 'Hidden description']) {
+      expect(filterEndpoints({ endpoints: [endpoint], query })).toEqual([]);
     }
   });
 

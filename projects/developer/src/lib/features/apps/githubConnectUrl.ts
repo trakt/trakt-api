@@ -7,9 +7,10 @@ type GithubConnectUrlParams = {
   clientId: string;
 };
 
-export function githubConnectUrl(
-  { intent, clientId }: GithubConnectUrlParams,
-): string {
+export function githubConnectUrl({
+  intent,
+  clientId,
+}: GithubConnectUrlParams): string {
   const state = globalThis.crypto.randomUUID();
   globalThis.sessionStorage?.setItem(GITHUB_STATE_KEY, state);
   globalThis.sessionStorage?.setItem(GITHUB_INTENT_KEY, intent);

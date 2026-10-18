@@ -63,9 +63,9 @@ describe('completeGithubConnect', () => {
 
   it('rejects a missing state', () => {
     vi.stubGlobal('sessionStorage', fakeStorage());
-    expect(
-      completeGithubConnect(new URLSearchParams({ code: 'abc' })),
-    ).toEqual({ status: 'invalid' });
+    expect(completeGithubConnect(new URLSearchParams({ code: 'abc' }))).toEqual(
+      { status: 'invalid' },
+    );
   });
 
   it('reports a denial callback and clears the pending state', () => {

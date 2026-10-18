@@ -4,10 +4,9 @@ import { deleteApplication } from './deleteApplication.ts';
 import { listApplications } from './listApplications.ts';
 import { saveApplication } from './saveApplication.ts';
 vi.mock('$lib/auth/accessToken.ts', () => ({ accessToken: vi.fn() }));
-vi.mock(
-  '$env/static/public',
-  () => ({ PUBLIC_TRAKT_CLIENT_ID: 'test-client' }),
-);
+vi.mock('$env/static/public', () => ({
+  PUBLIC_TRAKT_CLIENT_ID: 'test-client',
+}));
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -29,17 +28,18 @@ describe('app management transport', () => {
         finish = resolve;
       }),
     );
-    const fetcher = vi.fn().mockResolvedValue(
-      new Response(null, { status: 204 }),
-    );
+    const fetcher = vi
+      .fn()
+      .mockResolvedValue(new Response(null, { status: 204 }));
     vi.stubGlobal('fetch', fetcher);
 
     const request = deleteApplication(2, 42);
     expect(fetcher).not.toHaveBeenCalled();
     finish('refreshed-token');
     await request;
-    expect(fetcher.mock.calls.at(0)?.[1].headers.get('authorization'))
-      .toBe('Bearer refreshed-token');
+    expect(fetcher.mock.calls.at(0)?.[1].headers.get('authorization')).toBe(
+      'Bearer refreshed-token',
+    );
   });
 
   it('does not send a mutation when token refresh fails', async () => {
@@ -65,9 +65,11 @@ describe('app management transport', () => {
 
   it('uses the selected account and the exact V3 methods and payload', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
-    const fetcher = vi.fn().mockImplementation(() =>
-      Promise.resolve(new Response(null, { status: 204 }))
-    );
+    const fetcher = vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(new Response(null, { status: 204 })),
+      );
     vi.stubGlobal('fetch', fetcher);
     await saveApplication(3, input);
     await saveApplication(3, input, 42);
@@ -93,9 +95,11 @@ describe('app management transport', () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        new Response('sensitive-server-output', { status: 403 }),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          new Response('sensitive-server-output', { status: 403 }),
+        ),
     );
     await expect(saveApplication(0, input)).rejects.toThrow('app limit');
   });
@@ -104,9 +108,11 @@ describe('app management transport', () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        Response.json({ error: 'github_account_taken' }, { status: 403 }),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          Response.json({ error: 'github_account_taken' }, { status: 403 }),
+        ),
     );
     await expect(saveApplication(0, input)).rejects.toThrow(
       'already connected to another Trakt account',
@@ -118,9 +124,12 @@ describe('app management transport', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue(
-        Response.json({ error: 'Application limit reached (5)' }, {
-          status: 403,
-        }),
+        Response.json(
+          { error: 'Application limit reached (5)' },
+          {
+            status: 403,
+          },
+        ),
       ),
     );
     await expect(saveApplication(0, input)).rejects.toThrow(
@@ -132,9 +141,11 @@ describe('app management transport', () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        Response.json({ error: { secret: 'x' } }, { status: 400 }),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          Response.json({ error: { secret: 'x' } }, { status: 400 }),
+        ),
     );
     await expect(saveApplication(0, input)).rejects.toThrow(
       'Check your details',
@@ -145,9 +156,11 @@ describe('app management transport', () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        Response.json({ error: 'something_new' }, { status: 429 }),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          Response.json({ error: 'something_new' }, { status: 429 }),
+        ),
     );
     await expect(saveApplication(0, input)).rejects.toThrow(
       'Too many requests',

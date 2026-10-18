@@ -4,10 +4,9 @@ import { getDeveloperProfile } from './getDeveloperProfile.ts';
 import { linkGithub } from './linkGithub.ts';
 import { unlinkGithub } from './unlinkGithub.ts';
 vi.mock('$lib/auth/accessToken.ts', () => ({ accessToken: vi.fn() }));
-vi.mock(
-  '$env/static/public',
-  () => ({ PUBLIC_TRAKT_CLIENT_ID: 'test-client' }),
-);
+vi.mock('$env/static/public', () => ({
+  PUBLIC_TRAKT_CLIENT_ID: 'test-client',
+}));
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.clearAllMocks();
@@ -30,9 +29,7 @@ describe('developer profile transport', () => {
     await expect(getDeveloperProfile(2)).resolves.toEqual(profile);
     const call = fetcher.mock.calls.at(0);
     if (!call) throw new Error('fetch was not called');
-    expect(call[0]).toBe(
-      'https://api.trakt.tv/v3/users/me/developer',
-    );
+    expect(call[0]).toBe('https://api.trakt.tv/v3/users/me/developer');
     expect(accessToken).toHaveBeenCalledWith(2);
   });
 
@@ -40,9 +37,11 @@ describe('developer profile transport', () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(
-        Response.json({ github: null, applications: { count: 2, limit: 5 } }),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          Response.json({ github: null, applications: { count: 2, limit: 5 } }),
+        ),
     );
     await expect(getDeveloperProfile(0)).resolves.toEqual({
       github: null,
@@ -56,16 +55,16 @@ describe('developer profile transport', () => {
       'fetch',
       vi.fn().mockResolvedValue(Response.json({ github: null })),
     );
-    await expect(getDeveloperProfile(0)).rejects.toThrow(
-      'could not be read',
-    );
+    await expect(getDeveloperProfile(0)).rejects.toThrow('could not be read');
   });
 
   it('links with the code and the switch intent, and unlinks with DELETE', async () => {
     vi.mocked(accessToken).mockResolvedValue('test-token');
-    const fetcher = vi.fn().mockImplementation(() =>
-      Promise.resolve(new Response(null, { status: 204 }))
-    );
+    const fetcher = vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(new Response(null, { status: 204 })),
+      );
     vi.stubGlobal('fetch', fetcher);
 
     await linkGithub(1, 'abc', true);

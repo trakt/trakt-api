@@ -10,12 +10,14 @@ describe('formatCurlRequest', () => {
       const result = formatCurlRequest({
         method,
         url,
-        headers: [{
-          id: 'client',
-          name: 'Client-Id',
-          value: 'header-client-id',
-          enabled: true,
-        }],
+        headers: [
+          {
+            id: 'client',
+            name: 'Client-Id',
+            value: 'header-client-id',
+            enabled: true,
+          },
+        ],
         body: JSON.stringify({
           client_id: 'body-client-id',
           nested: [{ clientId: 'nested-client-id' }],
@@ -43,10 +45,12 @@ describe('formatCurlRequest', () => {
       body: JSON.stringify({
         client_secret: 'private-client-secret',
         grant_type: 'refresh_token',
-        accounts: [{
-          access_token: 'private-access-token',
-          refresh_token: 'private-refresh-token',
-        }],
+        accounts: [
+          {
+            access_token: 'private-access-token',
+            refresh_token: 'private-refresh-token',
+          },
+        ],
       }),
     });
 
@@ -103,11 +107,13 @@ describe('formatCurlRequest', () => {
   });
 
   it('should safely quote apostrophes for the shell', () => {
-    expect(formatCurlRequest({
-      method: 'POST',
-      url: 'https://api.trakt.tv/checkin',
-      headers: [],
-      body: '{"message":"it\'s ready"}',
-    })).toContain(`--data '{"message":"it'"'"'s ready"}'`);
+    expect(
+      formatCurlRequest({
+        method: 'POST',
+        url: 'https://api.trakt.tv/checkin',
+        headers: [],
+        body: '{"message":"it\'s ready"}',
+      }),
+    ).toContain(`--data '{"message":"it'"'"'s ready"}'`);
   });
 });

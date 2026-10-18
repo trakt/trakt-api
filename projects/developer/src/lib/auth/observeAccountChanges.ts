@@ -5,7 +5,10 @@ import { userManager } from './userManager.ts';
 
 export function observeAccountChanges(
   onChange: () => void,
-  { manager = userManager, target = globalThis }: {
+  {
+    manager = userManager,
+    target = globalThis,
+  }: {
     manager?: (slot: number) => Pick<UserManager, 'events'>;
     target?: Pick<Window, 'addEventListener' | 'removeEventListener'>;
   } = {},
@@ -23,9 +26,9 @@ export function observeAccountChanges(
   const stopObservingErrors = accountSessionErrors.subscribe(onChange);
 
   function onStorage(event: StorageEvent) {
-    const sessionSlot = event.key?.match(
-      /^trakt-developer-account-(\d+)\.user:/,
-    )?.at(1);
+    const sessionSlot = event.key
+      ?.match(/^trakt-developer-account-(\d+)\.user:/)
+      ?.at(1);
 
     if (sessionSlot !== undefined) {
       accountSessionErrors.clear(Number(sessionSlot));
@@ -35,9 +38,11 @@ export function observeAccountChanges(
     }
 
     if (
-      event.key === null || sessionSlot !== undefined ||
+      event.key === null ||
+      sessionSlot !== undefined ||
       event.key.startsWith('trakt-developer-username-')
-    ) onChange();
+    )
+      onChange();
   }
 
   target.addEventListener('storage', onStorage);

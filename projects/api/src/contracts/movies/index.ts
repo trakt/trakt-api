@@ -27,9 +27,7 @@ import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
 import type { movieCertificationResponseSchema } from '../_internal/response/movieCertificationResponseSchema.ts';
 import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import { movieStatsResponseSchema } from '../_internal/response/movieStatsResponseSchema.ts';
-import {
-  peopleResponseSchema,
-} from '../_internal/response/peopleResponseSchema.ts';
+import { peopleResponseSchema } from '../_internal/response/peopleResponseSchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import { movieRatingsResponseSchema } from '../_internal/response/movieRatingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
@@ -73,13 +71,15 @@ const movieAliasResponseSchema = z.object({
   country: z.string().nullable().optional(),
 });
 
-const movieReleaseResponseSchema = z.object({
-  country: z.string(),
-  certification: z.string().nullable().optional(),
-  release_date: z.string(),
-  release_type: z.string().optional(),
-  note: z.string().nullable().optional(),
-}).passthrough();
+const movieReleaseResponseSchema = z
+  .object({
+    country: z.string(),
+    certification: z.string().nullable().optional(),
+    release_date: z.string(),
+    release_type: z.string().optional(),
+    note: z.string().nullable().optional(),
+  })
+  .passthrough();
 
 const movieBoxOfficeResponseSchema = z.object({
   revenue: z.number().int().optional(),
@@ -91,233 +91,228 @@ const movieUpdatedResponseSchema = z.object({
   movie: movieResponseSchema,
 });
 
-const ENTITY_LEVEL = builder.router({
-  summary: {
-    summary: 'Get a movie',
-    description: `#### ✨ Extended Info
+const ENTITY_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get a movie',
+      description: `#### ✨ Extended Info
 Returns a single movie's details.
 
 > ### Note
 > _When getting \`full\` extended info, the \`status\` field can have a value of \`released\`, \`in production\`, \`post production\`, \`planned\`, \`rumored\`, or \`canceled\`._`,
-    path: '',
-    method: 'GET',
-    query: extendedMediaQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: movieResponseSchema,
+      path: '',
+      method: 'GET',
+      query: extendedMediaQuerySchema,
+      pathParams: idParamsSchema,
+      responses: {
+        200: movieResponseSchema,
+      },
     },
-  },
-  ratings: {
-    summary: 'Get movie ratings',
-    description:
-      `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a movie.
+    ratings: {
+      summary: 'Get movie ratings',
+      description: `Returns the Trakt rating (between 0 and 10), vote count, and rating distribution for a movie.
 
 Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Tomatoes, Letterboxd, and MyAnimeList. External ratings, vote counts, and links can be \`null\` when unavailable.`,
-    path: '/ratings',
-    method: 'GET',
-    query: extendedRatingsQuerySchema,
-    pathParams: idParamsSchema,
-    responses: {
-      200: movieRatingsResponseSchema,
+      path: '/ratings',
+      method: 'GET',
+      query: extendedRatingsQuerySchema,
+      pathParams: idParamsSchema,
+      responses: {
+        200: movieRatingsResponseSchema,
+      },
     },
-  },
-  stats: {
-    summary: 'Get movie stats',
-    description: 'Returns lots of movie stats.',
-    path: '/stats',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: movieStatsResponseSchema,
-    },
-  },
-  aliases: {
-    summary: 'Get all movie aliases',
-    description:
-      'Returns all title aliases for a movie. Includes localized and alternate titles when available.',
-    path: '/aliases',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: movieAliasResponseSchema.array(),
-    },
-  },
-  releases: {
-    summary: 'Get all movie releases',
-    description:
-      'Returns release dates for a movie in the requested country, including certification and release type when available.',
-    path: '/releases/:country',
-    method: 'GET',
-    pathParams: idParamsSchema.merge(countryParamsSchema),
-    responses: {
-      200: movieReleaseResponseSchema.array(),
-    },
-  },
-  translations: {
-    summary: 'Get all movie translations',
-    description:
-      'Returns all translations for a movie, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
-    path: '/translations',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: translationsLanguageQuerySchema,
-    responses: {
-      200: translationResponseSchema,
-    },
-  },
-  related: {
-    summary: 'Get related movies',
-    description: `#### 📄 Pagination ✨ Extended Info
-
-Returns related and similar movies.`,
-    path: '/related',
-    method: 'GET',
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
-    pathParams: idParamsSchema,
-    responses: {
-      200: movieResponseSchema.array(),
-    },
-  },
-  watching: {
-    summary: 'Get users watching right now',
-    description: `#### ✨ Extended Info
-Returns all users watching this movie right now.`,
-    path: '/watching',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full']>(),
-    responses: {
-      200: profileResponseSchema.array(),
-    },
-  },
-  studios: {
-    summary: 'Get movie studios',
-    description: 'Returns all studios for a movie.',
-    path: '/studios',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: studioResponseSchema.array(),
-    },
-  },
-  watchnow: {
-    summary: 'Get movie watch now sources',
-    description: `#### 🫣 Limited Access ✨ Extended Info
-This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
-
-Returns streaming and watch now sources for a movie in the requested country. Use \`links\` to include provider links when available.`,
-    path: '/watchnow/:country',
-    query: linksQuerySchema
-      .merge(extendedWatchNowQuerySchema),
-    method: 'GET',
-    pathParams: idParamsSchema.merge(countryParamsSchema),
-    responses: {
-      200: watchNowResponseSchema,
-    },
-  },
-  justwatch: builder.router({
-    link: {
-      summary: 'Get movie JustWatch links',
-      description:
-        '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a movie in the requested country. Use the movie `id` and two-character `country` path parameter to identify the lookup.',
-      path: '/watchnow/justwatch_links/:country',
+    stats: {
+      summary: 'Get movie stats',
+      description: 'Returns lots of movie stats.',
+      path: '/stats',
       method: 'GET',
       pathParams: idParamsSchema,
       responses: {
-        200: justWatchLinkResponseSchema,
+        200: movieStatsResponseSchema,
       },
     },
-    refresh: {
-      summary: 'Refresh movie JustWatch links',
-      description: `#### 🔥 VIP Only 🔒 OAuth Required
-Queue a refresh of a movie's JustWatch watch now links.`,
-      path: '/refresh/justwatch',
-      method: 'POST',
+    aliases: {
+      summary: 'Get all movie aliases',
+      description:
+        'Returns all title aliases for a movie. Includes localized and alternate titles when available.',
+      path: '/aliases',
+      method: 'GET',
       pathParams: idParamsSchema,
-      body: z.undefined(),
       responses: {
-        201: z.undefined(),
+        200: movieAliasResponseSchema.array(),
       },
     },
-  }),
-  people: {
-    summary: 'Get all people for a movie',
-    description: `#### ✨ Extended Info
+    releases: {
+      summary: 'Get all movie releases',
+      description:
+        'Returns release dates for a movie in the requested country, including certification and release type when available.',
+      path: '/releases/:country',
+      method: 'GET',
+      pathParams: idParamsSchema.merge(countryParamsSchema),
+      responses: {
+        200: movieReleaseResponseSchema.array(),
+      },
+    },
+    translations: {
+      summary: 'Get all movie translations',
+      description:
+        'Returns all translations for a movie, including language, country, and translated values for title, tagline and overview. The `country` field can be used together with `language` to identify regional variants (for example `fr`/`fr` vs `fr`/`ca`). Use the optional `language` query param to filter to a single language.',
+      path: '/translations',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: translationsLanguageQuerySchema,
+      responses: {
+        200: translationResponseSchema,
+      },
+    },
+    related: {
+      summary: 'Get related movies',
+      description: `#### 📄 Pagination ✨ Extended Info
+
+Returns related and similar movies.`,
+      path: '/related',
+      method: 'GET',
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      pathParams: idParamsSchema,
+      responses: {
+        200: movieResponseSchema.array(),
+      },
+    },
+    watching: {
+      summary: 'Get users watching right now',
+      description: `#### ✨ Extended Info
+Returns all users watching this movie right now.`,
+      path: '/watching',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedQuerySchemaFactory<['full']>(),
+      responses: {
+        200: profileResponseSchema.array(),
+      },
+    },
+    studios: {
+      summary: 'Get movie studios',
+      description: 'Returns all studios for a movie.',
+      path: '/studios',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: studioResponseSchema.array(),
+      },
+    },
+    watchnow: {
+      summary: 'Get movie watch now sources',
+      description: `#### 🫣 Limited Access ✨ Extended Info
+This endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.
+
+Returns streaming and watch now sources for a movie in the requested country. Use \`links\` to include provider links when available.`,
+      path: '/watchnow/:country',
+      query: linksQuerySchema.merge(extendedWatchNowQuerySchema),
+      method: 'GET',
+      pathParams: idParamsSchema.merge(countryParamsSchema),
+      responses: {
+        200: watchNowResponseSchema,
+      },
+    },
+    justwatch: builder.router({
+      link: {
+        summary: 'Get movie JustWatch links',
+        description:
+          '#### 🫣 Limited Access\nThis endpoint is documented for visibility, but access is currently limited and may not be available to all API consumers.\n\nReturns JustWatch links for a movie in the requested country. Use the movie `id` and two-character `country` path parameter to identify the lookup.',
+        path: '/watchnow/justwatch_links/:country',
+        method: 'GET',
+        pathParams: idParamsSchema,
+        responses: {
+          200: justWatchLinkResponseSchema,
+        },
+      },
+      refresh: {
+        summary: 'Refresh movie JustWatch links',
+        description: `#### 🔥 VIP Only 🔒 OAuth Required
+Queue a refresh of a movie's JustWatch watch now links.`,
+        path: '/refresh/justwatch',
+        method: 'POST',
+        pathParams: idParamsSchema,
+        body: z.undefined(),
+        responses: {
+          201: z.undefined(),
+        },
+      },
+    }),
+    people: {
+      summary: 'Get all people for a movie',
+      description: `#### ✨ Extended Info
 Returns all \`cast\` and \`crew\` for a movie. Each \`cast\` member will have a \`characters\` array and a standard \`person\` object.
 
 The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`person\` object.
 
 #### Markdown
 If you add \`?extended=markdown\` to the URL, person biographies include links to the movies and shows they mention. Without it the biography is plain text.`,
-    path: '/people',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['images', 'markdown']>(),
-    pathParams: idParamsSchema,
-    responses: {
-      200: peopleResponseSchema,
+      path: '/people',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['images', 'markdown']>(),
+      pathParams: idParamsSchema,
+      responses: {
+        200: peopleResponseSchema,
+      },
     },
-  },
-  videos: {
-    summary: 'Get all videos',
-    description: `#### ✨ Extended Info
+    videos: {
+      summary: 'Get all videos',
+      description: `#### ✨ Extended Info
 Returns all videos including trailers, teasers, clips, and featurettes.`,
-    path: '/videos',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: videoResponseSchema.array(),
+      path: '/videos',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: videoResponseSchema.array(),
+      },
     },
-  },
-  lists: {
-    summary: 'Get lists containing this movie',
-    description: `#### 📄 Pagination 😁 Emojis
+    lists: {
+      summary: 'Get lists containing this movie',
+      description: `#### 📄 Pagination 😁 Emojis
 
 Returns all lists that contain this movie. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
-    path: '/lists/:type/:sort',
-    method: 'GET',
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema),
-    pathParams: idParamsSchema
-      .merge(listSortSchema)
-      .merge(listTypeSchema),
-    responses: {
-      200: listResponseSchema.array(),
+      path: '/lists/:type/:sort',
+      method: 'GET',
+      query: extendedProfileQuerySchema.merge(pageQuerySchema),
+      pathParams: idParamsSchema.merge(listSortSchema).merge(listTypeSchema),
+      responses: {
+        200: listResponseSchema.array(),
+      },
     },
-  },
-  comments: {
-    summary: 'Get all movie comments',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    comments: {
+      summary: 'Get all movie comments',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all top level comments for a movie. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
-    path: '/comments/:sort',
-    method: 'GET',
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema)
-      .merge(languageQuerySchema),
-    pathParams: idParamsSchema.merge(commentsSortParamsSchema),
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/comments/:sort',
+      method: 'GET',
+      query: extendedProfileQuerySchema
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema)
+        .merge(languageQuerySchema),
+      pathParams: idParamsSchema.merge(commentsSortParamsSchema),
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
-  },
-  sentiments: {
-    summary: 'Get movie sentiments',
-    description:
-      'Returns sentiment counts for comments and reactions attached to a movie.',
-    path: '/sentiments',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: sentimentsResponseSchema,
+    sentiments: {
+      summary: 'Get movie sentiments',
+      description:
+        'Returns sentiment counts for comments and reactions attached to a movie.',
+      path: '/sentiments',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: sentimentsResponseSchema,
+      },
     },
-  },
-  report: {
-    summary: 'Report a movie',
-    description: `#### 🔒 OAuth Required
+    report: {
+      summary: 'Report a movie',
+      description: `#### 🔒 OAuth Required
 Report a movie for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per movie.
 
 | reason | description |
@@ -332,19 +327,21 @@ Report a movie for moderator review. Send a \`reason\` and optional \`message\` 
 | \`spam\` | Spam or fake title |
 | \`tmdb\` | Should use TMDB as the datasource |
 | \`other\` | Anything else (add details in \`message\`) |`,
-    path: '/report',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: mediaReportRequestSchema,
-    responses: {
-      201: z.undefined(),
-      400: z.undefined(),
-      409: z.undefined(),
+      path: '/report',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: mediaReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/:id',
-});
+  {
+    pathPrefix: '/:id',
+  },
+);
 
 const GLOBAL_LEVEL = builder.router({
   trending: {
@@ -429,8 +426,7 @@ Returns the most collected movies in the specified time \`period\`, defaulting t
     path: '/updates/:start_date',
     method: 'GET',
     pathParams: startDateParamsSchema,
-    query: extendedMediaQuerySchema
-      .merge(pageQuerySchema),
+    query: extendedMediaQuerySchema.merge(pageQuerySchema),
     responses: {
       200: movieUpdatedResponseSchema.array(),
     },
@@ -497,12 +493,15 @@ Returns movies recently available on streaming services for the requested \`peri
 });
 
 /** ts-rest contract for the `movies` endpoints. */
-export const movies = builder.router({
-  ...ENTITY_LEVEL,
-  ...GLOBAL_LEVEL,
-}, {
-  pathPrefix: '/movies',
-});
+export const movies = builder.router(
+  {
+    ...ENTITY_LEVEL,
+    ...GLOBAL_LEVEL,
+  },
+  {
+    pathPrefix: '/movies',
+  },
+);
 
 /** The movie id parameters. */
 export type MovieIdParams = z.infer<typeof idParamsSchema>;
@@ -519,24 +518,18 @@ export type WatchNowServiceResponse = z.infer<
   typeof watchNowServiceResponseSchema
 >;
 /** The watch now rank response payload. */
-export type watchNowRankResponse = z.infer<
-  typeof watchNowRankResponseSchema
->;
+export type watchNowRankResponse = z.infer<typeof watchNowRankResponseSchema>;
 
 /** The movie stats response payload. */
 export type MovieStatsResponse = z.infer<typeof movieStatsResponseSchema>;
 
 export { movieTrendingResponseSchema };
 /** The movie trending response payload. */
-export type MovieTrendingResponse = z.infer<
-  typeof movieTrendingResponseSchema
->;
+export type MovieTrendingResponse = z.infer<typeof movieTrendingResponseSchema>;
 
 export { movieWatchedResponseSchema };
 /** The movie watched response payload. */
-export type MovieWatchedResponse = z.infer<
-  typeof movieWatchedResponseSchema
->;
+export type MovieWatchedResponse = z.infer<typeof movieWatchedResponseSchema>;
 
 export { movieFavoritedResponseSchema };
 /** The movie favorited response payload. */
@@ -552,9 +545,7 @@ export type MovieAnticipatedResponse = z.infer<
 
 export { movieHotResponseSchema };
 /** The movie hot response payload. */
-export type MovieHotResponse = z.infer<
-  typeof movieHotResponseSchema
->;
+export type MovieHotResponse = z.infer<typeof movieHotResponseSchema>;
 
 /** The movie certification response payload. */
 export type MovieCertificationResponse = z.infer<

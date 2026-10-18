@@ -16,15 +16,17 @@ test('@types/SmartListTemplateResponse: non-personal template', () => {
     },
     personal: false,
     total: 315,
-    items: [{
-      type: 'movie',
-      rank: 1,
-      movie: {
-        title: 'Ne Zha 2',
-        year: 2025,
-        ids: { trakt: 787956, slug: 'ne-zha-2-2025' },
+    items: [
+      {
+        type: 'movie',
+        rank: 1,
+        movie: {
+          title: 'Ne Zha 2',
+          year: 2025,
+          ids: { trakt: 787956, slug: 'ne-zha-2-2025' },
+        },
       },
-    }],
+    ],
   };
 
   expectTypeOf<typeof template>().toEqualTypeOf<SmartListTemplateResponse>();

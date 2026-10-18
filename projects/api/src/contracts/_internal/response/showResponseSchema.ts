@@ -43,11 +43,13 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  airs: z.object({
-    day: z.string().nullish(),
-    time: z.string().nullish(),
-    timezone: z.string().nullish(),
-  }).nullish(),
+  airs: z
+    .object({
+      day: z.string().nullish(),
+      time: z.string().nullish(),
+      timezone: z.string().nullish(),
+    })
+    .nullish(),
   /**
    * Available if requesting extended `full`.
    */
@@ -55,9 +57,13 @@ export const showResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  total_runtime: z.number().int().nullish().describe(
-    'Total runtime in minutes. When exact runtime data is unavailable, this value may include estimated fallback runtimes and should be treated as an approximation.',
-  ),
+  total_runtime: z
+    .number()
+    .int()
+    .nullish()
+    .describe(
+      'Total runtime in minutes. When exact runtime data is unavailable, this value may include estimated fallback runtimes and should be treated as an approximation.',
+    ),
   /**
    * Available if requesting extended `full`.
    */

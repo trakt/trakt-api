@@ -99,10 +99,12 @@ export const yearInReviewPersonaResponseSchema = z.object({
     longest: z.number().int(),
     started_at: z.string().datetime().nullable(),
   }),
-  monthly: z.object({
-    month: z.number().int().min(1).max(12),
-    persona: personaIdSchema,
-  }).array(),
+  monthly: z
+    .object({
+      month: z.number().int().min(1).max(12),
+      persona: personaIdSchema,
+    })
+    .array(),
 });
 
 /** Zod schema for the year in review persona bad request response. */

@@ -31,7 +31,7 @@ async function authDevice() {
   return result;
 }
 
-const result = store.get(StoreKey.Auth) ?? await authDevice();
+const result = store.get(StoreKey.Auth) ?? (await authDevice());
 store.set(StoreKey.Auth, result);
 
 logger.statement(

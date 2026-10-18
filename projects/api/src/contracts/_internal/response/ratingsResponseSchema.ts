@@ -67,53 +67,61 @@ export const externalRatingsResponseSchema = z.object({
 });
 
 /** Shared shape for an external rating source that also reports its vote count. */
-export const externalVotedRatingsResponseSchema = externalRatingsResponseSchema
-  .extend({
+export const externalVotedRatingsResponseSchema =
+  externalRatingsResponseSchema.extend({
     votes: z.number().int().nullish(),
   });
 
 /** Zod schema for the ratings response. */
-export const ratingsResponseSchema = z.object({
-  rating: float(z.number()).nullish(),
-  votes: z.number().int().nullish(),
-  distribution: distributionResponseSchema.nullish(),
-  trakt: z.object({
-    rating: float(z.number()),
-    votes: z.number().int(),
-    distribution: distributionResponseSchema,
-  }).nullish(),
-  /**
-   * Available if requesting extended `all`.
-   */
-  tmdb: externalVotedRatingsResponseSchema.nullish(),
-  /**
-   * Available if requesting extended `all`.
-   */
-  imdb: externalVotedRatingsResponseSchema.nullish(),
-  /**
-   * Available if requesting extended `all`.
-   */
-  metascore: z.object({
-    rating: z.number().int().nullish(),
-    link: z.string().nullish(),
-  }).nullish(),
-  /**
-   * Available if requesting extended `all`.
-   */
-  rotten_tomatoes: externalRatingsResponseSchema.extend({
-    user_rating: z.number().int().nullish(),
-    state: z.string().nullish(),
-    user_state: z.string().nullish(),
-  }).nullish(),
-}).openapi({
-  mediaExamples: {
-    default: {
-      summary: 'Default response',
-      value: ratingsResponseExample,
+export const ratingsResponseSchema = z
+  .object({
+    rating: float(z.number()).nullish(),
+    votes: z.number().int().nullish(),
+    distribution: distributionResponseSchema.nullish(),
+    trakt: z
+      .object({
+        rating: float(z.number()),
+        votes: z.number().int(),
+        distribution: distributionResponseSchema,
+      })
+      .nullish(),
+    /**
+     * Available if requesting extended `all`.
+     */
+    tmdb: externalVotedRatingsResponseSchema.nullish(),
+    /**
+     * Available if requesting extended `all`.
+     */
+    imdb: externalVotedRatingsResponseSchema.nullish(),
+    /**
+     * Available if requesting extended `all`.
+     */
+    metascore: z
+      .object({
+        rating: z.number().int().nullish(),
+        link: z.string().nullish(),
+      })
+      .nullish(),
+    /**
+     * Available if requesting extended `all`.
+     */
+    rotten_tomatoes: externalRatingsResponseSchema
+      .extend({
+        user_rating: z.number().int().nullish(),
+        state: z.string().nullish(),
+        user_state: z.string().nullish(),
+      })
+      .nullish(),
+  })
+  .openapi({
+    mediaExamples: {
+      default: {
+        summary: 'Default response',
+        value: ratingsResponseExample,
+      },
+      extendedAll: {
+        summary: 'Response with `extended=all`',
+        value: extendedRatingsResponseExample,
+      },
     },
-    extendedAll: {
-      summary: 'Response with `extended=all`',
-      value: extendedRatingsResponseExample,
-    },
-  },
-});
+  });

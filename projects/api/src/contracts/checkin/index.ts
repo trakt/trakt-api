@@ -7,10 +7,11 @@ import { movieCheckinResponseSchema } from './schema/response/movieCheckinRespon
 import { showCheckinResponseSchema } from './schema/response/showCheckinResponseSchema.ts';
 
 /** ts-rest contract for the `checkin` endpoints. */
-export const checkin = builder.router({
-  start: {
-    summary: 'Check into an item',
-    description: `#### 🔒 OAuth Required
+export const checkin = builder.router(
+  {
+    start: {
+      summary: 'Check into an item',
+      description: `#### 🔒 OAuth Required
 Check into a movie or episode. This should be tied to a user action to manually indicate they are watching something. The item will display as *watching* on the site, then automatically switch to *watched* status once the duration has elapsed. A unique history \`id\` (64-bit integer) will be returned and can be used to reference this checkin directly.
 
 #### JSON POST Data
@@ -31,31 +32,30 @@ The \`sharing\` object is optional and will apply the user's settings if not sen
 
 > ### Note
 > _If a checkin is already in progress, a \`409\` HTTP status code will returned. The response will contain an \`expires_at\` timestamp which is when the user can check in again._`,
-    method: 'POST',
-    path: '',
-    body: z.union([
-      showCheckinRequestSchema,
-      movieCheckinRequestSchema,
-    ]),
-    responses: {
-      200: z.union([showCheckinResponseSchema, movieCheckinResponseSchema]),
-      409: checkin409ErrorResponse,
+      method: 'POST',
+      path: '',
+      body: z.union([showCheckinRequestSchema, movieCheckinRequestSchema]),
+      responses: {
+        200: z.union([showCheckinResponseSchema, movieCheckinResponseSchema]),
+        409: checkin409ErrorResponse,
+      },
     },
-  },
-  delete: {
-    summary: 'Delete any active checkins',
-    description: `#### 🔒 OAuth Required
+    delete: {
+      summary: 'Delete any active checkins',
+      description: `#### 🔒 OAuth Required
 Removes any active checkins, no need to provide a specific item.`,
-    path: '',
-    method: 'DELETE',
-    responses: {
-      204: z.undefined(),
+      path: '',
+      method: 'DELETE',
+      responses: {
+        204: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/checkin',
-  metadata: authMetadata('required'),
-});
+  {
+    pathPrefix: '/checkin',
+    metadata: authMetadata('required'),
+  },
+);
 
 export { showCheckinRequestSchema };
 /** The show checkin request payload. */

@@ -17,9 +17,10 @@ export function buildEndpointUrl({
   );
   const path = pathParameters.reduce((result, parameter) => {
     const value = values[parameter.id] ?? '';
-    const replacement = parameter.required && !value.trim()
-      ? `{${parameter.name}}`
-      : encodeURIComponent(value);
+    const replacement =
+      parameter.required && !value.trim()
+        ? `{${parameter.name}}`
+        : encodeURIComponent(value);
 
     return result.replaceAll(`{${parameter.name}}`, replacement);
   }, endpoint.path);

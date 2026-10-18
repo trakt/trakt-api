@@ -38,9 +38,7 @@ describe('githubConnectUrl', () => {
     );
     expect(url.searchParams.has('scope')).toBe(false);
     expect(url.searchParams.get('state')).toBe('fixed-state');
-    expect(storage.getItem('trakt-developer-github-state')).toBe(
-      'fixed-state',
-    );
+    expect(storage.getItem('trakt-developer-github-state')).toBe('fixed-state');
     expect(storage.getItem('trakt-developer-github-intent')).toBe('switch');
   });
 });

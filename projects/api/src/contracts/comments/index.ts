@@ -27,9 +27,10 @@ const commentActivityParamsSchema = z.object({
 });
 
 const includeRepliesQuerySchema = z.object({
-  include_replies: z.boolean().optional().describe(
-    'Include replies inline alongside top level comments.',
-  ),
+  include_replies: z
+    .boolean()
+    .optional()
+    .describe('Include replies inline alongside top level comments.'),
 });
 
 const commentActivityQuerySchema = extendedProfileQuerySchema
@@ -44,121 +45,125 @@ const commentItemResponseSchema = z.union([
   listResponseSchema,
 ]);
 
-const REACTIONS_LEVEL = builder.router({
-  summary: {
-    summary: 'Get reaction summary',
-    description:
-      'Returns reaction totals for a comment, grouped by reaction type.',
-    path: '/summary',
-    method: 'GET',
-    responses: {
-      200: reactionsSummaryResponseSchema,
+const REACTIONS_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get reaction summary',
+      description:
+        'Returns reaction totals for a comment, grouped by reaction type.',
+      path: '/summary',
+      method: 'GET',
+      responses: {
+        200: reactionsSummaryResponseSchema,
+      },
     },
-  },
-  all: {
-    summary: 'Get comment reactions',
-    description: `#### 📄 Pagination ✨ Extended Info
+    all: {
+      summary: 'Get comment reactions',
+      description: `#### 📄 Pagination ✨ Extended Info
 Returns users and reaction details for every reaction on a comment. Use pagination and \`extended\` to control the response.`,
-    path: '/',
-    method: 'GET',
-    query: extendedQuerySchemaFactory<['full', 'images']>()
-      .merge(pageQuerySchema)
-      .merge(limitlessQuerySchema),
-    responses: {
-      200: reactionsResponseSchema.array(),
+      path: '/',
+      method: 'GET',
+      query: extendedQuerySchemaFactory<['full', 'images']>()
+        .merge(pageQuerySchema)
+        .merge(limitlessQuerySchema),
+      responses: {
+        200: reactionsResponseSchema.array(),
+      },
     },
-  },
-  add: {
-    summary: 'Add comment reaction',
-    description: `#### 🔒 OAuth Required
+    add: {
+      summary: 'Add comment reaction',
+      description: `#### 🔒 OAuth Required
 Add a reaction to a comment. Use \`reaction_type\` to choose the reaction; a successful create returns \`201\` with no response body.`,
-    path: '/:reaction_type',
-    method: 'POST',
-    body: z.undefined(),
-    pathParams: reactionTypeSchema,
-    responses: {
-      201: z.undefined(),
+      path: '/:reaction_type',
+      method: 'POST',
+      body: z.undefined(),
+      pathParams: reactionTypeSchema,
+      responses: {
+        201: z.undefined(),
+      },
     },
-  },
-  remove: {
-    summary: 'Remove comment reaction',
-    description: `#### 🔒 OAuth Required
+    remove: {
+      summary: 'Remove comment reaction',
+      description: `#### 🔒 OAuth Required
 Remove a reaction from a comment. Use \`reaction_type\` to choose the reaction; a successful delete returns \`204\` with no response body.`,
-    path: '/:reaction_type',
-    method: 'DELETE',
-    pathParams: z.object({
-      reaction_type: reactionEnumSchema.optional(),
-    }),
-    responses: {
-      204: z.undefined(),
+      path: '/:reaction_type',
+      method: 'DELETE',
+      pathParams: z.object({
+        reaction_type: reactionEnumSchema.optional(),
+      }),
+      responses: {
+        204: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/reactions',
-});
+  {
+    pathPrefix: '/reactions',
+  },
+);
 
-const ENTITY_LEVEL = builder.router({
-  summary: {
-    summary: 'Get a comment or reply',
-    description: `#### 😁 Emojis
+const ENTITY_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get a comment or reply',
+      description: `#### 😁 Emojis
 Returns a single comment and indicates how many replies it has. Use [**/comments/:id/replies**](/reference/comments/replies/) to get the actual replies.`,
-    path: '',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    responses: {
-      200: commentResponseSchema,
+      path: '',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: commentResponseSchema,
+      },
     },
-  },
-  item: {
-    summary: 'Get the attached media item',
-    description:
-      '#### ✨ Extended Info\nReturns the media item this comment is attached to. The media type can be `movie`, `show`, `season`, `episode`, or `list` and it also returns the standard media object for that media type.',
-    path: '/item',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedQuerySchemaFactory<['full', 'images']>(),
-    responses: {
-      200: commentItemResponseSchema,
+    item: {
+      summary: 'Get the attached media item',
+      description:
+        '#### ✨ Extended Info\nReturns the media item this comment is attached to. The media type can be `movie`, `show`, `season`, `episode`, or `list` and it also returns the standard media object for that media type.',
+      path: '/item',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedQuerySchemaFactory<['full', 'images']>(),
+      responses: {
+        200: commentItemResponseSchema,
+      },
     },
-  },
-  likes: {
-    summary: 'Get all users who liked a comment',
-    description: `#### 📄 Pagination
+    likes: {
+      summary: 'Get all users who liked a comment',
+      description: `#### 📄 Pagination
 Returns all users who liked a comment. If you only need the \`replies\` count, the main \`comment\` object already has that, so no need to use this method.`,
-    path: '/likes',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: pageQuerySchema,
-    responses: {
-      200: likeResponseSchema.array(),
+      path: '/likes',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: pageQuerySchema,
+      responses: {
+        200: likeResponseSchema.array(),
+      },
     },
-  },
-  like: {
-    summary: 'Like a comment',
-    description: `#### 🔒 OAuth Required
+    like: {
+      summary: 'Like a comment',
+      description: `#### 🔒 OAuth Required
 Votes help determine popular comments. Only one like is allowed per comment per user.`,
-    path: '/like',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: z.undefined(),
-    responses: {
-      204: z.undefined(),
+      path: '/like',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: z.undefined(),
+      responses: {
+        204: z.undefined(),
+      },
     },
-  },
-  unlike: {
-    summary: 'Remove like on a comment',
-    description: `#### 🔒 OAuth Required
+    unlike: {
+      summary: 'Remove like on a comment',
+      description: `#### 🔒 OAuth Required
 Remove a like on a comment.`,
-    path: '/like',
-    method: 'DELETE',
-    pathParams: idParamsSchema,
-    responses: {
-      204: z.undefined(),
+      path: '/like',
+      method: 'DELETE',
+      pathParams: idParamsSchema,
+      responses: {
+        204: z.undefined(),
+      },
     },
-  },
-  report: {
-    summary: 'Report a comment',
-    description: `#### 🔒 OAuth Required
+    report: {
+      summary: 'Report a comment',
+      description: `#### 🔒 OAuth Required
 Report a comment for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per comment.
 
 | reason | description |
@@ -174,36 +179,35 @@ Report a comment for moderator review. Send a \`reason\` and optional \`message\
 | \`duplicate\` | Duplicate comment |
 | \`too_short\` | Too short to be useful |
 | \`other\` | Anything else (add details in \`message\`) |`,
-    path: '/report',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: commentReportRequestSchema,
-    responses: {
-      201: z.undefined(),
-      400: z.undefined(),
-      409: z.undefined(),
+      path: '/report',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: commentReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
     },
-  },
-  replies: {
-    summary: 'Get replies for a comment',
-    description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
+    replies: {
+      summary: 'Get replies for a comment',
+      description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
 Returns all replies for a comment. It is possible these replies could have replies themselves, so in that case you would just call [**/comments/:id/replies**](/reference/comments/replies/) again with the new comment \`id\`.
 
 > ### Note
 > _If you send OAuth, replies from blocked users will be automatically filtered out._`,
-    path: '/replies',
-    method: 'GET',
-    pathParams: idParamsSchema,
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema),
-    responses: {
-      200: commentResponseSchema.array(),
+      path: '/replies',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      query: extendedProfileQuerySchema.merge(pageQuerySchema),
+      responses: {
+        200: commentResponseSchema.array(),
+      },
     },
-  },
-  reply: {
-    summary: 'Post a reply for a comment',
-    description: `#### 🔒 OAuth Required 😁 Emojis
+    reply: {
+      summary: 'Post a reply for a comment',
+      description: `#### 🔒 OAuth Required 😁 Emojis
 Add a new reply to an existing comment. Make sure to allow and encourage *spoilers* to be indicated in your app and follow the rules listed above.
 
 > ### Note
@@ -223,17 +227,17 @@ Send \`null\` to remove the GIF.
 |---|---|---|
 | \`url\` * | string | Klipy GIF url. |
 | \`slug\` | string | Klipy GIF slug, up to 255 characters. |`,
-    path: '/replies',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: commentReplyParamsSchema,
-    responses: {
-      201: commentResponseSchema,
+      path: '/replies',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: commentReplyParamsSchema,
+      responses: {
+        201: commentResponseSchema,
+      },
     },
-  },
-  edit: {
-    summary: 'Update a comment or reply',
-    description: `#### 🔒 OAuth Required 😁 Emojis
+    edit: {
+      summary: 'Update a comment or reply',
+      description: `#### 🔒 OAuth Required 😁 Emojis
 Update a single comment. The OAuth user must match the author of the comment in order to update it. If not, a \`401\` HTTP status is returned.
 
 #### JSON POST Data
@@ -250,29 +254,31 @@ Send \`null\` to remove the GIF.
 |---|---|---|
 | \`url\` * | string | Klipy GIF url. |
 | \`slug\` | string | Klipy GIF slug, up to 255 characters. |`,
-    path: '/',
-    method: 'PUT',
-    pathParams: idParamsSchema,
-    body: commentReplyParamsSchema,
-    responses: {
-      200: commentResponseSchema,
+      path: '/',
+      method: 'PUT',
+      pathParams: idParamsSchema,
+      body: commentReplyParamsSchema,
+      responses: {
+        200: commentResponseSchema,
+      },
     },
-  },
-  delete: {
-    summary: 'Delete a comment or reply',
-    description: `#### 🔒 OAuth Required
+    delete: {
+      summary: 'Delete a comment or reply',
+      description: `#### 🔒 OAuth Required
 Delete a single comment. The OAuth user must match the author of the comment in order to delete it. If not, a \`401\` HTTP status code is returned. The comment must also be less than 2 weeks old or have 0 replies. If not, a \`409\` HTTP status is returned.`,
-    path: '/',
-    method: 'DELETE',
-    pathParams: idParamsSchema,
-    responses: {
-      204: z.undefined(),
+      path: '/',
+      method: 'DELETE',
+      pathParams: idParamsSchema,
+      responses: {
+        204: z.undefined(),
+      },
     },
+    reactions: REACTIONS_LEVEL,
   },
-  reactions: REACTIONS_LEVEL,
-}, {
-  pathPrefix: '/:id',
-});
+  {
+    pathPrefix: '/:id',
+  },
+);
 
 const GLOBAL_LEVEL = builder.router({
   trending: {
@@ -351,12 +357,15 @@ The \`sharing\` object is optional and will apply the user's settings if not sen
 });
 
 /** ts-rest contract for the `comments` endpoints. */
-export const comments = builder.router({
-  ...ENTITY_LEVEL,
-  ...GLOBAL_LEVEL,
-}, {
-  pathPrefix: '/comments',
-});
+export const comments = builder.router(
+  {
+    ...ENTITY_LEVEL,
+    ...GLOBAL_LEVEL,
+  },
+  {
+    pathPrefix: '/comments',
+  },
+);
 
 export {
   commentPostParamsSchema,

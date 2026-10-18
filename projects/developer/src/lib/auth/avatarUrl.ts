@@ -10,8 +10,11 @@ export function avatarUrl(value: unknown): string | null {
     if (
       !['https:', 'http:'].includes(url.protocol) ||
       !['media.trakt.tv', 'walter.trakt.tv'].includes(url.hostname) ||
-      url.username || url.password || url.port
-    ) return null;
+      url.username ||
+      url.password ||
+      url.port
+    )
+      return null;
     url.protocol = 'https:';
     return url.href;
   } catch {

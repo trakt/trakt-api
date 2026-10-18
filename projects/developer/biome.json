@@ -7,12 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": [
-      "**",
-      "!**/*.svelte",
-      "!**/*.svg",
-      "!static/openapi.json"
-    ]
+    "includes": ["**", "!**/*.svelte", "!**/*.svg", "!static/openapi.json"]
   },
   "formatter": {
     "indentStyle": "space",

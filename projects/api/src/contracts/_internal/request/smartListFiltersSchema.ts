@@ -29,7 +29,10 @@ export const smartListFiltersSchema = z.object({
   people_operator: operator.optional(),
   people_role: peopleRole.optional(),
   watchnow: list.optional(),
-  watchnow_country: z.string().regex(/^[a-z]{2}$/).optional(),
+  watchnow_country: z
+    .string()
+    .regex(/^[a-z]{2}$/)
+    .optional(),
   years: intRange.optional(),
   released_within_days: z.number().int().min(1).max(3650).optional(),
   ratings: intRange.optional(),

@@ -4,14 +4,17 @@ function isResponseHistoryEntry(value: unknown): value is ResponseHistoryEntry {
   if (typeof value !== 'object' || value === null) return false;
 
   const entry = value as Partial<ResponseHistoryEntry>;
-  return typeof entry.id === 'string' && typeof entry.endpointId === 'string' &&
+  return (
+    typeof entry.id === 'string' &&
+    typeof entry.endpointId === 'string' &&
     typeof entry.sequence === 'number' &&
     typeof entry.receivedAt === 'string' &&
     typeof entry.request?.method === 'string' &&
     typeof entry.request.url === 'string' &&
     typeof entry.response?.status === 'number' &&
     typeof entry.response.body === 'string' &&
-    Array.isArray(entry.response.headers);
+    Array.isArray(entry.response.headers)
+  );
 }
 
 export function loadResponseHistory(

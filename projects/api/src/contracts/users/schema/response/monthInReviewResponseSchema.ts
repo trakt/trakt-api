@@ -22,13 +22,17 @@ const statsCategoriesSchema = z.object({
   comments_counts: statsSchema,
 });
 
-const watchedEpisodeSchema = z.object({
-  watched_at: z.string().datetime(),
-}).merge(typedEpisodeResponseSchema);
+const watchedEpisodeSchema = z
+  .object({
+    watched_at: z.string().datetime(),
+  })
+  .merge(typedEpisodeResponseSchema);
 
-const watchedMovieSchema = z.object({
-  watched_at: z.string().datetime(),
-}).merge(typedMovieResponseSchema);
+const watchedMovieSchema = z
+  .object({
+    watched_at: z.string().datetime(),
+  })
+  .merge(typedMovieResponseSchema);
 
 const watchedItemSchema = z.discriminatedUnion('type', [
   watchedEpisodeSchema,
@@ -39,10 +43,12 @@ const watchedItemSchema = z.discriminatedUnion('type', [
 // count desc.
 const countryCountSchema = z.object({
   country_count: z.number().int(),
-  countries: z.object({
-    country: z.string(),
-    count: z.number().int(),
-  }).array(),
+  countries: z
+    .object({
+      country: z.string(),
+      count: z.number().int(),
+    })
+    .array(),
 });
 
 const countriesSchema = z.object({
@@ -83,13 +89,15 @@ const thanksSchema = z.object({
 // counts. Month in Review only.
 const streamingServicesSchema = z.object({
   country: z.string(),
-  services: z.object({
-    source: z.string(),
-    name: z.string(),
-    shows: z.number().int(),
-    movies: z.number().int(),
-    all: z.number().int(),
-  }).array(),
+  services: z
+    .object({
+      source: z.string(),
+      name: z.string(),
+      shows: z.number().int(),
+      movies: z.number().int(),
+      all: z.number().int(),
+    })
+    .array(),
 });
 
 // Shared by both the month- and year-in-review endpoints. Year in Review does
@@ -97,9 +105,11 @@ const streamingServicesSchema = z.object({
 /** Zod schema for review base. */
 export const reviewBaseSchema = z.object({
   stats: z.object({
-    all: statsCategoriesSchema.merge(z.object({
-      lists_counts: statsSchema,
-    })),
+    all: statsCategoriesSchema.merge(
+      z.object({
+        lists_counts: statsSchema,
+      }),
+    ),
     shows: statsCategoriesSchema,
     movies: statsCategoriesSchema,
   }),
@@ -115,6 +125,8 @@ export const reviewBaseSchema = z.object({
 });
 
 /** Zod schema for the month in review response. */
-export const monthInReviewResponseSchema = reviewBaseSchema.merge(z.object({
-  streaming_services: streamingServicesSchema,
-}));
+export const monthInReviewResponseSchema = reviewBaseSchema.merge(
+  z.object({
+    streaming_services: streamingServicesSchema,
+  }),
+);

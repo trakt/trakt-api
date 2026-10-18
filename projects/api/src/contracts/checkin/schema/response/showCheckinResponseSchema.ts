@@ -11,15 +11,19 @@ export const showCheckinResponseSchema = z.object({
     mastodon: z.boolean().nullish(),
     tumblr: z.boolean().nullish(),
   }),
-  episode: z.object({
-    season: z.number().int(),
-    number: z.number().int(),
-    title: z.string(),
-    ids: episodeIdsResponseSchema,
-  }).nullish(),
-  show: z.object({
-    title: z.string(),
-    year: z.number().int(),
-    ids: showIdsResponseSchema,
-  }).nullish(),
+  episode: z
+    .object({
+      season: z.number().int(),
+      number: z.number().int(),
+      title: z.string(),
+      ids: episodeIdsResponseSchema,
+    })
+    .nullish(),
+  show: z
+    .object({
+      title: z.string(),
+      year: z.number().int(),
+      ids: showIdsResponseSchema,
+    })
+    .nullish(),
 });

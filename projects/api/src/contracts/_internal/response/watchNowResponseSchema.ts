@@ -26,12 +26,14 @@ export const watchNowServiceResponseSchema = z.object({
   /***
    * Available if requesting links `webos`.
    */
-  link_webos: z.object({
-    id: z.string(),
-    params: z.object({
-      contentTarget: z.string(),
-    }),
-  }).nullish(),
+  link_webos: z
+    .object({
+      id: z.string(),
+      params: z.object({
+        contentTarget: z.string(),
+      }),
+    })
+    .nullish(),
 });
 
 /** Zod schema for the watch now response. */

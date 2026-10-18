@@ -23,10 +23,11 @@ const personUpdatedResponseSchema = z.object({
   person: personResponseSchema,
 });
 
-const ENTITY_LEVEL = builder.router({
-  summary: {
-    summary: 'Get a single person',
-    description: `#### ✨ Extended Info
+const ENTITY_LEVEL = builder.router(
+  {
+    summary: {
+      summary: 'Get a single person',
+      description: `#### ✨ Extended Info
 Returns a single person's details.
 
 #### Gender
@@ -37,61 +38,58 @@ If available, the \`known_for_department\` property will be set to \`production\
 
 #### Biography
 The \`biography\` is plain text. Request extended \`markdown\` to get markdown links to the movies and shows it mentions.`,
-    path: '/',
-    pathParams: idParamsSchema,
-    query: extendedPersonQuerySchema,
-    method: 'GET',
-    responses: {
-      200: personResponseSchema,
+      path: '/',
+      pathParams: idParamsSchema,
+      query: extendedPersonQuerySchema,
+      method: 'GET',
+      responses: {
+        200: personResponseSchema,
+      },
     },
-  },
-  movies: {
-    summary: 'Get movie credits',
-    description: `#### ✨ Extended Info
+    movies: {
+      summary: 'Get movie credits',
+      description: `#### ✨ Extended Info
 Returns all movies where this person is in the \`cast\` or \`crew\`. Each \`cast\` object will have a \`characters\` array and a standard \`movie\` object.
 
 The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, and \`editing\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`movie\` object.`,
-    path: '/movies',
-    pathParams: idParamsSchema,
-    query: extendedMediaQuerySchema,
-    method: 'GET',
-    responses: {
-      200: peopleMovieCreditsResponseSchema,
+      path: '/movies',
+      pathParams: idParamsSchema,
+      query: extendedMediaQuerySchema,
+      method: 'GET',
+      responses: {
+        200: peopleMovieCreditsResponseSchema,
+      },
     },
-  },
-  shows: {
-    summary: 'Get show credits',
-    description: `#### ✨ Extended Info
+    shows: {
+      summary: 'Get show credits',
+      description: `#### ✨ Extended Info
 Returns all shows where this person is in the \`cast\` or \`crew\`, including the \`episode_count\` for which they appear. Each \`cast\` object will have a \`characters\` array and a standard \`show\` object. If \`series_regular\` is \`true\`, this person is a series regular and not simply a guest star.
 
 The \`crew\` object will be broken up by department into \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, \`editing\`, and \`created  by\` (if there are people for those crew positions). Each of those members will have a \`jobs\` array and a standard \`show\` object.`,
-    path: '/shows',
-    pathParams: idParamsSchema,
-    query: extendedMediaQuerySchema,
-    method: 'GET',
-    responses: {
-      200: peopleShowCreditsResponseSchema,
+      path: '/shows',
+      pathParams: idParamsSchema,
+      query: extendedMediaQuerySchema,
+      method: 'GET',
+      responses: {
+        200: peopleShowCreditsResponseSchema,
+      },
     },
-  },
-  lists: {
-    summary: 'Get lists containing this person',
-    description: `#### 📄 Pagination 😁 Emojis
+    lists: {
+      summary: 'Get lists containing this person',
+      description: `#### 📄 Pagination 😁 Emojis
 
 Returns all lists that contain this person. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
-    path: '/lists/:type/:sort',
-    method: 'GET',
-    query: extendedProfileQuerySchema
-      .merge(pageQuerySchema),
-    pathParams: idParamsSchema
-      .merge(listSortSchema)
-      .merge(listTypeSchema),
-    responses: {
-      200: listResponseSchema.array(),
+      path: '/lists/:type/:sort',
+      method: 'GET',
+      query: extendedProfileQuerySchema.merge(pageQuerySchema),
+      pathParams: idParamsSchema.merge(listSortSchema).merge(listTypeSchema),
+      responses: {
+        200: listResponseSchema.array(),
+      },
     },
-  },
-  report: {
-    summary: 'Report a person',
-    description: `#### 🔒 OAuth Required
+    report: {
+      summary: 'Report a person',
+      description: `#### 🔒 OAuth Required
 Report a person for moderator review. Send a \`reason\` and optional \`message\` with additional context. A user can only have one \`pending\` report per person.
 
 | reason | description |
@@ -105,19 +103,21 @@ Report a person for moderator review. Send a \`reason\` and optional \`message\`
 | \`spam\` | Spam or fake person |
 | \`tmdb\` | Should use TMDB as the datasource |
 | \`other\` | Anything else (add details in \`message\`) |`,
-    path: '/report',
-    method: 'POST',
-    pathParams: idParamsSchema,
-    body: peopleReportRequestSchema,
-    responses: {
-      201: z.undefined(),
-      400: z.undefined(),
-      409: z.undefined(),
+      path: '/report',
+      method: 'POST',
+      pathParams: idParamsSchema,
+      body: peopleReportRequestSchema,
+      responses: {
+        201: z.undefined(),
+        400: z.undefined(),
+        409: z.undefined(),
+      },
     },
   },
-}, {
-  pathPrefix: '/:id',
-});
+  {
+    pathPrefix: '/:id',
+  },
+);
 
 const GLOBAL_LEVEL = builder.router({
   updates: {
@@ -127,8 +127,7 @@ const GLOBAL_LEVEL = builder.router({
     path: '/updates/:start_date',
     method: 'GET',
     pathParams: startDateParamsSchema,
-    query: extendedPeopleQuerySchema
-      .merge(pageQuerySchema),
+    query: extendedPeopleQuerySchema.merge(pageQuerySchema),
     responses: {
       200: personUpdatedResponseSchema.array(),
     },
@@ -148,18 +147,19 @@ const GLOBAL_LEVEL = builder.router({
 });
 
 /** ts-rest contract for the `people` endpoints. */
-export const people = builder.router({
-  ...GLOBAL_LEVEL,
-  ...ENTITY_LEVEL,
-}, {
-  pathPrefix: '/people',
-});
+export const people = builder.router(
+  {
+    ...GLOBAL_LEVEL,
+    ...ENTITY_LEVEL,
+  },
+  {
+    pathPrefix: '/people',
+  },
+);
 
 export { personResponseSchema };
 /** The person response payload. */
-export type PersonResponse = z.infer<
-  typeof personResponseSchema
->;
+export type PersonResponse = z.infer<typeof personResponseSchema>;
 
 export { peopleMovieCreditsResponseSchema };
 

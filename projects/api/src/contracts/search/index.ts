@@ -14,19 +14,22 @@ import type { trendingSearchPersonResponseSchema } from './schema/response/trend
 import { trendingSearchResponseSchema } from './schema/response/trendingSearchResponseSchema.ts';
 import type { trendingSearchShowResponseSchema } from './schema/response/trendingSearchShowResponseSchema.ts';
 
-const recent = builder.router({
-  add: {
-    summary: 'Add recent search',
-    description: `#### 🔒 OAuth Required
+const recent = builder.router(
+  {
+    add: {
+      summary: 'Add recent search',
+      description: `#### 🔒 OAuth Required
 Add a recent search to the global search trends. This is not a user-specific recent search history. Send the search request body; a successful create returns \`201\` with no response body.`,
-    path: '/',
-    method: 'POST',
-    body: recentSearchRequestSchema,
-    responses: {
-      201: z.undefined(),
+      path: '/',
+      method: 'POST',
+      body: recentSearchRequestSchema,
+      responses: {
+        201: z.undefined(),
+      },
     },
   },
-}, { pathPrefix: '/recent' });
+  { pathPrefix: '/recent' },
+);
 
 const idLookupParamsSchema = z.object({
   id_type: z.string().describe('External ID type to look up.'),
@@ -38,10 +41,11 @@ const idLookupQuerySchema = z.object({
 });
 
 /** ts-rest contract for the `search` endpoints. */
-export const search = builder.router({
-  query: {
-    summary: 'Get text query results',
-    description: `#### 📄 Pagination ✨ Extended Info
+export const search = builder.router(
+  {
+    query: {
+      summary: 'Get text query results',
+      description: `#### 📄 Pagination ✨ Extended Info
 
 Search all text fields that a media object contains (i.e. title, overview, etc). Results are ordered by the most relevant score. Specify the \`type\` of results by sending a single value or a comma delimited string for multiple types.
 
@@ -83,76 +87,70 @@ By default, certain text fields are used to search for the \`query\`. You can op
 |  | \`biography\` | |
 | \`list\` | \`name\` | &#10003; |
 |  | \`description\` | &#10003; |`,
-    path: '/:type',
-    method: 'GET',
-    pathParams: searchTypeParamFactory([
-      'movie',
-      'show',
-      'episode',
-      'person',
-      'list',
-    ]),
-    query: searchQuerySchema
-      .merge(pageQuerySchema)
-      .merge(
-        extendedQuerySchemaFactory<['full,images', 'markdown']>(),
-      ),
-    responses: {
-      200: searchResultResponseSchema.array(),
+      path: '/:type',
+      method: 'GET',
+      pathParams: searchTypeParamFactory([
+        'movie',
+        'show',
+        'episode',
+        'person',
+        'list',
+      ]),
+      query: searchQuerySchema
+        .merge(pageQuerySchema)
+        .merge(extendedQuerySchemaFactory<['full,images', 'markdown']>()),
+      responses: {
+        200: searchResultResponseSchema.array(),
+      },
     },
-  },
-  exact: {
-    summary: 'Get exact text query results',
-    description: `#### 📄 Pagination ✨ Extended Info
+    exact: {
+      summary: 'Get exact text query results',
+      description: `#### 📄 Pagination ✨ Extended Info
 Search for exact movie or show matches using the requested search \`type\` and \`query\`. Results are paginated and can include extended media details.`,
-    path: '/:type/exact',
-    method: 'GET',
-    pathParams: searchTypeParamFactory(['movie', 'show']),
-    query: searchQuerySchema
-      .merge(pageQuerySchema)
-      .merge(
-        extendedQuerySchemaFactory<['full,images']>(),
-      ),
-    responses: {
-      200: searchResultResponseSchema.array(),
+      path: '/:type/exact',
+      method: 'GET',
+      pathParams: searchTypeParamFactory(['movie', 'show']),
+      query: searchQuerySchema
+        .merge(pageQuerySchema)
+        .merge(extendedQuerySchemaFactory<['full,images']>()),
+      responses: {
+        200: searchResultResponseSchema.array(),
+      },
     },
-  },
-  lookup: {
-    summary: 'Get ID lookup results',
-    description: `#### 📄 Pagination ✨ Extended Info
+    lookup: {
+      summary: 'Get ID lookup results',
+      description: `#### 📄 Pagination ✨ Extended Info
 Lookup items by external ID. Use \`id_type\` and \`id\` to identify the external ID, and optionally send \`type\` to limit the result media type.`,
-    path: '/:id_type/:id',
-    method: 'GET',
-    pathParams: idLookupParamsSchema,
-    query: idLookupQuerySchema
-      .merge(pageQuerySchema)
-      .merge(
-        extendedQuerySchemaFactory<['full,images']>(),
-      ),
-    responses: {
-      200: searchResultResponseSchema.array(),
+      path: '/:id_type/:id',
+      method: 'GET',
+      pathParams: idLookupParamsSchema,
+      query: idLookupQuerySchema
+        .merge(pageQuerySchema)
+        .merge(extendedQuerySchemaFactory<['full,images']>()),
+      responses: {
+        200: searchResultResponseSchema.array(),
+      },
     },
-  },
-  trending: {
-    summary: 'Get trending search results',
-    description: `#### 📄 Pagination ✨ Extended Info
+    trending: {
+      summary: 'Get trending search results',
+      description: `#### 📄 Pagination ✨ Extended Info
 Returns globally trending recent searches by \`type\`. Use \`query\` to narrow the search text and pagination to move through the result set.`,
-    path: '/recent_by_id/global/:type',
-    method: 'GET',
-    pathParams: searchTypeParamFactory(['movies', 'shows', 'people']),
-    query: pageQuerySchema
-      .merge(searchQuerySchema)
-      .merge(
-        extendedQuerySchemaFactory<['full,images']>(),
-      ),
-    responses: {
-      200: trendingSearchResponseSchema.array(),
+      path: '/recent_by_id/global/:type',
+      method: 'GET',
+      pathParams: searchTypeParamFactory(['movies', 'shows', 'people']),
+      query: pageQuerySchema
+        .merge(searchQuerySchema)
+        .merge(extendedQuerySchemaFactory<['full,images']>()),
+      responses: {
+        200: trendingSearchResponseSchema.array(),
+      },
     },
+    recent,
   },
-  recent,
-}, {
-  pathPrefix: '/search',
-});
+  {
+    pathPrefix: '/search',
+  },
+);
 
 export { searchQuerySchema };
 /** The search query parameters. */

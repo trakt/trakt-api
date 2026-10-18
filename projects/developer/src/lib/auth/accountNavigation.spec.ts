@@ -73,10 +73,7 @@ it.each([
   '//evil.example/apps',
   '/docs/../callback',
   '/docs/api-url/extra',
-])(
-  'rejects unsupported return path %s',
-  (path) => {
-    globalThis.sessionStorage.setItem('trakt-developer-return-section', path);
-    expect(takeReturnPath()).toBe('/');
-  },
-);
+])('rejects unsupported return path %s', (path) => {
+  globalThis.sessionStorage.setItem('trakt-developer-return-section', path);
+  expect(takeReturnPath()).toBe('/');
+});

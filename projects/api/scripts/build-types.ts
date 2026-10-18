@@ -52,8 +52,8 @@ const rewrite = (src: string): string =>
     (_m, quote, path) => `${quote}${path}.d.ts${quote}`,
   );
 
-const declarations = (await readdir(tmp, { recursive: true })).filter(
-  (path) => path.endsWith('.d.ts'),
+const declarations = (await readdir(tmp, { recursive: true })).filter((path) =>
+  path.endsWith('.d.ts'),
 );
 await Promise.all(
   declarations.map(async (path) => {

@@ -5,9 +5,10 @@ type TraktHeadersOptions = {
   base?: Headers;
 };
 
-export function traktHeaders(
-  { accessToken, base }: TraktHeadersOptions = {},
-): Headers {
+export function traktHeaders({
+  accessToken,
+  base,
+}: TraktHeadersOptions = {}): Headers {
   const headers = new Headers(base);
 
   headers.set('accept', headers.get('accept') ?? 'application/json');

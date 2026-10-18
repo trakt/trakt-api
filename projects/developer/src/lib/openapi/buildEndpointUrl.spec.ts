@@ -7,16 +7,16 @@ describe('buildEndpointUrl', () => {
     const endpoint = seedCatalog.endpoints.at(0);
     if (!endpoint) throw new Error('Missing seed endpoint.');
 
-    expect(buildEndpointUrl({
-      endpoint,
-      serverUrl: 'https://api.trakt.tv',
-      values: {
-        'path:id': 'blade runner/1982',
-        'query:extended': 'full',
-      },
-    })).toBe(
-      'https://api.trakt.tv/movies/blade%20runner%2F1982?extended=full',
-    );
+    expect(
+      buildEndpointUrl({
+        endpoint,
+        serverUrl: 'https://api.trakt.tv',
+        values: {
+          'path:id': 'blade runner/1982',
+          'query:extended': 'full',
+        },
+      }),
+    ).toBe('https://api.trakt.tv/movies/blade%20runner%2F1982?extended=full');
   });
 
   it('should show placeholders for missing required path values', () => {
@@ -50,12 +50,12 @@ describe('buildEndpointUrl', () => {
       ],
     };
 
-    expect(buildEndpointUrl({
-      endpoint,
-      serverUrl: 'https://api.trakt.tv',
-      values: { 'path:days': '   ' },
-    })).toBe(
-      'https://api.trakt.tv/calendars/{start_date}/{days}',
-    );
+    expect(
+      buildEndpointUrl({
+        endpoint,
+        serverUrl: 'https://api.trakt.tv',
+        values: { 'path:days': '   ' },
+      }),
+    ).toBe('https://api.trakt.tv/calendars/{start_date}/{days}');
   });
 });

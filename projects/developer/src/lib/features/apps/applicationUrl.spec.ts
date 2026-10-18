@@ -27,6 +27,7 @@ it('reads back the name hint it writes, within the display limit', () => {
     'https://developer.trakt.tv',
   );
   expect(applicationNameFrom(url)).toBe('a'.repeat(255));
-  expect(applicationNameFrom(new URL('https://developer.trakt.tv/apps/42')))
-    .toBeUndefined();
+  expect(
+    applicationNameFrom(new URL('https://developer.trakt.tv/apps/42')),
+  ).toBeUndefined();
 });

@@ -51,9 +51,11 @@ describe('observe account changes', () => {
   it('clears errors when another tab replaces the stored session', () => {
     const { target, stop } = setup();
     accountSessionErrors.mark(0);
-    target.dispatchEvent(Object.assign(new Event('storage'), {
-      key: 'trakt-developer-account-0.user:https://auth.trakt.tv:client',
-    }));
+    target.dispatchEvent(
+      Object.assign(new Event('storage'), {
+        key: 'trakt-developer-account-0.user:https://auth.trakt.tv:client',
+      }),
+    );
     expect(accountSessionErrors.has(0)).toBe(false);
     stop();
   });
@@ -81,13 +83,11 @@ describe('observe account changes', () => {
       target.dispatchEvent(Object.assign(new Event('storage'), { key }));
     }
     expect(onChange).not.toHaveBeenCalled();
-    for (
-      const key of [
-        'trakt-developer-account-0.user:https://auth.trakt.tv:client',
-        'trakt-developer-username-1',
-        null,
-      ]
-    ) {
+    for (const key of [
+      'trakt-developer-account-0.user:https://auth.trakt.tv:client',
+      'trakt-developer-username-1',
+      null,
+    ]) {
       target.dispatchEvent(Object.assign(new Event('storage'), { key }));
     }
     expect(onChange).toHaveBeenCalledTimes(3);

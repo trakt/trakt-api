@@ -11,11 +11,12 @@ export function matchUsernames(
   if (!needle) return [];
   const available = people.filter((person) => !excludedSlugs.has(person.slug));
   const startsWith = available.filter((person) =>
-    person.username.toLowerCase().startsWith(needle)
+    person.username.toLowerCase().startsWith(needle),
   );
-  const contains = available.filter((person) =>
-    !person.username.toLowerCase().startsWith(needle) &&
-    person.username.toLowerCase().includes(needle)
+  const contains = available.filter(
+    (person) =>
+      !person.username.toLowerCase().startsWith(needle) &&
+      person.username.toLowerCase().includes(needle),
   );
   return [...startsWith, ...contains].slice(0, SUGGESTION_LIMIT);
 }
