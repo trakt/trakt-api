@@ -13,6 +13,7 @@ import type {
   MediaTypeObject,
   OpenAPIObject,
   OperationObject,
+  ParameterObject,
   PathsObject,
   ReferenceObject,
   SchemaObject,
@@ -76,7 +77,7 @@ const getPathParameters = (path: string, zodObject?: unknown) => {
       return zodShape[param] === undefined;
     });
 
-  const params: any[] = paramsFromPath?.map((param) => ({
+  const params: ParameterObject[] = paramsFromPath?.map((param) => ({
     name: param,
     in: 'path' as const,
     required: true,
