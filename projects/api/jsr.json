@@ -1,0 +1,17 @@
+{
+  "name": "@trakt/api",
+  "version": "0.0.0",
+  "exports": "./mod.js",
+  "publish": {
+    "include": [
+      "mod.js",
+      "jsr.json",
+      "README.md",
+      "src",
+      "types"
+    ],
+    "exclude": [
+      "**/*.test.ts"
+    ]
+  }
+}

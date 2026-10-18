@@ -28,5 +28,5 @@
 // the package free of "slow types" AND makes the npm compatibility layer point
 // `package.json`'s `types` straight at `./types/index.d.ts` (a `.ts` entry
 // would emit a `_dist` shim with a broken relative path). Runtime still comes
-// from `./src/index.ts`; regenerate `./types` with `deno task build:types`.
+// from `./src/index.ts`; regenerate `./types` with `bun run build:types`.
 export * from './src/index.ts';

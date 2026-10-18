@@ -1,4 +1,4 @@
-import { assertEquals, assertFalse, assertStringIncludes } from '@std/assert';
+import { expect, test } from 'bun:test';
 import type {
   OperationObject,
   ParameterObject,
@@ -50,22 +50,22 @@ const getResponseItemSchema = (operation: OperationObject): SchemaObject => {
   return schema.items;
 };
 
-Deno.test('search query docs omit the retired engine parameter', () => {
+test('search query docs omit the retired engine parameter', () => {
   for (const path of ['/search/{type}', '/search/{type}/exact']) {
     const operation = getOperation(path);
-    assertFalse(
+    expect(
       operation.parameters?.some((parameter) =>
         !('$ref' in parameter) && parameter.name === 'engine'
       ) ?? false,
-    );
+    ).toBe(false);
   }
 });
 
-Deno.test('search type docs list the types supported by each endpoint', () => {
+test('search type docs list the types supported by each endpoint', () => {
   const queryType = getSchema(
     getParameter(getOperation('/search/{type}'), 'type'),
   );
-  assertEquals(queryType.enum, [
+  expect(queryType.enum).toEqual([
     'movie',
     'show',
     'episode',
@@ -76,22 +76,22 @@ Deno.test('search type docs list the types supported by each endpoint', () => {
   const exactType = getSchema(
     getParameter(getOperation('/search/{type}/exact'), 'type'),
   );
-  assertEquals(exactType.enum, ['movie', 'show']);
+  expect(exactType.enum).toEqual(['movie', 'show']);
 });
 
-Deno.test('search result docs expose one flat schema with episode support', () => {
+test('search result docs expose one flat schema with episode support', () => {
   const result = getResponseItemSchema(getOperation('/search/{type}'));
 
-  assertEquals(result.oneOf, undefined);
-  assertEquals(result.properties?.type, {
+  expect(result.oneOf).toEqual(undefined);
+  expect(result.properties?.type).toEqual({
     type: 'string',
     enum: ['movie', 'show', 'episode', 'person', 'list'],
   });
-  assertEquals(result.required, ['score', 'type']);
+  expect(result.required).toEqual(['score', 'type']);
 });
 
-Deno.test('recent search docs describe global trend tracking', () => {
+test('recent search docs describe global trend tracking', () => {
   const addDescription = document.paths['/search/recent/']?.post?.description;
 
-  assertStringIncludes(addDescription ?? '', 'global search trends');
+  expect(addDescription ?? '').toContain('global search trends');
 });

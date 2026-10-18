@@ -1,8 +1,8 @@
-import { assertType, type IsExact } from '@std/testing/types';
+import { expectTypeOf, test } from 'bun:test';
 
 import type { YearInReviewPersonaResponse } from './index.ts';
 
-Deno.test('@types/YearInReviewPersonaResponse: complete persona response', () => {
+test('@types/YearInReviewPersonaResponse: complete persona response', () => {
   const persona: YearInReviewPersonaResponse = {
     persona: 'cinephile',
     runner_up: null,
@@ -30,11 +30,7 @@ Deno.test('@types/YearInReviewPersonaResponse: complete persona response', () =>
     monthly: [{ month: 1, persona: 'critic' }],
   };
 
-  assertType<
-    IsExact<typeof persona.runner_up, YearInReviewPersonaResponse['runner_up']>
-  >(true);
-  assertType<IsExact<typeof persona.confidence, 'strong' | 'leaning'>>(true);
-  assertType<
-    IsExact<YearInReviewPersonaResponse['scores']['cinephile'], number>
-  >(true);
+  expectTypeOf<typeof persona.runner_up>().toEqualTypeOf<YearInReviewPersonaResponse['runner_up']>();
+  expectTypeOf<typeof persona.confidence>().toEqualTypeOf<'strong' | 'leaning'>();
+  expectTypeOf<YearInReviewPersonaResponse['scores']['cinephile']>().toEqualTypeOf<number>();
 });

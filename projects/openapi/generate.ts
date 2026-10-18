@@ -130,5 +130,5 @@ export function generate(): ReturnType<typeof generateOpenApi> {
 }
 
 if (import.meta.main) {
-  await Deno.writeTextFile('openapi.json', JSON.stringify(generate(), null, 2));
+  await Bun.write('openapi.json', JSON.stringify(generate(), null, 2));
 }

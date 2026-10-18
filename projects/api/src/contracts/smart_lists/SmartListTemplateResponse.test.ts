@@ -1,9 +1,9 @@
-import { assertType, type IsExact } from '@std/testing/types';
+import { expectTypeOf, test } from 'bun:test';
 
 import { smartListTemplateResponseSchema } from '../_internal/response/smartListTemplateResponseSchema.ts';
 import type { SmartListTemplateResponse } from '../../index.ts';
 
-Deno.test('@types/SmartListTemplateResponse: non-personal template', () => {
+test('@types/SmartListTemplateResponse: non-personal template', () => {
   const template: SmartListTemplateResponse = {
     id: 'hidden-gems',
     source: 'discover',
@@ -27,11 +27,11 @@ Deno.test('@types/SmartListTemplateResponse: non-personal template', () => {
     }],
   };
 
-  assertType<IsExact<typeof template, SmartListTemplateResponse>>(true);
+  expectTypeOf<typeof template>().toEqualTypeOf<SmartListTemplateResponse>();
   smartListTemplateResponseSchema.parse(template);
 });
 
-Deno.test('@types/SmartListTemplateResponse: personal template', () => {
+test('@types/SmartListTemplateResponse: personal template', () => {
   const template: SmartListTemplateResponse = {
     id: 'just-landed-services',
     source: 'discover',

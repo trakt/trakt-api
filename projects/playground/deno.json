@@ -1,8 +1,0 @@
-{
-  "tasks": {
-    "dev": "deno run --allow-all --watch main.ts"
-  },
-  "imports": {
-    "@std/fs": "jsr:@std/fs@^1.0.5"
-  }
-}

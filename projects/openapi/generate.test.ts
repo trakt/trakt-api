@@ -1,3 +1,4 @@
+import { test } from 'bun:test';
 import type { OperationObject } from 'openapi3-ts';
 import { generate } from './generate.ts';
 
@@ -19,7 +20,7 @@ function getOperations(): OperationObject[] {
   );
 }
 
-Deno.test('uses the API host by default', () => {
+test('uses the API host by default', () => {
   const document = generate();
   const apiOperation = document.paths['/movies/trending']?.get;
 
@@ -36,7 +37,7 @@ Deno.test('uses the API host by default', () => {
   assertEquals(apiOperation?.servers, undefined);
 });
 
-Deno.test('uses the auth host for every OAuth endpoint', () => {
+test('uses the auth host for every OAuth endpoint', () => {
   const oauthOperations = getOperations().filter((operation) =>
     operation.tags?.includes('oauth')
   );
@@ -50,7 +51,7 @@ Deno.test('uses the auth host for every OAuth endpoint', () => {
   }
 });
 
-Deno.test('uses the auth host for the OAuth2 flow URLs', () => {
+test('uses the auth host for the OAuth2 flow URLs', () => {
   const document = generate();
   const oauth2 = document.components?.securitySchemes?.traktOAuth;
 

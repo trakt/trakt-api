@@ -1,4 +1,4 @@
-import { ensureDir, ensureFile } from '@std/fs';
+import { mkdir } from 'node:fs/promises';
 import type { OAuthTokenResponse } from '@trakt/api';
 
 const STORE_DIR = '.store';
@@ -15,18 +15,17 @@ type StoreKeyToValue = {
 export const store = await (async () => {
   const filePath = `${STORE_DIR}/${STORE_FILE}`;
 
-  await ensureDir(STORE_DIR);
-  await ensureFile(filePath);
+  await mkdir(STORE_DIR, { recursive: true });
 
-  const dbRaw = new TextDecoder()
-    .decode(await Deno.readFile(filePath));
+  const file = Bun.file(filePath);
+  const dbRaw = await file.exists() ? await file.text() : '';
   const db = dbRaw.length ? JSON.parse(dbRaw) : {};
 
   return {
     get: (key: StoreKey) => db[key] as StoreKeyToValue[typeof key] | undefined,
     set: (key: StoreKey, value: StoreKeyToValue[typeof key]) => {
       db[key] = value;
-      Deno.writeTextFile(filePath, JSON.stringify(db));
+      Bun.write(filePath, JSON.stringify(db));
     },
   };
 })();

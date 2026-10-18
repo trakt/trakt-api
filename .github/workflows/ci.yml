@@ -37,8 +37,10 @@ jobs:
               - '.github/workflows/ci.yml'
               - '.github/workflows/developer.yml'
               - '.github/workflows/developer-verify.yml'
-              - 'deno.json'
-              - 'deno.lock'
+              - 'package.json'
+              - 'bun.lock'
+              - 'biome.json'
+              - 'tsconfig.json'
 
   commitlint:
     needs: files-changed
@@ -67,35 +69,31 @@ jobs:
       - name: Summoning the Ancient Scrolls aka Checkout Code
         uses: actions/checkout@v5
 
-      - name: The Oracle's Gaze aka Setup Deno
-        uses: denoland/setup-deno@v2
+      - name: The Oracle's Gaze aka Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          deno-version: v2.9.4
+          bun-version: 1.3.14
 
       - name: The Sacred Assembly aka Install Dependencies
-        run: deno task install
+        run: bun install --frozen-lockfile
 
       - name: The Mirror's Judgement aka Check Formatting
-        run: deno fmt --check
+        run: bun run format:check
 
       - name: The Truth of Types aka Type Check Source
         working-directory: projects/api
-        run: deno check src/index.ts
+        run: bun run check
 
       - name: The Rehearsed Offering aka Build Types and Publish Dry Run
         working-directory: projects/api
-        run: deno task publish:check
-
-      - name: The Truth of Types aka Type Check Published Entry
-        working-directory: projects/api
-        run: deno check mod.js
+        run: bun run publish:check
 
       - name: The Purifying Flame aka Lint
-        run: deno lint
+        run: bun run lint
 
       - name: The Trial by Combat aka Test
         working-directory: projects/api
-        run: deno task test
+        run: bun run test
 
   openapi:
     needs: files-changed
@@ -105,20 +103,20 @@ jobs:
       - name: Summoning the Ancient Scrolls aka Checkout Code
         uses: actions/checkout@v5
 
-      - name: The Oracle's Gaze aka Setup Deno
-        uses: denoland/setup-deno@v2
+      - name: The Oracle's Gaze aka Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          deno-version: v2.9.4
+          bun-version: 1.3.14
 
       - name: The Sacred Assembly aka Install Dependencies
-        run: 'deno task install'
+        run: bun install --frozen-lockfile
 
       - name: The Scroll's Scrutiny aka Validate OpenAPI
-        run: deno task openapi:validate
+        run: bun run openapi:validate
 
       - name: The Sacred Transcription aka Generate OpenAPI
         if: github.ref == 'refs/heads/master'
-        run: deno task openapi:generate
+        run: bun run openapi:generate
 
       - name: Preserving the Sacred Texts aka Upload Definition
         if: github.ref == 'refs/heads/master'

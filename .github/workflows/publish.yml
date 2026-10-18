@@ -1,8 +1,8 @@
 name: The Rite of Ascension aka Publish to JSR
 
-# Version is driven by the git tag, not by `deno.json` (which stays at the
+# Version is driven by the git tag, not by `jsr.json` (which stays at the
 # `0.0.0` placeholder). Push a `vX.Y.Z` or `X.Y.Z` tag - the workflow extracts
-# the version, writes it into `deno.json`, and publishes to JSR via OIDC
+# the version, writes it into `jsr.json`, and publishes to JSR via OIDC
 # (tokenless, with provenance).
 on:
   push:
@@ -32,10 +32,10 @@ jobs:
       - name: The Oracle's Gaze aka Checkout Code
         uses: actions/checkout@v5
 
-      - name: The Summoning aka Setup Deno
-        uses: denoland/setup-deno@v2
+      - name: The Summoning aka Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          deno-version: v2.x
+          bun-version: 1.3.14
 
       - name: The Reading of the Sign aka Resolve Version
         id: version
@@ -50,16 +50,16 @@ jobs:
 
       - name: The Inscription aka Set Version
         run: |
-          sed -i -E "s/\"version\": \"[^\"]*\"/\"version\": \"${{ steps.version.outputs.version }}\"/" projects/api/deno.json
-          grep '"version"' projects/api/deno.json
+          sed -i -E "s/\"version\": \"[^\"]*\"/\"version\": \"${{ steps.version.outputs.version }}\"/" projects/api/jsr.json
+          grep '"version"' projects/api/jsr.json
 
       - name: The Sacred Assembly aka Install Dependencies
-        run: deno task install
+        run: bun install --frozen-lockfile
 
       - name: The Transcription aka Generate Static Types
-        run: cd projects/api && deno task build:types
+        run: cd projects/api && bun run build:types
 
-      # `--allow-dirty`: the version was injected into deno.json above, so the
+      # `--allow-dirty`: the version was injected into jsr.json above, so the
       # working tree intentionally differs from the tagged commit.
       - name: The Offering aka Publish
-        run: cd projects/api && deno publish --allow-dirty
+        run: cd projects/api && bun x jsr publish --allow-dirty

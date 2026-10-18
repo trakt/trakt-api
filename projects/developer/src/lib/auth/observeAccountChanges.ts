@@ -43,7 +43,9 @@ export function observeAccountChanges(
   target.addEventListener('storage', onStorage);
 
   return () => {
-    subscriptions.forEach((unsubscribe) => unsubscribe());
+    subscriptions.forEach((unsubscribe) => {
+      unsubscribe();
+    });
     stopObservingErrors();
     target.removeEventListener('storage', onStorage);
   };

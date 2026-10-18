@@ -22,7 +22,7 @@ function run(command, args, cwd) {
   });
 }
 
-await run('deno', ['task', 'openapi:generate'], repositoryRoot);
+await run('bun', ['run', 'openapi:generate'], repositoryRoot);
 
 const document = JSON.parse(await readFile(generated, 'utf8'));
 await mkdir(dirname(destination), { recursive: true });

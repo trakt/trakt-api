@@ -5,3 +5,5 @@
 .DS_Store
 
 openapi.json
+
+node_modules/
