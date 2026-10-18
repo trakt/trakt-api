@@ -52,12 +52,20 @@ function sanitizeUrl(value: string): string {
   }
 }
 
+const storedEntries = new WeakMap<ResponseHistoryEntry, ResponseHistoryEntry>();
+
 function storedEntry(entry: ResponseHistoryEntry): ResponseHistoryEntry {
-  return {
+  const cached = storedEntries.get(entry);
+  if (cached) return cached;
+
+  const stored = {
     ...entry,
     request: { ...entry.request, url: sanitizeUrl(entry.request.url) },
     response: { ...entry.response, body: sanitizeBody(entry.response) },
   };
+  storedEntries.set(entry, stored);
+
+  return stored;
 }
 
 export function saveResponseHistory({
