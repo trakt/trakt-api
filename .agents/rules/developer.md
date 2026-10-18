@@ -167,11 +167,12 @@ the repo root.
 
 ## Checking
 
-Before pushing, run what CI runs (`.github/workflows/developer.yml`), from
-`projects/developer`:
+Before pushing, run what CI runs (`.github/workflows/developer-verify.yml`),
+from `projects/developer`:
 
 ```sh
 deno fmt --check --config deno.json
+deno lint --config deno.json
 deno task format:svelte:check
 deno task check   # svelte-kit sync + svelte-check
 deno task test

@@ -221,6 +221,7 @@ Run from this directory:
 
 ```sh
 deno fmt --check --config deno.json
+deno lint --config deno.json
 deno task format:svelte:check
 deno task check
 deno task test
@@ -235,6 +236,8 @@ handling, and request execution. `build` regenerates the OpenAPI document and
 produces the static site in `build/`. Use `deno task preview` to inspect it
 locally.
 
-The [Developer workflow](../../.github/workflows/developer.yml) runs these
-checks with a frozen dependency install, then deploys from master. Root aliases
-are `developer:check`, `developer:test`, and `developer:build`.
+The [Developer Verify workflow](../../.github/workflows/developer-verify.yml)
+runs these checks with a frozen dependency install, on pull requests and before
+the [Developer workflow](../../.github/workflows/developer.yml) deploys from
+master. Root aliases are `developer:check`, `developer:test`, and
+`developer:build`.

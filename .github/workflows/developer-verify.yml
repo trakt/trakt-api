@@ -1,0 +1,31 @@
+name: Developer Verify
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PUBLIC_TRAKT_CLIENT_ID: synthetic-ci-client-id-never-real
+      PUBLIC_GITHUB_CLIENT_ID: synthetic-ci-client-id-never-real
+    defaults:
+      run:
+        working-directory: projects/developer
+    steps:
+      - uses: actions/checkout@v5
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
+      - run: deno install --allow-scripts --frozen
+        working-directory: ${{ github.workspace }}
+      - run: deno install --allow-scripts --frozen
+      - run: deno fmt --check --config deno.json
+      - run: deno lint --config deno.json
+      - run: deno task format:svelte:check
+      - run: deno task check
+      - run: deno task test
+      - run: deno task build
