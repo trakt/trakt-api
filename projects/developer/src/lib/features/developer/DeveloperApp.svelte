@@ -428,7 +428,7 @@
       responseHistory = nextHistory;
       saveResponseHistory({
         storage: globalThis.sessionStorage,
-        entries: nextHistory,
+        entries: responseHistory,
       });
     } catch (error) {
       if (generation === sessionGeneration) {
