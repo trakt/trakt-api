@@ -178,3 +178,10 @@ bun run check   # svelte-kit sync + svelte-check
 bun run test
 bun run build
 ```
+
+`check`, `test` and `build` need `PUBLIC_TRAKT_CLIENT_ID` and
+`PUBLIC_GITHUB_CLIENT_ID` set. Export the same synthetic value CI uses
+(`synthetic-ci-client-id-never-real`). Copying `.env.example` to `.env` is not
+enough: its values are empty, and two request specs need a non-empty client
+id. `build` also needs the root workspace installed (`bun run install:frozen`)
+for the OpenAPI generator.
