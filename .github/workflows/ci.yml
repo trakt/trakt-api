@@ -6,24 +6,21 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches:
-      - master
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   files-changed:
     if: github.event.pull_request.draft == false
     name: The Watchful Eye (Files Changed)
     runs-on: ubuntu-latest
-    concurrency:
-      group: ci-${{ github.ref }}
-      cancel-in-progress: true
     outputs:
-      api_source: ${{ steps.changes.outputs.api_source }}
-      client_source: ${{ steps.changes.outputs.client_source }}
-      workflows: ${{ steps.changes.outputs.workflows }}
+      developer: ${{ steps.changes.outputs.developer }}
     steps:
       - name: The Oracle's Gaze aka Checkout Code
         uses: actions/checkout@v5
@@ -33,19 +30,39 @@ jobs:
         id: changes
         with:
           filters: |
-            api_source:
-              - 'projects/api/src/**'
-              - 'projects/api/deno.json'
-            openapi:
-              - 'projects/openapi/*'
+            developer:
+              - 'projects/developer/**'
+              - 'projects/api/**'
+              - 'projects/openapi/**'
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/developer.yml'
+              - '.github/workflows/developer-verify.yml'
+              - 'deno.json'
+              - 'deno.lock'
 
-  openapi:
+  commitlint:
     needs: files-changed
-    name: The Scribe's Chamber (OpenAPI)
+    if: github.event_name == 'pull_request'
+    name: The Gatekeeper's Grimoire (Commitlint)
     runs-on: ubuntu-latest
-    concurrency:
-      group: openapi-${{ github.ref }}
-      cancel-in-progress: true
+    steps:
+      - name: Unveiling the Code Codex
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Scrutinizing the Commit Chronicle
+        uses: wagoid/commitlint-github-action@v3
+
+      - name: Exterminating the Fixup Fiends
+        uses: vladjerca/no-fixups-action@main
+        with:
+          skip-checkout: true
+
+  api:
+    needs: files-changed
+    name: The Forge's Proving (API, Format, Lint)
+    runs-on: ubuntu-latest
     steps:
       - name: Summoning the Ancient Scrolls aka Checkout Code
         uses: actions/checkout@v5
@@ -53,16 +70,50 @@ jobs:
       - name: The Oracle's Gaze aka Setup Deno
         uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.3.0
+          deno-version: v2.9.4
+
+      - name: The Sacred Assembly aka Install Dependencies
+        run: deno task install
+
+      - name: The Mirror's Judgement aka Check Formatting
+        run: deno fmt --check
+
+      - name: The Truth of Types aka Type Check Source
+        working-directory: projects/api
+        run: deno check src/index.ts
+
+      - name: The Rehearsed Offering aka Build Types and Publish Dry Run
+        working-directory: projects/api
+        run: deno task publish:check
+
+      - name: The Truth of Types aka Type Check Published Entry
+        working-directory: projects/api
+        run: deno check mod.js
+
+      - name: The Purifying Flame aka Lint
+        run: deno lint
+
+      - name: The Trial by Combat aka Test
+        working-directory: projects/api
+        run: deno task test
+
+  openapi:
+    needs: files-changed
+    name: The Scribe's Chamber (OpenAPI)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summoning the Ancient Scrolls aka Checkout Code
+        uses: actions/checkout@v5
+
+      - name: The Oracle's Gaze aka Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.4
 
       - name: The Sacred Assembly aka Install Dependencies
         run: 'deno task install'
 
       - name: The Scroll's Scrutiny aka Validate OpenAPI
-        if: ${{
-          needs.files-changed.outputs.api_source == 'true' ||
-          needs.files-changed.outputs.openapi == 'true'
-          }}
         run: deno task openapi:validate
 
       - name: The Sacred Transcription aka Generate OpenAPI
@@ -111,3 +162,19 @@ jobs:
           git add openapi/openapi.json
           git commit -m 'chore: openapi schema updates'
           git push --force origin feat/openapi_ci
+
+  developer:
+    needs: files-changed
+    if: needs.files-changed.outputs.developer == 'true' && github.event_name == 'pull_request'
+    name: The Portal's Trial (Developer)
+    uses: ./.github/workflows/developer-verify.yml
+
+  ci-passed:
+    if: always()
+    needs: [files-changed, commitlint, api, openapi, developer]
+    name: CI passed
+    runs-on: ubuntu-latest
+    steps:
+      - name: The Final Verdict
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
