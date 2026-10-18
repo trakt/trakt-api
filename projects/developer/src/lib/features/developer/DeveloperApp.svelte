@@ -32,6 +32,7 @@
   import { hasInvalidParameterValues } from "./hasInvalidParameterValues.ts";
   import { hasMissingExpectedJsonBody } from "./hasMissingExpectedJsonBody.ts";
   import { hasMissingRequiredParameters } from "./hasMissingRequiredParameters.ts";
+  import { haveSameAccounts } from "./haveSameAccounts.ts";
   import { managedHeaders } from "./managedHeaders.ts";
   import RequestEditor from "./RequestEditor.svelte";
   import type { RequestEditorTab } from "./RequestEditorTab.ts";
@@ -375,9 +376,11 @@
     const generation = sessionGeneration;
     const nextAccounts = await listAccounts().catch(() => []);
     if (generation !== sessionGeneration) return;
-    accounts = nextAccounts;
     accountsLoading = false;
-    profileRevision += 1;
+    if (!haveSameAccounts(accounts, nextAccounts)) {
+      accounts = nextAccounts;
+      profileRevision += 1;
+    }
     if (accounts.some((account) => account.slot === selectedAccountSlot))
       return;
 
