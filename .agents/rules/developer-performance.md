@@ -43,6 +43,41 @@ rendered lists (the endpoint sidebar, JSON viewers), the bundle, or images.
 - Filter and group large lists (endpoints, response history) in `$derived`, not
   in the template, so the work runs once per change.
 
+## Reactive State and Timers
+
+- **Large data that is only ever replaced uses `$state.raw`.** A deep `$state`
+  wraps every nested object in a proxy, and each read goes through it. The
+  332-endpoint catalog in `DeveloperApp.svelte` is raw: typing a search and
+  clearing it went from about 9 ms to about 6 ms of script. Before switching,
+  grep every reader for in-place writes and `bind:` to a field; a raw value
+  only updates on reassignment.
+- **A timer that only feeds UI under `{#if}` runs only while that UI is shown.**
+  Start it in an `$effect` guarded by the same condition, and refresh the value
+  when it starts (`AccountMenu.svelte`: the status clock ticks only while the
+  menu is open, 1 wakeup per second -> 0 while closed).
+- **Memoize per-entry serialization by object identity**, in a `WeakMap`, when
+  entries never change after creation (`saveResponseHistory.ts`). Pass the
+  reactive array after assigning it, not the plain array you built: reads of a
+  `$state` array return proxies, so a plain object and its proxy are two cache
+  keys. A send went from N+2 `JSON.parse` calls (N = stored entries, up to 20)
+  to 3.
+
+## Looked Like Wins, Were Not
+
+Measured in a browser and dropped. Do not re-propose without a new number.
+
+- Passing body validity from `DeveloperApp` into `RequestEditor` to "parse once
+  per keystroke". `isSendDisabled` is a lazy `$derived` read only on send, so
+  the body was already parsed once per keystroke for validity.
+- Skipping the `headers` reassignment in `setValue` when no header is bound to
+  the parameter. Its readers also depend on `values`, so they re-run anyway; no
+  script-time change in 4 paired runs.
+- `contain` on the workspace panels to cut panel-resize layout. Every panel's
+  width changes on drag, so each relayouts anyway, and `contain: paint` would
+  clip the request menus.
+- Debouncing the endpoint search. `filterEndpoints` takes about 0.09 ms over
+  332 endpoints; a debounce only adds lag.
+
 ## Bundle
 
 - SvelteKit already splits per route. Do not add manual `import()` splits

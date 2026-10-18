@@ -125,5 +125,7 @@ Source: `.agents/rules/developer-ui.md`,
   `prefers-reduced-motion`, and do not blanket-declare `will-change`.
 - Touch and wheel listeners are passive unless they call `preventDefault()`.
   Listeners, timers, and rAFs are cleaned up.
+- Large data that is only ever replaced is `$state.raw`, not a deep `$state`.
+  A timer that only feeds UI under `{#if}` runs only while that UI is shown.
 - `<img>` has explicit `width` / `height`; non-critical images are
   `loading="lazy"` + `decoding="async"`.
