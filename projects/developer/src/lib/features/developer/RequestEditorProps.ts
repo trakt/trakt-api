@@ -11,6 +11,7 @@ export type RequestEditorProps = {
   headers: ReadonlyArray<ApiHeader>;
   body: string;
   activeTab: RequestEditorTab;
+  isLoading: boolean;
   isSending: boolean;
   errorMessage: string;
   onServer: (value: string) => void;

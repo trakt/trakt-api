@@ -25,6 +25,7 @@
     headers,
     body,
     activeTab,
+    isLoading,
     isSending,
     errorMessage,
     onServer,
@@ -142,7 +143,12 @@
   }
 </script>
 
-<section class="trakt-request-editor" bind:this={requestEditor}>
+<section
+  class="trakt-request-editor"
+  bind:this={requestEditor}
+  inert={isLoading}
+  aria-busy={isLoading}
+>
   <header class="endpoint-heading">
     <div class="endpoint-title">
       <div class="endpoint-eyebrow">
