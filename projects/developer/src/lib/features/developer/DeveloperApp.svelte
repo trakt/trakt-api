@@ -701,6 +701,7 @@
           {headers}
           body={requestBody}
           {activeTab}
+          isLoading={isLoadingCatalog}
           {isSending}
           errorMessage={requestError}
           onServer={setServer}
