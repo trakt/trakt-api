@@ -2,8 +2,9 @@ import { asString, z } from '../../../_internal/z.ts';
 
 /**
  * Zod schema for the source name in a collected item's `available_on`.
- * Synced items are labelled `plex`.
+ * Synced items are labelled with the media server they came from: `plex` or
+ * `jellyfin`.
  */
 export const availableOnNameResponseSchema = asString(
-  z.enum(['digital', 'plex']),
+  z.enum(['digital', 'plex', 'jellyfin']),
 );
