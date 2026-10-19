@@ -116,6 +116,8 @@ const smartListItemsPathParamsSchema = listParamsSchema.extend({
 
 const ITEMS_DESCRIPTION = `Returns the dynamic items a smart list resolves to, worked out when you request them. A list can hold movies, shows, or both. Use query filters and pagination to refine the result set.
 
+Query filters narrow the list: they apply on top of its own filters, never instead of them. A thriller list requested with \`genres=crime\` returns thrillers that are also crime. \`ignore_*\` flags add to the list's own, and the list's source and streaming region always stay its own.
+
 Streaming (\`watchnow\`) filters resolve against the list owner, not the caller: the list region, else the owner's region, else \`us\`, and \`favorites\` means the owner's services.
 
 List filters (\`genres\`, \`studios\`, \`people\`, \`watchnow\`, and similar) accept a \`-\` prefix on a value to exclude it. New filters: \`released_within_days\`, \`tmdb_ratings\`, \`metascores\`, \`votes\`, \`imdb_votes\`, \`studios\`, \`people\`, \`people_operator\` and \`people_role\`.`;

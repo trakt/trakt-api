@@ -344,7 +344,7 @@ Returns a ready-made smart list setup for a personal list that stopped updating 
       description: `#### 🔒 OAuth Required
 Turns your personal list that stopped updating (see \`stale_origin\`) into a smart list. Send the same body as creating a smart list, usually the \`filters\`, \`source\` and \`media_type\` from [**smart-list-draft**](#reference/users/lists), edited as you like. Only the list owner can convert it.
 
-The list keeps its address: its items are then served from the smart list, and it carries \`converted_to\` pointing at the smart list.
+The list keeps its address: its items are then served from the smart list, and it carries \`converted_to\` pointing at the smart list. Filters sent with its items request narrow the smart list, the same way they narrow a regular list.
 
 | Status | When |
 |---|---|
