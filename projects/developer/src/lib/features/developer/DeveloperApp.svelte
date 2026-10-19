@@ -41,6 +41,7 @@
   import { resolveEndpointServer } from "./resolveEndpointServer.ts";
   import { decodeRequestUrlState } from "./decodeRequestUrlState.ts";
   import { encodeRequestUrlState } from "./encodeRequestUrlState.ts";
+  import { replaceHistoryUrlUnlessThrottled } from "./replaceHistoryUrlUnlessThrottled.ts";
   import type { RequestUrlState } from "./RequestUrlState.ts";
   import ResponseInspector from "./ResponseInspector.svelte";
 
@@ -197,7 +198,10 @@
     const nextUrl = new URL(globalThis.location.href);
     nextUrl.searchParams.delete("operation");
     nextUrl.hash = fragment;
-    globalThis.history.replaceState(globalThis.history.state, "", nextUrl);
+    replaceHistoryUrlUnlessThrottled({
+      history: globalThis.history,
+      url: nextUrl,
+    });
   });
 
   function initialValues(endpoint: Endpoint): Record<string, string> {
