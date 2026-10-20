@@ -9,6 +9,8 @@ import { z } from '../../../_internal/z.ts';
 /** Zod schema for media rating. */
 export const mediaRatingSchema = z.object({
   rating: z.number().int().min(1).max(10),
+  /** UTC datetime the item was rated; defaults to now. */
+  rated_at: z.string().datetime().nullish(),
 });
 
 /** Zod schema for ratings param. */
