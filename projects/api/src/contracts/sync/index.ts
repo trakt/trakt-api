@@ -421,7 +421,7 @@ const ratings = builder.router(
     add: {
       summary: 'Add new ratings',
       description: `#### 🔒 OAuth Required
-Rate one or more items. Accepts shows, seasons, episodes and movies. If only a show is passed, only the show itself will be rated. If seasons are specified, all of those seasons will be rated.
+Rate one or more items. Accepts shows, seasons, episodes and movies. A show without \`seasons\` rates the show itself. Send \`seasons\` inside a show to rate those seasons instead; add \`episodes\` to a season to rate only those episodes. Items without a \`rating\` are skipped.
 
 Send a \`rated_at\` UTC datetime to mark items as rated in the past. This is useful for syncing ratings from a media center.
 
