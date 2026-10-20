@@ -78,7 +78,8 @@ The \`crew\` object will be broken up by department into \`production\`, \`art\`
       summary: 'Get lists containing this person',
       description: `#### 📄 Pagination 😁 Emojis
 
-Returns all lists that contain this person. By default, \`personal\` lists are returned sorted by the most \`popular\`.`,
+Lists no longer support people, so this always returns an empty array.`,
+      deprecated: true,
       path: '/lists/:type/:sort',
       method: 'GET',
       query: extendedProfileQuerySchema.merge(pageQuerySchema),
