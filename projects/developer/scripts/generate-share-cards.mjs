@@ -53,7 +53,7 @@ const page = ({ method, path }) =>
           ? '#ffbd5b'
           : '#ff6b72'
   }}
-  .rule{width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,#9f42c6,#c02b81 42%,#f50613 78%,transparent)}
+  .rule{width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,#6438d0,#c02b81 42%,#f50613 78%,transparent)}
   .methods{display:flex;align-items:center;gap:12px}
   .pill{padding:8px 16px;border-radius:8px;font-family:"JetBrains Mono",monospace;font-size:18px;font-weight:700;letter-spacing:0.04em}
   .get{color:#65d28b;background:rgba(101,210,139,.14)}
