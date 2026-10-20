@@ -24,22 +24,21 @@ const showSeasonRatingSchema = mediaRatingSchema.extend({
     .nullish(),
 });
 
+/** A show rated itself, or through its `seasons`. */
+export const showRatingSchema = mediaRatingSchema.extend({
+  ids: showIdsRequestSchema,
+  /** Required unless `seasons` is sent. */
+  rating: ratingSchema.nullish(),
+  /** Rates these seasons or episodes instead of the show. */
+  seasons: z.array(showSeasonRatingSchema).nullish(),
+});
+
 /** Zod schema for ratings param. */
 export const ratingsParamSchema = z.object({
   movies: z
     .array(mediaRatingSchema.merge(z.object({ ids: movieIdsRequestSchema })))
     .nullish(),
-  shows: z
-    .array(
-      mediaRatingSchema.extend({
-        ids: showIdsRequestSchema,
-        /** Required unless `seasons` is sent. */
-        rating: ratingSchema.nullish(),
-        /** Rates these seasons or episodes instead of the show. */
-        seasons: z.array(showSeasonRatingSchema).nullish(),
-      }),
-    )
-    .nullish(),
+  shows: z.array(showRatingSchema).nullish(),
   seasons: z
     .array(mediaRatingSchema.merge(z.object({ ids: seasonIdsRequestSchema })))
     .nullish(),
