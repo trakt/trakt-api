@@ -73,13 +73,13 @@ Returns users and reaction details for every reaction on a comment. Use paginati
     add: {
       summary: 'Add comment reaction',
       description: `#### 🔒 OAuth Required
-Add a reaction to a comment. Use \`reaction_type\` to choose the reaction; a successful create returns \`201\` with no response body.`,
+Add a reaction to a comment. Use \`reaction_type\` to choose the reaction; a successful create returns \`204\` with no response body.`,
       path: '/:reaction_type',
       method: 'POST',
       body: z.undefined(),
       pathParams: reactionTypeSchema,
       responses: {
-        201: z.undefined(),
+        204: z.undefined(),
       },
     },
     remove: {
