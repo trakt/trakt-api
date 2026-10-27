@@ -1,5 +1,8 @@
 import { z } from '../z.ts';
 
+const SEVERITY_RANGE =
+  'Parental guide severity range `min-max`, from 0 (none) to 3 (severe).';
+
 /** Zod schema for the media filter parameters. */
 export const mediaFilterParamsSchema = z.object({
   watchnow: z
@@ -32,4 +35,13 @@ export const mediaFilterParamsSchema = z.object({
   countries: z.string().nullish(),
   statuses: z.string().nullish(),
   certifications: z.string().nullish(),
+  parental_nudity: z.string().nullish().describe(SEVERITY_RANGE),
+  parental_violence: z.string().nullish().describe(SEVERITY_RANGE),
+  parental_profanity: z.string().nullish().describe(SEVERITY_RANGE),
+  parental_alcohol: z.string().nullish().describe(SEVERITY_RANGE),
+  parental_frightening: z.string().nullish().describe(SEVERITY_RANGE),
+  parental_include_unrated: z
+    .boolean()
+    .nullish()
+    .describe('Also include titles without parental guide ratings.'),
 });
