@@ -24,6 +24,8 @@ const DEVELOPER_ERROR_MESSAGES = {
     'Your Trakt account is connected to a different GitHub account. Use Switch GitHub account to change it.',
   dev_redirect_not_local:
     'Development apps can only redirect to localhost, 127.0.0.1 or [::1].',
+  production_apps_unavailable:
+    'Production apps are currently unavailable. Contact support@trakt.tv if you need one.',
   production_requires_plan:
     'Production apps are currently unavailable. Contact support@trakt.tv if you need one.',
   application_not_dev: 'Only development apps have a sign-in list.',
