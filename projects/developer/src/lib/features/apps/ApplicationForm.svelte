@@ -8,6 +8,7 @@
   const {
     app,
     githubUsername = null,
+    productionAvailable,
     busy,
     onSave,
     onCancel,
@@ -77,24 +78,32 @@
             value={true}
             bind:group={dev}
           />
-          <strong>Development</strong>
+          <strong class="type-title">Development</strong>
           <small class="type-hint"
             >Only you and people you add can sign in. Redirect URIs must point
             to localhost.</small
           ></label
-        ><label class="type-option" class:is-selected={!dev}
+        ><label
+          class="type-option"
+          class:is-selected={!dev}
+          class:is-disabled={!productionAvailable}
           ><input
             class="type-radio"
             type="radio"
             name="app-type"
             value={false}
+            disabled={!productionAvailable}
             bind:group={dev}
           />
-          <strong>Production</strong>
-          <small class="type-hint"
-            >Anyone with a Trakt account can sign in. Redirect URIs must use
-            https://.</small
-          ></label
+          <strong class="type-title">Production</strong>
+          {#if productionAvailable}<small class="type-hint"
+              >Anyone with a Trakt account can sign in. Redirect URIs must use
+              https://.</small
+            >{:else}<small class="type-hint"
+              >Currently unavailable. Contact <a href="mailto:support@trakt.tv"
+                >support@trakt.tv</a
+              > if you need a production app.</small
+            >{/if}</label
         >
       </fieldset>{/if}
     <label
@@ -262,6 +271,14 @@
       &.is-selected {
         border-color: var(--color-accent);
         background: var(--color-accent-soft);
+      }
+
+      &.is-disabled {
+        cursor: not-allowed;
+
+        .type-title {
+          color: var(--color-muted);
+        }
       }
 
       .type-radio {
