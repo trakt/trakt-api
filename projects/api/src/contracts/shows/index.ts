@@ -42,12 +42,14 @@ import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSc
 import { z } from '../_internal/z.ts';
 import { episodeParamsSchema } from './schema/request/episodeParamsSchema.ts';
 import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
+import { showProgressResetRequestSchema } from './schema/request/showProgressResetRequestSchema.ts';
 import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
 import { showCollectionProgressResponseSchema } from './schema/response/showCollectionProgressResponseSchema.ts';
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
 import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
+import { showProgressResetResponseSchema } from './schema/response/showProgressResetResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
 import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
@@ -388,20 +390,20 @@ By default, the \`last_episode\` and \`next_episode\` are calculated using the l
       },
       reset: {
         summary: 'Reset show progress',
-        description:
-          'Reset a show progress. This starts re-watching a show and allows watched progress calculations to ignore previous watches.',
+        description: `#### 🔥 VIP Only 🔒 OAuth Required
+Reset a show progress. This starts re-watching a show and allows watched progress calculations to ignore previous watches. Send an optional \`reset_at\` to start the reset from an earlier time; it defaults to now.`,
         path: '/progress/watched/reset',
         method: 'POST',
         pathParams: idParamsSchema,
-        body: z.undefined(),
+        body: showProgressResetRequestSchema,
         responses: {
-          200: z.undefined(),
+          201: showProgressResetResponseSchema,
         },
       },
       undoReset: {
         summary: 'Undo reset show progress',
-        description:
-          'Undo a show progress reset and restore normal watched progress calculations.',
+        description: `#### 🔥 VIP Only 🔒 OAuth Required
+Undo a show progress reset and restore normal watched progress calculations.`,
         path: '/progress/watched/reset',
         method: 'DELETE',
         pathParams: idParamsSchema,
