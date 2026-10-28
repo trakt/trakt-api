@@ -18,6 +18,7 @@ const API_ERROR_CODES = [
   'github_code_expired',
   'github_account_taken',
   'github_account_mismatch',
+  'production_apps_unavailable',
   'production_requires_plan',
 ];
 
