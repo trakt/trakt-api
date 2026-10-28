@@ -460,7 +460,7 @@
         <ApplicationForm
           app={mode === "edit" ? selected : undefined}
           githubUsername={profile?.github?.username ?? null}
-          productionAvailable={!!profile?.subscription}
+          productionAvailable={tier === "premium"}
           {busy}
           onSave={save}
           onCancel={() => {
