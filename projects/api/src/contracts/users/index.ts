@@ -412,12 +412,18 @@ Get a user's profile information. If the user is private, info will only be retu
     },
     activities: {
       summary: 'Get social activity',
-      description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
-Returns recent activity for a user social graph. Use \`type\` to choose \`friends\`, \`followers\`, or \`following\`, and use pagination to move through the activity feed.`,
+      description: `#### 🫣 Limited Access 🔓 OAuth Optional 📄 Pagination ✨ Extended Info
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response.
+
+Returns the last 7 days of watch activity from a user's social graph, newest first. Use \`type\` to choose \`friends\`, \`followers\`, or \`following\`, and use pagination to move through the activity feed.
+
+Activity from a private user is only included when you follow them. Set \`?extended=rating\` to include each person's \`user_rating\` for the item they watched.`,
       path: '/:type/activities',
       method: 'GET',
       pathParams: profileParamsSchema.merge(socialActivityParamsSchema),
-      query: extendedMediaQuerySchema
+      query: extendedQuerySchemaFactory<
+        ['full', 'images', 'colors', 'streaming_ids', 'rating']
+      >()
         .merge(mediaFilterParamsSchema)
         .merge(ignoreQuerySchema)
         .merge(pageQuerySchema),
