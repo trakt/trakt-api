@@ -4,6 +4,7 @@ import type { ApplicationInput } from './ApplicationInput.ts';
 export type ApplicationFormProps = {
   app?: Application;
   githubUsername?: string | null;
+  productionAvailable: boolean;
   busy: boolean;
   onSave: (input: ApplicationInput) => void;
   onCancel: () => void;
