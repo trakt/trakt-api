@@ -2,6 +2,8 @@ import { authMetadata, builder } from '../_internal/builder.ts';
 import { z } from '../_internal/z.ts';
 import { connectRequestSchema } from './schema/request/connectRequestSchema.ts';
 import { refreshParamsSchema } from './schema/request/refreshParamsSchema.ts';
+import { refreshRequestSchema } from './schema/request/refreshRequestSchema.ts';
+import { refreshServiceRequestSchema } from './schema/request/refreshServiceRequestSchema.ts';
 import { serviceIdParamsSchema } from './schema/request/serviceIdParamsSchema.ts';
 import { connectionSchema } from './schema/response/connectionResponseSchema.ts';
 import { connectResponseSchema } from './schema/response/connectResponseSchema.ts';
@@ -39,6 +41,17 @@ A \`422\` is returned when the service is not connectable on the user's plan, an
         422: z.undefined(),
       },
     },
+    refreshService: {
+      summary: 'Refresh a streaming service (service in the body)',
+      description: `#### 🔒 OAuth Required
+Queue a re-sync of the connected streaming service named by \`service_id\` in the body. Free accounts only sync the service within their limit.`,
+      method: 'POST',
+      path: '/users/refresh',
+      body: refreshServiceRequestSchema,
+      responses: {
+        201: z.undefined(),
+      },
+    },
     refresh: {
       summary: 'Refresh a streaming service',
       description: `#### 🔒 OAuth Required
@@ -46,21 +59,21 @@ Queue / force a re-sync of a connected streaming service for the authenticated u
       method: 'POST',
       path: '/users/refresh/:service_id',
       pathParams: serviceIdParamsSchema,
-      body: z.undefined(),
+      body: refreshRequestSchema.optional(),
       responses: {
-        204: z.undefined(),
+        201: z.undefined(),
       },
     },
     refreshAll: {
       summary: 'Refresh a streaming service (full re-sync)',
       description: `#### 🔒 OAuth Required
-Queue / force a re-sync of a connected streaming service for the authenticated user. The trailing \`all_data\` segment forces a full re-sync of all data rather than an incremental one.`,
+Queue / force a re-sync of a connected streaming service for the authenticated user. An \`all_data\` segment of \`true\` forces a full re-sync of all data rather than an incremental one.`,
       method: 'POST',
       path: '/users/refresh/:service_id/:all_data',
       pathParams: refreshParamsSchema,
-      body: z.undefined(),
+      body: refreshRequestSchema.optional(),
       responses: {
-        204: z.undefined(),
+        201: z.undefined(),
       },
     },
     disconnect: {
@@ -86,6 +99,8 @@ export {
   connectRequestSchema,
   connectResponseSchema,
   refreshParamsSchema,
+  refreshRequestSchema,
+  refreshServiceRequestSchema,
   serviceIdParamsSchema,
 };
 
@@ -95,3 +110,9 @@ export type YounifyConnection = z.infer<typeof connectionSchema>;
 export type YounifyConnectRequest = z.infer<typeof connectRequestSchema>;
 /** The younify connect response payload. */
 export type YounifyConnectResponse = z.infer<typeof connectResponseSchema>;
+/** The younify refresh request payload. */
+export type YounifyRefreshRequest = z.infer<typeof refreshRequestSchema>;
+/** The younify refresh request payload that names the service in the body. */
+export type YounifyRefreshServiceRequest = z.infer<
+  typeof refreshServiceRequestSchema
+>;
