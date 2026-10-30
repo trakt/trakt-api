@@ -1,6 +1,6 @@
 import { authMetadata, builder } from '../_internal/builder.ts';
-import { bulkMediaRequestSchema } from '../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySchemaFactory.ts';
+import { historyItemsRequestSchema } from '../_internal/request/historyItemsRequestSchema.ts';
 import { lifetimeStatsQuerySchema } from '../_internal/request/lifetimeStatsQuerySchema.ts';
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
@@ -272,7 +272,7 @@ Send a \`watched_at\` UTC datetime to mark items as watched in the past. This is
 | \`watched_at\` | datetime | UTC datetime when the item was watched. Set to \`released\` to automatically use the initial release date + runtime *(episodes only)*. Set to \`unknown\` to mark the item as watched without a specific date. |`,
       method: 'POST',
       path: '',
-      body: bulkMediaRequestSchema,
+      body: historyItemsRequestSchema,
       responses: {
         200: historyResponseSchema,
       },
@@ -757,7 +757,7 @@ export type PlaybackResponse = z.infer<typeof playbackResponseSchema>;
 export type UpNextIntentRequest = z.infer<typeof upNextIntentQuerySchema>;
 
 /** The history add request payload. */
-export type HistoryAddRequest = z.infer<typeof bulkMediaRequestSchema>;
+export type HistoryAddRequest = z.infer<typeof historyItemsRequestSchema>;
 /** The history remove request payload. */
 export type HistoryRemoveRequest = z.infer<typeof historyRemoveRequestSchema>;
 /** The history response payload. */

@@ -1,6 +1,6 @@
 import { builder } from '../../_internal/builder.ts';
-import { bulkMediaRequestSchema } from '../../_internal/request/bulkMediaRequestSchema.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
+import { historyItemsRequestSchema } from '../../_internal/request/historyItemsRequestSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { z } from '../../_internal/z.ts';
 import { hiddenParamsSchema } from '../schema/request/hiddenParamsSchema.ts';
@@ -41,7 +41,7 @@ Hide items for a specific section. Here's what type of items can hidden for each
       path: '/:section',
       pathParams: hiddenParamsSchema,
       method: 'POST',
-      body: bulkMediaRequestSchema,
+      body: historyItemsRequestSchema,
       responses: {
         200: hiddenAddResponseSchema,
       },
@@ -90,7 +90,7 @@ Returns shows the authenticated user has dropped or hidden from progress. Use pa
 Remove shows or seasons from hidden watched progress. Send hideable media objects in the request body; the response contains remove counts.`,
         path: '/progress_watched/remove',
         method: 'POST',
-        body: bulkMediaRequestSchema,
+        body: historyItemsRequestSchema,
         responses: {
           200: historyRemoveResponseSchema,
         },
@@ -101,7 +101,7 @@ Remove shows or seasons from hidden watched progress. Send hideable media object
 Remove movies or shows from hidden calendar items. Send hideable media objects in the request body; the response contains remove counts.`,
         path: '/calendar/remove',
         method: 'POST',
-        body: bulkMediaRequestSchema,
+        body: historyItemsRequestSchema,
         responses: {
           200: historyRemoveResponseSchema,
         },
@@ -113,7 +113,7 @@ Remove hidden items for a specific section. Send hideable media objects in the r
         path: '/:section/remove',
         method: 'POST',
         pathParams: hiddenParamsSchema,
-        body: bulkMediaRequestSchema,
+        body: historyItemsRequestSchema,
         responses: {
           200: historyRemoveResponseSchema,
         },
@@ -128,4 +128,4 @@ Remove hidden items for a specific section. Send hideable media objects in the r
 /** The hidden show item response payload. */
 export type HiddenShowItemResponse = z.infer<typeof hiddenShowResponseSchema>;
 /** The hidden media request payload. */
-export type HiddenMediaRequest = z.infer<typeof bulkMediaRequestSchema>;
+export type HiddenMediaRequest = z.infer<typeof historyItemsRequestSchema>;
