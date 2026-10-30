@@ -20,9 +20,7 @@ const seasonIdsSchema = allMediaIdsSchema.omit({
 });
 
 const episodeIdsSchema = allMediaIdsSchema.omit({
-  imdb: true,
   slug: true,
-  tmdb: true,
 });
 
 /** Zod schema for the show ids request. */
@@ -52,5 +50,7 @@ export const seasonIdsRequestSchema = z.union([
 /** Zod schema for the episode ids request. */
 export const episodeIdsRequestSchema = z.union([
   episodeIdsSchema.extend({ trakt: z.number().int() }),
+  episodeIdsSchema.extend({ imdb: z.string() }),
+  episodeIdsSchema.extend({ tmdb: z.number().int() }),
   episodeIdsSchema.extend({ tvdb: z.number().int() }),
 ]);
