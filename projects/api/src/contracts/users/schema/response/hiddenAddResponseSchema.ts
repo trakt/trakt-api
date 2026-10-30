@@ -1,4 +1,4 @@
-import { bulkMediaRequestSchema } from '../../../_internal/request/bulkMediaRequestSchema.ts';
+import { historyItemsRequestSchema } from '../../../_internal/request/historyItemsRequestSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for the hidden add response. */
@@ -8,5 +8,5 @@ export const hiddenAddResponseSchema = z.object({
     shows: z.number().int(),
     season: z.number().int(),
   }),
-  not_found: bulkMediaRequestSchema,
+  not_found: historyItemsRequestSchema,
 });
