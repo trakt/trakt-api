@@ -4,6 +4,7 @@ import { extendedQuerySchemaFactory } from '../_internal/request/extendedQuerySc
 import { lifetimeStatsQuerySchema } from '../_internal/request/lifetimeStatsQuerySchema.ts';
 import { listRequestSchema } from '../_internal/request/listRequestSchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
+import { mediaItemsRequestSchema } from '../_internal/request/mediaItemsRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
@@ -622,7 +623,7 @@ Returns movies, shows, and episodes in the authenticated user collection. Use \`
         'Add items to a user collection. Accepts shows, seasons, episodes, and movies.',
       method: 'POST',
       path: '',
-      body: listRequestSchema,
+      body: mediaItemsRequestSchema,
       responses: {
         201: listAddResponseSchema,
       },
@@ -633,7 +634,7 @@ Returns movies, shows, and episodes in the authenticated user collection. Use \`
         'Remove items from a user collection. Accepts shows, seasons, episodes, and movies.',
       method: 'POST',
       path: '/remove',
-      body: listRequestSchema,
+      body: mediaItemsRequestSchema,
       responses: {
         200: listRemoveResponseSchema,
       },
