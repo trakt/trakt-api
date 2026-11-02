@@ -36,14 +36,14 @@ The \`sharing\` object is optional and will apply the user's settings if not sen
       path: '',
       body: z.union([showCheckinRequestSchema, movieCheckinRequestSchema]),
       responses: {
-        200: z.union([showCheckinResponseSchema, movieCheckinResponseSchema]),
+        201: z.union([showCheckinResponseSchema, movieCheckinResponseSchema]),
         409: checkin409ErrorResponse,
       },
     },
     delete: {
       summary: 'Delete any active checkins',
       description: `#### 🔒 OAuth Required
-Removes any active checkins, no need to provide a specific item.`,
+Removes any active checkins, no need to provide a specific item. The elapsed progress is saved as paused playback, so the next checkin of the same item resumes from it.`,
       path: '',
       method: 'DELETE',
       responses: {
