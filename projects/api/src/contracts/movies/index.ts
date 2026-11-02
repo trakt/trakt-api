@@ -14,6 +14,7 @@ import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { mediaReportRequestSchema } from '../_internal/request/mediaReportRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { personalizedQuerySchema } from '../_internal/request/personalizedQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
@@ -169,10 +170,12 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
       summary: 'Get related movies',
       description: `#### 📄 Pagination ✨ Extended Info
 
-Returns related and similar movies.`,
+Returns related and similar movies. Pass \`personalized=true\` as a VIP to re-order them toward your taste.`,
       path: '/related',
       method: 'GET',
-      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      query: extendedMediaQuerySchema
+        .merge(pageQuerySchema)
+        .merge(personalizedQuerySchema),
       pathParams: idParamsSchema,
       responses: {
         200: movieResponseSchema.array(),

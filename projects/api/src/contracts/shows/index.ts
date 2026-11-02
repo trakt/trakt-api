@@ -14,6 +14,7 @@ import { linksQuerySchema } from '../_internal/request/linksQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { mediaReportRequestSchema } from '../_internal/request/mediaReportRequestSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
+import { personalizedQuerySchema } from '../_internal/request/personalizedQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
 import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
@@ -428,11 +429,13 @@ Undo a show progress reset and restore normal watched progress calculations.`,
       summary: 'Get related shows',
       description: `#### 📄 Pagination ✨ Extended Info
 
-Returns related and similar shows.`,
+Returns related and similar shows. Pass \`personalized=true\` as a VIP to re-order them toward your taste.`,
       path: '/related',
       method: 'GET',
       pathParams: idParamsSchema,
-      query: extendedMediaQuerySchema.merge(pageQuerySchema),
+      query: extendedMediaQuerySchema
+        .merge(pageQuerySchema)
+        .merge(personalizedQuerySchema),
       responses: {
         200: showResponseSchema.array(),
       },
