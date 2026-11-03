@@ -13,6 +13,7 @@ import { listRemoveResponseSchema } from '../_internal/response/listRemoveRespon
 import { z } from '../_internal/z.ts';
 import { reorderRequestSchema } from '../users/schema/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../users/schema/response/reorderListResponseSchema.ts';
+import { collectionAddRequestSchema } from './schema/request/collectionAddRequestSchema.ts';
 import { collectionParamSchema } from './schema/request/collectionParamSchema.ts';
 import { favoriteParamSchema } from './schema/request/favoritesParamSchema.ts';
 import { historyRemoveRequestSchema } from './schema/request/historyRemoveRequestSchema.ts';
@@ -22,10 +23,12 @@ import { progressParamsSchema } from './schema/request/progressParamsSchema.ts';
 import { ratingsParamSchema } from './schema/request/ratingsParamSchema.ts';
 import { removeRatingsParamSchema } from './schema/request/removeRatingsParamSchema.ts';
 import { upNextIntentQuerySchema } from './schema/request/upNextIntentQuerySchema.ts';
+import { collectionAddResponseSchema } from './schema/response/collectionAddResponseSchema.ts';
 import {
   collectionMinimalResponseSchema,
   collectionMinimalShowResponseSchema,
 } from './schema/response/collectionMinimalResponseSchema.ts';
+import { collectionRemoveResponseSchema } from './schema/response/collectionRemoveResponseSchema.ts';
 import {
   collectedEpisodeSchema,
   collectedMovieSchema,
@@ -619,24 +622,46 @@ Returns movies, shows, and episodes in the authenticated user collection. Use \`
     },
     add: {
       summary: 'Add items to collection',
-      description:
-        'Add items to a user collection. Accepts shows, seasons, episodes, and movies.',
+      description: `#### 🔒 OAuth Required
+Add items to a user collection. Accepts shows, seasons, episodes and movies. A show adds its aired episodes, specials excluded; a season adds its aired episodes. A movie or episode without a release date is returned in \`not_found\`.
+
+Sending an item that is already collected with different metadata updates it, \`collected_at\` included; a new \`collected_at\` alone is ignored. Metadata left out of the request is cleared.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movies\` | array | Array of \`movie\` objects. (see examples ->) |
+| \`shows\` | array | Array of \`show\` objects. |
+| \`seasons\` | array | Array of \`season\` objects. |
+| \`episodes\` | array | Array of \`episode\` objects. |
+
+#### Media Object POST Data
+| Key | Type | Value |
+|---|---|---|
+| item * | object | \`movie\`, \`show\`, \`season\`, or \`episode\` object. |
+| \`collected_at\` | datetime | UTC datetime when the item was collected. Set to \`released\` for the release date, \`unknown\` for no specific date, or \`now\`. |
+| \`media_type\` | string | Physical or digital format, e.g. \`bluray\`. |
+| \`resolution\` | string | e.g. \`uhd_4k\`. |
+| \`hdr\` | string | e.g. \`dolby_vision\`. |
+| \`audio\` | string | e.g. \`dolby_atmos\`. |
+| \`audio_channels\` | string | e.g. \`7.1\`. |
+| \`3d\` | boolean | Set to \`true\` for 3D media. |`,
       method: 'POST',
       path: '',
-      body: mediaItemsRequestSchema,
+      body: collectionAddRequestSchema,
       responses: {
-        201: listAddResponseSchema,
+        201: collectionAddResponseSchema,
       },
     },
     remove: {
       summary: 'Remove items from collection',
-      description:
-        'Remove items from a user collection. Accepts shows, seasons, episodes, and movies.',
+      description: `#### 🔒 OAuth Required
+Remove items from a user collection. Accepts shows, seasons, episodes and movies. A show or season removes every collected episode it holds.`,
       method: 'POST',
       path: '/remove',
       body: mediaItemsRequestSchema,
       responses: {
-        200: listRemoveResponseSchema,
+        200: collectionRemoveResponseSchema,
       },
     },
     minimal: builder.router(
@@ -788,6 +813,14 @@ export type FavoritesRemoveResponse = z.infer<
 
 /** The collection request payload. */
 export type CollectionRequest = z.infer<typeof collectionParamSchema>;
+/** The collection add request payload. */
+export type CollectionAddRequest = z.infer<typeof collectionAddRequestSchema>;
+/** The collection add response payload. */
+export type CollectionAddResponse = z.infer<typeof collectionAddResponseSchema>;
+/** The collection remove response payload. */
+export type CollectionRemoveResponse = z.infer<
+  typeof collectionRemoveResponseSchema
+>;
 /** The collection response payload. */
 export type CollectionResponse = z.infer<typeof collectionResponseSchema>;
 /** The collection movie response payload. */
