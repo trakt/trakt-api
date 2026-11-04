@@ -10,6 +10,18 @@ describe('unsafeRedirectUris', () => {
     ).toEqual([]);
   });
 
+  it('accepts domains whose first label looks like a private range', () => {
+    expect(
+      unsafeRedirectUris(
+        [
+          'https://10.example.com/cb',
+          'https://127.example.org/cb',
+          'https://192.168.example.net/cb',
+        ].join('\n'),
+      ),
+    ).toEqual([]);
+  });
+
   it('accepts public addresses next to the private ranges', () => {
     expect(
       unsafeRedirectUris(
@@ -19,6 +31,7 @@ describe('unsafeRedirectUris', () => {
           'https://11.0.0.1/callback',
           'https://[2001:db8::1]/callback',
           'https://localhost.example.com/callback',
+          'https://[::ffff:11.0.0.1]/callback',
         ].join('\n'),
       ),
     ).toEqual([]);
@@ -30,6 +43,12 @@ describe('unsafeRedirectUris', () => {
     'urn:ietf:wg:oauth:2.0:oob',
     'http://example.com/callback',
     'https://localhost:3000/callback',
+    'https://localhost./callback',
+    'https://dev.localhost./callback',
+    'https://printer.local./callback',
+    'https://[::ffff:127.0.0.1]/callback',
+    'https://[::ffff:192.168.1.10]/callback',
+    'https://[::]/callback',
     'http://localhost/callback',
     'https://dev.localhost/callback',
     'http://127.0.0.1:8080/callback',

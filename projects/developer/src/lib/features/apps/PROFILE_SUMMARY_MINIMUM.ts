@@ -1,0 +1,1 @@
+export const PROFILE_SUMMARY_MINIMUM = 100;
