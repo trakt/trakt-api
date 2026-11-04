@@ -22,16 +22,25 @@ const DEVELOPER_ERROR_MESSAGES = {
     'This GitHub account is already connected to another Trakt account.',
   github_account_mismatch:
     'Your Trakt account is connected to a different GitHub account. Use Switch GitHub account to change it.',
-  dev_redirect_not_local:
-    'Development apps can only redirect to localhost, 127.0.0.1 or [::1].',
   production_apps_unavailable:
-    'Production apps are currently unavailable. Contact support@trakt.tv if you need one.',
+    'Create a Development app first, then request Production access from its page.',
   application_not_dev: 'Only development apps have a sign-in list.',
   user_not_found: 'No Trakt account has that username.',
   cannot_allow_owner: 'You own this app, so you can always sign in to it.',
   allowed_user_limit_reached:
     'This app already has 16 people who can sign in. Remove someone to add another.',
   owner_only: 'Only the app owner can do this.',
+  production_review_pending: 'A review is already waiting for this app.',
+  production_application_linked:
+    'Delete the Production app first, then delete this Development app.',
+  production_review_conflict:
+    'Another request was just sent for this app. Reload to see it.',
+  production_requires_sign_in:
+    'This Production app already supports sign-in. Choose PKCE or device code.',
+  profile_not_found: 'This app has no app information yet.',
+  review_not_found: 'This app has no review yet.',
+  redirect_not_allowed:
+    'Production redirect URIs must use https:// on a domain you control. Localhost and custom app schemes only work on Development apps.',
 } as const;
 
 type DeveloperErrorCode = keyof typeof DEVELOPER_ERROR_MESSAGES;
