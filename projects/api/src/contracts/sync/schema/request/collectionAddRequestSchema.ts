@@ -1,15 +1,13 @@
+import { actionDateSchema } from '../../../_internal/request/actionDateSchema.ts';
 import { mediaItemsRequestSchemaFactory } from '../../../_internal/request/mediaItemsRequestSchemaFactory.ts';
 import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for the collection add request. */
 export const collectionAddRequestSchema = mediaItemsRequestSchemaFactory({
-  collected_at: z
-    .union([z.string().datetime(), z.enum(['released', 'unknown', 'now'])])
-    .nullish()
-    .openapi({
-      description:
-        'When the item was collected: a UTC datetime, `released` for its release date, `unknown` for no specific date, or `now` for the current time. Defaults to the stored date, else now.',
-    }),
+  collected_at: actionDateSchema.nullish().openapi({
+    description:
+      'When the item was collected: a UTC datetime, `released` for its release date, `unknown` for no specific date, or `now` for the current time. Defaults to the stored date, else now.',
+  }),
   media_type: z
     .enum([
       'digital',
