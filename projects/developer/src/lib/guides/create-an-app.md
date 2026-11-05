@@ -53,10 +53,10 @@ Apps get no Client Secret by default. If your server exchanges and refreshes
 tokens itself, ask for one in the same form and tell us why.
 
 Standard developers wait for a review, usually within a few business days.
-Premium developers get their Production app right away. Later changes to your
-app information, or a Client Secret, go through the same review. Nothing
-changes until it's granted, and a declined review leaves your apps as they
-were.
+Premium developers get their Production app right away, and later changes to
+your app information apply right away too. A Client Secret is always reviewed:
+the request waits until we grant it. Nothing changes until a review is
+granted, and a declined review leaves your apps as they were.
 
 Granting Production access is not a review, endorsement or certification of
 your app or how you use it. You stay responsible for following the
