@@ -145,7 +145,9 @@
 
   {#if linked}<p class="pair">
       {linked.dev ? "Development app" : "Production app"}:
-      <a href={applicationUrl({ id: linked.id, name: linked.name })}
+      <a
+        class="pair-link"
+        href={applicationUrl({ id: linked.id, name: linked.name })}
         >{linked.name}</a
       >
     </p>{/if}
@@ -171,7 +173,7 @@
 
   {#if error}<p class="error" role="alert">
       {error}{#if !editing}
-        <button onclick={load}>Retry</button>{/if}
+        <button class="action" onclick={load}>Retry</button>{/if}
     </p>{/if}
 
   {#if editing}
@@ -202,7 +204,7 @@
   {:else}
     {#if review && status !== "granted" && status !== "granted_instantly"}
       <details class="request" open={status === "pending"}>
-        <summary>What you asked for</summary>
+        <summary class="request-summary">What you asked for</summary>
         <ApplicationProfileCard profile={review.profile} />
         {#if review.redirect_uri.length > 0}<p class="muted">
             Production redirect URIs: {review.redirect_uri.join(", ")}
@@ -228,17 +230,18 @@
 
     {#if canRequest}<div class="actions">
         {#if reopensReview}<button
-            class="primary"
+            class="action primary"
             onclick={() =>
               (editing = { prefill: "review", asksForSecret: false })}
             >{resubmitLabel}</button
           >{:else if createsProductionApp}<button
-            class="primary"
+            class="action primary"
             onclick={() =>
               (editing = { prefill: "live", asksForSecret: false })}
             >{firstLabel}</button
           >{/if}
         {#if !createsProductionApp}<button
+            class="action"
             class:primary={!reopensReview}
             onclick={() =>
               (editing = { prefill: "live", asksForSecret: false })}
@@ -246,6 +249,7 @@
               ? "Update app information"
               : "Add app information"}</button
           >{#if !hasClientSecret && !productionReadOnly}<button
+              class="action"
               onclick={() =>
                 (editing = { prefill: "live", asksForSecret: true })}
               >Request a Client Secret</button
@@ -264,12 +268,12 @@
   .trakt-production-panel {
     display: grid;
     gap: var(--gap-m);
-    padding: 28px;
+    padding: var(--ni-28);
     border: var(--border-thickness-xxs) solid var(--color-border);
     border-radius: var(--radius-large);
     background: var(--color-surface);
 
-    h2 {
+    .panel-title {
       margin: 0;
       font-size: 17px;
     }
@@ -302,13 +306,13 @@
       border: var(--border-thickness-xxs) solid var(--color-border);
       border-radius: var(--radius-control);
 
-      summary {
+      .request-summary {
         cursor: pointer;
         font-size: 13px;
         font-weight: 600;
       }
 
-      &[open] summary {
+      &[open] .request-summary {
         margin-block-end: var(--gap-s);
       }
     }
@@ -346,7 +350,7 @@
       gap: var(--ni-10);
     }
 
-    button {
+    .action {
       @include action.base;
     }
 
@@ -354,12 +358,12 @@
       @include action.primary;
     }
 
-    a {
+    .pair-link {
       color: var(--color-info);
     }
 
     @media (max-width: 700px) {
-      padding: 20px;
+      padding: var(--ni-20);
     }
   }
 </style>

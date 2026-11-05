@@ -82,8 +82,8 @@
       }
 
       &:focus-within {
-        outline: 2px solid var(--color-info);
-        outline-offset: 2px;
+        outline: var(--border-thickness-xs) solid var(--color-info);
+        outline-offset: var(--ni-2);
       }
     }
 
@@ -96,7 +96,7 @@
     .choice-hint {
       grid-column: 2;
       color: var(--color-muted);
-      font-size: 12px;
+      font-size: var(--ni-12);
       font-weight: 400;
       line-height: 1.5;
     }
@@ -104,7 +104,7 @@
     .group-hint {
       grid-column: 1 / -1;
       color: var(--color-muted);
-      font-size: 12px;
+      font-size: var(--ni-12);
       line-height: 1.6;
     }
   }
