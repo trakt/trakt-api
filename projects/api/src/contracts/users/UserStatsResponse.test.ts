@@ -62,3 +62,18 @@ test('@types/UserStatsResponse: complete stats response', () => {
 
   expectTypeOf<typeof stats>().toEqualTypeOf<UserStatsResponse>();
 });
+
+test('@types/UserStatsResponse: progress, lists and totals are nullish', () => {
+  expectTypeOf<UserStatsResponse['lists']>().toEqualTypeOf<
+    number | null | undefined
+  >();
+  expectTypeOf<UserStatsResponse['total_minutes']>().toEqualTypeOf<
+    number | null | undefined
+  >();
+  expectTypeOf<UserStatsResponse['total_plays']>().toEqualTypeOf<
+    number | null | undefined
+  >();
+  expectTypeOf<UserStatsResponse['progress']>().toEqualTypeOf<
+    { started: number; finished: number; dropped: number } | null | undefined
+  >();
+});
