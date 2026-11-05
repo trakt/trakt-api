@@ -31,6 +31,8 @@ const DEVELOPER_ERROR_MESSAGES = {
     'This app already has 16 people who can sign in. Remove someone to add another.',
   owner_only: 'Only the app owner can do this.',
   production_review_pending: 'A review is already waiting for this app.',
+  production_application_linked:
+    'Delete the Production app first, then delete this Development app.',
   production_review_conflict:
     'Another request was just sent for this app. Reload to see it.',
   production_requires_sign_in:

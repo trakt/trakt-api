@@ -8,6 +8,7 @@
   import { getApplicationProfile } from "./getApplicationProfile.ts";
   import { getProductionReview } from "./getProductionReview.ts";
   import type { ProductionPanelProps } from "./ProductionPanelProps.ts";
+  import type { ProductionReview } from "./ProductionReview.ts";
   import type { ProductionReviewDetail } from "./ProductionReviewDetail.ts";
   import type { ProductionReviewInput } from "./ProductionReviewInput.ts";
   import ProductionStatusBanner from "./ProductionStatusBanner.svelte";
@@ -101,8 +102,10 @@
     }
   }
 
-  function successNotice(sent: string, createdApp: boolean): string {
-    if (sent === "pending") return "Review requested.";
+  function successNotice(sent: ProductionReview, createdApp: boolean): string {
+    if (sent.kind === "client_secret" && sent.status === "pending")
+      return "Your Production app is ready. Your Client Secret request is waiting for a review.";
+    if (sent.status === "pending") return "Review requested.";
     return createdApp ? "Your Production app is ready." : "Changes applied.";
   }
 
@@ -122,7 +125,7 @@
       await onChanged();
       if (!alive) return;
       editing = null;
-      notice = successNotice(sent.status, createdApp);
+      notice = successNotice(sent, createdApp);
       await tick();
       title?.focus();
       await load();

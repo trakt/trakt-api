@@ -21,6 +21,14 @@ export function productionStatusCopy(
   const firstTime = review.kind === 'production';
   switch (review.status) {
     case 'pending':
+      if (review.kind === 'client_secret')
+        return {
+          badge: 'Client Secret requested',
+          title: `Client Secret requested · ${formatDate(review.submitted_at)}`,
+          detail:
+            "Your Production app is ready. Your Client Secret request is waiting for a review. We'll email you when it's reviewed.",
+          tone: 'info',
+        };
       return {
         badge: 'Review requested',
         title: `Review requested · ${formatDate(review.submitted_at)}`,

@@ -461,7 +461,9 @@
     <p class="disclaimer">
       {createsProductionApp && draft.signIn !== "none"
         ? "Production access lets anyone with a Trakt account sign in to your app."
-        : "Nothing changes until the review is granted."} Granting a review is not
+        : premium
+          ? "Changes apply right away. A Client Secret waits for a review."
+          : "Nothing changes until the review is granted."} Granting a review is not
       an endorsement or certification of your app or how you use it. You stay responsible
       for following the API Use Policy and the law. We can remove access at any time.
     </p>

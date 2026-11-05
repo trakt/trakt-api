@@ -31,6 +31,18 @@ describe('productionStatusCopy', () => {
     });
   });
 
+  it('says the Production app is ready while a Client Secret request waits', () => {
+    expect(
+      productionStatusCopy(review({ kind: 'client_secret' })),
+    ).toMatchObject({
+      badge: 'Client Secret requested',
+      detail: expect.stringMatching(
+        /Production app is ready.*Client Secret request is waiting for a review/,
+      ),
+      tone: 'info',
+    });
+  });
+
   it.each(['granted', 'granted_instantly'] as const)(
     'says Production access was granted, never approved, for a first %s review',
     (status) => {
