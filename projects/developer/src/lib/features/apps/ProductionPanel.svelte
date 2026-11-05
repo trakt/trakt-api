@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import ApplicationProfileCard from "./ApplicationProfileCard.svelte";
   import ApplicationProfileForm from "./ApplicationProfileForm.svelte";
   import type { ApplicationProfile } from "./ApplicationProfile.ts";
@@ -32,6 +32,7 @@
   let error = $state("");
   let notice = $state("");
   let alive = true;
+  let title = $state<HTMLHeadingElement>();
 
   const isOwner = $derived(app.role === "owner");
   const status = $derived(app.production_review?.status);
@@ -122,6 +123,8 @@
       if (!alive) return;
       editing = null;
       notice = successNotice(sent.status, createdApp);
+      await tick();
+      title?.focus();
       await load();
     } catch (cause) {
       if (alive)
@@ -136,7 +139,9 @@
 </script>
 
 <section class="trakt-production-panel">
-  <h2>{createsProductionApp ? "Production access" : "App information"}</h2>
+  <h2 class="panel-title" tabindex="-1" bind:this={title}>
+    {createsProductionApp ? "Production access" : "App information"}
+  </h2>
 
   {#if linked}<p class="pair">
       {linked.dev ? "Development app" : "Production app"}:
@@ -159,9 +164,11 @@
       Nothing changes until it's granted.
     </p>{/if}
 
-  <ProductionStatusBanner review={app.production_review} {fullProduction} />
+  <div class="live" role="status">
+    <ProductionStatusBanner review={app.production_review} {fullProduction} />
+    {#if notice}<p class="notice">{notice}</p>{/if}
+  </div>
 
-  {#if notice}<p class="notice" role="status">{notice}</p>{/if}
   {#if error}<p class="error" role="alert">
       {error}{#if !editing}
         <button onclick={load}>Retry</button>{/if}
@@ -303,6 +310,15 @@
 
       &[open] summary {
         margin-block-end: var(--gap-s);
+      }
+    }
+
+    .live {
+      display: grid;
+      gap: var(--gap-m);
+
+      &:not(:has(*)) {
+        position: absolute;
       }
     }
 

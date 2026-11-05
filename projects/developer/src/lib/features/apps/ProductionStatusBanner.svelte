@@ -10,11 +10,7 @@
   const copy = $derived(productionStatusCopy(review, fullProduction));
 </script>
 
-{#if copy}<div
-    class="trakt-production-status-banner"
-    data-tone={copy.tone}
-    role="status"
-  >
+{#if copy}<div class="trakt-production-status-banner" data-tone={copy.tone}>
     <strong class="status-title">{copy.title}</strong>
     {#if review?.review_note}<blockquote class="status-note">
         {review.review_note}

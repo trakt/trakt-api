@@ -158,9 +158,11 @@
 <form
   class="trakt-application-profile-form"
   novalidate
+  aria-busy={busy}
   bind:this={form}
   onsubmit={(event) => {
     event.preventDefault();
+    if (busy) return;
     void submit();
   }}
 >
@@ -465,19 +467,24 @@
     </p>
 
     {#if issues.length > 0}<p class="error">{issueSummary}</p>{/if}
-
-    <div class="actions">
-      <button class="action primary" type="submit"
-        >{busy ? "Sending…" : submitLabel}</button
-      ><button class="action" type="button" onclick={onCancel}>Cancel</button>
-    </div>
   </fieldset>
+
+  <div class="actions">
+    <button class="action primary" type="submit" aria-disabled={busy}
+      >{busy ? "Sending…" : submitLabel}</button
+    ><button class="action" type="button" disabled={busy} onclick={onCancel}
+      >Cancel</button
+    >
+  </div>
 </form>
 
 <style lang="scss">
   @use "../../../style/action-button" as action;
 
   .trakt-application-profile-form {
+    display: grid;
+    gap: var(--gap-l);
+
     .fields {
       display: grid;
       gap: var(--gap-l);
@@ -550,6 +557,11 @@
 
     .primary {
       @include action.primary;
+
+      &[aria-disabled="true"] {
+        opacity: 0.5;
+        cursor: default;
+      }
     }
   }
 </style>
