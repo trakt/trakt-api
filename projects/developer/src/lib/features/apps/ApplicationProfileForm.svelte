@@ -5,6 +5,7 @@
   import { asksProductionRedirects } from "./asksProductionRedirects.ts";
   import ChoiceGroup from "./ChoiceGroup.svelte";
   import { DEVELOPMENT_SEAT_LIMIT } from "./DEVELOPMENT_SEAT_LIMIT.ts";
+  import FormField from "./FormField.svelte";
   import { parseApplicationProfile } from "./parseApplicationProfile.ts";
   import { parseProductionReview } from "./parseProductionReview.ts";
   import type { ProductionFormField } from "./ProductionFormField.ts";
@@ -137,16 +138,6 @@
     return issues.find((issue) => issue.field === field)?.message;
   }
 
-  function describedBy(
-    field: ProductionFormField,
-    ...ids: ReadonlyArray<string | false>
-  ): string | undefined {
-    const error = !!errorFor(field) && `${uid}-${field}-error`;
-    const all = [...ids, error].filter((id) => typeof id === "string");
-
-    return all.length > 0 ? all.join(" ") : undefined;
-  }
-
   async function submit() {
     attempted = true;
     if (issues.length > 0) {
@@ -164,13 +155,6 @@
   }
 </script>
 
-{#snippet fieldError(field: ProductionFormField)}
-  {@const message = errorFor(field)}
-  {#if message}<span class="field-error" id="{uid}-{field}-error"
-      >{message}</span
-    >{/if}
-{/snippet}
-
 <form
   class="trakt-application-profile-form"
   novalidate
@@ -181,24 +165,25 @@
   }}
 >
   <fieldset class="fields" disabled={busy}>
-    <div class="field">
-      <label for="{uid}-summary">What {appName} does, and who it's for</label>
-      <span class="hint" id="{uid}-summary-hint"
-        >Between {PROFILE_SUMMARY_MINIMUM} and {PROFILE_SUMMARY_LIMIT} characters.
-        A few plain sentences are enough. {summaryCountLabel(
-          draft.summary,
-        )}</span
-      ><textarea
-        id="{uid}-summary"
-        bind:value={draft.summary}
-        required
-        maxlength={PROFILE_SUMMARY_LIMIT}
-        rows="3"
-        aria-invalid={errorFor("summary") ? "true" : undefined}
-        aria-describedby={describedBy("summary", `${uid}-summary-hint`)}
-      ></textarea>
-      {@render fieldError("summary")}
-    </div>
+    <FormField
+      {uid}
+      field="summary"
+      label="What {appName} does, and who it's for"
+      hint="Between {PROFILE_SUMMARY_MINIMUM} and {PROFILE_SUMMARY_LIMIT} characters. A few plain sentences are enough. {summaryCountLabel(
+        draft.summary,
+      )}"
+      error={errorFor("summary")}
+    >
+      {#snippet control(attributes)}
+        <textarea
+          class="control control-area"
+          {...attributes}
+          bind:value={draft.summary}
+          required
+          maxlength={PROFILE_SUMMARY_LIMIT}
+          rows="3"></textarea>
+      {/snippet}
+    </FormField>
 
     <ChoiceGroup
       legend="Is your app open source?"
@@ -207,83 +192,85 @@
       bind:value={openSource}
     />
 
-    <div class="field">
-      <label for="{uid}-productLinks">Links to your app</label>
-      <span class="hint" id="{uid}-productLinks-hint"
-        >At least one, separated by commas. Repository, docs, App Store, Play
-        Store, TestFlight, website.</span
-      ><textarea
-        id="{uid}-productLinks"
-        bind:value={draft.productLinks}
-        required
-        rows="2"
-        spellcheck="false"
-        placeholder="https://github.com/you/app, https://example.com"
-        aria-invalid={errorFor("productLinks") ? "true" : undefined}
-        aria-describedby={describedBy(
-          "productLinks",
-          `${uid}-productLinks-hint`,
-        )}></textarea>
-      {@render fieldError("productLinks")}
-    </div>
+    <FormField
+      {uid}
+      field="productLinks"
+      label="Links to your app"
+      hint="At least one, separated by commas. Repository, docs, App Store, Play Store, TestFlight, website."
+      error={errorFor("productLinks")}
+    >
+      {#snippet control(attributes)}
+        <textarea
+          class="control control-area"
+          {...attributes}
+          bind:value={draft.productLinks}
+          required
+          rows="2"
+          spellcheck="false"
+          placeholder="https://github.com/you/app, https://example.com"
+        ></textarea>
+      {/snippet}
+    </FormField>
 
-    <div class="field">
-      <label for="{uid}-privacyUrl">Privacy policy</label><input
-        id="{uid}-privacyUrl"
-        bind:value={draft.privacyUrl}
-        type="url"
-        required
-        spellcheck="false"
-        placeholder="https://example.com/privacy"
-        aria-invalid={errorFor("privacyUrl") ? "true" : undefined}
-        aria-describedby={describedBy("privacyUrl")}
-      />
-      {@render fieldError("privacyUrl")}
-    </div>
+    <FormField
+      {uid}
+      field="privacyUrl"
+      label="Privacy policy"
+      error={errorFor("privacyUrl")}
+    >
+      {#snippet control(attributes)}
+        <input
+          class="control"
+          {...attributes}
+          bind:value={draft.privacyUrl}
+          type="url"
+          required
+          spellcheck="false"
+          placeholder="https://example.com/privacy"
+        />
+      {/snippet}
+    </FormField>
 
-    <div class="field">
-      <label for="{uid}-noticeLinks">Where we can see your Trakt notice</label>
-      <span class="hint" id="{uid}-noticeLinks-hint"
-        >At least one, separated by commas. The notice reads "{appName} uses Trakt
-        but is not endorsed or certified by Trakt". A page, a README, or a screenshot
-        or video you host is fine.</span
-      ><textarea
-        id="{uid}-noticeLinks"
-        bind:value={draft.noticeLinks}
-        required
-        rows="2"
-        spellcheck="false"
-        placeholder="https://example.com/about"
-        aria-invalid={errorFor("noticeLinks") ? "true" : undefined}
-        aria-describedby={describedBy("noticeLinks", `${uid}-noticeLinks-hint`)}
-      ></textarea>
-      {@render fieldError("noticeLinks")}
-    </div>
+    <FormField
+      {uid}
+      field="noticeLinks"
+      label="Where we can see your Trakt notice"
+      hint={`At least one, separated by commas. The notice reads "${appName} uses Trakt but is not endorsed or certified by Trakt". A page, a README, or a screenshot or video you host is fine.`}
+      error={errorFor("noticeLinks")}
+    >
+      {#snippet control(attributes)}
+        <textarea
+          class="control control-area"
+          {...attributes}
+          bind:value={draft.noticeLinks}
+          required
+          rows="2"
+          spellcheck="false"
+          placeholder="https://example.com/about"></textarea>
+      {/snippet}
+    </FormField>
 
-    <div class="field">
-      <label for="{uid}-expectedMau">Expected monthly active users</label>
-      <span class="hint" id="{uid}-expectedMau-hint"
-        >A rough guess is fine.</span
-      ><input
-        id="{uid}-expectedMau"
-        bind:value={draft.expectedMau}
-        inputmode="numeric"
-        required
-        placeholder="2000"
-        aria-invalid={errorFor("expectedMau") ? "true" : undefined}
-        aria-describedby={describedBy(
-          "expectedMau",
-          `${uid}-expectedMau-hint`,
-          fewUsers && `${uid}-expectedMau-warning`,
-        )}
-      />{#if fewUsers}<span
-          class="hint is-warning"
-          id="{uid}-expectedMau-warning"
-          >A Development app already covers you plus up to {DEVELOPMENT_SEAT_LIMIT}
-          people you invite. Apps for yourself or a few people stay on Development.</span
-        >{/if}
-      {@render fieldError("expectedMau")}
-    </div>
+    <FormField
+      {uid}
+      field="expectedMau"
+      label="Expected monthly active users"
+      hint="A rough guess is fine."
+      warning={fewUsers
+        ? `A Development app already covers you plus up to ${DEVELOPMENT_SEAT_LIMIT} people you invite. Apps for yourself or a few people stay on Development.`
+        : undefined}
+      error={errorFor("expectedMau")}
+    >
+      {#snippet control(attributes)}
+        <input
+          class="control"
+          {...attributes}
+          bind:value={draft.expectedMau}
+          inputmode="numeric"
+          required
+          placeholder="2000"
+        />
+      {/snippet}
+    </FormField>
 
     <ChoiceGroup
       legend="How your app uses Trakt"
@@ -297,7 +284,8 @@
       bind:value={draft.signIn}
     />
 
-    {#if draft.signIn !== "none"}<ChoiceGroup
+    {#if draft.signIn !== "none"}
+      <ChoiceGroup
         legend="Will it change users' Trakt data?"
         name="writes"
         options={[
@@ -306,7 +294,8 @@
         ]}
         hint="Writes: history, scrobbles, check-ins, lists, ratings, comments."
         bind:value={writes}
-      />{/if}
+      />
+    {/if}
 
     <div class="other">
       <ChoiceGroup
@@ -315,18 +304,27 @@
         options={servicesChoice}
         bind:value={otherData}
       />
-      {#if otherData === "others"}<div class="field other-name">
-          <label for="{uid}-otherDataSources">Name them</label><input
-            id="{uid}-otherDataSources"
-            bind:value={draft.otherDataSources}
-            maxlength="255"
-            required
-            placeholder="Other movie and show databases you use"
-            aria-invalid={errorFor("otherDataSources") ? "true" : undefined}
-            aria-describedby={describedBy("otherDataSources")}
-          />
-          {@render fieldError("otherDataSources")}
-        </div>{/if}
+
+      {#if otherData === "others"}
+        <FormField
+          {uid}
+          field="otherDataSources"
+          label="Name them"
+          size="small"
+          error={errorFor("otherDataSources")}
+        >
+          {#snippet control(attributes)}
+            <input
+              class="control"
+              {...attributes}
+              bind:value={draft.otherDataSources}
+              maxlength="255"
+              required
+              placeholder="Other movie and show databases you use"
+            />
+          {/snippet}
+        </FormField>
+      {/if}
     </div>
 
     <div class="other">
@@ -336,39 +334,52 @@
         options={servicesChoice}
         bind:value={otherSync}
       />
-      {#if otherSync === "others"}<div class="field other-name">
-          <label for="{uid}-otherSyncServices">Name them</label><input
-            id="{uid}-otherSyncServices"
-            bind:value={draft.otherSyncServices}
-            maxlength="255"
-            required
-            placeholder="Other tracking services you sync with"
-            aria-invalid={errorFor("otherSyncServices") ? "true" : undefined}
-            aria-describedby={describedBy("otherSyncServices")}
-          />
-          {@render fieldError("otherSyncServices")}
-        </div>{/if}
+
+      {#if otherSync === "others"}
+        <FormField
+          {uid}
+          field="otherSyncServices"
+          label="Name them"
+          size="small"
+          error={errorFor("otherSyncServices")}
+        >
+          {#snippet control(attributes)}
+            <input
+              class="control"
+              {...attributes}
+              bind:value={draft.otherSyncServices}
+              maxlength="255"
+              required
+              placeholder="Other tracking services you sync with"
+            />
+          {/snippet}
+        </FormField>
+      {/if}
     </div>
 
-    {#if asksRedirects}<div class="field">
-        <label for="{uid}-redirects">Production redirect URIs</label>
-        <span class="hint" id="{uid}-redirects-hint"
-          >One per line. Use https:// on a domain you control. Localhost and
-          custom app schemes stay on your Development app.</span
-        ><textarea
-          id="{uid}-redirects"
-          bind:value={redirects}
-          required
-          rows="3"
-          spellcheck="false"
-          placeholder="https://example.com/trakt/callback"
-          aria-invalid={errorFor("redirects") ? "true" : undefined}
-          aria-describedby={describedBy("redirects", `${uid}-redirects-hint`)}
-        ></textarea>
-        {@render fieldError("redirects")}
-      </div>{/if}
+    {#if asksRedirects}
+      <FormField
+        {uid}
+        field="redirects"
+        label="Production redirect URIs"
+        hint="One per line. Use https:// on a domain you control. Localhost and custom app schemes stay on your Development app."
+        error={errorFor("redirects")}
+      >
+        {#snippet control(attributes)}
+          <textarea
+            class="control control-area"
+            {...attributes}
+            bind:value={redirects}
+            required
+            rows="3"
+            spellcheck="false"
+            placeholder="https://example.com/trakt/callback"></textarea>
+        {/snippet}
+      </FormField>
+    {/if}
 
-    {#if !hasClientSecret && draft.signIn !== "none"}<div class="other">
+    {#if !hasClientSecret && draft.signIn !== "none"}
+      <div class="other">
         <ChoiceGroup
           legend="Does your server need a Client Secret?"
           name="client-secret"
@@ -376,55 +387,73 @@
           hint="Only for servers that exchange and refresh tokens themselves. Apps and websites sign users in with PKCE or the device code flow without one."
           bind:value={needsSecret}
         />
-        {#if wantsSecret}<div class="field other-name">
-            <label for="{uid}-secretReason">Why your server needs it</label
-            ><textarea
-              id="{uid}-secretReason"
-              bind:value={secretReason}
-              required
-              maxlength="500"
-              rows="2"
-              placeholder="Our server exchanges and refreshes tokens for self-hosted installs."
-              aria-invalid={errorFor("secretReason") ? "true" : undefined}
-              aria-describedby={describedBy("secretReason")}></textarea>
-            {@render fieldError("secretReason")}
-          </div>{/if}
-      </div>{/if}
+
+        {#if wantsSecret}
+          <FormField
+            {uid}
+            field="secretReason"
+            label="Why your server needs it"
+            size="small"
+            error={errorFor("secretReason")}
+          >
+            {#snippet control(attributes)}
+              <textarea
+                class="control control-area"
+                {...attributes}
+                bind:value={secretReason}
+                required
+                maxlength="500"
+                rows="2"
+                placeholder="Our server exchanges and refreshes tokens for self-hosted installs."
+              ></textarea>
+            {/snippet}
+          </FormField>
+        {/if}
+      </div>
+    {/if}
 
     <div class="confirmations">
-      <div class="field">
-        <label class="confirm"
-          ><input
+      <FormField
+        {uid}
+        field="confirmPolicy"
+        variant="check"
+        error={errorFor("confirmPolicy")}
+      >
+        {#snippet label()}
+          {appName} follows the
+          <a class="policy-link" href="/docs/api-use-policy">API Use Policy</a>,
+          including the Trakt notice.
+        {/snippet}
+        {#snippet control(attributes)}
+          <input
+            class="check-box"
+            {...attributes}
             type="checkbox"
             bind:checked={confirmPolicy}
             required
-            aria-invalid={errorFor("confirmPolicy") ? "true" : undefined}
-            aria-describedby={describedBy("confirmPolicy")}
           />
-          <span
-            >{appName} follows the
-            <a href="/docs/api-use-policy">API Use Policy</a>, including the
-            Trakt notice.</span
-          ></label
+        {/snippet}
+      </FormField>
+
+      {#if wantsSecret || hasClientSecret}
+        <FormField
+          {uid}
+          field="confirmSecret"
+          variant="check"
+          label="My Client Secret stays on my server. It's never inside the app people download or the site they open."
+          error={errorFor("confirmSecret")}
         >
-        {@render fieldError("confirmPolicy")}
-      </div>
-      {#if wantsSecret || hasClientSecret}<div class="field">
-          <label class="confirm"
-            ><input
+          {#snippet control(attributes)}
+            <input
+              class="check-box"
+              {...attributes}
               type="checkbox"
               bind:checked={confirmSecret}
               required
-              aria-invalid={errorFor("confirmSecret") ? "true" : undefined}
-              aria-describedby={describedBy("confirmSecret")}
             />
-            <span
-              >My Client Secret stays on my server. It's never inside the app
-              people download or the site they open.</span
-            ></label
-          >
-          {@render fieldError("confirmSecret")}
-        </div>{/if}
+          {/snippet}
+        </FormField>
+      {/if}
     </div>
 
     <p class="disclaimer">
@@ -438,9 +467,9 @@
     {#if issues.length > 0}<p class="error">{issueSummary}</p>{/if}
 
     <div class="actions">
-      <button class="primary" type="submit"
+      <button class="action primary" type="submit"
         >{busy ? "Sending…" : submitLabel}</button
-      ><button type="button" onclick={onCancel}>Cancel</button>
+      ><button class="action" type="button" onclick={onCancel}>Cancel</button>
     </div>
   </fieldset>
 </form>
@@ -458,50 +487,19 @@
       border: 0;
     }
 
-    .field {
-      display: grid;
-      gap: var(--ni-8);
-    }
-
-    label {
-      display: grid;
-      gap: var(--ni-8);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .field-error {
-      color: var(--color-danger);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .hint {
-      color: var(--color-muted);
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 1.6;
-    }
-
-    .is-warning {
-      color: var(--color-warning);
-    }
-
-    input:not([type="checkbox"]),
-    textarea {
+    .control {
       width: 100%;
       padding: var(--ni-12);
       border: var(--border-thickness-xxs) solid var(--color-border);
       background: var(--color-canvas);
       font-weight: 400;
+
+      &[aria-invalid="true"] {
+        border-color: var(--color-danger);
+      }
     }
 
-    input[aria-invalid="true"],
-    textarea[aria-invalid="true"] {
-      border-color: var(--color-danger);
-    }
-
-    textarea {
+    .control-area {
       resize: vertical;
     }
 
@@ -510,27 +508,18 @@
       gap: var(--ni-10);
     }
 
-    .other-name label {
-      font-size: 13px;
-    }
-
     .confirmations {
       display: grid;
       gap: var(--ni-10);
     }
 
-    .confirm {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--ni-10);
-      font-size: 13px;
-      font-weight: 400;
-      line-height: 1.6;
+    .check-box {
+      margin-block-start: var(--ni-4);
+      accent-color: var(--color-accent);
+    }
 
-      input {
-        margin-block-start: var(--ni-4);
-        accent-color: var(--color-accent);
-      }
+    .policy-link {
+      color: var(--color-info);
     }
 
     .disclaimer {
@@ -539,12 +528,8 @@
       border: var(--border-thickness-xxs) solid var(--color-border);
       border-radius: var(--radius-control);
       color: var(--color-muted);
-      font-size: 12px;
+      font-size: var(--ni-12);
       line-height: 1.6;
-    }
-
-    a {
-      color: var(--color-info);
     }
 
     .error {
@@ -559,7 +544,7 @@
       gap: var(--ni-10);
     }
 
-    button {
+    .action {
       @include action.base;
     }
 
