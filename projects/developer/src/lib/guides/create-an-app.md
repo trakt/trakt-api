@@ -32,9 +32,9 @@ hosted test sites and custom app schemes. Apps for yourself or a few people
 stay on Development.
 
 When your app is ready for everyone, open it from [My Apps](/apps) and choose
-**Request Production access**. Once access is granted, you get a separate
-**Production app** with its own Client ID, and your Development app stays your
-sandbox.
+**Request Production access**. Premium developers see **Create Production app**
+instead. Once access is granted, you get a separate **Production app** with its
+own Client ID, and your Development app stays your sandbox.
 
 Have these ready before you start:
 
