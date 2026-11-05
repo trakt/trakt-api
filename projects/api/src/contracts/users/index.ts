@@ -166,6 +166,18 @@ Update the authenticated user avatar. Send the avatar request body; a successful
       400: z.undefined(),
     },
   },
+  removeAvatar: {
+    summary: 'Remove avatar',
+    description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
+
+Remove the authenticated user avatar. A successful removal returns a \`204\` response; the profile then falls back to the default avatar.`,
+    path: '/avatar',
+    method: 'DELETE',
+    responses: {
+      204: z.undefined(),
+    },
+  },
   cover: {
     summary: 'Update cover image',
     description: `#### 🫣 Limited Access 🔒 OAuth Required
