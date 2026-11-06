@@ -1,0 +1,1 @@
+export const DEVELOPMENT_SEAT_LIMIT = 16;

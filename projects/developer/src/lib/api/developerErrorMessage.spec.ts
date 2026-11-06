@@ -19,7 +19,18 @@ const API_ERROR_CODES = [
   'github_account_taken',
   'github_account_mismatch',
   'production_apps_unavailable',
-  'production_requires_plan',
+  'application_not_dev',
+  'user_not_found',
+  'cannot_allow_owner',
+  'allowed_user_limit_reached',
+  'owner_only',
+  'production_review_pending',
+  'production_application_linked',
+  'production_review_conflict',
+  'production_requires_sign_in',
+  'profile_not_found',
+  'review_not_found',
+  'redirect_not_allowed',
 ];
 
 describe('developerErrorMessage', () => {

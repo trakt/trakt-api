@@ -1,11 +1,13 @@
 import type { ApplicationInput } from './ApplicationInput.ts';
-import { nonLocalRedirectUris } from './nonLocalRedirectUris.ts';
+import { splitLines } from './splitLines.ts';
+import { unsafeRedirectUris } from './unsafeRedirectUris.ts';
 
-const lines = (value: string) =>
-  value
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
+const DANGEROUS_REDIRECT_SCHEMES: ReadonlySet<string> = new Set([
+  'javascript:',
+  'data:',
+  'vbscript:',
+  'blob:',
+]);
 
 export function parseApplication({
   name,
@@ -13,15 +15,20 @@ export function parseApplication({
   redirects,
   originsText,
   dev = false,
+  enforceProductionRedirects = false,
+  redirectsOptional = false,
 }: {
   name: string;
   description: string;
   redirects: string;
   originsText: string;
   dev?: boolean;
+  enforceProductionRedirects?: boolean;
+  /** Production apps without browser sign-in can have an empty redirect list. */
+  redirectsOptional?: boolean;
 }): ApplicationInput {
-  const redirect_uri = lines(redirects);
-  const origins = lines(originsText);
+  const redirect_uri = splitLines(redirects);
+  const origins = splitLines(originsText);
 
   if (!name.trim() || name.trim().length > 255) {
     throw new Error('Enter an app name of 1-255 characters.');
@@ -30,7 +37,7 @@ export function parseApplication({
     throw new Error('Keep the description within 255 characters.');
   }
   if (
-    !redirect_uri.length ||
+    (!redirect_uri.length && !redirectsOptional) ||
     redirect_uri.length > 25 ||
     redirect_uri.join('\n').length > 2048
   ) {
@@ -48,22 +55,22 @@ export function parseApplication({
       throw new Error('Enter valid redirect URIs, one per line.');
     }
     if (
-      url.search ||
-      url.hash ||
-      !uri.toLowerCase().startsWith(`${url.protocol}//`)
+      DANGEROUS_REDIRECT_SCHEMES.has(url.protocol) ||
+      (!dev && !uri.toLowerCase().startsWith(`${url.protocol}//`))
     ) {
-      throw new Error(
-        'Redirect URIs must use a URL scheme and cannot contain queries or fragments.',
-      );
+      throw new Error('Enter valid redirect URIs, one per line.');
+    }
+    if (url.search || url.hash) {
+      throw new Error('Redirect URIs cannot contain queries or fragments.');
     }
   }
 
-  const nonLocal = dev ? nonLocalRedirectUris(redirects) : [];
-  if (nonLocal.length > 0) {
+  const blocked = enforceProductionRedirects
+    ? unsafeRedirectUris(redirects)
+    : [];
+  if (blocked.length > 0) {
     throw new Error(
-      `Development apps can only redirect to localhost. Remove ${nonLocal.join(
-        ', ',
-      )}.`,
+      `Production redirect URIs must use https:// on a domain you control. Change ${blocked.join(', ')}.`,
     );
   }
 

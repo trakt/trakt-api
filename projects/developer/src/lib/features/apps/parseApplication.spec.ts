@@ -22,6 +22,8 @@ describe('V3 application validation parity', () => {
   it.each([
     'javascript:alert(1)',
     'data:text/plain,hello',
+    'vbscript:msgbox(1)',
+    'blob:https://example.com/callback',
     'https://example.com/?code=x',
     'https://example.com/#fragment',
   ])('rejects unsafe or unsupported callback %s', (uri) => {
@@ -31,6 +33,7 @@ describe('V3 application validation parity', () => {
         description: '',
         redirects: uri,
         originsText: '',
+        dev: true,
       }),
     ).toThrow();
   });
@@ -102,24 +105,54 @@ describe('V3 application validation parity', () => {
     ).toThrow();
   });
 
-  it('keeps a development app on localhost redirects', () => {
-    const base = { name: 'Dev App', description: '', originsText: '' };
+  it('accepts hosted and native callbacks on a development app', () => {
+    const redirects =
+      'http://localhost:5173/callback\nhttps://you.github.io/app/\nmyapp://callback\ncom.example.app:/oauth';
 
     expect(
       parseApplication({
-        ...base,
-        redirects: 'http://localhost:5173/callback',
+        name: 'Dev App',
+        description: '',
+        originsText: '',
+        redirects,
         dev: true,
       }).redirect_uri,
-    ).toEqual(['http://localhost:5173/callback']);
+    ).toEqual(redirects.split('\n'));
+  });
+
+  it('holds new or edited production redirects to public https', () => {
+    const base = { name: 'App', description: '', originsText: '' };
+
     expect(() =>
       parseApplication({
         ...base,
-        redirects: 'http://localhost:5173/callback\nhttps://example.com/cb',
-        dev: true,
+        redirects:
+          'https://example.com/cb\nmyapp://callback\nhttp://localhost:5173',
+        enforceProductionRedirects: true,
       }),
     ).toThrow(
-      'Development apps can only redirect to localhost. Remove https://example.com/cb.',
+      'Production redirect URIs must use https:// on a domain you control. Change myapp://callback, http://localhost:5173.',
     );
+    expect(
+      parseApplication({
+        ...base,
+        redirects: 'myapp://callback',
+        enforceProductionRedirects: false,
+      }).redirect_uri,
+    ).toEqual(['myapp://callback']);
+  });
+
+  it('lets a read-only Production app save without a redirect', () => {
+    const base = {
+      name: 'Poster Wall',
+      description: '',
+      redirects: '',
+      originsText: '',
+    };
+
+    expect(() => parseApplication(base)).toThrow('Enter 1-25 redirect URIs');
+    expect(
+      parseApplication({ ...base, redirectsOptional: true }).redirect_uri,
+    ).toEqual([]);
   });
 });

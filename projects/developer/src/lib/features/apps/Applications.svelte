@@ -27,6 +27,9 @@
   import type { AppSection } from "./AppSection.ts";
   import MembersPanel from "./MembersPanel.svelte";
   import PkceNotice from "./PkceNotice.svelte";
+  import { productionNeedsRedirects } from "./productionNeedsRedirects.ts";
+  import ProductionPanel from "./ProductionPanel.svelte";
+  import { productionCardBadge } from "./productionCardBadge.ts";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
   import { developerApiHost } from "$lib/features/premium/developerApiHost.ts";
@@ -120,6 +123,13 @@
           { id: "credentials", label: "Credentials" },
           { id: "settings", label: "Settings" },
           { id: "details", label: "Details" },
+          {
+            id: "production",
+            label:
+              selected.dev && !selected.linked_application
+                ? "Production access"
+                : "App information",
+          },
           { id: "members", label: `Members · ${memberCount}` },
           ...(isOwner ? [{ id: "delete", label: "Delete app" }] : []),
         ]
@@ -254,6 +264,19 @@
     loading = false;
   }
 
+  async function refresh() {
+    try {
+      const next = await listApplications(slot);
+      if (alive) apps = next;
+    } catch (cause) {
+      if (alive)
+        error =
+          cause instanceof Error
+            ? cause.message
+            : "Could not reload your apps.";
+    }
+  }
+
   async function save(input: ApplicationInput) {
     if (busy || (mode === "edit" && !selected)) return;
     busy = true;
@@ -308,13 +331,19 @@
 <svelte:head><title>{title} | Trakt Developer</title></svelte:head>
 
 {#snippet appCard(app: Application)}
+  {@const badge = productionCardBadge(app.production_review)}
   <a class="app-card" href={applicationUrl({ id: app.id, name: app.name })}
     ><div class="card-heading">
       <span class="app-icon">&lt;/&gt;</span><span class="badges"
         >{#if app.dev}<span class="badge" data-variant="dev">Development</span
-          >{/if}<span class="badge"
-          >{app.approved ? "Approved" : "Pending approval"}</span
-        ></span
+          >{/if}{#if app.app_type === "production_read_only"}<span
+            class="badge"
+            data-variant="read-only">Read-only</span
+          >{/if}{#if badge}<span class="badge" data-variant={badge.status}
+            >{badge.label}</span
+          >{/if}{#if !app.approved}<span class="badge" data-variant="blocked"
+            >Blocked</span
+          >{/if}</span
       >
     </div>
     <h2>{app.name}</h2>
@@ -367,6 +396,10 @@
           {#if mode !== "list" && selected?.dev}<span
               class="badge"
               data-variant="dev">Development</span
+            >{/if}
+          {#if mode !== "list" && selected?.app_type === "production_read_only"}<span
+              class="badge"
+              data-variant="read-only">Read-only</span
             >{/if}
           {#if mode !== "list" && selected?.role === "manager"}<span
               class="badge"
@@ -498,13 +531,19 @@
               </div>
             </div>
 
-            <PkceNotice hasSecret={!!selected.client_secret} />
+            <PkceNotice
+              hasSecret={!!selected.client_secret &&
+                !selected.client_secret_granted}
+            />
 
             {#if selected.client_secret}<div class="credential">
                 <strong
-                  >Client Secret <span class="badge" data-variant="deprecated"
-                    >Deprecated</span
-                  ></strong
+                  >Client Secret {#if selected.client_secret_granted}<span
+                      class="badge"
+                      data-variant="server">Server to server</span
+                    >{:else}<span class="badge" data-variant="deprecated"
+                      >Deprecated</span
+                    >{/if}</strong
                 >
                 <div class="credential-value">
                   <code
@@ -594,15 +633,30 @@
               {#if !isOwner}<dt>Your role</dt>
                 <dd>Manager</dd>{/if}
               <dt>Type</dt>
-              <dd>{selected.dev ? "Development" : "Production"}</dd>
-              <dt>Status</dt>
-              <dd>{selected.approved ? "Approved" : "Pending approval"}</dd>
+              <dd>
+                {selected.dev
+                  ? "Development"
+                  : selected.app_type === "production_read_only"
+                    ? "Production (read-only: public data, no sign-in)"
+                    : "Production"}
+              </dd>
+              {#if selected.linked_application}<dt>
+                  {selected.linked_application.dev
+                    ? "Development app"
+                    : "Production app"}
+                </dt>
+                <dd>
+                  <a
+                    href={applicationUrl({
+                      id: selected.linked_application.id,
+                      name: selected.linked_application.name,
+                    })}>{selected.linked_application.name}</a
+                  >
+                </dd>{/if}
+              <dt>API key</dt>
+              <dd>{selected.approved ? "Active" : "Blocked by Trakt"}</dd>
               <dt>Created</dt>
               <dd>{formatDate(selected.created_at)}</dd>
-              {#if selected.approved_at}<dt>Approved</dt>
-                <dd>
-                  {formatDate(selected.approved_at)}
-                </dd>{/if}
               {#if tier && isOwner}
                 <dt>Plan</dt>
                 <dd><TierBadge {tier} /></dd>
@@ -617,6 +671,17 @@
               <dd>{selected.scopes.join(", ") || "None"}</dd>
             </dl>
           </section>
+
+          <div id="production" class:is-active={activeSection === "production"}>
+            <ProductionPanel
+              {slot}
+              app={selected}
+              redirectsNeeded={productionNeedsRedirects(selected, apps)}
+              tier={tier ?? "standard"}
+              {readOnly}
+              onChanged={refresh}
+            />
+          </div>
 
           <div id="members" class:is-active={activeSection === "members"}>
             <MembersPanel
@@ -902,6 +967,37 @@
     color: var(--color-warning);
     background: color-mix(in srgb, var(--color-warning) 14%, transparent);
     white-space: nowrap;
+  }
+
+  .badge[data-variant="pending"] {
+    color: var(--color-info);
+    background: color-mix(in srgb, var(--color-info) 14%, transparent);
+    white-space: nowrap;
+  }
+
+  .badge[data-variant="changes_requested"] {
+    color: var(--color-warning);
+    background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+    white-space: nowrap;
+  }
+
+  .badge[data-variant="declined"],
+  .badge[data-variant="blocked"] {
+    color: var(--color-danger);
+    background: color-mix(in srgb, var(--color-danger) 14%, transparent);
+    white-space: nowrap;
+  }
+
+  .badge[data-variant="read-only"] {
+    color: var(--color-info);
+    background: color-mix(in srgb, var(--color-info) 14%, transparent);
+    white-space: nowrap;
+  }
+
+  .badge[data-variant="server"] {
+    margin-inline-start: var(--gap-xs);
+    color: var(--color-info);
+    background: color-mix(in srgb, var(--color-info) 14%, transparent);
   }
 
   .badge[data-variant="deprecated"] {

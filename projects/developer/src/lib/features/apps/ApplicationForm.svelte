@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { ApplicationFormProps } from "./ApplicationFormProps.ts";
-  import { nonLocalRedirectUris } from "./nonLocalRedirectUris.ts";
   import { parseApplication } from "./parseApplication.ts";
   import RedirectUriWarning from "./RedirectUriWarning.svelte";
   import { unsafeRedirectUris } from "./unsafeRedirectUris.ts";
@@ -22,9 +21,17 @@
   let origins = $state(initial?.origins.join("\n") ?? "");
   let dev = $state(initial?.dev ?? true);
   let error = $state("");
-  const unsafeRedirects = $derived(dev ? [] : unsafeRedirectUris(redirects));
-  const nonLocalRedirects = $derived(
-    dev ? nonLocalRedirectUris(redirects) : [],
+  const readOnly = initial?.app_type === "production_read_only";
+  const redirectsOptional =
+    readOnly || (!!initial && !initial.dev && !initial.redirect_uri.trim());
+  const enforceProductionRedirects = $derived(
+    !dev && (!initial || redirects !== initial.redirect_uri),
+  );
+  const blockedRedirects = $derived(
+    enforceProductionRedirects ? unsafeRedirectUris(redirects) : [],
+  );
+  const unsafeRedirects = $derived(
+    dev || enforceProductionRedirects ? [] : unsafeRedirectUris(redirects),
   );
 
   function submit(event: SubmitEvent) {
@@ -36,6 +43,8 @@
         redirects,
         originsText: origins,
         dev,
+        enforceProductionRedirects,
+        redirectsOptional,
       });
       error = "";
       onSave(input);
@@ -80,8 +89,8 @@
           />
           <strong class="type-title">Development</strong>
           <small class="type-hint"
-            >Only you and people you add can sign in. Redirect URIs must point
-            to localhost.</small
+            >Only you and up to 16 people you add can sign in. Any redirect URI
+            works for testing.</small
           ></label
         ><label
           class="type-option"
@@ -98,40 +107,42 @@
           <strong class="type-title">Production</strong>
           {#if productionAvailable}<small class="type-hint"
               >Anyone with a Trakt account can sign in. Redirect URIs must use
-              https://.</small
+              https:// on a domain you control.</small
             >{:else}<small class="type-hint"
-              >Currently unavailable. Contact <a href="mailto:support@trakt.tv"
-                >support@trakt.tv</a
-              > if you need a production app.</small
+              >Start in Development, then request Production access from your
+              app's page. You'll get a separate Production app.</small
             >{/if}</label
         >
       </fieldset>{/if}
-    <label
-      >Redirect URIs <span
-        >{dev
-          ? "One per line. Development apps accept localhost, 127.0.0.1 or [::1] only."
-          : "One per line. Use https:// only; on mobile, back it with Universal Links or verified App Links."}</span
-      ><textarea
-        bind:value={redirects}
-        required
-        rows="4"
-        placeholder={dev
-          ? "http://localhost:5173/callback"
-          : "https://example.com/callback"}
-        spellcheck="false"
-        class:is-invalid={nonLocalRedirects.length > 0}
-        aria-invalid={nonLocalRedirects.length > 0}
-        aria-describedby={nonLocalRedirects.length > 0
-          ? "redirect-error"
-          : undefined}></textarea>{#if nonLocalRedirects.length > 0}<span
-          class="field-error"
-          id="redirect-error"
-          >Development apps can only redirect to localhost. Remove {nonLocalRedirects.join(
-            ", ",
-          )}.</span
-        >{/if}</label
-    >
-    <RedirectUriWarning uris={unsafeRedirects} />
+    {#if readOnly}<p class="read-only-redirects">
+        Read-only Production apps need no redirect URI: nobody signs in to them.
+      </p>{:else}<label
+        >Redirect URIs <span
+          >{dev
+            ? "One per line. Any redirect URI works for testing: localhost, https, or a custom app scheme."
+            : redirectsOptional
+              ? "Optional for device-code sign-in. Use public https:// URLs if you add any."
+              : "One per line. https:// on a domain you control. Localhost and custom app schemes only work on Development apps; on mobile, use Universal Links or verified App Links."}</span
+        ><textarea
+          bind:value={redirects}
+          required={!redirectsOptional}
+          rows="4"
+          placeholder={dev
+            ? "http://localhost:5173/callback"
+            : "https://example.com/callback"}
+          spellcheck="false"
+          class:is-invalid={blockedRedirects.length > 0}
+          aria-invalid={blockedRedirects.length > 0}
+          aria-describedby={blockedRedirects.length > 0
+            ? "redirect-error"
+            : undefined}></textarea>{#if blockedRedirects.length > 0}<span
+            class="field-error"
+            id="redirect-error"
+            >Production redirect URIs must use https:// on a domain you control.
+            Change {blockedRedirects.join(", ")}.</span
+          >{/if}</label
+      >
+      <RedirectUriWarning uris={unsafeRedirects} />{/if}
 
     <label
       >Allowed origins <span
@@ -154,7 +165,7 @@
       <button
         class="primary"
         type="submit"
-        disabled={nonLocalRedirects.length > 0}
+        disabled={blockedRedirects.length > 0}
         >{busy ? "Saving…" : app ? "Save changes" : "Create app"}</button
       ><button type="button" onclick={onCancel}>Cancel</button>
     </div>
@@ -185,6 +196,13 @@
       color: var(--color-muted);
       font-size: 12px;
       font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .read-only-redirects {
+      margin: 0;
+      color: var(--color-muted);
+      font-size: 13px;
       line-height: 1.6;
     }
 
