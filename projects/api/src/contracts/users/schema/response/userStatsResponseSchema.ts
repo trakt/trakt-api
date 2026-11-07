@@ -31,12 +31,14 @@ export const userStatsResponseSchema = z.object({
     total: z.number().int(),
     distribution: distributionResponseSchema,
   }),
-  progress: z.object({
-    started: z.number().int(),
-    finished: z.number().int(),
-    dropped: z.number().int(),
-  }),
-  lists: z.number().int(),
-  total_minutes: z.number().int(),
-  total_plays: z.number().int(),
+  progress: z
+    .object({
+      started: z.number().int(),
+      finished: z.number().int(),
+      dropped: z.number().int(),
+    })
+    .nullish(),
+  lists: z.number().int().nullish(),
+  total_minutes: z.number().int().nullish(),
+  total_plays: z.number().int().nullish(),
 });
