@@ -26,8 +26,6 @@ const DEVELOPER_ERROR_MESSAGES = {
     'Development apps can only redirect to localhost, 127.0.0.1 or [::1].',
   production_apps_unavailable:
     'Production apps are currently unavailable. Contact support@trakt.tv if you need one.',
-  production_requires_plan:
-    'Production apps are currently unavailable. Contact support@trakt.tv if you need one.',
   application_not_dev: 'Only development apps have a sign-in list.',
   user_not_found: 'No Trakt account has that username.',
   cannot_allow_owner: 'You own this app, so you can always sign in to it.',
