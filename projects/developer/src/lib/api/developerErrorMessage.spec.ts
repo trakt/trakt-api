@@ -19,7 +19,6 @@ const API_ERROR_CODES = [
   'github_account_taken',
   'github_account_mismatch',
   'production_apps_unavailable',
-  'production_requires_plan',
 ];
 
 describe('developerErrorMessage', () => {
