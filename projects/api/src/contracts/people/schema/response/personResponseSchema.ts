@@ -1,6 +1,6 @@
 import { crewPositionResponseSchema } from '../../../_internal/response/crewPositionResponseSchema.ts';
-import { socialIdsResponseSchema } from '../../../_internal/response/socialIdsResponseSchema.ts';
 import { asString, float, z } from '../../../_internal/z.ts';
+import { personSocialIdsResponseSchema } from './personSocialIdsResponseSchema.ts';
 
 /** Zod schema for the person response. */
 export const personResponseSchema = z.object({
@@ -15,7 +15,7 @@ export const personResponseSchema = z.object({
   /***
    * Available if requesting extended `full`.
    */
-  social_ids: socialIdsResponseSchema.nullish(),
+  social_ids: personSocialIdsResponseSchema.nullish(),
   /***
    * Available if requesting extended `full`. A longer biography. Includes
    * markdown links to the movies and shows it mentions only when also
