@@ -27,8 +27,10 @@ import { sortEnumSchema } from './schema/request/sortParamsSchema.ts';
 import { syncIdParamsSchema } from './schema/request/syncIdParamsSchema.ts';
 import { syncTypeParamsSchema } from './schema/request/syncTypeParamsSchema.ts';
 import { userReportRequestSchema } from './schema/request/userReportRequestSchema.ts';
+import { reviewQuerySchema } from './schema/request/reviewQuerySchema.ts';
 import { yearInReviewParamsSchema } from './schema/request/yearInReviewParamsSchema.ts';
 import { yearInReviewPersonaParamsSchema } from './schema/request/yearInReviewPersonaParamsSchema.ts';
+import { yearInReviewRangeParamsSchema } from './schema/request/yearInReviewRangeParamsSchema.ts';
 import { blockedUserResponseSchema } from './schema/response/blockedUserResponseSchema.ts';
 import { followerResponseSchema } from './schema/response/followerResponseSchema.ts';
 import { followResponseSchema } from './schema/response/followResponseSchema.ts';
@@ -37,7 +39,10 @@ import {
   likedCommentResponseSchema,
   likedListResponseSchema,
 } from './schema/response/likedItemResponseSchema.ts';
-import { monthInReviewResponseSchema } from './schema/response/monthInReviewResponseSchema.ts';
+import {
+  monthInReviewResponseSchema,
+  type reviewStreamingServicesSchema,
+} from './schema/response/monthInReviewResponseSchema.ts';
 import { plexConnectResponseSchema } from './schema/response/plexConnectResponseSchema.ts';
 import { plexErrorResponseSchema } from './schema/response/plexErrorResponseSchema.ts';
 import {
@@ -51,6 +56,25 @@ import {
 } from './schema/response/plexServersResponseSchema.ts';
 import { plexSettingsResponseSchema } from './schema/response/plexSettingsResponseSchema.ts';
 import { reactedCommentResponseSchema } from './schema/response/reactedCommentResponseSchema.ts';
+import type {
+  reviewAllStatsSchema,
+  reviewBaseResponseSchema,
+  reviewCompanySchema,
+  reviewCountryCountSchema,
+  reviewDistributionsSchema,
+  reviewGenreCountSchema,
+  reviewMostWatchedSchema,
+  reviewThanksSchema,
+  reviewTopRatedSchema,
+  reviewTypeStatsSchema,
+  reviewWatchedItemSchema,
+} from './schema/response/reviewBaseResponseSchema.ts';
+import {
+  reviewBadRequestResponseSchema,
+  reviewNotFoundResponseSchema,
+  reviewUnauthorizedResponseSchema,
+  reviewUpgradeRequiredResponseSchema,
+} from './schema/response/reviewErrorResponseSchema.ts';
 import { settingsResponseSchema } from './schema/response/settingsResponseSchema.ts';
 import { socialActivityResponseSchema } from './schema/response/socialActivityResponseSchema.ts';
 import { syncItemSchema } from './schema/response/syncItemResponseSchema.ts';
@@ -65,7 +89,16 @@ import {
   yearInReviewPersonaNotFoundResponseSchema,
   yearInReviewPersonaResponseSchema,
 } from './schema/response/yearInReviewPersonaResponseSchema.ts';
-import { yearInReviewResponseSchema } from './schema/response/yearInReviewResponseSchema.ts';
+import {
+  type reviewGlobalTopSchema,
+  type reviewListProgressSchema,
+  type reviewReleaseYearsSchema,
+  yearInReviewAllResponseSchema,
+} from './schema/response/yearInReviewAllResponseSchema.ts';
+import {
+  yearInReviewResponseSchema,
+  type yearReviewImagesSchema,
+} from './schema/response/yearInReviewResponseSchema.ts';
 import { favorites } from './subroutes/favorites.ts';
 import { filters } from './subroutes/filters.ts';
 import { hidden } from './subroutes/hidden.ts';
@@ -94,6 +127,19 @@ const userCollectionItemResponseSchema = z
     collected_at: z.string().datetime().optional(),
   })
   .passthrough();
+
+const REVIEW_ACCESS = `
+Only official Trakt apps can call it. The profile owner needs VIP; the viewer does not. Send \`slurm\` instead of an Authorization header to view as that token's owner.
+
+Returns \`400\` for an invalid user slug, year or month, \`401\` off an official app or for a private profile the viewer cannot see, \`404\` for an unknown user or a review that is not built yet, and \`426\` with an \`X-Upgrade-URL\` header when the profile owner is not VIP.
+`;
+
+const REVIEW_ERROR_RESPONSES = {
+  400: reviewBadRequestResponseSchema,
+  401: reviewUnauthorizedResponseSchema,
+  404: reviewNotFoundResponseSchema,
+  426: reviewUpgradeRequiredResponseSchema,
+};
 
 const GLOBAL_LEVEL = builder.router({
   settings: {
@@ -639,30 +685,6 @@ Returns all friends for a user including when the relationship began. Friendship
         200: friendResponseSchema.array(),
       },
     },
-    month_in_review: {
-      summary: 'Get month in review',
-      description: `#### 🔓 OAuth Optional ✨ Extended Info
-Returns a month-in-review summary for a user. Send the \`year\` and \`month\` path parameters to choose the review period.`,
-      path: '/mir/:year/:month',
-      pathParams: profileParamsSchema.merge(monthInReviewParamsSchema),
-      query: extendedMediaQuerySchema,
-      method: 'GET',
-      responses: {
-        200: monthInReviewResponseSchema,
-      },
-    },
-    year_in_review: {
-      summary: 'Get year in review',
-      description: `#### 🔓 OAuth Optional ✨ Extended Info
-Returns a year-in-review summary for a user. Send the \`year\` path parameter to choose the review period.`,
-      path: '/yir/:year',
-      pathParams: profileParamsSchema.merge(yearInReviewParamsSchema),
-      query: extendedMediaQuerySchema,
-      method: 'GET',
-      responses: {
-        200: yearInReviewResponseSchema,
-      },
-    },
     year_in_review_persona: {
       summary: 'Get year in review persona',
       description: `#### 🔥 VIP Only 🔓 OAuth Optional
@@ -686,6 +708,74 @@ Returns \`400\` for an invalid year or user slug, \`403\` when a non-VIP user re
   },
 );
 
+const REVIEW_LEVEL = builder.router(
+  {
+    month_in_review: {
+      summary: 'Get month in review',
+      description: `#### 🔥 VIP Only 🔓 OAuth Optional ✨ Extended Info
+Returns a user's month in review: totals and averages, play distributions (\`daily\` included), first and last watched, most watched and top rated titles, genres, networks, production companies, countries and the streaming services watched on. Send the \`year\` and \`month\` path parameters to choose the month.
+${REVIEW_ACCESS}
+Successful responses carry \`X-Year\`, \`X-Month\` and \`X-Private-User\` headers.`,
+      path: '/mir/:year/:month',
+      pathParams: profileParamsSchema.merge(monthInReviewParamsSchema),
+      query: reviewQuerySchema,
+      method: 'GET',
+      responses: {
+        200: monthInReviewResponseSchema,
+        ...REVIEW_ERROR_RESPONSES,
+      },
+    },
+    year_in_review: {
+      summary: 'Get year in review',
+      description: `#### 🔥 VIP Only 🔓 OAuth Optional ✨ Extended Info
+Returns a user's year in review: totals and averages, play distributions, first and last watched, most watched and top rated titles, genres, networks, production companies and countries. Send the \`year\` path parameter to choose the year.
+${REVIEW_ACCESS}
+Successful responses carry \`X-Year-Start\`, \`X-Year-End\` and \`X-Private-User\` headers.`,
+      path: '/yir/:year',
+      pathParams: profileParamsSchema.merge(yearInReviewParamsSchema),
+      query: reviewQuerySchema,
+      method: 'GET',
+      responses: {
+        200: yearInReviewResponseSchema,
+        ...REVIEW_ERROR_RESPONSES,
+      },
+    },
+    year_in_review_range: {
+      summary: 'Get year in review for a range of years',
+      description: `#### 🔥 VIP Only 🔓 OAuth Optional ✨ Extended Info
+Returns a user's year in review for every year from \`year\` to \`year_end\`, both included, in the same shape as a single year.
+${REVIEW_ACCESS}
+Successful responses carry \`X-Year-Start\`, \`X-Year-End\` and \`X-Private-User\` headers. \`X-Year-Start\` is the first year with plays inside the range.`,
+      path: '/yir/:year/:year_end',
+      pathParams: profileParamsSchema.merge(yearInReviewRangeParamsSchema),
+      query: reviewQuerySchema,
+      method: 'GET',
+      responses: {
+        200: yearInReviewResponseSchema,
+        ...REVIEW_ERROR_RESPONSES,
+      },
+    },
+    year_in_review_all: {
+      summary: 'Get all-time year in review',
+      description: `#### 🔥 VIP Only 🔓 OAuth Optional ✨ Extended Info
+Returns a user's review of their whole history. On top of the year shape it adds plays per year, the ratings distribution, release years and decades, progress through curated top lists, and the most played titles on Trakt.
+${REVIEW_ACCESS}
+Successful responses carry \`X-Year-Start\` (the first year with plays), \`X-Year-End\` and \`X-Private-User\` headers.`,
+      path: '/yir/all',
+      pathParams: profileParamsSchema,
+      query: reviewQuerySchema,
+      method: 'GET',
+      responses: {
+        200: yearInReviewAllResponseSchema,
+        ...REVIEW_ERROR_RESPONSES,
+      },
+    },
+  },
+  {
+    pathPrefix: '/:id',
+  },
+);
+
 // The fully inferred `users` type exceeds TypeScript's declaration-
 // serialization limit (TS7056) as a single literal. Composing the type from
 // `typeof` references to its already-declared parts (and reusing ts-rest's own
@@ -694,7 +784,8 @@ Returns \`400\` for an invalid year or user slug, \`403\` when a non-VIP user re
 // because TS can't prove the spread-merged value equals the reference-composed
 // type through ts-rest's mapped types - they are structurally identical.
 type UsersInput = typeof GLOBAL_LEVEL &
-  typeof ENTITY_LEVEL & {
+  typeof ENTITY_LEVEL &
+  typeof REVIEW_LEVEL & {
     syncs: typeof syncs;
     plex: typeof plex;
     watched: typeof watched;
@@ -720,6 +811,7 @@ export const users = builder.router(
     syncs,
     plex,
     ...ENTITY_LEVEL,
+    ...REVIEW_LEVEL,
     watched,
     history,
     watchlist,
@@ -777,6 +869,11 @@ export {
   plexSyncRequestSchema,
   profileParamsSchema,
   reactedCommentResponseSchema,
+  reviewBadRequestResponseSchema,
+  reviewNotFoundResponseSchema,
+  reviewQuerySchema,
+  reviewUnauthorizedResponseSchema,
+  reviewUpgradeRequiredResponseSchema,
   settingsRequestSchema,
   settingsResponseSchema,
   socialActivityResponseSchema,
@@ -790,8 +887,12 @@ export {
   userStatsResponseSchema,
   watchActionSchema,
   watchingResponseSchema,
+  yearInReviewAllResponseSchema,
+  yearInReviewParamsSchema,
   yearInReviewPersonaParamsSchema,
   yearInReviewPersonaResponseSchema,
+  yearInReviewRangeParamsSchema,
+  yearInReviewResponseSchema,
 };
 
 /** The profile parameters. */
@@ -858,6 +959,59 @@ export type MonthInReviewResponse = z.infer<typeof monthInReviewResponseSchema>;
 export type YearInReviewParams = z.infer<typeof yearInReviewParamsSchema>;
 /** The year in review response payload. */
 export type YearInReviewResponse = z.infer<typeof yearInReviewResponseSchema>;
+/** The year in review range parameters. */
+export type YearInReviewRangeParams = z.infer<
+  typeof yearInReviewRangeParamsSchema
+>;
+/** The all-time year in review response payload. */
+export type YearInReviewAllResponse = z.infer<
+  typeof yearInReviewAllResponseSchema
+>;
+
+/** The year and month in review query parameters. */
+export type ReviewQuery = z.infer<typeof reviewQuerySchema>;
+/** The year and month in review error codes, by status. */
+export type ReviewErrorResponse =
+  | z.infer<typeof reviewBadRequestResponseSchema>
+  | z.infer<typeof reviewUnauthorizedResponseSchema>
+  | z.infer<typeof reviewNotFoundResponseSchema>
+  | z.infer<typeof reviewUpgradeRequiredResponseSchema>;
+/** The year and month in review error code. */
+export type ReviewErrorCode = ReviewErrorResponse['error'];
+/** The keys every year and month in review window returns. */
+export type ReviewBaseResponse = z.infer<typeof reviewBaseResponseSchema>;
+/** The review stats across shows and movies. */
+export type ReviewAllStats = z.infer<typeof reviewAllStatsSchema>;
+/** One media type's review stats. */
+export type ReviewTypeStats = z.infer<typeof reviewTypeStatsSchema>;
+/** The review play distributions every window returns. */
+export type ReviewDistributions = z.infer<typeof reviewDistributionsSchema>;
+/** A review first or last watched item. */
+export type ReviewWatchedItem = z.infer<typeof reviewWatchedItemSchema>;
+/** The review most watched titles. */
+export type ReviewMostWatched = z.infer<typeof reviewMostWatchedSchema>;
+/** The review genre counts of one media type. */
+export type ReviewGenreCount = z.infer<typeof reviewGenreCountSchema>;
+/** A review network or production company. */
+export type ReviewCompany = z.infer<typeof reviewCompanySchema>;
+/** The review country counts of one media type. */
+export type ReviewCountryCount = z.infer<typeof reviewCountryCountSchema>;
+/** The review top rated titles. */
+export type ReviewTopRated = z.infer<typeof reviewTopRatedSchema>;
+/** The review thanks titles. */
+export type ReviewThanks = z.infer<typeof reviewThanksSchema>;
+/** The month in review streaming services. */
+export type ReviewStreamingServices = z.infer<
+  typeof reviewStreamingServicesSchema
+>;
+/** The share images of a year or all-time review. */
+export type YearReviewImages = z.infer<typeof yearReviewImagesSchema>;
+/** The all-time review release years of one media type. */
+export type ReviewReleaseYears = z.infer<typeof reviewReleaseYearsSchema>;
+/** The all-time review progress through one curated list. */
+export type ReviewListProgress = z.infer<typeof reviewListProgressSchema>;
+/** The all-time review most played titles on Trakt. */
+export type ReviewGlobalTop = z.infer<typeof reviewGlobalTopSchema>;
 
 /** The year in review persona parameters. */
 export type YearInReviewPersonaParams = z.infer<
