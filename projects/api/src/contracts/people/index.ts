@@ -10,6 +10,7 @@ import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
 import { z } from '../_internal/z.ts';
 import { peopleReportRequestSchema } from './schema/request/peopleReportRequestSchema.ts';
+import { personLanguageQuerySchema } from './schema/request/personLanguageQuerySchema.ts';
 import { peopleMovieCreditsResponseSchema } from './schema/response/peopleMovieCreditsResponseSchema.ts';
 import { peopleShowCreditsResponseSchema } from './schema/response/peopleShowCreditsResponseSchema.ts';
 import { personResponseSchema } from './schema/response/personResponseSchema.ts';
@@ -37,13 +38,17 @@ If available, the \`gender\` property will be set to \`male\`, \`female\`, or \`
 If available, the \`known_for_department\` property will be set to \`production\`, \`art\`, \`crew\`, \`costume & make-up\`, \`directing\`, \`writing\`, \`sound\`, \`camera\`, \`visual effects\`, \`lighting\`, or \`editing\`. Many people have credits across departments, \`known_for\` allows you to select their default credits more accurately.
 
 #### Biography
-The \`biography\` is plain text. Request extended \`markdown\` to get markdown links to the movies and shows it mentions.`,
+The \`biography\` is plain text. Request extended \`markdown\` to get markdown links to the movies and shows it mentions.
+
+#### Social IDs
+With extended \`full\`, \`social_ids\` includes \`twitter\`, \`facebook\`, \`instagram\`, \`tiktok\`, \`youtube\`, \`wikidata\` and \`wikipedia\`. \`wikipedia_language\` is the language of the \`wikipedia\` page. Pass \`language\` to pick the page language, it falls back to the base language, then English. A malformed \`language\` returns a \`400\`.`,
       path: '/',
       pathParams: idParamsSchema,
-      query: extendedPersonQuerySchema,
+      query: extendedPersonQuerySchema.merge(personLanguageQuerySchema),
       method: 'GET',
       responses: {
         200: personResponseSchema,
+        400: z.undefined(),
       },
     },
     movies: {
