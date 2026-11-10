@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
@@ -41,6 +41,7 @@ import {
   type watchNowServiceResponseSchema,
 } from '../_internal/response/watchNowResponseSchema.ts';
 import { z } from '../_internal/z.ts';
+import { anticipatedMovieRecommendationResponseSchema } from '../recommendations/schema/response/anticipatedMovieRecommendationResponseSchema.ts';
 import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
 import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
 import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
@@ -347,6 +348,19 @@ Report a movie for moderator review. Send a \`reason\` and optional \`message\` 
 );
 
 const GLOBAL_LEVEL = builder.router({
+  anticipatedRecommendations: {
+    summary: 'Get anticipated movie recommendations',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Upcoming movies that have not been released yet, ranked for the taste of the user. Returns at most \`100\` results in total. Each result carries a \`score\` and the \`released\` date (\`YYYY-MM-DD\`, or \`null\` when unknown).`,
+    path: '/recommendations/anticipated',
+    method: 'GET',
+    metadata: authMetadata('required'),
+    query: pageQuerySchema,
+    responses: {
+      200: anticipatedMovieRecommendationResponseSchema.array(),
+      401: z.object({ error: z.string() }),
+    },
+  },
   trending: {
     summary: 'Get trending movies',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters

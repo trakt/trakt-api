@@ -1,10 +1,11 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
 import { ignoreQuerySchema } from '../_internal/request/ignoreQuerySchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { themeQuerySchema } from '../_internal/request/themeQuerySchema.ts';
-import type { z } from '../_internal/z.ts';
+import { z } from '../_internal/z.ts';
+import { anticipatedMediaRecommendationResponseSchema } from '../recommendations/schema/response/anticipatedMediaRecommendationResponseSchema.ts';
 import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipatedResponseSchema.ts';
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
@@ -40,6 +41,19 @@ Returns anticipated movies and shows based on list activity. Results can be filt
         .merge(ignoreQuerySchema),
       responses: {
         200: mediaAnticipatedResponseSchema.array(),
+      },
+    },
+    anticipatedRecommendations: {
+      summary: 'Get anticipated media recommendations',
+      description: `#### 🔒 OAuth Required 📄 Pagination
+Upcoming movies and shows that have not been released yet, ranked for the taste of the user. Returns at most \`100\` results in total. Each result carries a \`score\` and the \`released\` date (\`YYYY-MM-DD\`, or \`null\` when unknown).`,
+      path: '/recommendations/anticipated',
+      method: 'GET',
+      metadata: authMetadata('required'),
+      query: pageQuerySchema,
+      responses: {
+        200: anticipatedMediaRecommendationResponseSchema.array(),
+        401: z.object({ error: z.string() }),
       },
     },
     popular: {

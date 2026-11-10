@@ -1,4 +1,4 @@
-import { builder } from '../_internal/builder.ts';
+import { authMetadata, builder } from '../_internal/builder.ts';
 import { commentsSortParamsSchema } from '../_internal/request/commentsSortParamsSchema.ts';
 import { countryParamsSchema } from '../_internal/request/countryParamsSchema.ts';
 import { extendedMediaQuerySchema } from '../_internal/request/extendedMediaQuerySchema.ts';
@@ -46,6 +46,7 @@ import { seasonParamsSchema } from './schema/request/seasonParamsSchema.ts';
 import { showProgressResetRequestSchema } from './schema/request/showProgressResetRequestSchema.ts';
 import { showQueryParamsSchema } from './schema/request/showQueryParamsSchema.ts';
 import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts';
+import { anticipatedShowRecommendationResponseSchema } from '../recommendations/schema/response/anticipatedShowRecommendationResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
 import { showCollectionProgressResponseSchema } from './schema/response/showCollectionProgressResponseSchema.ts';
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
@@ -833,6 +834,19 @@ Report a show for moderator review. Send a \`reason\` and optional \`message\` w
 );
 
 const GLOBAL_LEVEL = builder.router({
+  anticipatedRecommendations: {
+    summary: 'Get anticipated show recommendations',
+    description: `#### 🔒 OAuth Required 📄 Pagination
+Upcoming shows that have not been released yet, ranked for the taste of the user. Returns at most \`100\` results in total. Each result carries a \`score\` and the \`released\` date (\`YYYY-MM-DD\`, or \`null\` when unknown).`,
+    path: '/recommendations/anticipated',
+    method: 'GET',
+    metadata: authMetadata('required'),
+    query: pageQuerySchema,
+    responses: {
+      200: anticipatedShowRecommendationResponseSchema.array(),
+      401: z.object({ error: z.string() }),
+    },
+  },
   trending: {
     summary: 'Get trending shows',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
