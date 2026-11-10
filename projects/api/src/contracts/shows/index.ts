@@ -38,6 +38,7 @@ import { showResponseSchema } from '../_internal/response/showResponseSchema.ts'
 import { showStatsResponseSchema } from '../_internal/response/showStatsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
+import { titleAwardResponseSchema } from '../_internal/response/titleAwardResponseSchema.ts';
 import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import { watchNowResponseSchema } from '../_internal/response/watchNowResponseSchema.ts';
 import { z } from '../_internal/z.ts';
@@ -528,6 +529,20 @@ Queue a refresh of a show's JustWatch watch now links.`,
         },
       },
     }),
+    awards: {
+      summary: 'Get show awards',
+      description: `#### 🫣 Limited Access
+This endpoint is limited to official apps and may not be available to all API consumers.
+
+Returns the award nominations and wins for a show, wins first, then the most recent year. \`won\` is \`null\` while the ceremony results are pending. Awards given to a person credited on the title include that \`person\`.`,
+      path: '/awards',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: titleAwardResponseSchema.array(),
+        404: z.undefined(),
+      },
+    },
     people: {
       summary: 'Get all people for a show',
       description: `#### ✨ Extended Info

@@ -1,4 +1,5 @@
 import { builder } from './_internal/builder.ts';
+import { awards } from './awards/index.ts';
 import { calendars } from './calendars/index.ts';
 import { certifications } from './certifications/index.ts';
 import { checkin } from './checkin/index.ts';
@@ -31,6 +32,7 @@ import { younify } from './younify/index.ts';
 // referencing each domain by name keeps the emitted type static and precise.
 type TraktContract = {
   oauth: typeof oauth;
+  awards: typeof awards;
   calendars: typeof calendars;
   checkin: typeof checkin;
   users: typeof users;
@@ -61,6 +63,7 @@ type TraktContract = {
 /** ts-rest contract for the `traktContract` endpoints. */
 export const traktContract: TraktContract = builder.router({
   oauth,
+  awards,
   calendars,
   checkin,
   users,

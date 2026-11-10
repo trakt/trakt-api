@@ -34,6 +34,7 @@ import { movieRatingsResponseSchema } from '../_internal/response/movieRatingsRe
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
 import { translationResponseSchema } from '../_internal/response/translationResponseSchema.ts';
+import { titleAwardResponseSchema } from '../_internal/response/titleAwardResponseSchema.ts';
 import { videoResponseSchema } from '../_internal/response/videoResponseSchema.ts';
 import type { watchNowRankResponseSchema } from '../_internal/response/watchNowRankResponseSchema.ts';
 import {
@@ -243,6 +244,20 @@ Queue a refresh of a movie's JustWatch watch now links.`,
         },
       },
     }),
+    awards: {
+      summary: 'Get movie awards',
+      description: `#### 🫣 Limited Access
+This endpoint is limited to official apps and may not be available to all API consumers.
+
+Returns the award nominations and wins for a movie, wins first, then the most recent year. \`won\` is \`null\` while the ceremony results are pending. Awards given to a person credited on the title include that \`person\`.`,
+      path: '/awards',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: titleAwardResponseSchema.array(),
+        404: z.undefined(),
+      },
+    },
     people: {
       summary: 'Get all people for a movie',
       description: `#### ✨ Extended Info
