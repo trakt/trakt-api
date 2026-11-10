@@ -1,10 +1,12 @@
 import { expect, test } from 'bun:test';
 
+import { awardCatalogResponseSchema } from '../_internal/response/awardCatalogResponseSchema.ts';
 import { personAwardResponseSchema } from '../_internal/response/personAwardResponseSchema.ts';
 import { smartListFiltersSchema } from '../_internal/request/smartListFiltersSchema.ts';
 import { titleAwardResponseSchema } from '../_internal/response/titleAwardResponseSchema.ts';
 import { upcomingCeremonyResponseSchema } from '../_internal/response/upcomingCeremonyResponseSchema.ts';
 import { traktContract } from '../traktContract.ts';
+import type { AwardCatalogResponse } from './index.ts';
 
 const award = { slug: 'oscars-best-picture', name: 'Best Picture' };
 const ceremony = {
@@ -77,6 +79,24 @@ test('upcomingCeremonyResponseSchema: parses an upcoming ceremony', () => {
   expect(upcomingCeremonyResponseSchema.strict().parse(entry)).toEqual(entry);
 });
 
+test('awardCatalogResponseSchema: parses a ceremony with its awards', () => {
+  const entry: AwardCatalogResponse = {
+    slug: 'golden-globes',
+    name: 'Golden Globe Awards',
+    media_types: ['movie', 'show'],
+    awards: [
+      { ...award, kind: 'title' },
+      {
+        slug: 'golden-globes-best-actor-drama',
+        name: 'Best Actor',
+        kind: 'person',
+      },
+    ],
+  };
+
+  expect(awardCatalogResponseSchema.strict().parse(entry)).toEqual(entry);
+});
+
 test('smartListFiltersSchema: accepts award filters', () => {
   const filters = {
     awards: ['oscars-best-picture'],
@@ -88,6 +108,7 @@ test('smartListFiltersSchema: accepts award filters', () => {
 });
 
 test('traktContract: declares the awards routes', () => {
+  expect(traktContract.awards.catalog.path).toBe('/awards');
   expect(traktContract.awards.ceremonies.path).toBe('/awards/ceremonies');
   expect(traktContract.movies.awards.path).toBe('/movies/:id/awards');
   expect(traktContract.shows.awards.path).toBe('/shows/:id/awards');
