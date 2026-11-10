@@ -28,6 +28,9 @@ export const smartListFiltersSchema = z.object({
   people: list.optional(),
   people_operator: operator.optional(),
   people_role: peopleRole.optional(),
+  awards: list.optional(),
+  award_years: intRange.optional(),
+  award_won: z.boolean().optional(),
   watchnow: list.optional(),
   watchnow_country: z
     .string()

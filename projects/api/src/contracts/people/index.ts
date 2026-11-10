@@ -8,6 +8,7 @@ import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { listSortSchema } from '../_internal/response/listSortSchema.ts';
 import { listTypeSchema } from '../_internal/response/listTypeSchema.ts';
+import { personAwardResponseSchema } from '../_internal/response/personAwardResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { peopleReportRequestSchema } from './schema/request/peopleReportRequestSchema.ts';
 import { personLanguageQuerySchema } from './schema/request/personLanguageQuerySchema.ts';
@@ -91,6 +92,20 @@ Lists no longer support people, so this always returns an empty array.`,
       pathParams: idParamsSchema.merge(listSortSchema).merge(listTypeSchema),
       responses: {
         200: listResponseSchema.array(),
+      },
+    },
+    awards: {
+      summary: 'Get person awards',
+      description: `#### 🫣 Limited Access
+This endpoint is limited to official apps and may not be available to all API consumers.
+
+Returns the award nominations and wins for a person, wins first, then the most recent year. \`won\` is \`null\` while the ceremony results are pending. Each entry holds either a \`movie\` or a \`show\`.`,
+      path: '/awards',
+      method: 'GET',
+      pathParams: idParamsSchema,
+      responses: {
+        200: personAwardResponseSchema.array(),
+        404: z.undefined(),
       },
     },
     report: {

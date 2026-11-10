@@ -6,6 +6,7 @@ import {
 import { traktContract } from './contracts/traktContract.ts';
 import { Environment } from './Environment.ts';
 
+export * from './contracts/awards/index.ts';
 export * from './contracts/calendars/index.ts';
 export * from './contracts/certifications/index.ts';
 export * from './contracts/checkin/index.ts';

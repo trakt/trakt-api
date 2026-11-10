@@ -77,6 +77,22 @@ const smartListItemsQuerySchema = extendedMediaQuerySchema
       .enum(['any', 'cast', 'directing', 'writing', 'producing'])
       .optional()
       .describe('Restrict `people` matches to a role. Defaults to `any`.'),
+    awards: z
+      .string()
+      .optional()
+      .describe(
+        'Comma-separated award slugs, e.g. `oscars-best-picture`. Keeps titles nominated for or winning any of them.',
+      ),
+    award_years: z
+      .string()
+      .optional()
+      .describe(RANGE('Award ceremony year', '2020-2026') + ' Needs `awards`.'),
+    award_won: z
+      .boolean()
+      .optional()
+      .describe(
+        'Keep only titles that won the listed `awards` instead of being nominated. Needs `awards`. Defaults to `false`.',
+      ),
     watchnow_country: z
       .string()
       .optional()
@@ -120,7 +136,7 @@ Query filters narrow the list: they apply on top of its own filters, never inste
 
 Streaming (\`watchnow\`) filters resolve against the list owner, not the caller: the list region, else the owner's region, else \`us\`, and \`favorites\` means the owner's services.
 
-List filters (\`genres\`, \`studios\`, \`people\`, \`watchnow\`, and similar) accept a \`-\` prefix on a value to exclude it. New filters: \`released_within_days\`, \`tmdb_ratings\`, \`metascores\`, \`votes\`, \`imdb_votes\`, \`studios\`, \`people\`, \`people_operator\` and \`people_role\`.`;
+List filters (\`genres\`, \`studios\`, \`people\`, \`watchnow\`, and similar) accept a \`-\` prefix on a value to exclude it. New filters: \`released_within_days\`, \`tmdb_ratings\`, \`metascores\`, \`votes\`, \`imdb_votes\`, \`studios\`, \`people\`, \`people_operator\`, \`people_role\`, \`awards\`, \`award_years\` and \`award_won\`.`;
 
 /** ts-rest contract for the `smartLists` endpoints. */
 export const smartLists = builder.router(
