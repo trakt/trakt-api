@@ -1,4 +1,8 @@
-import { initClient } from '@ts-rest/core';
+import {
+  type ApiFetcher,
+  type InitClientReturn,
+  initClient,
+} from '@ts-rest/core';
 import { traktContract } from './contracts/traktContract.ts';
 import { Environment } from './Environment.ts';
 
@@ -60,8 +64,18 @@ export type TraktApiOptions = {
   cancellationId?: string;
 };
 
+type TraktClientArgs = {
+  baseUrl: TraktApiOptions['environment'];
+  baseHeaders: {
+    'Content-Type': string;
+    'trakt-api-version': string;
+    'trakt-api-key': string;
+  };
+  api: ApiFetcher;
+};
+
 /** A fully typed Trakt API client, as returned by {@link traktApi}. */
-export type TraktApi = ReturnType<typeof traktApiFactory>;
+export type TraktApi = InitClientReturn<typeof traktContract, TraktClientArgs>;
 
 const controllers = new Map<string, AbortController>();
 
@@ -130,7 +144,7 @@ export function traktApiFactory({
   fetch = globalThis.fetch,
   cancellable,
   cancellationId,
-}: TraktApiOptions) {
+}: TraktApiOptions): TraktApi {
   return initClient(traktContract, {
     baseUrl: environment,
     baseHeaders: {

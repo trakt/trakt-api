@@ -4,6 +4,9 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { mediaFilterParamsSchema } from '../_internal/request/mediaFilterParamsSchema.ts';
 import { themeQuerySchema } from '../_internal/request/themeQuerySchema.ts';
 import { z } from '../_internal/z.ts';
+import { anticipatedMediaRecommendationResponseSchema } from './schema/response/anticipatedMediaRecommendationResponseSchema.ts';
+import { anticipatedMovieRecommendationResponseSchema } from './schema/response/anticipatedMovieRecommendationResponseSchema.ts';
+import { anticipatedShowRecommendationResponseSchema } from './schema/response/anticipatedShowRecommendationResponseSchema.ts';
 import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
 import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
@@ -95,3 +98,21 @@ export { recommendedShowResponse };
 export type RecommendedShowResponse = z.infer<typeof recommendedShowResponse>;
 
 export { recommendationsQuerySchema };
+
+export { anticipatedMovieRecommendationResponseSchema };
+/** The anticipated movie recommendation response payload. */
+export type AnticipatedMovieRecommendationResponse = z.infer<
+  typeof anticipatedMovieRecommendationResponseSchema
+>;
+
+export { anticipatedShowRecommendationResponseSchema };
+/** The anticipated show recommendation response payload. */
+export type AnticipatedShowRecommendationResponse = z.infer<
+  typeof anticipatedShowRecommendationResponseSchema
+>;
+
+export { anticipatedMediaRecommendationResponseSchema };
+/** The anticipated media recommendation response payload. */
+export type AnticipatedMediaRecommendationResponse = z.infer<
+  typeof anticipatedMediaRecommendationResponseSchema
+>;
