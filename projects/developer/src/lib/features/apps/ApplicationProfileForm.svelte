@@ -380,13 +380,18 @@
       </FormField>
     {/if}
 
-    {#if !hasClientSecret && draft.signIn !== "none"}
+    {#if !hasClientSecret && draft.signIn === "device_code"}
+      <p class="secret-note">
+        No Client Secret needed: device code sign-in, token refresh and revoke
+        all work with your Client ID alone.
+      </p>
+    {:else if !hasClientSecret && draft.signIn === "pkce"}
       <div class="other">
         <ChoiceGroup
           legend="Does your server need a Client Secret?"
           name="client-secret"
           options={yesNo}
-          hint="Only for servers that exchange and refresh tokens themselves. Apps and websites sign users in with PKCE or the device code flow without one."
+          hint="Almost never. PKCE sign-in, token refresh and revoke all work with your Client ID alone, and a secret inside an app or website is not secret. Ask only if your own server exchanges tokens. A person reviews every request."
           bind:value={needsSecret}
         />
 
@@ -394,7 +399,7 @@
           <FormField
             {uid}
             field="secretReason"
-            label="Why your server needs it"
+            label="What your server does with it"
             size="small"
             error={errorFor("secretReason")}
           >
@@ -515,6 +520,13 @@
     .other {
       display: grid;
       gap: var(--ni-10);
+    }
+
+    .secret-note {
+      margin: 0;
+      color: var(--color-muted);
+      font-size: var(--ni-12);
+      line-height: 1.6;
     }
 
     .confirmations {

@@ -1,5 +1,6 @@
 import type { ProductionSignIn } from './ProductionSignIn.ts';
 
+/** Only PKCE apps can ask: device code sign-in works with the Client ID alone. */
 export function requestsClientSecret({
   needsSecret,
   hasClientSecret,
@@ -9,5 +10,5 @@ export function requestsClientSecret({
   hasClientSecret: boolean;
   signIn: ProductionSignIn;
 }): boolean {
-  return needsSecret && !hasClientSecret && signIn !== 'none';
+  return needsSecret && !hasClientSecret && signIn === 'pkce';
 }
