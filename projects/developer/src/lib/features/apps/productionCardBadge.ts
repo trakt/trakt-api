@@ -6,6 +6,7 @@ const SHOWN_ON_CARD: ReadonlySet<ProductionStatus> = new Set([
   'pending',
   'changes_requested',
   'declined',
+  'suspended',
 ]);
 
 export function productionCardBadge(

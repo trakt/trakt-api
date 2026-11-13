@@ -3,7 +3,7 @@ import { productionStatusSchema } from './productionStatusSchema.ts';
 
 export const productionReviewSchema = z.object({
   id: z.number(),
-  kind: z.enum(['production', 'update', 'client_secret']),
+  kind: z.enum(['production', 'update', 'client_secret', 'post_review']),
   status: productionStatusSchema,
   submitted_at: z.string(),
   reviewed_at: z.string().nullish(),

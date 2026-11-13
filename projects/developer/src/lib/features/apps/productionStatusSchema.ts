@@ -6,4 +6,5 @@ export const productionStatusSchema = z.enum([
   'granted',
   'granted_instantly',
   'declined',
+  'suspended',
 ]);

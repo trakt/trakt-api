@@ -98,4 +98,43 @@ describe('productionStatusCopy', () => {
       tone: 'danger',
     });
   });
+
+  it('tells the owner of a live app sent back that it stays live and by when to answer', () => {
+    expect(
+      productionStatusCopy(
+        review({
+          kind: 'post_review',
+          status: 'changes_requested',
+          reviewed_at,
+        }),
+      ),
+    ).toMatchObject({
+      title: `Changes requested · ${formatDate(reviewed_at)}`,
+      detail: expect.stringMatching(/stays live for now.*within 14 days/),
+      tone: 'warning',
+    });
+  });
+
+  it('calls a confirmed live app a complete review, not a new grant', () => {
+    expect(
+      productionStatusCopy(
+        review({ kind: 'post_review', status: 'granted', reviewed_at }),
+      ),
+    ).toMatchObject({
+      badge: 'Review complete',
+      tone: 'success',
+    });
+  });
+
+  it('tells a suspended developer what stopped and how to come back', () => {
+    expect(
+      productionStatusCopy(
+        review({ kind: 'post_review', status: 'suspended', reviewed_at }),
+      ),
+    ).toMatchObject({
+      title: `Production access suspended · ${formatDate(reviewed_at)}`,
+      detail: expect.stringMatching(/no longer call the API.*resubmit/),
+      tone: 'danger',
+    });
+  });
 });
