@@ -4,7 +4,6 @@ const BLOCKED_HOSTS: ReadonlyArray<string> = [
   'example.net',
   'localhost',
   'trakt.tv',
-  'imgur.com',
 ];
 
 const BLOCKED_SUFFIXES: ReadonlyArray<string> = ['.local', '.test', '.invalid'];
