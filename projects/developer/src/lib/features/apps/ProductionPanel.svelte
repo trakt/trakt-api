@@ -4,10 +4,12 @@
   import ApplicationProfileForm from "./ApplicationProfileForm.svelte";
   import type { ApplicationProfile } from "./ApplicationProfile.ts";
   import { applicationUrl } from "./applicationUrl.ts";
+  import { checkProductionLinks } from "./checkProductionLinks.ts";
   import { DEVELOPMENT_SEAT_LIMIT } from "./DEVELOPMENT_SEAT_LIMIT.ts";
   import { getApplicationProfile } from "./getApplicationProfile.ts";
   import { getProductionReview } from "./getProductionReview.ts";
   import { latestReview } from "./latestReview.ts";
+  import { linkReportProblems } from "./linkReportProblems.ts";
   import type { ProductionPanelProps } from "./ProductionPanelProps.ts";
   import type { ProductionReview } from "./ProductionReview.ts";
   import type { ProductionReviewDetail } from "./ProductionReviewDetail.ts";
@@ -33,6 +35,9 @@
   let busy = $state(false);
   let error = $state("");
   let notice = $state("");
+  let linkProblems = $state<string[]>([]);
+  let linkWarnings = $state<string[]>([]);
+  let warnedInput = "";
   let alive = true;
   let title = $state<HTMLHeadingElement>();
 
@@ -119,8 +124,31 @@
     busy = true;
     error = "";
     notice = "";
+    linkProblems = [];
+    linkWarnings = [];
     try {
       const createdApp = createsProductionApp;
+      const serialized = JSON.stringify(input);
+      if (serialized !== warnedInput) {
+        const report = await checkProductionLinks({
+          slot,
+          appId: app.id,
+          profile: input.profile,
+        });
+        if (!alive) return;
+
+        const problems = report
+          ? linkReportProblems(report, app.name)
+          : { blocking: [], warnings: [] };
+        linkProblems = problems.blocking;
+        linkWarnings = problems.warnings;
+        if (problems.blocking.length > 0) return;
+        if (problems.warnings.length > 0) {
+          warnedInput = serialized;
+          return;
+        }
+      }
+
       const sent = await requestProductionReview({
         slot,
         appId: app.id,
@@ -206,8 +234,26 @@
       onCancel={() => {
         editing = null;
         error = "";
+        linkProblems = [];
+        linkWarnings = [];
       }}
     />
+    {#if linkProblems.length > 0 || linkWarnings.length > 0}
+      <div class="link-check" role="alert">
+        {#each linkProblems as problem (problem)}
+          <p class="link-problem">{problem}</p>
+        {/each}
+        {#each linkWarnings as warning (warning)}
+          <p class="link-warning">{warning}</p>
+        {/each}
+        {#if linkProblems.length === 0}
+          <p class="link-hint">
+            Fix this and submit again, or submit again as it is and a reviewer
+            will take a look.
+          </p>
+        {/if}
+      </div>
+    {/if}
   {:else if loading}
     <p class="muted" role="status">Loading app information…</p>
   {:else}
@@ -341,6 +387,27 @@
       border: var(--border-thickness-xxs) solid var(--color-border);
       border-radius: var(--radius-control);
       font-size: 13px;
+    }
+
+    .link-check {
+      display: grid;
+      gap: var(--gap-s);
+      padding: var(--gap-s) var(--gap-m);
+      border: var(--border-thickness-xxs) solid var(--color-border);
+      border-radius: var(--radius-control);
+      font-size: 13px;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .link-problem {
+      color: var(--color-danger);
+    }
+
+    .link-hint {
+      color: var(--color-muted);
     }
 
     .error {
