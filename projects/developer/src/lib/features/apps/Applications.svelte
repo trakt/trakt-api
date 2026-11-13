@@ -982,6 +982,7 @@
   }
 
   .badge[data-variant="declined"],
+  .badge[data-variant="suspended"],
   .badge[data-variant="blocked"] {
     color: var(--color-danger);
     background: color-mix(in srgb, var(--color-danger) 14%, transparent);

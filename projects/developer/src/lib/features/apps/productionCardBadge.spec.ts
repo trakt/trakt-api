@@ -12,6 +12,7 @@ it.each([
   ['pending', 'Review requested'],
   ['changes_requested', 'Changes requested'],
   ['declined', 'Review declined'],
+  ['suspended', 'Production access suspended'],
 ] as const)('flags %s reviews on the app card', (status, label) => {
   expect(productionCardBadge({ ...base, status })).toEqual({ label, status });
 });

@@ -62,10 +62,12 @@
   );
   const canRequest = $derived(isOwner && !readOnly && status !== "pending");
   const reopensReview = $derived(
-    status === "changes_requested" || status === "declined",
+    status === "changes_requested" ||
+      status === "declined" ||
+      status === "suspended",
   );
   const resubmitLabel = $derived(
-    status === "changes_requested"
+    status === "changes_requested" || status === "suspended"
       ? "Edit and resubmit"
       : "Request another review",
   );
@@ -88,7 +90,8 @@
     const wantsReview =
       review_status === "pending" ||
       review_status === "changes_requested" ||
-      review_status === "declined";
+      review_status === "declined" ||
+      review_status === "suspended";
     if (!app.has_profile && !wantsReview) return;
 
     loading = true;
