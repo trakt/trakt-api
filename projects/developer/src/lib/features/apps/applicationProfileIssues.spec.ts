@@ -113,4 +113,22 @@ describe('applicationProfileIssues', () => {
       [],
     );
   });
+
+  it('treats links that differ only by host case as the same page', () => {
+    const issues = applicationProfileIssues({
+      ...draft,
+      privacyUrl: 'https://Example.app/about',
+    });
+
+    expect(issues.map(({ field }) => field)).toEqual(['privacyUrl']);
+  });
+
+  it('keeps links that differ by path case as separate pages', () => {
+    expect(
+      applicationProfileIssues({
+        ...draft,
+        privacyUrl: 'https://example.app/About',
+      }),
+    ).toEqual([]);
+  });
 });

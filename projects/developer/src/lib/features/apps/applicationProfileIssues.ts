@@ -14,7 +14,12 @@ const PRIVACY_URL_MAX_LENGTH = 500;
 const EXPECTED_MAU_MAX = 4_294_967_295;
 const OTHER_SERVICES_LIMIT = 255;
 
-const samePage = (link: string) => link.replace(/\/$/, '').toLowerCase();
+const samePage = (link: string) =>
+  link
+    .replace(/\/$/, '')
+    .replace(/^[a-z][a-z0-9+.-]*:\/\/[^/?#]*/i, (origin) =>
+      origin.toLowerCase(),
+    );
 
 const unreviewableMessage = (link: string) =>
   `We can't review ${link}. Link a public page about your app, not a placeholder or a Trakt page.`;
