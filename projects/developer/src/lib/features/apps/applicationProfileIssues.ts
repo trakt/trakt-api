@@ -21,6 +21,9 @@ const samePage = (link: string) =>
       origin.toLowerCase(),
     );
 
+const POLICY_SUBDOMAIN =
+  /^(privacy|private|policy|policies|legal)[^.]*\.[^.]+\.[^.]+/i;
+
 const unreviewableMessage = (link: string) =>
   `We can't review ${link}. Link a public page about your app, not a placeholder or a Trakt page.`;
 
@@ -64,8 +67,9 @@ function privacyIssue(draft: ApplicationProfileDraft): string | null {
   }
   if (!isReviewableLink(url)) return unreviewableMessage(url);
 
-  const { pathname, search, hash } = new URL(url);
-  if (pathname === '/' && search === '' && hash === '') {
+  const { hostname, pathname, search, hash } = new URL(url);
+  const siteRoot = pathname === '/' && search === '' && hash === '';
+  if (siteRoot && !POLICY_SUBDOMAIN.test(hostname)) {
     return 'Link to the privacy policy page itself, not your home page.';
   }
 
