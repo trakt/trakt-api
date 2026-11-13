@@ -131,4 +131,25 @@ describe('applicationProfileIssues', () => {
       }),
     ).toEqual([]);
   });
+
+  it('accepts a privacy policy that lives at the root of its own subdomain', () => {
+    for (const privacyUrl of [
+      'https://privacy.example.app',
+      'https://private.example.app/',
+      'https://legal.example.app',
+    ]) {
+      expect(applicationProfileIssues({ ...draft, privacyUrl })).toEqual([]);
+    }
+  });
+
+  it('still refuses a site root that is not a policy subdomain', () => {
+    for (const privacyUrl of [
+      'https://www.example.app',
+      'https://app.example.app/',
+      'https://privacy.app',
+    ]) {
+      const issues = applicationProfileIssues({ ...draft, privacyUrl });
+      expect(issues.map(({ field }) => field)).toEqual(['privacyUrl']);
+    }
+  });
 });
