@@ -71,17 +71,17 @@ describe('parseApplicationProfile', () => {
     );
   });
 
-  it('accepts descriptions of 100 to 500 characters and zero expected users', () => {
+  it('accepts descriptions of 100 to 500 characters and the smallest Production audience', () => {
     const parsed = parseApplicationProfile({
       ...draft,
       summary: 'a'.repeat(500),
-      expectedMau: '0',
+      expectedMau: '17',
     });
 
     expect(parsed.summary).toHaveLength(500);
     expect(
       parseApplicationProfile({ ...draft, summary: 'a'.repeat(100) }).summary,
     ).toHaveLength(100);
-    expect(parsed.expected_mau).toBe(0);
+    expect(parsed.expected_mau).toBe(17);
   });
 });

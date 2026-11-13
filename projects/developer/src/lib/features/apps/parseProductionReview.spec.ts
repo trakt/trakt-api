@@ -68,7 +68,7 @@ describe('parseProductionReview', () => {
         needsSecret: true,
         confirmSecret: true,
       }),
-    ).toThrow('why your server needs');
+    ).toThrow('what your server does');
     expect(() =>
       parseProductionReview({
         ...base,

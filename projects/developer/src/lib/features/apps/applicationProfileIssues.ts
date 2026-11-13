@@ -1,4 +1,6 @@
 import type { ApplicationProfileDraft } from './ApplicationProfileDraft.ts';
+import { DEVELOPMENT_SEAT_LIMIT } from './DEVELOPMENT_SEAT_LIMIT.ts';
+import { isReviewableLink } from './isReviewableLink.ts';
 import { isWebUrl } from './isWebUrl.ts';
 import { PROFILE_SUMMARY_LIMIT } from './PROFILE_SUMMARY_LIMIT.ts';
 import { PROFILE_SUMMARY_MINIMUM } from './PROFILE_SUMMARY_MINIMUM.ts';
@@ -11,6 +13,11 @@ const LINK_MAX_LENGTH = 2048;
 const PRIVACY_URL_MAX_LENGTH = 500;
 const EXPECTED_MAU_MAX = 4_294_967_295;
 const OTHER_SERVICES_LIMIT = 255;
+
+const samePage = (link: string) => link.replace(/\/$/, '').toLowerCase();
+
+const unreviewableMessage = (link: string) =>
+  `We can't review ${link}. Link a public page about your app, not a placeholder, an image or a Trakt page.`;
 
 function summaryIssue(text: string): string | null {
   const length = text.trim().length;
@@ -36,28 +43,51 @@ function linksIssue(text: string, label: string): string | null {
   const invalid = links.find((link) => !isWebUrl(link) || /\s/.test(link));
   if (invalid) return `${invalid} isn't a valid http:// or https:// link.`;
 
+  const blocked = links.find((link) => !isReviewableLink(link));
+  if (blocked) return unreviewableMessage(blocked);
+
   return null;
 }
 
-function privacyIssue(text: string): string | null {
-  const url = text.trim();
+function privacyIssue(draft: ApplicationProfileDraft): string | null {
+  const url = draft.privacyUrl.trim();
   if (url.length > PRIVACY_URL_MAX_LENGTH) {
     return `Keep the privacy policy link within ${PRIVACY_URL_MAX_LENGTH} characters.`;
   }
-  if (isWebUrl(url) && !/\s/.test(url)) return null;
+  if (!isWebUrl(url) || /\s/.test(url)) {
+    return 'Enter a valid link to your privacy policy.';
+  }
+  if (!isReviewableLink(url)) return unreviewableMessage(url);
 
-  return 'Enter a valid link to your privacy policy.';
+  const { pathname, search, hash } = new URL(url);
+  if (pathname === '/' && search === '' && hash === '') {
+    return 'Link to the privacy policy page itself, not your home page.';
+  }
+
+  const reused = [
+    ...splitLinks(draft.productLinks),
+    ...splitLinks(draft.noticeLinks),
+  ].some((link) => samePage(link) === samePage(url));
+  if (reused) {
+    return 'Your privacy policy needs its own link. This one is also listed as an app or notice link.';
+  }
+
+  return null;
 }
 
 function mauIssue(text: string): string | null {
   const mau = text.trim();
-  if (/^\d+$/.test(mau)) {
-    return Number(mau) <= EXPECTED_MAU_MAX
-      ? null
-      : 'Enter no more than 4,294,967,295 expected monthly active users.';
+  if (!/^\d+$/.test(mau)) {
+    return 'Enter your expected monthly active users as a number.';
+  }
+  if (Number(mau) > EXPECTED_MAU_MAX) {
+    return 'Enter no more than 4,294,967,295 expected monthly active users.';
+  }
+  if (Number(mau) <= DEVELOPMENT_SEAT_LIMIT) {
+    return `Apps for you and up to ${DEVELOPMENT_SEAT_LIMIT} people stay on Development: invite them as testers instead. Production is for apps open to more people.`;
   }
 
-  return 'Enter your expected monthly active users as a number.';
+  return null;
 }
 
 function otherIssue(enabled: boolean, text: string, label: string) {
@@ -79,7 +109,7 @@ export function applicationProfileIssues(
   const checks: ReadonlyArray<[ProductionFormField, string | null]> = [
     ['summary', summaryIssue(draft.summary)],
     ['productLinks', linksIssue(draft.productLinks, 'link to your app')],
-    ['privacyUrl', privacyIssue(draft.privacyUrl)],
+    ['privacyUrl', privacyIssue(draft)],
     ['noticeLinks', linksIssue(draft.noticeLinks, 'notice link')],
     ['expectedMau', mauIssue(draft.expectedMau)],
     [

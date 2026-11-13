@@ -42,7 +42,7 @@ function secretReasonIssue(requests: boolean, text: string): string | null {
   if (!requests) return null;
 
   const reason = text.trim();
-  if (!reason) return 'Tell us why your server needs a Client Secret.';
+  if (!reason) return 'Tell us what your server does with the Client Secret.';
   if (reason.length > SECRET_REASON_LIMIT) {
     return `Keep the Client Secret reason within ${SECRET_REASON_LIMIT} characters.`;
   }
