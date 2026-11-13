@@ -9,5 +9,6 @@ export const linkReportSchema = z.object({
     }),
   ),
   notice_found: z.boolean().nullable(),
+  notice_is_media: z.boolean().optional(),
   privacy_mentions_trakt: z.boolean().nullable(),
 });

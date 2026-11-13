@@ -29,6 +29,9 @@ export function linkReportProblems(
       report.notice_found === false
         ? `We couldn't find "${appName} uses Trakt but is not endorsed or certified by Trakt" on your notice links. Requests without it are sent back.`
         : null,
+      report.notice_is_media
+        ? 'Your notice proof is an image or a video, so a person checks it before your app goes live. A link to a page with the notice is faster.'
+        : null,
       report.privacy_mentions_trakt === false
         ? "Your privacy policy doesn't mention Trakt. Say what your app sends to Trakt and how to disconnect."
         : null,

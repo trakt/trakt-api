@@ -60,4 +60,14 @@ describe('linkReportProblems', () => {
       ).warnings,
     ).toEqual([]);
   });
+
+  it('says a person will look when the proof is an image or a video', () => {
+    const { blocking, warnings } = linkReportProblems(
+      { ...healthy, notice_found: null, notice_is_media: true },
+      'Showlist',
+    );
+
+    expect(blocking).toEqual([]);
+    expect(warnings).toEqual([expect.stringMatching(/image or a video/)]);
+  });
 });
