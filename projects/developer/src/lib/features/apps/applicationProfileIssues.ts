@@ -17,7 +17,7 @@ const OTHER_SERVICES_LIMIT = 255;
 const samePage = (link: string) => link.replace(/\/$/, '').toLowerCase();
 
 const unreviewableMessage = (link: string) =>
-  `We can't review ${link}. Link a public page about your app, not a placeholder, an image or a Trakt page.`;
+  `We can't review ${link}. Link a public page about your app, not a placeholder or a Trakt page.`;
 
 function summaryIssue(text: string): string | null {
   const length = text.trim().length;

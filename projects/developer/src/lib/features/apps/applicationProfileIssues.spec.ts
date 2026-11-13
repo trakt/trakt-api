@@ -69,7 +69,6 @@ describe('applicationProfileIssues', () => {
 
   it.each([
     ['https://example.com', /can't review/],
-    ['https://i.imgur.com/a.png', /can't review/],
     ['https://app.trakt.tv/about', /can't review/],
   ])('refuses %s as an app or notice link', (link, message) => {
     const issues = applicationProfileIssues({

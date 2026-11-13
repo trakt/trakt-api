@@ -5,6 +5,7 @@ describe('isReviewableLink', () => {
   it('accepts a page on a public domain', () => {
     expect(isReviewableLink('https://myapp.io/privacy')).toBe(true);
     expect(isReviewableLink('https://github.com/me/app#credits')).toBe(true);
+    expect(isReviewableLink('https://i.imgur.com/sr9G4hx.png')).toBe(true);
   });
 
   it.each([
@@ -14,7 +15,6 @@ describe('isReviewableLink', () => {
     'http://127.0.0.1/privacy',
     'https://myapp.local',
     'https://app.trakt.tv/about',
-    'https://i.imgur.com/sr9G4hx.png',
     'https://.streamen.app',
     'https://intranet/privacy',
   ])('refuses %s', (link) => {
