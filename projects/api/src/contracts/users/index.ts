@@ -9,7 +9,6 @@ import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { profileResponseSchema } from '../_internal/response/profileResponseSchema.ts';
 import type { sortDirectionSchema } from '../_internal/response/sortDirectionSchema.ts';
 import { z } from '../_internal/z.ts';
-import { noteResponseSchema } from '../notes/index.ts';
 import { avatarRequestSchema } from './schema/request/avatarRequestSchema.ts';
 import { commentOnTypeParamsSchema } from './schema/request/commentOnTypeParamsSchema.ts';
 import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts';
@@ -65,6 +64,7 @@ import { settingsResponseSchema } from './schema/response/settingsResponseSchema
 import { socialActivityResponseSchema } from './schema/response/socialActivityResponseSchema.ts';
 import { syncItemSchema } from './schema/response/syncItemResponseSchema.ts';
 import { syncSchema } from './schema/response/syncResponseSchema.ts';
+import { userNoteResponseSchema } from './schema/response/userNoteResponseSchema.ts';
 import { userCommentResponseSchema } from './schema/response/userCommentResponseSchema.ts';
 import { userStatsResponseSchema } from './schema/response/userStatsResponseSchema.ts';
 import { watchActionSchema } from './schema/response/watchActionSchema.ts';
@@ -494,13 +494,13 @@ Returns collection items for a user filtered by type.`,
     notes: {
       summary: 'Get notes',
       description: `#### 🔓 OAuth Optional 📄 Pagination ✨ Extended Info 😁 Emojis
-Returns notes for a user filtered by type.`,
+Returns notes for a user filtered by type. Each entry says what the note is attached to and includes the media object it belongs to, next to the \`note\` itself.`,
       path: '/notes/:type',
       method: 'GET',
       pathParams: userTypeParamsSchema,
       query: extendedMediaQuerySchema.merge(pageQuerySchema),
       responses: {
-        200: noteResponseSchema.array(),
+        200: userNoteResponseSchema.array(),
       },
     },
     watching: {
@@ -873,6 +873,8 @@ export type CommentOnTypeParams = z.infer<typeof commentOnTypeParamsSchema>;
 export type CommentRequest = z.infer<typeof commentsRequestSchema>;
 /** The user comment response payload. */
 export type UserCommentResponse = z.infer<typeof userCommentResponseSchema>;
+/** The user note response payload. */
+export type UserNoteResponse = z.infer<typeof userNoteResponseSchema>;
 
 /** The watching response payload. */
 export type WatchingResponse = z.infer<typeof watchingResponseSchema>;
