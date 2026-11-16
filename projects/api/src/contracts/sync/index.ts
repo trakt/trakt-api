@@ -10,6 +10,7 @@ import { sortQuerySchema } from '../_internal/request/sortQuerySchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { listAddResponseSchema } from '../_internal/response/listAddResponseSchema.ts';
 import { listRemoveResponseSchema } from '../_internal/response/listRemoveResponseSchema.ts';
+import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { reorderRequestSchema } from '../users/schema/request/reorderRequestSchema.ts';
 import { reorderListResponseSchema } from '../users/schema/response/reorderListResponseSchema.ts';
@@ -87,6 +88,12 @@ const syncListItemUpdateRequestSchema = z
     rank: z.number().int().optional(),
   })
   .passthrough();
+
+const syncWatchlistUpdateRequestSchema = z
+  .object({
+    description: z.string().nullish(),
+  })
+  .merge(sortQuerySchema);
 
 const syncListItemResponseSchema = z
   .object({
@@ -324,13 +331,21 @@ Returns all items in the authenticated user's watchlist filtered by type.`,
     },
     update: {
       summary: 'Update watchlist',
-      description:
-        'Update watchlist item metadata such as notes or rank for multiple items.',
+      description: `#### 🔒 OAuth Required ✨ Extended Info
+Update the watchlist by sending 1 or more parameters.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`description\` | string | Description for the watchlist. |
+| \`sort_by\` | string | \`rank\`, \`added\`, \`title\`, \`released\`, \`runtime\`, \`popularity\`, \`random\`, \`percentage\`, \`imdb_rating\`, \`tmdb_rating\`, \`rt_tomatometer\`, \`rt_audience\`, \`metascore\`, \`votes\`, \`imdb_votes\`, \`tmdb_votes\`, \`my_rating\`, \`watched\`, \`collected\` |
+| \`sort_how\` | string | \`asc\`, \`desc\` |`,
       method: 'PUT',
       path: '',
-      body: listRequestSchema,
+      query: extendedQuerySchemaFactory<['images']>(),
+      body: syncWatchlistUpdateRequestSchema,
       responses: {
-        200: listAddResponseSchema,
+        200: listResponseSchema,
       },
     },
     add: {
