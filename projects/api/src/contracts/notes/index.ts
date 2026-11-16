@@ -8,6 +8,31 @@ const noteItemSchema = z
   })
   .passthrough();
 
+const noteMediaRequestSchema = z
+  .object({
+    ids: z.object({
+      trakt: z.number().int().openapi({ description: 'Trakt ID' }),
+    }),
+  })
+  .nullish();
+
+const noteCreateRequestSchema = z.object({
+  movie: noteMediaRequestSchema,
+  show: noteMediaRequestSchema,
+  season: noteMediaRequestSchema,
+  episode: noteMediaRequestSchema,
+  person: noteMediaRequestSchema,
+  attached_to: z
+    .object({
+      type: z.enum(['history', 'collection', 'rating']),
+      id: z.number().int().nullish(),
+    })
+    .nullish(),
+  notes: z.string(),
+  privacy: z.enum(['private', 'public', 'friends']).nullish(),
+  spoiler: z.boolean().nullish(),
+});
+
 const noteRequestSchema = z
   .object({
     item: noteItemSchema.optional(),
@@ -86,10 +111,21 @@ export const notes = builder.router(
     create: {
       summary: 'Add notes',
       description: `#### 🔒 OAuth Required 😁 Emojis
-Add a new note to a movie, show, season, episode, person, or list.`,
+Add a new note to a movie, show, season, episode, or person. Send the media object under its own key (\`movie\`, \`show\`, \`season\`, \`episode\`, or \`person\`) with its Trakt ID in \`ids.trakt\`.
+
+To attach the note to a history, collection, or rating entry instead, also send \`attached_to\` with its \`type\` (\`history\`, \`collection\`, or \`rating\`). For \`history\`, send the history \`id\` and no media object. \`privacy\` and \`spoiler\` only apply to these attached notes.
+
+#### JSON POST Data
+| Key | Type | Value |
+|---|---|---|
+| \`movie\`, \`show\`, \`season\`, \`episode\`, \`person\` | object | Media object with \`ids.trakt\`. |
+| \`attached_to\` | object | Optional \`type\` and \`id\`. |
+| \`notes\` * | string | The note text. |
+| \`privacy\` | string | \`private\`, \`public\`, or \`friends\`. |
+| \`spoiler\` | boolean | Is this a spoiler? |`,
       path: '',
       method: 'POST',
-      body: noteRequestSchema,
+      body: noteCreateRequestSchema,
       responses: {
         201: noteResponseSchema,
       },
@@ -102,6 +138,8 @@ Add a new note to a movie, show, season, episode, person, or list.`,
   },
 );
 
+/** The note create request payload. */
+export type NoteCreateRequest = z.infer<typeof noteCreateRequestSchema>;
 /** The note request payload. */
 export type NoteRequest = z.infer<typeof noteRequestSchema>;
 /** The note response payload. */
