@@ -20,6 +20,7 @@ import { z } from '../_internal/z.ts';
 import { commentPostParamsSchema } from './schema/requests/commentPostParamsSchema.ts';
 import { commentReplyParamsSchema } from './schema/requests/commentReplyParamsSchema.ts';
 import { commentReportRequestSchema } from './schema/requests/commentReportRequestSchema.ts';
+import { commentActivityResponseSchema } from './schema/response/commentActivityResponseSchema.ts';
 
 const commentActivityParamsSchema = z.object({
   comment_type: z.string().describe('Comment type filter.'),
@@ -290,7 +291,7 @@ const GLOBAL_LEVEL = builder.router({
     pathParams: commentActivityParamsSchema,
     query: commentActivityQuerySchema,
     responses: {
-      200: commentResponseSchema.array(),
+      200: commentActivityResponseSchema.array(),
     },
   },
   recent: {
@@ -302,7 +303,7 @@ const GLOBAL_LEVEL = builder.router({
     pathParams: commentActivityParamsSchema,
     query: commentActivityQuerySchema,
     responses: {
-      200: commentResponseSchema.array(),
+      200: commentActivityResponseSchema.array(),
     },
   },
   updates: {
@@ -314,7 +315,7 @@ const GLOBAL_LEVEL = builder.router({
     pathParams: commentActivityParamsSchema,
     query: commentActivityQuerySchema,
     responses: {
-      200: commentResponseSchema.array(),
+      200: commentActivityResponseSchema.array(),
     },
   },
   post: {
