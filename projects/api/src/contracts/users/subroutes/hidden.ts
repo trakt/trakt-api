@@ -1,12 +1,12 @@
 import { builder } from '../../_internal/builder.ts';
 import { extendedQuerySchemaFactory } from '../../_internal/request/extendedQuerySchemaFactory.ts';
-import { historyItemsRequestSchema } from '../../_internal/request/historyItemsRequestSchema.ts';
 import { pageQuerySchema } from '../../_internal/request/pageQuerySchema.ts';
 import { z } from '../../_internal/z.ts';
 import { hiddenParamsSchema } from '../schema/request/hiddenParamsSchema.ts';
+import { hiddenItemsRequestSchema } from '../schema/request/hiddenItemsRequestSchema.ts';
 import { hiddenShowRequestSchema } from '../schema/request/hiddenShowRequestSchema.ts';
 import { hiddenAddResponseSchema } from '../schema/response/hiddenAddResponseSchema.ts';
-import { historyRemoveResponseSchema } from '../../sync/schema/response/historyRemoveResponseSchema.ts';
+import { hiddenRemoveResponseSchema } from '../schema/response/hiddenRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from '../schema/response/hiddenShowResponseSchema.ts';
 
 const hiddenTypeQuerySchema = z.object({
@@ -41,7 +41,7 @@ Hide items for a specific section. Here's what type of items can hidden for each
       path: '/:section',
       pathParams: hiddenParamsSchema,
       method: 'POST',
-      body: historyItemsRequestSchema,
+      body: hiddenItemsRequestSchema,
       responses: {
         200: hiddenAddResponseSchema,
       },
@@ -87,35 +87,35 @@ Returns shows the authenticated user has dropped or hidden from progress. Use pa
       progress: {
         summary: 'Remove hidden progress items',
         description: `#### 🔒 OAuth Required
-Remove shows or seasons from hidden watched progress. Send hideable media objects in the request body; the response contains remove counts.`,
+Remove shows or seasons from hidden watched progress. Send hideable media objects in the request body; the response contains the \`deleted\` counts and any \`not_found\` items.`,
         path: '/progress_watched/remove',
         method: 'POST',
-        body: historyItemsRequestSchema,
+        body: hiddenItemsRequestSchema,
         responses: {
-          200: historyRemoveResponseSchema,
+          200: hiddenRemoveResponseSchema,
         },
       },
       calendar: {
         summary: 'Remove hidden calendar items',
         description: `#### 🔒 OAuth Required
-Remove movies or shows from hidden calendar items. Send hideable media objects in the request body; the response contains remove counts.`,
+Remove movies or shows from hidden calendar items. Send hideable media objects in the request body; the response contains the \`deleted\` counts and any \`not_found\` items.`,
         path: '/calendar/remove',
         method: 'POST',
-        body: historyItemsRequestSchema,
+        body: hiddenItemsRequestSchema,
         responses: {
-          200: historyRemoveResponseSchema,
+          200: hiddenRemoveResponseSchema,
         },
       },
       section: {
         summary: 'Remove hidden items',
         description: `#### 🔒 OAuth Required
-Remove hidden items for a specific section. Send hideable media objects in the request body; the response contains remove counts.`,
+Remove hidden items for a specific section. Send hideable media objects in the request body; the response contains the \`deleted\` counts and any \`not_found\` items.`,
         path: '/:section/remove',
         method: 'POST',
         pathParams: hiddenParamsSchema,
-        body: historyItemsRequestSchema,
+        body: hiddenItemsRequestSchema,
         responses: {
-          200: historyRemoveResponseSchema,
+          200: hiddenRemoveResponseSchema,
         },
       },
     },
@@ -128,4 +128,4 @@ Remove hidden items for a specific section. Send hideable media objects in the r
 /** The hidden show item response payload. */
 export type HiddenShowItemResponse = z.infer<typeof hiddenShowResponseSchema>;
 /** The hidden media request payload. */
-export type HiddenMediaRequest = z.infer<typeof historyItemsRequestSchema>;
+export type HiddenMediaRequest = z.infer<typeof hiddenItemsRequestSchema>;
