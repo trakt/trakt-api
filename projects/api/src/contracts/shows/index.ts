@@ -32,7 +32,7 @@ import { profileResponseSchema } from '../_internal/response/profileResponseSche
 import { ratingsResponseSchema } from '../_internal/response/ratingsResponseSchema.ts';
 import { showRatingsResponseSchema } from '../_internal/response/showRatingsResponseSchema.ts';
 import { sentimentsResponseSchema } from '../_internal/response/sentimentsResponseSchema.ts';
-import { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
+import type { showCertificationResponseSchema } from '../_internal/response/showCertificationResponseSchema.ts';
 import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
 import { showStatsResponseSchema } from '../_internal/response/showStatsResponseSchema.ts';
 import { studioResponseSchema } from '../_internal/response/studioResponseSchema.ts';
@@ -49,6 +49,7 @@ import { seasonResponseSchema } from './schema/response/seasonResponseSchema.ts'
 import { anticipatedShowRecommendationResponseSchema } from '../recommendations/schema/response/anticipatedShowRecommendationResponseSchema.ts';
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
 import { showCollectionProgressResponseSchema } from './schema/response/showCollectionProgressResponseSchema.ts';
+import { showCertificationEntryResponseSchema } from './schema/response/showCertificationEntryResponseSchema.ts';
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
 import { showProgressResetResponseSchema } from './schema/response/showProgressResetResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
@@ -333,12 +334,12 @@ Use \`?extended=all\` to include ratings from TMDB, IMDb, Metascore, Rotten Toma
     certifications: {
       summary: 'Get all show certifications',
       description:
-        'Returns all content certifications for a show, grouped by country.',
+        'Returns all content certifications for a show as a flat list of `certification` and `country` pairs.',
       path: '/certifications',
       method: 'GET',
       pathParams: idParamsSchema,
       responses: {
-        200: showCertificationResponseSchema,
+        200: showCertificationEntryResponseSchema.array(),
       },
     },
     progress: {
@@ -1024,6 +1025,11 @@ export { showAnticipatedResponseSchema };
 /** The show anticipated response payload. */
 export type ShowAnticipatedResponse = z.infer<
   typeof showAnticipatedResponseSchema
+>;
+
+/** The show certification entry response payload. */
+export type ShowCertificationEntryResponse = z.infer<
+  typeof showCertificationEntryResponseSchema
 >;
 
 /** The show certification response payload. */
