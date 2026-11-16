@@ -5,22 +5,19 @@ import { idParamsSchema } from '../_internal/request/idParamsSchema.ts';
 import { limitlessQuerySchema } from '../_internal/request/limitlessQuerySchema.ts';
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
-import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
 import { likeResponseSchema } from '../_internal/response/likeResponseSchema.ts';
-import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
-import { movieResponseSchema } from '../_internal/response/movieResponseSchema.ts';
 import {
   reactionEnumSchema,
   reactionsResponseSchema,
   reactionsSummaryResponseSchema,
   reactionTypeSchema,
 } from '../_internal/response/reactionsResponseSchema.ts';
-import { showResponseSchema } from '../_internal/response/showResponseSchema.ts';
 import { z } from '../_internal/z.ts';
 import { commentPostParamsSchema } from './schema/requests/commentPostParamsSchema.ts';
 import { commentReplyParamsSchema } from './schema/requests/commentReplyParamsSchema.ts';
 import { commentReportRequestSchema } from './schema/requests/commentReportRequestSchema.ts';
 import { commentActivityResponseSchema } from './schema/response/commentActivityResponseSchema.ts';
+import { commentItemResponseSchema } from './schema/response/commentItemResponseSchema.ts';
 
 const commentActivityParamsSchema = z.object({
   comment_type: z.string().describe('Comment type filter.'),
@@ -38,13 +35,6 @@ const commentActivityQuerySchema = extendedProfileQuerySchema
   .merge(pageQuerySchema)
   .merge(limitlessQuerySchema)
   .merge(includeRepliesQuerySchema);
-
-const commentItemResponseSchema = z.union([
-  movieResponseSchema,
-  showResponseSchema,
-  episodeResponseSchema,
-  listResponseSchema,
-]);
 
 const REACTIONS_LEVEL = builder.router(
   {
@@ -118,7 +108,7 @@ Returns a single comment and indicates how many replies it has. Use [**/comments
     item: {
       summary: 'Get the attached media item',
       description:
-        '#### ✨ Extended Info\nReturns the media item this comment is attached to. The media type can be `movie`, `show`, `season`, `episode`, or `list` and it also returns the standard media object for that media type.',
+        '#### ✨ Extended Info\nReturns the media item this comment is attached to. Returns the comment `type` plus the standard media object for that media type, keyed by `movie`, `show`, `season`, `episode`, `person`, `list`, `comment`, or `user`. Seasons and episodes also include their `show`.',
       path: '/item',
       method: 'GET',
       pathParams: idParamsSchema,
