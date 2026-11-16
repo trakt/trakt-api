@@ -6,6 +6,7 @@ import { hiddenParamsSchema } from '../schema/request/hiddenParamsSchema.ts';
 import { hiddenItemsRequestSchema } from '../schema/request/hiddenItemsRequestSchema.ts';
 import { hiddenShowRequestSchema } from '../schema/request/hiddenShowRequestSchema.ts';
 import { hiddenAddResponseSchema } from '../schema/response/hiddenAddResponseSchema.ts';
+import { hiddenItemResponseSchema } from '../schema/response/hiddenItemResponseSchema.ts';
 import { hiddenRemoveResponseSchema } from '../schema/response/hiddenRemoveResponseSchema.ts';
 import { hiddenShowResponseSchema } from '../schema/response/hiddenShowResponseSchema.ts';
 
@@ -70,7 +71,7 @@ Returns hidden items for a specific section. Use \`type\`, \`page\`, and \`limit
         .merge(pageQuerySchema)
         .merge(hiddenTypeQuerySchema),
       responses: {
-        200: hiddenShowResponseSchema.array(),
+        200: hiddenItemResponseSchema.array(),
       },
     },
     dropped: {
@@ -127,5 +128,7 @@ Remove hidden items for a specific section. Send hideable media objects in the r
 
 /** The hidden show item response payload. */
 export type HiddenShowItemResponse = z.infer<typeof hiddenShowResponseSchema>;
+/** The hidden item response payload. */
+export type HiddenItemResponse = z.infer<typeof hiddenItemResponseSchema>;
 /** The hidden media request payload. */
 export type HiddenMediaRequest = z.infer<typeof hiddenItemsRequestSchema>;
