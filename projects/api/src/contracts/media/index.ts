@@ -9,6 +9,8 @@ import { anticipatedMediaRecommendationResponseSchema } from '../recommendations
 import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipatedResponseSchema.ts';
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
+import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
+import { mediaRecommendationResponseSchema } from '../recommendations/schema/response/mediaRecommendationResponseSchema.ts';
 
 /** ts-rest contract for the `media` endpoints. */
 export const media = builder.router(
@@ -53,6 +55,23 @@ Upcoming movies and shows that have not been released yet, ranked for the taste 
       query: pageQuerySchema,
       responses: {
         200: anticipatedMediaRecommendationResponseSchema.array(),
+        401: z.object({ error: z.string() }),
+      },
+    },
+    recommendations: {
+      summary: 'Get media recommendations with their sources',
+      description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
+Movie and show recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`. An account with nothing to recommend from answers \`204\`.`,
+      path: '/recommendations',
+      method: 'GET',
+      metadata: authMetadata('required'),
+      query: extendedMediaQuerySchema
+        .merge(recommendationsQuerySchema)
+        .merge(mediaFilterParamsSchema)
+        .merge(themeQuerySchema),
+      responses: {
+        200: mediaRecommendationResponseSchema.array(),
+        204: z.undefined(),
         401: z.object({ error: z.string() }),
       },
     },

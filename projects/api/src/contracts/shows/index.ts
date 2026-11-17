@@ -54,6 +54,8 @@ import { showProgressResetResponseSchema } from './schema/response/showProgressR
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
+import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
+import { showRecommendationResponseSchema } from '../recommendations/schema/response/showRecommendationResponseSchema.ts';
 
 const episodePathParamsSchema = idParamsSchema
   .merge(seasonParamsSchema)
@@ -856,6 +858,23 @@ Upcoming shows that have not been released yet, ranked for the taste of the user
     query: pageQuerySchema,
     responses: {
       200: anticipatedShowRecommendationResponseSchema.array(),
+      401: z.object({ error: z.string() }),
+    },
+  },
+  recommendations: {
+    summary: 'Get show recommendations with their sources',
+    description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
+Show recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`. An account with nothing to recommend from answers \`204\`.`,
+    path: '/recommendations',
+    method: 'GET',
+    metadata: authMetadata('required'),
+    query: extendedMediaQuerySchema
+      .merge(recommendationsQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema),
+    responses: {
+      200: showRecommendationResponseSchema.array(),
+      204: z.undefined(),
       401: z.object({ error: z.string() }),
     },
   },

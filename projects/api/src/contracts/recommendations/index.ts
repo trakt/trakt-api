@@ -10,6 +10,11 @@ import { anticipatedShowRecommendationResponseSchema } from './schema/response/a
 import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
 import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
+import { mediaRecommendationResponseSchema } from './schema/response/mediaRecommendationResponseSchema.ts';
+import { movieRecommendationResponseSchema } from './schema/response/movieRecommendationResponseSchema.ts';
+import { recommendationPeopleReasonSchema } from './schema/response/recommendationPeopleReasonSchema.ts';
+import { recommendationSourceSchema } from './schema/response/recommendationSourceSchema.ts';
+import { showRecommendationResponseSchema } from './schema/response/showRecommendationResponseSchema.ts';
 
 const movies = builder.router(
   {
@@ -115,4 +120,32 @@ export { anticipatedMediaRecommendationResponseSchema };
 /** The anticipated media recommendation response payload. */
 export type AnticipatedMediaRecommendationResponse = z.infer<
   typeof anticipatedMediaRecommendationResponseSchema
+>;
+
+export { movieRecommendationResponseSchema };
+/** The movie recommendation response payload. */
+export type MovieRecommendationResponse = z.infer<
+  typeof movieRecommendationResponseSchema
+>;
+
+export { showRecommendationResponseSchema };
+/** The show recommendation response payload. */
+export type ShowRecommendationResponse = z.infer<
+  typeof showRecommendationResponseSchema
+>;
+
+export { mediaRecommendationResponseSchema };
+/** The media recommendation response payload. */
+export type MediaRecommendationResponse = z.infer<
+  typeof mediaRecommendationResponseSchema
+>;
+
+export { recommendationSourceSchema };
+/** The title a recommendation was drawn from. */
+export type RecommendationSource = z.infer<typeof recommendationSourceSchema>;
+
+export { recommendationPeopleReasonSchema };
+/** The person a recommendation was matched on. */
+export type RecommendationPeopleReason = z.infer<
+  typeof recommendationPeopleReasonSchema
 >;
