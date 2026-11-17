@@ -46,7 +46,7 @@ import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipat
 import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
-import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
+import { recommendationsWithSourcesQuerySchema } from '../recommendations/schema/request/recommendationsWithSourcesQuerySchema.ts';
 import { movieRecommendationResponseSchema } from '../recommendations/schema/response/movieRecommendationResponseSchema.ts';
 
 const themedFilteredMediaQuerySchema = extendedMediaQuerySchema
@@ -378,7 +378,7 @@ Movie recommendations for the user, each with its \`score\`, the \`sources\` it 
     method: 'GET',
     metadata: authMetadata('required'),
     query: extendedMediaQuerySchema
-      .merge(recommendationsQuerySchema)
+      .merge(recommendationsWithSourcesQuerySchema)
       .merge(mediaFilterParamsSchema)
       .merge(themeQuerySchema),
     responses: {

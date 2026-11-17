@@ -9,7 +9,7 @@ import { anticipatedMediaRecommendationResponseSchema } from '../recommendations
 import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipatedResponseSchema.ts';
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
-import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
+import { recommendationsWithSourcesQuerySchema } from '../recommendations/schema/request/recommendationsWithSourcesQuerySchema.ts';
 import { mediaRecommendationResponseSchema } from '../recommendations/schema/response/mediaRecommendationResponseSchema.ts';
 
 /** ts-rest contract for the `media` endpoints. */
@@ -66,7 +66,7 @@ Movie and show recommendations for the user, each with its \`score\`, the \`sour
       method: 'GET',
       metadata: authMetadata('required'),
       query: extendedMediaQuerySchema
-        .merge(recommendationsQuerySchema)
+        .merge(recommendationsWithSourcesQuerySchema)
         .merge(mediaFilterParamsSchema)
         .merge(themeQuerySchema),
       responses: {

@@ -15,6 +15,7 @@ import { movieRecommendationResponseSchema } from './schema/response/movieRecomm
 import { recommendationPeopleReasonSchema } from './schema/response/recommendationPeopleReasonSchema.ts';
 import { recommendationSourceSchema } from './schema/response/recommendationSourceSchema.ts';
 import { showRecommendationResponseSchema } from './schema/response/showRecommendationResponseSchema.ts';
+import { recommendationsWithSourcesQuerySchema } from './schema/request/recommendationsWithSourcesQuerySchema.ts';
 
 const movies = builder.router(
   {
@@ -103,6 +104,8 @@ export { recommendedShowResponse };
 export type RecommendedShowResponse = z.infer<typeof recommendedShowResponse>;
 
 export { recommendationsQuerySchema };
+
+export { recommendationsWithSourcesQuerySchema };
 
 export { anticipatedMovieRecommendationResponseSchema };
 /** The anticipated movie recommendation response payload. */

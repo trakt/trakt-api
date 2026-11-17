@@ -54,7 +54,7 @@ import { showProgressResetResponseSchema } from './schema/response/showProgressR
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
-import { recommendationsQuerySchema } from '../recommendations/schema/request/recommendationsQuerySchema.ts';
+import { recommendationsWithSourcesQuerySchema } from '../recommendations/schema/request/recommendationsWithSourcesQuerySchema.ts';
 import { showRecommendationResponseSchema } from '../recommendations/schema/response/showRecommendationResponseSchema.ts';
 
 const episodePathParamsSchema = idParamsSchema
@@ -869,7 +869,7 @@ Show recommendations for the user, each with its \`score\`, the \`sources\` it w
     method: 'GET',
     metadata: authMetadata('required'),
     query: extendedMediaQuerySchema
-      .merge(recommendationsQuerySchema)
+      .merge(recommendationsWithSourcesQuerySchema)
       .merge(mediaFilterParamsSchema)
       .merge(themeQuerySchema),
     responses: {
