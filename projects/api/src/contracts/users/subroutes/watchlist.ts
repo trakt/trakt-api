@@ -86,7 +86,7 @@ Returns all items in a user's watchlist filtered by type.`,
       summary: 'Get all watchlist comments',
       description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
-Returns all top level comments for the watchlist. By default, the comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+Returns all top level comments for the watchlist. By default, comments are sorted by \`newest\` first. Other sorting options include \`oldest\`, most \`likes\`, and most \`replies\`.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
