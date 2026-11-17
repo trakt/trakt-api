@@ -1,5 +1,5 @@
 ---
-updatedAt: 2026-10-01T00:00:00.000Z
+updatedAt: 2026-11-17T00:00:00.000Z
 ---
 
 # ✅ Create an App
@@ -52,11 +52,18 @@ them. To let users sign in later, request another review.
 Apps get no Client Secret by default. If your server exchanges and refreshes
 tokens itself, ask for one in the same form and tell us why.
 
-Standard developers wait for a review, usually within a few business days.
-Premium developers get their Production app right away, and later changes to
-your app information apply right away too. A Client Secret is always reviewed:
-the request waits until we grant it. Nothing changes until a review is
-granted, and a declined review leaves your apps as they were.
+Every request is checked automatically when you send it. If nothing needs a
+closer look, your Production app is granted right away, and later changes to
+your app information apply right away too. If a check flags something, the
+request waits for a person, usually within a few business days, and nothing
+changes until it's granted. Premium developers get their Production app right
+away either way. A Client Secret is always reviewed by a person: that part of
+the request waits until we grant it.
+
+We also look at apps after they go live, so please keep your app information
+accurate. If something doesn't match how your app works, we'll email you what
+to change and give you 14 days to update it. An app whose information stays
+incorrect can be suspended until it's fixed.
 
 Granting Production access is not a review, endorsement or certification of
 your app or how you use it. You stay responsible for following the
