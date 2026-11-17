@@ -669,7 +669,9 @@ Remove items from a user collection. Accepts shows, seasons, episodes and movies
         movies: {
           summary: 'Get minimal movie collection',
           description: `#### 🔒 OAuth Required
-Returns the authenticated user movie collection in a minimal format optimized for syncing local state.`,
+Returns the authenticated user movie collection in a minimal format optimized for syncing local state.
+
+Each value is the \`collected_at\` datetime. Use \`available_on\` to keep only \`digital\` items (synced from a connected media server) or \`other\` items. When \`available_on\` is sent, each value becomes \`collected_at|source\`, where \`source\` is \`plex\` or \`jellyfin\` for synced items and empty otherwise, for example \`2002-07-19T21:00:00.000Z|\`.`,
           method: 'GET',
           path: '/movies',
           query: collectionParamSchema,
@@ -680,7 +682,9 @@ Returns the authenticated user movie collection in a minimal format optimized fo
         shows: {
           summary: 'Get minimal show collection',
           description: `#### 🔒 OAuth Required
-Returns the authenticated user show collection in a minimal format optimized for syncing local state.`,
+Returns the authenticated user show collection in a minimal format optimized for syncing local state.
+
+Each episode value is the \`collected_at\` datetime. Use \`available_on\` to keep only \`digital\` items (synced from a connected media server) or \`other\` items. When \`available_on\` is sent, each value becomes \`collected_at|source\`, where \`source\` is \`plex\` or \`jellyfin\` for synced items and empty otherwise, for example \`2002-07-19T21:00:00.000Z|\`.`,
           method: 'GET',
           path: '/shows',
           query: collectionParamSchema,
@@ -691,7 +695,9 @@ Returns the authenticated user show collection in a minimal format optimized for
         episodes: {
           summary: 'Get minimal episode collection',
           description: `#### 🔒 OAuth Required
-Returns the authenticated user episode collection in a minimal format optimized for syncing local state.`,
+Returns the authenticated user episode collection in a minimal format optimized for syncing local state.
+
+Each value is the \`collected_at\` datetime. Use \`available_on\` to keep only \`digital\` items (synced from a connected media server) or \`other\` items. When \`available_on\` is sent, each value becomes \`collected_at|source\`, where \`source\` is \`plex\` or \`jellyfin\` for synced items and empty otherwise, for example \`2002-07-19T21:00:00.000Z|\`.`,
           method: 'GET',
           path: '/episodes',
           query: collectionParamSchema,
