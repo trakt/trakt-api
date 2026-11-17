@@ -61,7 +61,7 @@ Upcoming movies and shows that have not been released yet, ranked for the taste 
     recommendations: {
       summary: 'Get media recommendations with their sources',
       description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
-Movie and show recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`. An account with nothing to recommend from answers \`204\`.`,
+Movie and show recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`.`,
       path: '/recommendations',
       method: 'GET',
       metadata: authMetadata('required'),
@@ -71,7 +71,6 @@ Movie and show recommendations for the user, each with its \`score\`, the \`sour
         .merge(themeQuerySchema),
       responses: {
         200: mediaRecommendationResponseSchema.array(),
-        204: z.undefined(),
         401: z.object({ error: z.string() }),
       },
     },

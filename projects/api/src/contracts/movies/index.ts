@@ -373,7 +373,7 @@ Upcoming movies that have not been released yet, ranked for the taste of the use
   recommendations: {
     summary: 'Get movie recommendations with their sources',
     description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
-Movie recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`. An account with nothing to recommend from answers \`204\`.`,
+Movie recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`.`,
     path: '/recommendations',
     method: 'GET',
     metadata: authMetadata('required'),
@@ -383,7 +383,6 @@ Movie recommendations for the user, each with its \`score\`, the \`sources\` it 
       .merge(themeQuerySchema),
     responses: {
       200: movieRecommendationResponseSchema.array(),
-      204: z.undefined(),
       401: z.object({ error: z.string() }),
     },
   },
