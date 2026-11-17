@@ -16,7 +16,6 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { personalizedQuerySchema } from '../_internal/request/personalizedQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
-import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { statsQuerySchema } from '../_internal/request/statsQuerySchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import { episodeResponseSchema } from '../_internal/response/episodeResponseSchema.ts';
@@ -51,10 +50,8 @@ import { anticipatedShowRecommendationResponseSchema } from '../recommendations/
 import { showAnticipatedResponseSchema } from './schema/response/showAnticipatedResponseSchema.ts';
 import { showCollectionProgressResponseSchema } from './schema/response/showCollectionProgressResponseSchema.ts';
 import { showFavoritedResponseSchema } from './schema/response/showFavoritedResponseSchema.ts';
-import { showHotResponseSchema } from './schema/response/showHotResponseSchema.ts';
 import { showProgressResetResponseSchema } from './schema/response/showProgressResetResponseSchema.ts';
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
-import { showStreamingResponseSchema } from './schema/response/showStreamingResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
 
@@ -962,17 +959,6 @@ Returns the most anticipated shows based on the number of lists a show appears o
       200: showAnticipatedResponseSchema.array(),
     },
   },
-  hot: {
-    summary: 'Get hot shows',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
-Returns shows that are currently hot on Trakt. Results can be filtered by media fields or ignored user state.`,
-    path: '/hot',
-    method: 'GET',
-    query: filteredMediaQuerySchema,
-    responses: {
-      200: showHotResponseSchema.array(),
-    },
-  },
   popular: {
     summary: 'Get popular shows',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -983,18 +969,6 @@ Returns the most popular shows. Popularity is calculated using the rating percen
     query: themedFilteredMediaQuerySchema,
     responses: {
       200: showResponseSchema.array(),
-    },
-  },
-  streaming: {
-    summary: 'Get streaming shows',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
-Returns shows recently available on streaming services for the requested \`period\`. Results can be filtered by media fields or ignored user state.`,
-    path: '/streaming/:period',
-    method: 'GET',
-    pathParams: recentPeriodParamsSchema,
-    query: filteredMediaQuerySchema,
-    responses: {
-      200: showStreamingResponseSchema.array(),
     },
   },
 });
@@ -1052,10 +1026,6 @@ export type ShowAnticipatedResponse = z.infer<
   typeof showAnticipatedResponseSchema
 >;
 
-export { showHotResponseSchema };
-/** The show hot response payload. */
-export type ShowHotResponse = z.infer<typeof showHotResponseSchema>;
-
 /** The show certification response payload. */
 export type ShowCertificationResponse = z.infer<
   typeof showCertificationResponseSchema
@@ -1064,10 +1034,6 @@ export type ShowCertificationResponse = z.infer<
 export { seasonResponseSchema };
 /** The seasons response payload. */
 export type SeasonsResponse = z.infer<typeof seasonResponseSchema>[];
-
-export { showStreamingResponseSchema };
-/** The show streaming response payload. */
-export type ShowStreamingResponse = z.infer<typeof showStreamingResponseSchema>;
 
 export { episodeParamsSchema };
 
