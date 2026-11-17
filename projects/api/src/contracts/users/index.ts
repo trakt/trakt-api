@@ -16,10 +16,7 @@ import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts
 import { commentTypeParamsSchema } from './schema/request/commentTypeParamsSchema.ts';
 import { coverRequestSchema } from './schema/request/coverRequestSchema.ts';
 import { monthInReviewParamsSchema } from './schema/request/monthInReviewParamsSchema.ts';
-import { plexConnectRequestSchema } from './schema/request/plexConnectRequestSchema.ts';
-import { plexServerParamsSchema } from './schema/request/plexServerParamsSchema.ts';
 import { plexSettingsUpdateSchema } from './schema/request/plexSettingsUpdateSchema.ts';
-import { plexSyncRequestSchema } from './schema/request/plexSyncRequestSchema.ts';
 import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
@@ -43,17 +40,6 @@ import {
   monthInReviewResponseSchema,
   type reviewStreamingServicesSchema,
 } from './schema/response/monthInReviewResponseSchema.ts';
-import { plexConnectResponseSchema } from './schema/response/plexConnectResponseSchema.ts';
-import { plexErrorResponseSchema } from './schema/response/plexErrorResponseSchema.ts';
-import {
-  plexAccountSchema,
-  plexLibrarySchema,
-  plexServerAccountsResponseSchema,
-} from './schema/response/plexServerAccountsResponseSchema.ts';
-import {
-  plexServerSchema,
-  plexServersResponseSchema,
-} from './schema/response/plexServersResponseSchema.ts';
 import { plexSettingsResponseSchema } from './schema/response/plexSettingsResponseSchema.ts';
 import { reactedCommentResponseSchema } from './schema/response/reactedCommentResponseSchema.ts';
 import type {
@@ -265,7 +251,9 @@ const syncs = builder.router(
   {
     list: {
       summary: 'Get data syncs',
-      description: `#### 🔒 OAuth Required 📄 Pagination
+      description: `#### 🫣 Limited Access 🔒 OAuth Required 📄 Pagination
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Paginated list of the authenticated user's data syncs across **every** connected app (younify, plex, importers). Counts only — the paused/skipped item arrays are served by the dedicated paginated endpoints.
 
 Pagination is via \`page\` / \`limit\` and the standard \`X-Pagination-*\` headers. \`X-Pagination-Item-Count\` is the total sync count (use it for the "Data has synced N times" banner). All timestamps are normalized to \`.000Z\`.`,
@@ -278,7 +266,9 @@ Pagination is via \`page\` / \`limit\` and the standard \`X-Pagination-*\` heade
     },
     listByType: {
       summary: 'Get data syncs by type',
-      description: `#### 🔒 OAuth Required 📄 Pagination
+      description: `#### 🫣 Limited Access 🔒 OAuth Required 📄 Pagination
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Same as the list of data syncs, filtered by the app that created them. The \`type\` matches the \`kind\` returned on each row (\`younify\`, \`plex\`, or \`import\` for anything else, including \`application_id 0\` importers).
 
 An unknown \`type\` returns \`404\` rather than silently returning everything. Pagination and \`X-Pagination-*\` headers are identical to the unfiltered list.`,
@@ -293,7 +283,9 @@ An unknown \`type\` returns \`404\` rather than silently returning everything. P
     },
     details: {
       summary: 'Get a data sync',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Returns a single sync scoped to the authenticated user — foreign ids return \`404\`. Same shape as a list row: added counts plus \`paused_count\` / \`skipped_count\`, no item arrays.
 
 A numeric segment (\`/users/syncs/157\`) hits this endpoint; a non-numeric segment (\`/users/syncs/younify\`) is the filtered list.`,
@@ -307,7 +299,9 @@ A numeric segment (\`/users/syncs/157\`) hits this endpoint; a non-numeric segme
     },
     paused: {
       summary: 'Get paused sync items',
-      description: `#### 🔒 OAuth Required 📄 Pagination
+      description: `#### 🫣 Limited Access 🔒 OAuth Required 📄 Pagination
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Paginated item array for a sync, scoped to the authenticated user — foreign ids return \`404\`. Split out because a single sync can hold thousands of items.
 
 Paused items are always \`history\` (their \`kind\` is always \`"history"\`). Each item is the raw stored item (so source-specific fields are preserved) plus a normalized envelope, with timestamps normalized to \`.000Z\`. Pagination and \`X-Pagination-*\` headers are identical to the list endpoint.`,
@@ -322,7 +316,9 @@ Paused items are always \`history\` (their \`kind\` is always \`"history"\`). Ea
     },
     skipped: {
       summary: 'Get skipped sync items',
-      description: `#### 🔒 OAuth Required 📄 Pagination
+      description: `#### 🫣 Limited Access 🔒 OAuth Required 📄 Pagination
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Paginated item array for a sync, scoped to the authenticated user — foreign ids return \`404\`. Split out because a single sync can hold thousands of items.
 
 Skipped items mix \`history\` and \`rating\` (see each item's \`kind\` discriminator). Each item is the raw stored item (so source-specific fields are preserved) plus a normalized envelope, with timestamps normalized to \`.000Z\`. Pagination and \`X-Pagination-*\` headers are identical to the list endpoint.`,
@@ -357,10 +353,12 @@ const plex = builder.router(
   {
     settings: {
       summary: 'Get Plex settings',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
+
 Returns the authenticated user's Plex connection status, real-time scrobbler webhook info, server/library/home-user selection, and both toggle sets (batch \`sync\` + real-time \`scrobbler\`). Read-only, though the VIP webhook URL lazily mints its tokens.
 
-\`connection.connected\` reflects that a Plex authorization exists; for a live auth check call \`servers\` and watch for a \`bad_auth\` error. \`webhook.url\` is null unless the user is VIP. \`sync.configured\` indicates the initial sync has been set up. Toggles are booleans (unset ⇒ \`false\`); sync toggles include \`watching\`/\`watchlist\`, scrobbler toggles do not carry \`watchlist\`. All timestamps are normalized to \`.000Z\`.`,
+\`connection.connected\` reflects that a Plex authorization exists; it is not a live check against Plex. \`webhook.url\` is null unless the user is VIP. \`sync.configured\` indicates the initial sync has been set up. Toggles are booleans (unset ⇒ \`false\`); sync toggles include \`watching\`/\`watchlist\`, scrobbler toggles do not carry \`watchlist\`. All timestamps are normalized to \`.000Z\`.`,
       method: 'GET',
       path: '/',
       responses: {
@@ -369,7 +367,9 @@ Returns the authenticated user's Plex connection status, real-time scrobbler web
     },
     updateSettings: {
       summary: 'Update Plex settings',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
+
 Writes the Plex toggles, selection, and home users. Mirrors the GET shape so it round-trips; omitted toggle keys are left unchanged (no clobbering), and \`library_ids\` is sent structured and rebuilt into the \`server|uuid\` storage server-side.
 
 The optional \`trigger_sync\` block is the only thing that touches sync timestamps or enqueues work: any \`*_all_data: true\` resets the affected cursors and enqueues a full sync per selected server; present-but-all-false seeds every cursor to "now" (the first sync skips old history); absent writes settings without syncing.`,
@@ -380,72 +380,16 @@ The optional \`trigger_sync\` block is the only thing that touches sync timestam
         204: z.undefined(),
       },
     },
-    connect: {
-      summary: 'Connect Plex',
-      description: `#### 🔒 OAuth Required
-Mints a Plex web-auth URL for the client to open. Plex uses a 2-step PIN OAuth; the PIN is stashed server-side under an opaque \`state\` token and Plex is forwarded to a website return endpoint that exchanges it and redirects back to your \`return_url\` with \`?plex_status=connected|error\`.
-
-\`return_url\` is validated against the trakt-owned allowlist (\`trakt://\`, \`http(s)://localhost\`, \`https://*.trakt.tv\`); a \`400\` is returned otherwise.`,
-      method: 'POST',
-      path: '/connect',
-      body: plexConnectRequestSchema,
-      responses: {
-        200: plexConnectResponseSchema,
-        400: z.undefined(),
-      },
-    },
     disconnect: {
       summary: 'Disconnect Plex',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
+
 Disconnects Plex: destroys the authorization, clears server/library/user selection and sync state, and busts the connection caches.`,
       method: 'DELETE',
       path: '/connect',
       responses: {
         204: z.undefined(),
-      },
-    },
-    servers: {
-      summary: 'Get Plex servers',
-      description: `#### 🔒 OAuth Required
-Lists the authenticated user's Plex servers. Network-bound — probes each server's remote URL. On a Plex/auth failure it returns the shared \`{ error_code, message, guidance }\` envelope: \`bad_auth\` (401), \`plex_timeout\` (504), \`plex_bad_response\`/\`plex_generic_error\` (502).`,
-      method: 'GET',
-      path: '/servers',
-      responses: {
-        200: plexServersResponseSchema,
-        401: plexErrorResponseSchema,
-        502: plexErrorResponseSchema,
-        504: plexErrorResponseSchema,
-      },
-    },
-    serverAccounts: {
-      summary: 'Get Plex server accounts and libraries',
-      description: `#### 🔒 OAuth Required
-Returns the home accounts (owned servers only) and syncable libraries for a Plex server, with the user's current library selection flagged. Network-bound.
-
-Errors use the shared \`{ error_code, message, guidance }\` envelope: \`missing_token\`/\`bad_auth\` (401), \`missing_server_id\`/\`plex_unprocessable\` (422), \`invalid_server_id\`/\`plex_not_found\` (404), \`invalid_server_url\` (503), \`plex_timeout\` (504), \`plex_bad_response\`/\`plex_generic_error\` (502).`,
-      method: 'GET',
-      path: '/servers/:server_id',
-      pathParams: plexServerParamsSchema,
-      responses: {
-        200: plexServerAccountsResponseSchema,
-        401: plexErrorResponseSchema,
-        404: plexErrorResponseSchema,
-        422: plexErrorResponseSchema,
-        502: plexErrorResponseSchema,
-        503: plexErrorResponseSchema,
-        504: plexErrorResponseSchema,
-      },
-    },
-    sync: {
-      summary: 'Sync Plex now',
-      description: `#### 🔒 OAuth Required
-Enqueues a Plex sync immediately. With \`server_id\`, syncs that server; without it, syncs every server in the saved selection. \`all_data: true\` re-pulls full history, otherwise an incremental sync. A \`422\` is returned when there is no server to sync.`,
-      method: 'POST',
-      path: '/sync',
-      body: plexSyncRequestSchema,
-      responses: {
-        201: z.undefined(),
-        422: z.undefined(),
       },
     },
   },
@@ -853,18 +797,8 @@ export {
   likedListResponseSchema,
   monthInReviewParamsSchema,
   monthInReviewResponseSchema,
-  plexAccountSchema,
-  plexConnectRequestSchema,
-  plexConnectResponseSchema,
-  plexErrorResponseSchema,
-  plexLibrarySchema,
-  plexServerAccountsResponseSchema,
-  plexServerParamsSchema,
-  plexServerSchema,
-  plexServersResponseSchema,
   plexSettingsResponseSchema,
   plexSettingsUpdateSchema,
-  plexSyncRequestSchema,
   profileParamsSchema,
   reactedCommentResponseSchema,
   reviewBadRequestResponseSchema,
@@ -1040,25 +974,3 @@ export type PlexSettingsResponse = z.infer<typeof plexSettingsResponseSchema>;
 export type PlexSettingsUpdateRequest = z.infer<
   typeof plexSettingsUpdateSchema
 >;
-/** The plex connect request payload. */
-export type PlexConnectRequest = z.infer<typeof plexConnectRequestSchema>;
-/** The plex connect response payload. */
-export type PlexConnectResponse = z.infer<typeof plexConnectResponseSchema>;
-/** The plex servers response payload. */
-export type PlexServersResponse = z.infer<typeof plexServersResponseSchema>;
-/** The plex server type. */
-export type PlexServer = z.infer<typeof plexServerSchema>;
-/** The plex server accounts response payload. */
-export type PlexServerAccountsResponse = z.infer<
-  typeof plexServerAccountsResponseSchema
->;
-/** The plex account type. */
-export type PlexAccount = z.infer<typeof plexAccountSchema>;
-/** The plex library type. */
-export type PlexLibrary = z.infer<typeof plexLibrarySchema>;
-/** The plex server parameters. */
-export type PlexServerParams = z.infer<typeof plexServerParamsSchema>;
-/** The plex sync request payload. */
-export type PlexSyncRequest = z.infer<typeof plexSyncRequestSchema>;
-/** The plex error type. */
-export type PlexError = z.infer<typeof plexErrorResponseSchema>;
