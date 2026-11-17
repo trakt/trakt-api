@@ -13,7 +13,9 @@ export const younify = builder.router(
   {
     connections: {
       summary: 'Get streaming connections',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Lists every connectable streaming service with the current user's connection status merged in, so a settings grid can render each tile in one pass. Read-only — never creates a remote younify user.
 
 > ### IMPORTANT
@@ -28,7 +30,9 @@ Lists every connectable streaming service with the current user's connection sta
     },
     connect: {
       summary: 'Create a streaming connection',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Mints a signed younify web-auth URL for the client to open. Accepts the client's own \`return_url\` (deep link / universal link), validated against trakt-owned destinations only (\`trakt://…\` or \`https://*.trakt.tv\`).
 
 A \`422\` is returned when the service is not connectable on the user's plan, and a \`400\` when the \`return_url\` is missing/invalid or no URL could be minted.`,
@@ -43,7 +47,9 @@ A \`422\` is returned when the service is not connectable on the user's plan, an
     },
     refreshService: {
       summary: 'Refresh a streaming service (service in the body)',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Queue a re-sync of the connected streaming service named by \`service_id\` in the body. Free accounts only sync the service within their limit.`,
       method: 'POST',
       path: '/users/refresh',
@@ -54,7 +60,9 @@ Queue a re-sync of the connected streaming service named by \`service_id\` in th
     },
     refresh: {
       summary: 'Refresh a streaming service',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Queue / force a re-sync of a connected streaming service for the authenticated user.`,
       method: 'POST',
       path: '/users/refresh/:service_id',
@@ -66,7 +74,9 @@ Queue / force a re-sync of a connected streaming service for the authenticated u
     },
     refreshAll: {
       summary: 'Refresh a streaming service (full re-sync)',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Queue / force a re-sync of a connected streaming service for the authenticated user. An \`all_data\` segment of \`true\` forces a full re-sync of all data rather than an incremental one.`,
       method: 'POST',
       path: '/users/refresh/:service_id/:all_data',
@@ -78,7 +88,9 @@ Queue / force a re-sync of a connected streaming service for the authenticated u
     },
     disconnect: {
       summary: 'Unlink a streaming service',
-      description: `#### 🔒 OAuth Required
+      description: `#### 🫣 Limited Access 🔒 OAuth Required
+This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`403\` response even with a valid OAuth token.
+
 Unlink a streaming service from the authenticated user.`,
       method: 'DELETE',
       path: '/users/services/:service_id',
