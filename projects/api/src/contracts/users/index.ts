@@ -542,9 +542,7 @@ Returns collection items for a user filtered by type.`,
       path: '/collection/:type',
       method: 'GET',
       pathParams: userTypeParamsSchema,
-      query: extendedMediaQuerySchema
-        .merge(mediaFilterParamsSchema)
-        .merge(pageQuerySchema),
+      query: extendedMediaQuerySchema.merge(pageQuerySchema),
       responses: {
         200: userCollectionItemResponseSchema.array(),
       },
