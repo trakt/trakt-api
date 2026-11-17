@@ -16,7 +16,6 @@ import { mediaReportRequestSchema } from '../_internal/request/mediaReportReques
 import { pageQuerySchema } from '../_internal/request/pageQuerySchema.ts';
 import { personalizedQuerySchema } from '../_internal/request/personalizedQuerySchema.ts';
 import { periodParamsSchema } from '../_internal/request/periodParamsSchema.ts';
-import { recentPeriodParamsSchema } from '../_internal/request/recentPeriodParamsSchema.ts';
 import { commentResponseSchema } from '../_internal/response/commentResponseSchema.ts';
 import type { genreEnumSchema } from '../_internal/response/genreEnumSchema.ts';
 import { languageQuerySchema } from '../_internal/request/languageQuerySchema.ts';
@@ -45,8 +44,6 @@ import { z } from '../_internal/z.ts';
 import { anticipatedMovieRecommendationResponseSchema } from '../recommendations/schema/response/anticipatedMovieRecommendationResponseSchema.ts';
 import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipatedResponseSchema.ts';
 import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
-import { movieHotResponseSchema } from './schema/response/movieHotResponseSchema.ts';
-import { movieStreamingResponseSchema } from './schema/response/movieStreamingResponseSchema.ts';
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
 
@@ -57,11 +54,6 @@ const themedFilteredMediaQuerySchema = extendedMediaQuerySchema
   .merge(ignoreQuerySchema);
 
 const pagedMediaQuerySchema = extendedMediaQuerySchema
-  .merge(pageQuerySchema)
-  .merge(ignoreQuerySchema);
-
-const filteredMediaQuerySchema = extendedMediaQuerySchema
-  .merge(mediaFilterParamsSchema)
   .merge(pageQuerySchema)
   .merge(ignoreQuerySchema);
 
@@ -487,17 +479,6 @@ Returns the most anticipated movies based on the number of lists a movie appears
       200: movieAnticipatedResponseSchema.array(),
     },
   },
-  hot: {
-    summary: 'Get hot movies',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
-Returns movies that are currently hot on Trakt. Results can be filtered by media fields or ignored user state.`,
-    path: '/hot',
-    method: 'GET',
-    query: filteredMediaQuerySchema,
-    responses: {
-      200: movieHotResponseSchema.array(),
-    },
-  },
   popular: {
     summary: 'Get popular movies',
     description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
@@ -508,18 +489,6 @@ Returns the most popular movies. Popularity is calculated using the rating perce
     query: themedFilteredMediaQuerySchema,
     responses: {
       200: movieResponseSchema.array(),
-    },
-  },
-  streaming: {
-    summary: 'Get streaming movies',
-    description: `#### 📄 Pagination ✨ Extended Info 🎚 Filters
-Returns movies recently available on streaming services for the requested \`period\`. Results can be filtered by media fields or ignored user state.`,
-    path: '/streaming/:period',
-    method: 'GET',
-    pathParams: recentPeriodParamsSchema,
-    query: filteredMediaQuerySchema,
-    responses: {
-      200: movieStreamingResponseSchema.array(),
     },
   },
 });
@@ -575,17 +544,7 @@ export type MovieAnticipatedResponse = z.infer<
   typeof movieAnticipatedResponseSchema
 >;
 
-export { movieHotResponseSchema };
-/** The movie hot response payload. */
-export type MovieHotResponse = z.infer<typeof movieHotResponseSchema>;
-
 /** The movie certification response payload. */
 export type MovieCertificationResponse = z.infer<
   typeof movieCertificationResponseSchema
->;
-
-export { movieStreamingResponseSchema };
-/** The movie streaming response payload. */
-export type MovieStreamingResponse = z.infer<
-  typeof movieStreamingResponseSchema
 >;
