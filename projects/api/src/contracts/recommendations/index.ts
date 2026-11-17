@@ -12,10 +12,8 @@ import { recommendedMovieResponse } from './schema/response/recommendedMovieResp
 import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
 import { mediaRecommendationResponseSchema } from './schema/response/mediaRecommendationResponseSchema.ts';
 import { movieRecommendationResponseSchema } from './schema/response/movieRecommendationResponseSchema.ts';
-import { recommendationPeopleReasonSchema } from './schema/response/recommendationPeopleReasonSchema.ts';
-import { recommendationSourceSchema } from './schema/response/recommendationSourceSchema.ts';
 import { showRecommendationResponseSchema } from './schema/response/showRecommendationResponseSchema.ts';
-import { recommendationsWithSourcesQuerySchema } from './schema/request/recommendationsWithSourcesQuerySchema.ts';
+import { personalizedRecommendationsQuerySchema } from './schema/request/personalizedRecommendationsQuerySchema.ts';
 
 const movies = builder.router(
   {
@@ -105,7 +103,7 @@ export type RecommendedShowResponse = z.infer<typeof recommendedShowResponse>;
 
 export { recommendationsQuerySchema };
 
-export { recommendationsWithSourcesQuerySchema };
+export { personalizedRecommendationsQuerySchema };
 
 export { anticipatedMovieRecommendationResponseSchema };
 /** The anticipated movie recommendation response payload. */
@@ -141,14 +139,4 @@ export { mediaRecommendationResponseSchema };
 /** The media recommendation response payload. */
 export type MediaRecommendationResponse = z.infer<
   typeof mediaRecommendationResponseSchema
->;
-
-export { recommendationSourceSchema };
-/** The title a recommendation was drawn from. */
-export type RecommendationSource = z.infer<typeof recommendationSourceSchema>;
-
-export { recommendationPeopleReasonSchema };
-/** The person a recommendation was matched on. */
-export type RecommendationPeopleReason = z.infer<
-  typeof recommendationPeopleReasonSchema
 >;

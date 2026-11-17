@@ -54,7 +54,7 @@ import { showProgressResetResponseSchema } from './schema/response/showProgressR
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
-import { recommendationsWithSourcesQuerySchema } from '../recommendations/schema/request/recommendationsWithSourcesQuerySchema.ts';
+import { personalizedRecommendationsQuerySchema } from '../recommendations/schema/request/personalizedRecommendationsQuerySchema.ts';
 import { showRecommendationResponseSchema } from '../recommendations/schema/response/showRecommendationResponseSchema.ts';
 
 const episodePathParamsSchema = idParamsSchema
@@ -862,14 +862,14 @@ Upcoming shows that have not been released yet, ranked for the taste of the user
     },
   },
   recommendations: {
-    summary: 'Get show recommendations with their sources',
+    summary: 'Get show recommendations',
     description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
-Show recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`.`,
+Show recommendations for the user, each with its \`score\`. Titles the user has watched are left out unless \`ignore_watched=false\`. By default, \`100\` results are returned; send a \`limit\` for up to \`250\`.`,
     path: '/recommendations',
     method: 'GET',
     metadata: authMetadata('required'),
     query: extendedMediaQuerySchema
-      .merge(recommendationsWithSourcesQuerySchema)
+      .merge(personalizedRecommendationsQuerySchema)
       .merge(mediaFilterParamsSchema)
       .merge(themeQuerySchema),
     responses: {

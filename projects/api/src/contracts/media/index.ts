@@ -9,7 +9,7 @@ import { anticipatedMediaRecommendationResponseSchema } from '../recommendations
 import { mediaAnticipatedResponseSchema } from './schema/response/mediaAnticipatedResponseSchema.ts';
 import { mediaPopularResponseSchema } from './schema/response/mediaPopularResponseSchema.ts';
 import { mediaTrendingResponseSchema } from './schema/response/mediaTrendingResponseSchema.ts';
-import { recommendationsWithSourcesQuerySchema } from '../recommendations/schema/request/recommendationsWithSourcesQuerySchema.ts';
+import { personalizedRecommendationsQuerySchema } from '../recommendations/schema/request/personalizedRecommendationsQuerySchema.ts';
 import { mediaRecommendationResponseSchema } from '../recommendations/schema/response/mediaRecommendationResponseSchema.ts';
 
 /** ts-rest contract for the `media` endpoints. */
@@ -59,14 +59,14 @@ Upcoming movies and shows that have not been released yet, ranked for the taste 
       },
     },
     recommendations: {
-      summary: 'Get media recommendations with their sources',
+      summary: 'Get media recommendations',
       description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
-Movie and show recommendations for the user, each with its \`score\`, the \`sources\` it was drawn from and the \`people\` behind it. By default, \`10\` results are returned; send a \`limit\` for up to \`100\`.`,
+Movie and show recommendations for the user, each with its \`score\`. Titles the user has watched are left out unless \`ignore_watched=false\`. By default, \`100\` results are returned; send a \`limit\` for up to \`250\`.`,
       path: '/recommendations',
       method: 'GET',
       metadata: authMetadata('required'),
       query: extendedMediaQuerySchema
-        .merge(recommendationsWithSourcesQuerySchema)
+        .merge(personalizedRecommendationsQuerySchema)
         .merge(mediaFilterParamsSchema)
         .merge(themeQuerySchema),
       responses: {

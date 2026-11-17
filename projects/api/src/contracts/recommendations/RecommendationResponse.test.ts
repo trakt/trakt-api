@@ -18,52 +18,28 @@ const show = {
   ids: { trakt: 2, slug: 'euphoria-2019' },
 };
 
-test('movieRecommendationResponseSchema: parses an item with sources and no people', () => {
-  const parsed = movieRecommendationResponseSchema.parse({
-    movie,
-    score: 0.9,
-    sources: [{ id: 3, type: 'favorite', stars: null, movie }],
-  });
+test('movieRecommendationResponseSchema: parses an item with its score', () => {
+  const parsed = movieRecommendationResponseSchema.parse({ movie, score: 0.9 });
 
   expect(parsed.movie.ids.trakt).toBe(1);
-  expect(parsed.people).toBeUndefined();
+  expect(parsed.score).toBe(0.9);
 });
 
-test('showRecommendationResponseSchema: parses a subgenre source and a people reason', () => {
+test('showRecommendationResponseSchema: drops the sources the server still sends', () => {
   const parsed = showRecommendationResponseSchema.parse({
     show,
     score: 0.5,
-    sources: [
-      {
-        id: 4,
-        type: 'subgenre',
-        stars: 4,
-        show,
-        subgenres: [{ id: 1, name: 'Teen Drama', slug: 'teen-drama' }],
-      },
-    ],
-    people: [
-      {
-        person: {
-          name: 'Sam Levinson',
-          ids: { trakt: 9, slug: 'sam-levinson' },
-        },
-        role: 'directing',
-        watched_roles: ['directing'],
-        watched_count: 2,
-        titles: [{ show }],
-      },
-    ],
+    sources: [],
   });
 
-  expect(parsed.people?.[0]?.watched_count).toBe(2);
+  expect(parsed.show.ids.trakt).toBe(2);
+  expect('sources' in parsed).toBe(false);
 });
 
 test('mediaRecommendationResponseSchema: carries a movie or a show under its own key', () => {
   const parsed = mediaRecommendationResponseSchema.parse({
     show,
     score: 0.5,
-    sources: [],
   });
 
   expect(parsed.show?.ids.trakt).toBe(2);
