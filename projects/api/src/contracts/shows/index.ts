@@ -165,7 +165,7 @@ Returns all users watching this episode right now.`,
       summary: 'Get all episode comments',
       description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
-Returns all top level comments for an episode. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+Returns all top level comments for an episode. By default, comments are sorted by \`newest\` first. Other sorting options include \`oldest\`, most \`likes\`, most \`replies\`, \`highest\` and \`lowest\` rating from the comment author, and the author's most \`plays\`.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
@@ -633,7 +633,7 @@ If you'd like to included translated episode titles and overviews in the respons
           summary: 'Get all season comments',
           description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
-Returns all top level comments for a season. By default, comments are sorted by most \`likes\`.`,
+Returns all top level comments for a season. By default, comments are sorted by \`newest\` first. Other sorting options include \`oldest\`, most \`likes\`, most \`replies\`, \`highest\` and \`lowest\` rating from the comment author, and the author's most \`plays\`.`,
           path: '/comments/:sort',
           method: 'GET',
           pathParams: idParamsSchema
@@ -791,7 +791,7 @@ Returns all lists that contain this show. By default, \`personal\` lists are ret
       summary: 'Get all show comments',
       description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
-Returns all top level comments for a show. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, highest \`watched\` percentage, most \`plays\`, highest \`rating\`, and \`added\` date.
+Returns all top level comments for a show. By default, comments are sorted by \`newest\` first. Other sorting options include \`oldest\`, most \`likes\`, most \`replies\`, \`highest\` and \`lowest\` rating from the comment author, and the author's most \`plays\`.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,

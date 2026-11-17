@@ -303,7 +303,7 @@ Returns all lists that contain this movie. By default, \`personal\` lists are re
       summary: 'Get all movie comments',
       description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
-Returns all top level comments for a movie. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+Returns all top level comments for a movie. By default, comments are sorted by \`newest\` first. Other sorting options include \`oldest\`, most \`likes\`, most \`replies\`, \`highest\` and \`lowest\` rating from the comment author, and the author's most \`plays\`.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,

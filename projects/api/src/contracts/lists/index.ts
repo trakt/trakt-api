@@ -18,6 +18,7 @@ import { listedMovieResponseSchema } from '../_internal/response/listedMovieResp
 import { listedShowResponseSchema } from '../_internal/response/listedShowResponseSchema.ts';
 import { listResponseSchema } from '../_internal/response/listResponseSchema.ts';
 import { z } from '../_internal/z.ts';
+import { listCommentsSortParamsSchema } from '../users/schema/request/listCommentsSortParamsSchema.ts';
 import { listReportRequestSchema } from './schema/listReportRequestSchema.ts';
 import { prominentListResponseSchema } from './schema/prominentListResponseSchema.ts';
 
@@ -36,10 +37,6 @@ const listItemsPathParamsSchema = idParamsSchema.extend({
   type: z.string().describe('List item type filter.'),
   sort_by: z.string().describe('Sort by a specific property.'),
   sort_how: z.string().describe('Sort direction.'),
-});
-
-const listCommentsSortParamsSchema = idParamsSchema.extend({
-  sort: z.string().describe('Comment sort option.'),
 });
 
 const listTypePathParamsSchema = z.object({
@@ -135,13 +132,13 @@ Get all items on a personal list. Items can be a \`movie\`, \`show\`, \`season\`
       summary: 'Get all list comments',
       description: `#### 🔓 OAuth Optional 📄 Pagination 😁 Emojis
 
-Returns all top level comments for a list. By default, comments are sorted by most \`likes\`. Other sorting options include \`likes_30\`, most \`replies\`, \`replies_30\`, most \`plays\`, highest \`rating\`, and \`added\` date.
+Returns all top level comments for a list. By default, comments are sorted by \`newest\` first. Other sorting options include \`oldest\`, most \`likes\`, and most \`replies\`.
 
 > ### Note
 > _If you send OAuth, comments from blocked users will be automatically filtered out._`,
       path: '/comments/:sort',
       method: 'GET',
-      pathParams: listCommentsSortParamsSchema,
+      pathParams: idParamsSchema.merge(listCommentsSortParamsSchema),
       query: extendedProfileQuerySchema
         .merge(pageQuerySchema)
         .merge(limitlessQuerySchema),
