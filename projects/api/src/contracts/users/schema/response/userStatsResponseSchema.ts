@@ -39,6 +39,7 @@ export const userStatsResponseSchema = z.object({
     })
     .nullish(),
   lists: z.number().int().nullish(),
+  list_comments: z.number().int().nullish(),
   total_minutes: z.number().int().nullish(),
   total_plays: z.number().int().nullish(),
 });
