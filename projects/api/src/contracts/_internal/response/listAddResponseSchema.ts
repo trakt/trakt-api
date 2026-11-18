@@ -1,5 +1,5 @@
 import { listSummaryResponseSchema } from './listSummaryResponseSchema.ts';
-import { mediaItemsRequestSchema } from '../request/mediaItemsRequestSchema.ts';
+import { mediaItemsNotFoundSchema } from './mediaItemsNotFoundSchema.ts';
 import { z } from '../z.ts';
 import { mediaMutationCountsSchema } from './mediaMutationCountsSchema.ts';
 
@@ -7,6 +7,6 @@ import { mediaMutationCountsSchema } from './mediaMutationCountsSchema.ts';
 export const listAddResponseSchema = z.object({
   added: mediaMutationCountsSchema,
   existing: mediaMutationCountsSchema,
-  not_found: mediaItemsRequestSchema,
+  not_found: mediaItemsNotFoundSchema,
   list: listSummaryResponseSchema,
 });

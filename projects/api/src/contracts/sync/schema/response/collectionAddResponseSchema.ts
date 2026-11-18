@@ -13,6 +13,13 @@ export const collectionAddResponseSchema = z.object({
   updated: collectedCountsSchema,
   /** Already collected with the same date and metadata. */
   existing: collectedCountsSchema,
-  /** Items echoed as sent. A movie or episode without a release date is echoed as `{ ids: { trakt } }`. */
-  not_found: collectionAddRequestSchema,
+  /**
+   * Items not found, echoed as sent. A season or episode missing under a show
+   * echoes that show once per miss, holding only the missing season or episode.
+   * A movie or episode without a release date is echoed as `{ ids: { trakt } }`.
+   */
+  not_found: collectionAddRequestSchema.extend({
+    seasons: collectionAddRequestSchema.shape.shows,
+    episodes: collectionAddRequestSchema.shape.shows,
+  }),
 });
