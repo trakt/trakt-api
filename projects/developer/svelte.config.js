@@ -1,6 +1,11 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
+const { PUBLIC_TRAKT_API_URL } = process.env;
+const configuredApiOrigin = PUBLIC_TRAKT_API_URL?.trim()
+  ? [new URL(PUBLIC_TRAKT_API_URL).origin]
+  : [];
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: vitePreprocess(),
@@ -16,6 +21,7 @@ const config = {
           'https://api.trakt.tv',
           'https://apiz.trakt.tv',
           'https://auth.trakt.tv',
+          ...configuredApiOrigin,
         ],
         'font-src': ['self'],
         'form-action': ['self'],

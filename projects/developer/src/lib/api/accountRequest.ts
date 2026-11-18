@@ -3,6 +3,7 @@ import { markRejectedSession } from '$lib/auth/markRejectedSession.ts';
 import { accessToken } from '$lib/auth/accessToken.ts';
 import { developerErrorMessage } from './developerErrorMessage.ts';
 import { traktHeaders } from './traktHeaders.ts';
+import { API_BASE_URL } from './API_BASE_URL.ts';
 
 const errorBodySchema = z.object({ error: z.string().optional() });
 
@@ -28,7 +29,7 @@ export async function accountRequest({
   const headers = traktHeaders({ accessToken: token });
   if (init.body) headers.set('content-type', 'application/json');
 
-  const response = await fetch(`https://api.trakt.tv${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers,
     cache: 'no-store',

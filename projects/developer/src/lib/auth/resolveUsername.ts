@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { AUTH_REQUEST_TIMEOUT_SECONDS } from './AUTH_REQUEST_TIMEOUT_SECONDS.ts';
 import { traktHeaders } from '$lib/api/traktHeaders.ts';
+import { API_BASE_URL } from '$lib/api/API_BASE_URL.ts';
 import { fallbackUsername } from './fallbackUsername.ts';
 
 const settingsPayloadSchema = z.object({
@@ -14,7 +15,7 @@ export async function resolveUsername({
   accessToken: string;
   slot: number;
 }): Promise<string> {
-  const response = await fetch('https://api.trakt.tv/users/settings', {
+  const response = await fetch(`${API_BASE_URL}/users/settings`, {
     headers: traktHeaders({ accessToken }),
     signal: AbortSignal.timeout(AUTH_REQUEST_TIMEOUT_SECONDS * 1000),
   }).catch(() => null);
