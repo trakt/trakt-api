@@ -46,11 +46,12 @@ and development tasks are `bun run developer:install` and
 
 ## Configuration
 
-There is one setting, listed in [`.env.example`](.env.example).
+The settings are listed in [`.env.example`](.env.example).
 
-| Variable                 | Purpose                                                      |
-| ------------------------ | ------------------------------------------------------------ |
-| `PUBLIC_TRAKT_CLIENT_ID` | Identifies the Trakt application for API requests and OAuth. |
+| Variable                 | Purpose                                                                                                                                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PUBLIC_TRAKT_CLIENT_ID` | Identifies the Trakt application for API requests and OAuth.                                                                                                                                       |
+| `PUBLIC_TRAKT_API_URL`   | Optional. Sends the portal's account requests (apps, developer profile, premium) to another API, such as a local worker. Defaults to `https://api.trakt.tv` and is added to the CSP `connect-src`. |
 
 It is read at build time through `$env/static/public` and ships in the browser
 bundle, which is why it carries the `PUBLIC_` prefix. There is no secret to
