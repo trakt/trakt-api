@@ -129,6 +129,8 @@ const syncRatingItemResponseSchema = z
   })
   .passthrough();
 
+const PLACEHOLDER_PAGINATION_COUNT_NOTE = `\`X-Pagination-Item-Count\` and \`X-Pagination-Page-Count\` hold placeholder values because the totals are too expensive to calculate. Keep requesting the next page until one returns an empty array. See [Pagination](https://developer.trakt.tv/docs/pagination).`;
+
 const PLAYBACK_PAGINATION_NOTE = `Pagination is opt-in: without \`page\` or \`limit\` the whole set is returned and no \`X-Pagination-*\` headers are sent. Sending either paginates and adds the headers.`;
 
 const progress = builder.router({
@@ -136,7 +138,9 @@ const progress = builder.router({
     standard: {
       summary: 'Get up next',
       description: `#### 🔒 OAuth Required 📄 Pagination ✨ Extended Info
-Returns the authenticated user up next progress ordered by the requested sort. Use \`include_stats\` and \`lifetime_stats\` to include additional watch stats.`,
+Returns the authenticated user up next progress ordered by the requested sort. Use \`include_stats\` and \`lifetime_stats\` to include additional watch stats.
+
+${PLACEHOLDER_PAGINATION_COUNT_NOTE}`,
       method: 'GET',
       path: '/progress/up_next',
       query: extendedQuerySchemaFactory<['full', 'images']>()
@@ -151,7 +155,9 @@ Returns the authenticated user up next progress ordered by the requested sort. U
     nitro: {
       summary: 'Get up next nitro',
       description: `#### 🔒 OAuth Required 📄 Pagination
-Returns the authenticated user up next progress optimized for intent-based clients. Use \`intent\` plus sorting and pagination to control the response.`,
+Returns the authenticated user up next progress optimized for intent-based clients. Use \`intent\` plus sorting and pagination to control the response.
+
+${PLACEHOLDER_PAGINATION_COUNT_NOTE}`,
       method: 'GET',
       path: '/progress/up_next_nitro',
       query: pageQuerySchema
