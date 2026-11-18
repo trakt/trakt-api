@@ -1,9 +1,9 @@
-import { historyItemsRequestSchema } from '../../../_internal/request/historyItemsRequestSchema.ts';
+import { historyItemsNotFoundSchema } from '../../../_internal/response/historyItemsNotFoundSchema.ts';
 import { z } from '../../../_internal/z.ts';
 
 /** Zod schema for the history response. */
 export const historyResponseSchema = z.object({
   added: z.object({ movies: z.number().int(), episodes: z.number().int() }),
   updated: z.object({ movies: z.number().int(), episodes: z.number().int() }),
-  not_found: historyItemsRequestSchema,
+  not_found: historyItemsNotFoundSchema,
 });
