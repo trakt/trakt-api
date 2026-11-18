@@ -1,5 +1,5 @@
 ---
-updatedAt: 2026-09-04T07:20:30.000Z
+updatedAt: 2026-11-18T12:00:00.000Z
 ---
 
 # Pagination
@@ -47,3 +47,9 @@ Paginated responses include the following HTTP headers:
 | `X-Pagination-Item-Count` | Total number of items.              |
 
 When loading a complete dataset, continue requesting pages until all pages have been retrieved. Use the returned pagination headers rather than calculating the number of pages from the `limit` you requested.
+
+## Placeholder counts
+
+Some endpoints return placeholder values in `X-Pagination-Item-Count` and `X-Pagination-Page-Count`, because calculating the real totals would be too expensive. These endpoints say so in their reference documentation.
+
+For these endpoints, do not use the counts to decide how many pages to load. Keep requesting the next page until one returns an empty array. A page with fewer items than the `limit` does not mean it is the last one.
