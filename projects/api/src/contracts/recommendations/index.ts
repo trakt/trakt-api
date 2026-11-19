@@ -10,6 +10,10 @@ import { anticipatedShowRecommendationResponseSchema } from './schema/response/a
 import { recommendationsQuerySchema } from './schema/request/recommendationsQuerySchema.ts';
 import { recommendedMovieResponse } from './schema/response/recommendedMovieResponse.ts';
 import { recommendedShowResponse } from './schema/response/recommendedShowResponse.ts';
+import { mediaRecommendationResponseSchema } from './schema/response/mediaRecommendationResponseSchema.ts';
+import { movieRecommendationResponseSchema } from './schema/response/movieRecommendationResponseSchema.ts';
+import { showRecommendationResponseSchema } from './schema/response/showRecommendationResponseSchema.ts';
+import { personalizedRecommendationsQuerySchema } from './schema/request/personalizedRecommendationsQuerySchema.ts';
 
 const movies = builder.router(
   {
@@ -99,6 +103,8 @@ export type RecommendedShowResponse = z.infer<typeof recommendedShowResponse>;
 
 export { recommendationsQuerySchema };
 
+export { personalizedRecommendationsQuerySchema };
+
 export { anticipatedMovieRecommendationResponseSchema };
 /** The anticipated movie recommendation response payload. */
 export type AnticipatedMovieRecommendationResponse = z.infer<
@@ -115,4 +121,22 @@ export { anticipatedMediaRecommendationResponseSchema };
 /** The anticipated media recommendation response payload. */
 export type AnticipatedMediaRecommendationResponse = z.infer<
   typeof anticipatedMediaRecommendationResponseSchema
+>;
+
+export { movieRecommendationResponseSchema };
+/** The movie recommendation response payload. */
+export type MovieRecommendationResponse = z.infer<
+  typeof movieRecommendationResponseSchema
+>;
+
+export { showRecommendationResponseSchema };
+/** The show recommendation response payload. */
+export type ShowRecommendationResponse = z.infer<
+  typeof showRecommendationResponseSchema
+>;
+
+export { mediaRecommendationResponseSchema };
+/** The media recommendation response payload. */
+export type MediaRecommendationResponse = z.infer<
+  typeof mediaRecommendationResponseSchema
 >;

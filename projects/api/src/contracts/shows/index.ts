@@ -55,6 +55,8 @@ import { showProgressResetResponseSchema } from './schema/response/showProgressR
 import { showProgressResponseSchema } from './schema/response/showProgressResponseSchema.ts';
 import { showTrendingResponseSchema } from './schema/response/showTrendingResponseSchema.ts';
 import { showWatchedResponseSchema } from './schema/response/showWatchedResponseSchema.ts';
+import { personalizedRecommendationsQuerySchema } from '../recommendations/schema/request/personalizedRecommendationsQuerySchema.ts';
+import { showRecommendationResponseSchema } from '../recommendations/schema/response/showRecommendationResponseSchema.ts';
 
 const episodePathParamsSchema = idParamsSchema
   .merge(seasonParamsSchema)
@@ -857,6 +859,22 @@ Upcoming shows that have not been released yet, ranked for the taste of the user
     query: pageQuerySchema,
     responses: {
       200: anticipatedShowRecommendationResponseSchema.array(),
+      401: z.object({ error: z.string() }),
+    },
+  },
+  recommendations: {
+    summary: 'Get show recommendations',
+    description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
+Show recommendations for the user, each with its \`score\`. Titles the user has watched are left out unless \`ignore_watched=false\`. By default, \`100\` results are returned; send a \`limit\` for up to \`250\`.`,
+    path: '/recommendations',
+    method: 'GET',
+    metadata: authMetadata('required'),
+    query: extendedMediaQuerySchema
+      .merge(personalizedRecommendationsQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema),
+    responses: {
+      200: showRecommendationResponseSchema.array(),
       401: z.object({ error: z.string() }),
     },
   },
