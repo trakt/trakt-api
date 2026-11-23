@@ -18,14 +18,14 @@ export function float(schema: z.ZodNumber) {
 }
 
 /**
- * Helper function to mark a number schema as a double in OpenAPI metadata
+ * Helper function to mark a number schema as a 64-bit integer in OpenAPI metadata
  */
 export function int64(schema: z.ZodNumber) {
   // Use type assertion to access the openapi method added by extendZodWithOpenApi
   return (
     schema as z.ZodNumber & { openapi: (meta: unknown) => z.ZodNumber }
   ).openapi({
-    type: 'number',
+    type: 'integer',
     format: 'int64',
   });
 }
