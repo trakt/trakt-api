@@ -114,6 +114,10 @@ jobs:
       - name: The Scroll's Scrutiny aka Validate OpenAPI
         run: bun run openapi:validate
 
+      - name: The Scroll's Trial aka Test OpenAPI
+        working-directory: projects/openapi
+        run: bun run test
+
       - name: The Sacred Transcription aka Generate OpenAPI
         if: github.ref == 'refs/heads/master'
         run: bun run openapi:generate
