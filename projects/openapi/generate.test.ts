@@ -71,3 +71,67 @@ test('uses the auth host for the OAuth2 flow URLs', () => {
     'https://auth.trakt.tv/oauth/token',
   );
 });
+
+test('types every query parameter', () => {
+  const untyped = Object.entries(generate().paths).flatMap(([path, item]) =>
+    Object.values(item ?? {}).flatMap((operation) => {
+      const parameters = (operation as OperationObject).parameters ?? [];
+      return parameters.flatMap((parameter) => {
+        if ('$ref' in parameter) return [];
+        const schema = parameter.schema ?? {};
+        const isTyped = ['type', '$ref', 'oneOf', 'anyOf', 'allOf'].some(
+          (key) => key in schema,
+        );
+        return isTyped ? [] : [`${path} ${parameter.name}`];
+      });
+    }),
+  );
+
+  assertEquals(untyped, []);
+});
+
+function int64Types(node: unknown): string[] {
+  if (Array.isArray(node)) return node.flatMap(int64Types);
+  if (typeof node !== 'object' || node === null) return [];
+  const schema = node as Record<string, unknown>;
+  const own = schema.format === 'int64' ? [String(schema.type)] : [];
+
+  return [...own, ...Object.values(schema).flatMap(int64Types)];
+}
+
+test('emits int64 fields as integers', () => {
+  const types = int64Types(generate().paths);
+
+  assertEquals(types.length > 0, true);
+  assertEquals(
+    types.filter((type) => type !== 'integer'),
+    [],
+  );
+});
+
+test('describes the search score as a double', () => {
+  const response = generate().paths['/search/{type}']?.get?.responses?.['200'];
+  const schema = response as unknown as {
+    content: {
+      'application/json': {
+        schema: { items: { properties: { score: unknown } } };
+      };
+    };
+  };
+  const { score } = schema.content['application/json'].schema.items.properties;
+
+  assertEquals(score, { type: 'number', format: 'double' });
+});
+
+test('lists the 204 on movie and show sentiments', () => {
+  const paths = generate().paths;
+
+  assertEquals(
+    Object.keys(paths['/movies/{id}/sentiments']?.get?.responses ?? {}),
+    ['200', '204'],
+  );
+  assertEquals(
+    Object.keys(paths['/shows/{id}/sentiments']?.get?.responses ?? {}),
+    ['200', '204'],
+  );
+});
