@@ -32,11 +32,10 @@ export const seasonResponseSchema = z.object({
   /**
    * Available if requesting extended `full`.
    */
-  first_aired: z.string().optional(
-    /**
-     * Available if requesting extended `full`.
-     */
-  ),
+  first_aired: z.string().nullish(),
+  /**
+   * Available if requesting extended `full`.
+   */
   updated_at: z.string().datetime().nullish(),
   /**
    * Available if requesting extended `full`.
