@@ -5,5 +5,6 @@ import { z } from '../z.ts';
 export const linksQuerySchema = z.object({
   links: z
     .custom<CombinationsFrom<['tvos', 'direct', 'android', 'webos']>>()
-    .nullish(),
+    .nullish()
+    .openapi({ type: 'string' }),
 });
