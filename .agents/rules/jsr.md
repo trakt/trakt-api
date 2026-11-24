@@ -42,7 +42,7 @@ annotations - they are load-bearing:
 - `users` uses `UsersInput` +
   `UsersRouter = ReturnType<typeof builder.router<...>>` with an
   `as unknown as UsersRouter` cast. Keep the internal route groups
-  (`GLOBAL_LEVEL`, `ENTITY_LEVEL`, `syncs`, `plex`) non-exported.
+  (`GLOBAL_LEVEL`, `ENTITY_LEVEL`, `syncs`) non-exported.
 - The query factories (`extendedQuerySchemaFactory`, `searchTypeParamFactory`)
   have explicit `z.ZodObject<{...}>` returns (avoids TS5088 cyclic).
 - `builder` is typed `ReturnType<typeof initContract>` (avoids TS4023).

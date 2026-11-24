@@ -15,7 +15,6 @@ import { commentsRequestSchema } from './schema/request/commentsRequestSchema.ts
 import { commentTypeParamsSchema } from './schema/request/commentTypeParamsSchema.ts';
 import { coverRequestSchema } from './schema/request/coverRequestSchema.ts';
 import { monthInReviewParamsSchema } from './schema/request/monthInReviewParamsSchema.ts';
-import { plexSettingsUpdateSchema } from './schema/request/plexSettingsUpdateSchema.ts';
 import { profileParamsSchema } from './schema/request/profileParamsSchema.ts';
 import { settingsRequestSchema } from './schema/request/settingsRequestSchema.ts';
 import { socialActivityParamsSchema } from './schema/request/socialActivityParamsSchema.ts';
@@ -39,7 +38,6 @@ import {
   monthInReviewResponseSchema,
   type reviewStreamingServicesSchema,
 } from './schema/response/monthInReviewResponseSchema.ts';
-import { plexSettingsResponseSchema } from './schema/response/plexSettingsResponseSchema.ts';
 import { reactedCommentResponseSchema } from './schema/response/reactedCommentResponseSchema.ts';
 import type {
   reviewAllStatsSchema,
@@ -346,55 +344,6 @@ Undoes a sync — reverses every item it imported (history, ratings, paused, wat
   },
   {
     pathPrefix: '/syncs',
-  },
-);
-
-const plex = builder.router(
-  {
-    settings: {
-      summary: 'Get Plex settings',
-      description: `#### 🫣 Limited Access 🔒 OAuth Required
-This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
-
-Returns the authenticated user's Plex connection status, real-time scrobbler webhook info, server/library/home-user selection, and both toggle sets (batch \`sync\` + real-time \`scrobbler\`). Read-only, though the VIP webhook URL lazily mints its tokens.
-
-\`connection.connected\` reflects that a Plex authorization exists; it is not a live check against Plex. \`webhook.url\` is null unless the user is VIP. \`sync.configured\` indicates the initial sync has been set up. Toggles are booleans (unset ⇒ \`false\`); sync toggles include \`watching\`/\`watchlist\`, scrobbler toggles do not carry \`watchlist\`. All timestamps are normalized to \`.000Z\`.`,
-      method: 'GET',
-      path: '/',
-      responses: {
-        200: plexSettingsResponseSchema,
-      },
-    },
-    updateSettings: {
-      summary: 'Update Plex settings',
-      description: `#### 🫣 Limited Access 🔒 OAuth Required
-This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
-
-Writes the Plex toggles, selection, and home users. Mirrors the GET shape so it round-trips; omitted toggle keys are left unchanged (no clobbering), and \`library_ids\` is sent structured and rebuilt into the \`server|uuid\` storage server-side.
-
-The optional \`trigger_sync\` block is the only thing that touches sync timestamps or enqueues work: any \`*_all_data: true\` resets the affected cursors and enqueues a full sync per selected server; present-but-all-false seeds every cursor to "now" (the first sync skips old history); absent writes settings without syncing.`,
-      method: 'PUT',
-      path: '/',
-      body: plexSettingsUpdateSchema,
-      responses: {
-        204: z.undefined(),
-      },
-    },
-    disconnect: {
-      summary: 'Disconnect Plex',
-      description: `#### 🫣 Limited Access 🔒 OAuth Required
-This endpoint is currently available only to first-party Trakt applications. Third-party applications receive a \`401\` response even with a valid OAuth token.
-
-Disconnects Plex: destroys the authorization, clears server/library/user selection and sync state, and busts the connection caches.`,
-      method: 'DELETE',
-      path: '/connect',
-      responses: {
-        204: z.undefined(),
-      },
-    },
-  },
-  {
-    pathPrefix: '/settings/plex',
   },
 );
 
@@ -729,7 +678,6 @@ type UsersInput = typeof GLOBAL_LEVEL &
   typeof ENTITY_LEVEL &
   typeof REVIEW_LEVEL & {
     syncs: typeof syncs;
-    plex: typeof plex;
     watched: typeof watched;
     history: typeof history;
     watchlist: typeof watchlist;
@@ -751,7 +699,6 @@ export const users = builder.router(
   {
     ...GLOBAL_LEVEL,
     syncs,
-    plex,
     ...ENTITY_LEVEL,
     ...REVIEW_LEVEL,
     watched,
@@ -797,8 +744,6 @@ export {
   likedListResponseSchema,
   monthInReviewParamsSchema,
   monthInReviewResponseSchema,
-  plexSettingsResponseSchema,
-  plexSettingsUpdateSchema,
   profileParamsSchema,
   reactedCommentResponseSchema,
   reviewBadRequestResponseSchema,
@@ -969,10 +914,3 @@ export type SyncItemResponse = z.infer<typeof syncItemSchema>;
 export type SyncTypeParams = z.infer<typeof syncTypeParamsSchema>;
 /** The sync id parameters. */
 export type SyncIdParams = z.infer<typeof syncIdParamsSchema>;
-
-/** The plex settings response payload. */
-export type PlexSettingsResponse = z.infer<typeof plexSettingsResponseSchema>;
-/** The plex settings update request payload. */
-export type PlexSettingsUpdateRequest = z.infer<
-  typeof plexSettingsUpdateSchema
->;
