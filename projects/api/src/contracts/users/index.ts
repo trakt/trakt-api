@@ -387,7 +387,9 @@ Activity from a private user is only included when you follow them. Set \`?exten
       description: `#### 🔥 VIP Only 🔓 OAuth Optional
 Returns stats about the movies, shows, and episodes a user has watched, collected, and rated.
 
-Stats are precomputed for VIP users only. Returns \`204 No Content\` when no precomputed stats are available.`,
+Stats are only available for VIP users. Check the \`vip\` flag on the user and only use the response body when the user is VIP.
+
+> **Temporary behavior:** for non-VIP users the API currently returns \`200\` with every count set to \`0\`, to avoid breaking existing integrations. These zeros are placeholders, not real data, and this response will change. Treat any response for a non-VIP user as "no stats available", whatever its status or body.`,
       path: '/stats',
       pathParams: profileParamsSchema,
       method: 'GET',
