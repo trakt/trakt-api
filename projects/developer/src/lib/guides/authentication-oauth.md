@@ -1,8 +1,14 @@
 ---
-updatedAt: 2026-10-01T00:00:00.000Z
+updatedAt: 2026-11-27T00:00:00.000Z
 ---
 
 # Authentication
+
+> ### 🔐 Sign-in uses auth.trakt.tv
+>
+> Every OAuth route goes to `https://auth.trakt.tv`: authorize, token, refresh,
+> revoke, and the device flow. Every other API call stays on
+> `https://api.trakt.tv` (see [API URL](/docs/api-url)).
 
 The Trakt API uses OAuth 2.0 for user authentication. Some endpoints are
 "public" and only require your API key, while others require an authenticated
@@ -37,14 +43,24 @@ website.
 - [Create a new API app](https://app.trakt.tv/settings/apps/api/new)
 - [View your API apps](https://app.trakt.tv/settings/apps/api)
 
+## Auth Endpoints
+
+| Route             | URL                                             |
+| ----------------- | ----------------------------------------------- |
+| Authorize         | `https://auth.trakt.tv/oauth/authorize`         |
+| Token and refresh | `POST https://auth.trakt.tv/oauth/token`        |
+| Revoke            | `POST https://auth.trakt.tv/oauth/revoke`       |
+| Device code       | `POST https://auth.trakt.tv/oauth/device/code`  |
+| Device token      | `POST https://auth.trakt.tv/oauth/device/token` |
+
 ## Authorization Code Flow
 
 For mobile apps, desktop apps, and websites with access to a web browser.
 
 ### Application Flow
 
-1. **Redirect to request Trakt access.** Using the `/oauth/authorize` method,
-   construct then redirect to this URL. The Trakt website will request
+1. **Redirect to request Trakt access.** Construct a
+   `https://auth.trakt.tv/oauth/authorize` URL, then redirect to it. The Trakt website will request
    permissions for your app and the user will have the opportunity to sign up
    for a new Trakt account or sign in with their existing account.
 2. **Trakt redirects back to your site.** If the user accepts your request,
@@ -57,7 +73,8 @@ For mobile apps, desktop apps, and websites with access to a web browser.
    exchange.
 3. **Exchange the code for an access token.** If everything looks good in step
    2, exchange the `code` for an access token using the
-   [/oauth/token](/?section=reference&operation=postOauthToken) method. Save
+   [`POST https://auth.trakt.tv/oauth/token`](/?section=reference&operation=postOauthToken)
+   method. Save
    the `access_token` so your app can authenticate the user by sending the
    `Authorization` header as described above. The `access_token` is valid for
    **7 days**. Save and use the `refresh_token` to get a new `access_token`
@@ -79,12 +96,14 @@ below.
 ### Device Flow
 
 1. **Generate codes.** Your app calls
-   [/oauth/device/code](/?section=reference&operation=postOauthDeviceCode) to
-   generate new codes. Save this entire response for later use.
+   [`POST https://auth.trakt.tv/oauth/device/code`](/?section=reference&operation=postOauthDeviceCode)
+   to generate new codes. Save this entire response for later use.
 2. **Display the code.** Display the `user_code` and instruct the user to visit
-   the `verification_url` on their computer or mobile device.
+   the `verification_url` on their computer or mobile device. Today this is
+   `https://auth.trakt.tv/activate`, but always show the `verification_url`
+   from the response instead of hardcoding it.
 3. **Poll for authorization.** Poll the
-   [/oauth/device/token](/?section=reference&operation=postOauthDeviceToken)
+   [`POST https://auth.trakt.tv/oauth/device/token`](/?section=reference&operation=postOauthDeviceToken)
    method to see if the user successfully authorizes your app. Use the
    `device_code` and poll at the `interval` (in seconds) to check if the user
    has authorized your app. See the
@@ -105,8 +124,8 @@ below.
    connect their Trakt account. For some devices this will be right away, and
    for others it might be later in the experience.
 2. **Display the code.** When a user clicks the call to action, your app calls
-   [/oauth/device/code](/?section=reference&operation=postOauthDeviceCode) to
-   generate new codes. In your UI, display the `user_code` and instruct the user
+   [`POST https://auth.trakt.tv/oauth/device/code`](/?section=reference&operation=postOauthDeviceCode)
+   to generate new codes. In your UI, display the `user_code` and instruct the user
    to visit the `verification_url` on their computer or mobile device. The
    `user_code` is typically 8 characters, so make sure there is enough room to
    display the full code.
@@ -119,11 +138,17 @@ below.
    user successfully authorizes your app. Once they have, refresh your UI to
    indicate a successful connection has been made.
 
+## Revoking an Access Token
+
+To sign a user out, revoke their token with
+`POST https://auth.trakt.tv/oauth/revoke`.
+
 ## Refreshing an Access Token
 
 Access tokens are valid for 7 days. Use the `refresh_token` returned during
 authorization with the
-[`POST /oauth/token`](/?section=reference&operation=postOauthToken) endpoint
+[`POST https://auth.trakt.tv/oauth/token`](/?section=reference&operation=postOauthToken)
+endpoint
 to obtain a new access token without asking the user to authorize your app
 again.
 
