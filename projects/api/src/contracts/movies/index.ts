@@ -46,6 +46,8 @@ import { movieAnticipatedResponseSchema } from './schema/response/movieAnticipat
 import { movieFavoritedResponseSchema } from './schema/response/movieFavoritedResponseSchema.ts';
 import { movieTrendingResponseSchema } from './schema/response/movieTrendingResponseSchema.ts';
 import { movieWatchedResponseSchema } from './schema/response/movieWatchedResponseSchema.ts';
+import { personalizedRecommendationsQuerySchema } from '../recommendations/schema/request/personalizedRecommendationsQuerySchema.ts';
+import { movieRecommendationResponseSchema } from '../recommendations/schema/response/movieRecommendationResponseSchema.ts';
 
 const themedFilteredMediaQuerySchema = extendedMediaQuerySchema
   .merge(mediaFilterParamsSchema)
@@ -365,6 +367,22 @@ Upcoming movies that have not been released yet, ranked for the taste of the use
     query: pageQuerySchema,
     responses: {
       200: anticipatedMovieRecommendationResponseSchema.array(),
+      401: z.object({ error: z.string() }),
+    },
+  },
+  recommendations: {
+    summary: 'Get movie recommendations',
+    description: `#### 🔒 OAuth Required ✨ Extended Info 🎚 Filters
+Movie recommendations for the user, each with its \`score\`. Titles the user has watched are left out unless \`ignore_watched=false\`. By default, \`100\` results are returned; send a \`limit\` for up to \`250\`.`,
+    path: '/recommendations',
+    method: 'GET',
+    metadata: authMetadata('required'),
+    query: extendedMediaQuerySchema
+      .merge(personalizedRecommendationsQuerySchema)
+      .merge(mediaFilterParamsSchema)
+      .merge(themeQuerySchema),
+    responses: {
+      200: movieRecommendationResponseSchema.array(),
       401: z.object({ error: z.string() }),
     },
   },
