@@ -313,12 +313,13 @@ Returns all top level comments for a movie. By default, comments are sorted by \
     sentiments: {
       summary: 'Get movie sentiments',
       description:
-        'Returns sentiment counts for comments and reactions attached to a movie.',
+        'Returns sentiment counts for comments and reactions attached to a movie. If there are none yet, a `204` response is returned.',
       path: '/sentiments',
       method: 'GET',
       pathParams: idParamsSchema,
       responses: {
         200: sentimentsResponseSchema,
+        204: z.undefined(),
       },
     },
     report: {

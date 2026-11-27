@@ -804,12 +804,13 @@ Returns all top level comments for a show. By default, comments are sorted by \`
     sentiments: {
       summary: 'Get show sentiments',
       description:
-        'Returns sentiment counts for comments and reactions attached to a show.',
+        'Returns sentiment counts for comments and reactions attached to a show. If there are none yet, a `204` response is returned.',
       path: '/sentiments',
       method: 'GET',
       pathParams: idParamsSchema,
       responses: {
         200: sentimentsResponseSchema,
+        204: z.undefined(),
       },
     },
     report: {

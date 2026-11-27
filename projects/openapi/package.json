@@ -6,6 +6,7 @@
     "start": "bun main.ts",
     "dev": "bun --watch main.ts",
     "validate": "bun validate.ts",
+    "test": "bun test",
     "generate": "bun generate.ts"
   },
   "dependencies": {

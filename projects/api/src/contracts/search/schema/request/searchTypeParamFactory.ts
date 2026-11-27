@@ -9,6 +9,7 @@ export const searchTypeParamFactory = <const T extends string[]>(
 }> =>
   z.object({
     type: z.custom<CombinationsFrom<T>>().nullish().openapi({
+      type: 'string',
       description:
         'Specify the type of results by sending a single value or a comma delimited string for multiple types.',
       enum: types,
